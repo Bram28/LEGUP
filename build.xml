@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<project name="LEGUP" default="compile">
+  <description>Compiles and runs LEGUP code</description>
+
+  
+
+  <property name="distdir" location="dist"/>
+  <property name="srcdir" location="code"/>
+  <property name="classdir" location="class"/>
+  <property name="manifestfilename" value="reasoning.mf"/>
+  <property name="manifestfile" location="${classdir}/${manifestfilename}"/>
+
+  <path id="compile.classpath">
+    <pathelement location="${classdir}"/>
+  </path>
+
+
+  <target name="compile"
+	  depends="init"
+	  description="Compiles the source code">
+    <javac srcdir="${srcdir}"
+	   destdir="${classdir}"
+	   classpathref="compile.classpath"
+	   deprecation="true"/>
+  </target>
+ 
+
+  <target name="doc">
+    <mkdir dir="docs" />
+    <javadoc packagenames="edu.rpi.phil.legup"
+	     sourcepath="code"
+	     destdir="docs"
+	     author="true"
+	     version="true"
+	     windowtitle="LEGUP API"
+	     doctitle="LEGUP"
+	     bottom = "www.rpi.edu"/>
+</target>
+  
+  <target name="archive"
+	  depends="compile"
+	  description="Creates the JAR files">
+    <jar jarfile="${distdir}/legup.jar"
+	 basedir="${classdir}"
+	 includes="edu/**/*.class"/>
+  </target>
+
+
+  <target name="clean"
+	  depends="init"
+	  description="Removes temporary directory contents">
+    <delete dir="${classdir}"/>
+    <delete dir="${distdir}"/>
+  </target>
+
+  
+  <target name="init">
+    <echo message="Building reasoning."/>
+    <mkdir dir="${classdir}"/>
+    <mkdir dir="${distdir}"/>
+  </target>
+
+  <target name="manifest"
+	  depends="init">
+    <manifest file="${manifestfile}">
+      <attribute name="Built-By" value="Drew Housten"/>
+      <attribute name="Built-On" value="2005"/>
+      <attribute name="Main-Class" value="edu.rpi.phil.legup"/>
+    </manifest>
+  </target>
+
+</project>
+  

@@ -1,0 +1,22 @@
+package edu.rpi.phil.legup.puzzles.treetent;
+
+import java.awt.Point;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import edu.rpi.phil.legup.BoardState;
+
+public class RuleNewTreeLink extends RuleNewLink{
+
+	
+    public RuleNewTreeLink()
+    {
+    	name = "New Link Tree";
+    	description = "A tree must link to a tent if there are no unknowns or unlinked tents near the tree.";
+    	image = new ImageIcon("images/treetent/NewTentLink.png");
+    }
+    
+    protected boolean checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
+    {
+    	return this.checkTreeNeededLink(tree, tent, state, validLinks);
+    }
+}

@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_06" class="java.beans.XMLDecoder"> 
+ <object class="edu.rpi.phil.legup.editor.SaveableBoardState"> 
+  <void property="boardCells"> 
+   <array class="[I" length="5"> 
+    <void index="0"> 
+     <array class="int" length="5"/> 
+    </void> 
+    <void index="1"> 
+     <array class="int" length="5"/> 
+    </void> 
+    <void index="2"> 
+     <array class="int" length="5"/> 
+    </void> 
+    <void index="3"> 
+     <array class="int" length="5"/> 
+    </void> 
+    <void index="4"> 
+     <array class="int" length="5"/> 
+    </void> 
+   </array> 
+  </void> 
+  <void property="bottomLabels"> 
+   <array class="int" length="5"/> 
+  </void> 
+  <void property="extraData"> 
+   <object class="java.util.ArrayList"> 
+    <void method="add"> 
+     <array class="edu.rpi.phil.legup.puzzles.heyawake.Region" length="9"> 
+      <void index="0"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>4</int> 
+           </void> 
+           <void property="y"> 
+            <int>2</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>4</int> 
+           </void> 
+           <void property="y"> 
+            <int>3</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>4</int> 
+           </void> 
+           <void property="y"> 
+            <int>4</int> 
+           </void> 
+          </object> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>1</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="1"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>3</int> 
+           </void> 
+           <void property="y"> 
+            <int>2</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>3</int> 
+           </void> 
+           <void property="y"> 
+            <int>3</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>3</int> 
+           </void> 
+           <void property="y"> 
+            <int>4</int> 
+           </void> 
+          </object> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>1</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="2"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>2</int> 
+           </void> 
+           <void property="y"> 
+            <int>2</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>2</int> 
+           </void> 
+           <void property="y"> 
+            <int>3</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>2</int> 
+           </void> 
+           <void property="y"> 
+            <int>4</int> 
+           </void> 
+          </object> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>1</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="3"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>4</int> 
+           </void> 
+           <void property="y"> 
+            <int>1</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>3</int> 
+           </void> 
+           <void property="y"> 
+            <int>1</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>2</int> 
+           </void> 
+           <void property="y"> 
+            <int>1</int> 
+           </void> 
+          </object> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>1</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="4"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>1</int> 
+           </void> 
+           <void property="y"> 
+            <int>2</int> 
+           </void> 
+          </object> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>1</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="5"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>1</int> 
+           </void> 
+           <void property="y"> 
+            <int>3</int> 
+           </void> 
+          </object> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>1</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="6"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>1</int> 
+           </void> 
+           <void property="y"> 
+            <int>4</int> 
+           </void> 
+          </object> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>1</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="7"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="y"> 
+            <int>4</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="y"> 
+            <int>3</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="y"> 
+            <int>2</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="y"> 
+            <int>1</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"/> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>2</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="8"> 
+       <object class="edu.rpi.phil.legup.puzzles.heyawake.Region"> 
+        <void property="cells"> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>4</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>3</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>2</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>1</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void method="add"> 
+          <object class="edu.rpi.phil.legup.puzzles.heyawake.CellLocation"> 
+           <void property="x"> 
+            <int>1</int> 
+           </void> 
+           <void property="y"> 
+            <int>1</int> 
+           </void> 
+          </object> 
+         </void> 
+        </void> 
+        <void property="value"> 
+         <int>-1</int> 
+        </void> 
+       </object> 
+      </void> 
+     </array> 
+    </void> 
+    <void method="add"> 
+     <int>9</int> 
+    </void> 
+    <void method="add"> 
+     <array class="[I" length="5"> 
+      <void index="0"> 
+       <array class="int" length="5"> 
+        <void index="0"> 
+         <int>7</int> 
+        </void> 
+        <void index="1"> 
+         <int>8</int> 
+        </void> 
+        <void index="2"> 
+         <int>8</int> 
+        </void> 
+        <void index="3"> 
+         <int>8</int> 
+        </void> 
+        <void index="4"> 
+         <int>8</int> 
+        </void> 
+       </array> 
+      </void> 
+      <void index="1"> 
+       <array class="int" length="5"> 
+        <void index="0"> 
+         <int>7</int> 
+        </void> 
+        <void index="1"> 
+         <int>8</int> 
+        </void> 
+        <void index="2"> 
+         <int>3</int> 
+        </void> 
+        <void index="3"> 
+         <int>3</int> 
+        </void> 
+        <void index="4"> 
+         <int>3</int> 
+        </void> 
+       </array> 
+      </void> 
+      <void index="2"> 
+       <array class="int" length="5"> 
+        <void index="0"> 
+         <int>7</int> 
+        </void> 
+        <void index="1"> 
+         <int>4</int> 
+        </void> 
+        <void index="2"> 
+         <int>2</int> 
+        </void> 
+        <void index="3"> 
+         <int>1</int> 
+        </void> 
+       </array> 
+      </void> 
+      <void index="3"> 
+       <array class="int" length="5"> 
+        <void index="0"> 
+         <int>7</int> 
+        </void> 
+        <void index="1"> 
+         <int>5</int> 
+        </void> 
+        <void index="2"> 
+         <int>2</int> 
+        </void> 
+        <void index="3"> 
+         <int>1</int> 
+        </void> 
+       </array> 
+      </void> 
+      <void index="4"> 
+       <array class="int" length="5"> 
+        <void index="0"> 
+         <int>7</int> 
+        </void> 
+        <void index="1"> 
+         <int>6</int> 
+        </void> 
+        <void index="2"> 
+         <int>2</int> 
+        </void> 
+        <void index="3"> 
+         <int>1</int> 
+        </void> 
+       </array> 
+      </void> 
+     </array> 
+    </void> 
+   </object> 
+  </void> 
+  <void property="height"> 
+   <int>5</int> 
+  </void> 
+  <void property="leftLabels"> 
+   <array class="int" length="5"/> 
+  </void> 
+  <void property="puzzleMod"> 
+   <string>Heyawake</string> 
+  </void> 
+  <void property="rightLabels"> 
+   <array class="int" length="5"/> 
+  </void> 
+  <void property="topLabels"> 
+   <array class="int" length="5"/> 
+  </void> 
+  <void property="width"> 
+   <int>5</int> 
+  </void> 
+ </object> 
+</java> 

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_04" class="java.beans.XMLDecoder"> 
+ <object class="edu.rpi.phil.legup.editor.SaveableBoardState"> 
+  <void property="boardCells"> 
+   <array class="[I" length="6"> 
+    <void index="0"> 
+     <array class="int" length="6"/> 
+    </void> 
+    <void index="1"> 
+     <array class="int" length="6"> 
+      <void index="2"> 
+       <int>1</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="2"> 
+     <array class="int" length="6"> 
+      <void index="0"> 
+       <int>2</int> 
+      </void> 
+      <void index="1"> 
+       <int>1</int> 
+      </void> 
+      <void index="5"> 
+       <int>1</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="3"> 
+     <array class="int" length="6"/> 
+    </void> 
+    <void index="4"> 
+     <array class="int" length="6"/> 
+    </void> 
+    <void index="5"> 
+     <array class="int" length="6"/> 
+    </void> 
+   </array> 
+  </void> 
+  <void property="bottomLabels"> 
+   <array class="int" length="6"> 
+    <void index="0"> 
+     <int>11</int> 
+    </void> 
+    <void index="1"> 
+     <int>10</int> 
+    </void> 
+    <void index="2"> 
+     <int>11</int> 
+    </void> 
+    <void index="3"> 
+     <int>10</int> 
+    </void> 
+    <void index="4"> 
+     <int>11</int> 
+    </void> 
+    <void index="5"> 
+     <int>10</int> 
+    </void> 
+   </array> 
+  </void> 
+  <void property="height"> 
+   <int>6</int> 
+  </void> 
+  <void property="leftLabels"> 
+   <array class="int" length="6"> 
+    <void index="0"> 
+     <int>30</int> 
+    </void> 
+    <void index="1"> 
+     <int>31</int> 
+    </void> 
+    <void index="2"> 
+     <int>32</int> 
+    </void> 
+    <void index="3"> 
+     <int>33</int> 
+    </void> 
+    <void index="4"> 
+     <int>34</int> 
+    </void> 
+    <void index="5"> 
+     <int>35</int> 
+    </void> 
+   </array> 
+  </void> 
+  <void property="puzzleMod"> 
+   <string>TreeTent</string> 
+  </void> 
+  <void property="rightLabels"> 
+   <array class="int" length="6"> 
+    <void index="0"> 
+     <int>11</int> 
+    </void> 
+    <void index="1"> 
+     <int>10</int> 
+    </void> 
+    <void index="2"> 
+     <int>12</int> 
+    </void> 
+    <void index="3"> 
+     <int>10</int> 
+    </void> 
+    <void index="4"> 
+     <int>10</int> 
+    </void> 
+    <void index="5"> 
+     <int>10</int> 
+    </void> 
+   </array> 
+  </void> 
+  <void property="topLabels"> 
+   <array class="int" length="6"> 
+    <void index="0"> 
+     <int>11</int> 
+    </void> 
+    <void index="1"> 
+     <int>12</int> 
+    </void> 
+    <void index="2"> 
+     <int>13</int> 
+    </void> 
+    <void index="3"> 
+     <int>14</int> 
+    </void> 
+    <void index="4"> 
+     <int>15</int> 
+    </void> 
+    <void index="5"> 
+     <int>16</int> 
+    </void> 
+   </array> 
+  </void> 
+  <void property="width"> 
+   <int>6</int> 
+  </void> 
+ </object> 
+</java> 

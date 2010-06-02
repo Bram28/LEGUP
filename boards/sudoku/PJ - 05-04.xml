@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_06" class="java.beans.XMLDecoder"> 
+ <object class="edu.rpi.phil.legup.editor.SaveableBoardState"> 
+  <void property="boardCells"> 
+   <array class="[I" length="9"> 
+    <void index="0"> 
+     <array class="int" length="9"> 
+      <void index="2"> 
+       <int>6</int> 
+      </void> 
+      <void index="3"> 
+       <int>2</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="1"> 
+     <array class="int" length="9"> 
+      <void index="1"> 
+       <int>7</int> 
+      </void> 
+      <void index="6"> 
+       <int>8</int> 
+      </void> 
+      <void index="7"> 
+       <int>5</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="2"> 
+     <array class="int" length="9"> 
+      <void index="1"> 
+       <int>1</int> 
+      </void> 
+      <void index="4"> 
+       <int>8</int> 
+      </void> 
+      <void index="8"> 
+       <int>4</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="3"> 
+     <array class="int" length="9"> 
+      <void index="8"> 
+       <int>1</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="4"> 
+     <array class="int" length="9"> 
+      <void index="2"> 
+       <int>3</int> 
+      </void> 
+      <void index="4"> 
+       <int>6</int> 
+      </void> 
+      <void index="6"> 
+       <int>7</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="5"> 
+     <array class="int" length="9"> 
+      <void index="0"> 
+       <int>2</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="6"> 
+     <array class="int" length="9"> 
+      <void index="0"> 
+       <int>4</int> 
+      </void> 
+      <void index="4"> 
+       <int>5</int> 
+      </void> 
+      <void index="7"> 
+       <int>8</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="7"> 
+     <array class="int" length="9"> 
+      <void index="1"> 
+       <int>8</int> 
+      </void> 
+      <void index="2"> 
+       <int>9</int> 
+      </void> 
+      <void index="7"> 
+       <int>7</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="8"> 
+     <array class="int" length="9"> 
+      <void index="5"> 
+       <int>2</int> 
+      </void> 
+      <void index="6"> 
+       <int>3</int> 
+      </void> 
+     </array> 
+    </void> 
+   </array> 
+  </void> 
+  <void property="bottomLabels"> 
+   <array class="int" length="9"/> 
+  </void> 
+  <void property="height"> 
+   <int>9</int> 
+  </void> 
+  <void property="leftLabels"> 
+   <array class="int" length="9"/> 
+  </void> 
+  <void property="puzzleMod"> 
+   <string>Sudoku</string> 
+  </void> 
+  <void property="rightLabels"> 
+   <array class="int" length="9"/> 
+  </void> 
+  <void property="topLabels"> 
+   <array class="int" length="9"/> 
+  </void> 
+  <void property="width"> 
+   <int>9</int> 
+  </void> 
+ </object> 
+</java> 

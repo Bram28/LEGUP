@@ -1,0 +1,36 @@
+<legupconfig>
+	<puzzles>
+		<puzzle>
+			<name>TreeTent</name>
+			<class>edu.rpi.phil.legup.puzzles.treetent.TreeTent</class>
+		</puzzle>
+		<puzzle>
+		    <name>BattleShip</name>
+			<class>edu.rpi.phil.legup.puzzles.battleship.BattleShip</class>
+		</puzzle>
+        <puzzle>
+		    <name>Sudoku</name>
+			<class>edu.rpi.phil.legup.puzzles.sudoku.Sudoku</class>
+		</puzzle>
+		<puzzle>
+		    <name>Heyawake</name>
+			<class>edu.rpi.phil.legup.puzzles.heyawake.Heyawake</class>
+		</puzzle>
+		<puzzle>
+		    <name>Masyu</name>
+			<class>edu.rpi.phil.legup.puzzles.masyu.Masyu</class>
+		</puzzle>
+		<puzzle>
+		    <name>LightUp</name>
+			<class>edu.rpi.phil.legup.puzzles.lightup.LightUp</class>
+		</puzzle>
+		<puzzle>
+		    <name>Nurikabe</name>
+			<class>edu.rpi.phil.legup.puzzles.nurikabe.Nurikabe</class>
+		</puzzle>
+		<puzzle>
+		    <name>Fillapix</name>
+			<class>edu.rpi.phil.legup.puzzles.fillapix.Fillapix</class>
+		</puzzle>
+	</puzzles>
+</legupconfig>

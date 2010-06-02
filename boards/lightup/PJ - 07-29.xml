@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_06" class="java.beans.XMLDecoder"> 
+ <object class="edu.rpi.phil.legup.editor.SaveableBoardState"> 
+  <void property="boardCells"> 
+   <array class="[I" length="31"> 
+    <void index="0"> 
+     <array class="int" length="45"> 
+      <void index="8"> 
+       <int>11</int> 
+      </void> 
+      <void index="44"> 
+       <int>12</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="1"> 
+     <array class="int" length="45"> 
+      <void index="4"> 
+       <int>10</int> 
+      </void> 
+      <void index="16"> 
+       <int>11</int> 
+      </void> 
+      <void index="27"> 
+       <int>10</int> 
+      </void> 
+      <void index="28"> 
+       <int>15</int> 
+      </void> 
+      <void index="30"> 
+       <int>15</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="2"> 
+     <array class="int" length="45"> 
+      <void index="0"> 
+       <int>10</int> 
+      </void> 
+      <void index="17"> 
+       <int>11</int> 
+      </void> 
+      <void index="31"> 
+       <int>11</int> 
+      </void> 
+      <void index="36"> 
+       <int>11</int> 
+      </void> 
+      <void index="38"> 
+       <int>11</int> 
+      </void> 
+      <void index="39"> 
+       <int>15</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="3"> 
+     <array class="int" length="45"> 
+      <void index="6"> 
+       <int>11</int> 
+      </void> 
+      <void index="10"> 
+       <int>10</int> 
+      </void> 
+      <void index="18"> 
+       <int>11</int> 
+      </void> 
+      <void index="35"> 
+       <int>12</int> 
+      </void> 
+      <void index="40"> 
+       <int>15</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="4"> 
+     <array class="int" length="45"> 
+      <void index="11"> 
+       <int>11</int> 
+      </void> 
+      <void index="26"> 
+       <int>15</int> 
+      </void> 
+      <void index="28"> 
+       <int>15</int> 
+      </void> 
+      <void index="41"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="5"> 
+     <array class="int" length="45"> 
+      <void index="4"> 
+       <int>13</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="6"> 
+     <array class="int" length="45"> 
+      <void index="3"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="7"> 
+     <array class="int" length="45"> 
+      <void index="0"> 
+       <int>15</int> 
+      </void> 
+      <void index="36"> 
+       <int>15</int> 
+      </void> 
+      <void index="41"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="8"> 
+     <array class="int" length="45"> 
+      <void index="20"> 
+       <int>13</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="9"> 
+     <array class="int" length="45"/> 
+    </void> 
+    <void index="10"> 
+     <array class="int" length="45"> 
+      <void index="0"> 
+       <int>11</int> 
+      </void> 
+      <void index="9"> 
+       <int>11</int> 
+      </void> 
+      <void index="12"> 
+       <int>11</int> 
+      </void> 
+      <void index="41"> 
+       <int>12</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="11"> 
+     <array class="int" length="45"> 
+      <void index="1"> 
+       <int>12</int> 
+      </void> 
+      <void index="10"> 
+       <int>11</int> 
+      </void> 
+      <void index="42"> 
+       <int>15</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="12"> 
+     <array class="int" length="45"> 
+      <void index="43"> 
+       <int>12</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="13"> 
+     <array class="int" length="45"> 
+      <void index="3"> 
+       <int>15</int> 
+      </void> 
+      <void index="10"> 
+       <int>10</int> 
+      </void> 
+      <void index="29"> 
+       <int>10</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="14"> 
+     <array class="int" length="45"/> 
+    </void> 
+    <void index="15"> 
+     <array class="int" length="45"> 
+      <void index="22"> 
+       <int>14</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="16"> 
+     <array class="int" length="45"/> 
+    </void> 
+    <void index="17"> 
+     <array class="int" length="45"> 
+      <void index="15"> 
+       <int>12</int> 
+      </void> 
+      <void index="34"> 
+       <int>15</int> 
+      </void> 
+      <void index="41"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="18"> 
+     <array class="int" length="45"> 
+      <void index="1"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="19"> 
+     <array class="int" length="45"> 
+      <void index="2"> 
+       <int>11</int> 
+      </void> 
+      <void index="34"> 
+       <int>15</int> 
+      </void> 
+      <void index="43"> 
+       <int>15</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="20"> 
+     <array class="int" length="45"> 
+      <void index="3"> 
+       <int>12</int> 
+      </void> 
+      <void index="32"> 
+       <int>11</int> 
+      </void> 
+      <void index="35"> 
+       <int>12</int> 
+      </void> 
+      <void index="44"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="21"> 
+     <array class="int" length="45"/> 
+    </void> 
+    <void index="22"> 
+     <array class="int" length="45"> 
+      <void index="24"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="23"> 
+     <array class="int" length="45"> 
+      <void index="3"> 
+       <int>15</int> 
+      </void> 
+      <void index="8"> 
+       <int>12</int> 
+      </void> 
+      <void index="44"> 
+       <int>10</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="24"> 
+     <array class="int" length="45"> 
+      <void index="41"> 
+       <int>12</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="25"> 
+     <array class="int" length="45"> 
+      <void index="40"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="26"> 
+     <array class="int" length="45"> 
+      <void index="3"> 
+       <int>15</int> 
+      </void> 
+      <void index="16"> 
+       <int>11</int> 
+      </void> 
+      <void index="18"> 
+       <int>11</int> 
+      </void> 
+      <void index="33"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="27"> 
+     <array class="int" length="45"> 
+      <void index="4"> 
+       <int>15</int> 
+      </void> 
+      <void index="9"> 
+       <int>11</int> 
+      </void> 
+      <void index="26"> 
+       <int>11</int> 
+      </void> 
+      <void index="34"> 
+       <int>15</int> 
+      </void> 
+      <void index="38"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="28"> 
+     <array class="int" length="45"> 
+      <void index="5"> 
+       <int>10</int> 
+      </void> 
+      <void index="6"> 
+       <int>11</int> 
+      </void> 
+      <void index="8"> 
+       <int>15</int> 
+      </void> 
+      <void index="13"> 
+       <int>12</int> 
+      </void> 
+      <void index="27"> 
+       <int>12</int> 
+      </void> 
+      <void index="44"> 
+       <int>15</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="29"> 
+     <array class="int" length="45"> 
+      <void index="14"> 
+       <int>11</int> 
+      </void> 
+      <void index="16"> 
+       <int>15</int> 
+      </void> 
+      <void index="17"> 
+       <int>11</int> 
+      </void> 
+      <void index="28"> 
+       <int>15</int> 
+      </void> 
+      <void index="40"> 
+       <int>11</int> 
+      </void> 
+     </array> 
+    </void> 
+    <void index="30"> 
+     <array class="int" length="45"> 
+      <void index="0"> 
+       <int>11</int> 
+      </void> 
+      <void index="36"> 
+       <int>12</int> 
+      </void> 
+     </array> 
+    </void> 
+   </array> 
+  </void> 
+  <void property="bottomLabels"> 
+   <array class="int" length="45"/> 
+  </void> 
+  <void property="height"> 
+   <int>31</int> 
+  </void> 
+  <void property="leftLabels"> 
+   <array class="int" length="31"/> 
+  </void> 
+  <void property="puzzleMod"> 
+   <string>LightUp</string> 
+  </void> 
+  <void property="rightLabels"> 
+   <array class="int" length="31"/> 
+  </void> 
+  <void property="topLabels"> 
+   <array class="int" length="45"/> 
+  </void> 
+  <void property="width"> 
+   <int>45</int> 
+  </void> 
+ </object> 
+</java> 
