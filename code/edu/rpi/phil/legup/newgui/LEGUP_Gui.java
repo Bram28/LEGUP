@@ -31,6 +31,8 @@ import edu.rpi.phil.legup.Selection;
 import edu.rpi.phil.legup.saveable.SaveableProof;
 import edu.rpi.phil.legup.ILegupGui;
 
+//import edu.rpi.phil.legup.newgui.TreeFrame;
+
 public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameListener, TreeSelectionListener, ILegupGui
 {
 	private static final long serialVersionUID = -2304281047341398965L;
@@ -573,6 +575,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		else if (e.getSource() == toolBarButtons[TOOLBAR_CHECK])
 		{
 			checkProof();
+		}
+		else if (e.getSource() == toolBarButtons[TOOLBAR_TUTOR])
+		{
+			myAI.setBoard(Legup.getInstance().getPuzzleModule());
+			((TutorFrame)frames[TUTOR]).tutorPrintln(myAI.findRuleApplication(Legup.getInstance().getSelections().getFirstSelection().getState()));
 		}
 		else if (e.getSource() == allowDefault)
 		{
