@@ -207,16 +207,17 @@ public class RuleAllTents extends PuzzleRule{
 		    		}
 	        	}
 	        	
-		    	String error = checkRuleRaw(destBoardState);
 		    	
-				if (error != null)
+		    	
+				
+	    	}
+	    	String error = checkRuleRaw(destBoardState);
+	    	if (error != null)
 				{
 					System.out.println(error);
 					changed = false;
 					// valid change
 				}
-	    	}
-	    	
 	    	if(!changed)
 	    	{
 	    		destBoardState = origBoardState.copy();

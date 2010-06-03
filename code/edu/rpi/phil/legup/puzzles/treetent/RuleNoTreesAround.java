@@ -122,4 +122,68 @@ public class RuleNoTreesAround extends PuzzleRule{
 		
 		return error;
 	}
+	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
+	{
+		BoardState origBoardState = destBoardState.getSingleParentState();
+		boolean changed = false;
+		boolean connected;
+		int width = destBoardState.getWidth();
+		int height = destBoardState.getHeight();
+		int tree_cells= 0;
+		ArrayList <Object> destExtra = destBoardState.getExtraData();
+		if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+		{
+			for(int x = 0; x < width; ++x)
+			{
+				for(int y = 0; y<height;++y)
+				{
+					if(destBoardState.getCellContents(x,y)==TreeTent.CELL_UNKNOWN)
+					{
+						tree_cells=0;
+						for(int i =-1;i<2;i++)
+						{
+							for(int j = -1;j<2;j++)
+							{
+								if(i==0 && j==0)
+									continue;
+								if((x+i)>=width || (x+i)<0)
+									continue;
+								if((y+j)>=height || (y+j)<0)
+									continue;
+								if( j!=0 && i!=0)
+									continue;
+									
+								
+								if(destBoardState.getCellContents(x+i,y+j)==TreeTent.CELL_TREE)
+								{
+									if(TreeTent.isLinked(destExtra, new Point(x+i,y+j)))
+										continue;
+									
+									tree_cells++;
+								}
+							}
+						}
+						if(tree_cells==0)
+						{
+							System.out.println(x+" "+y);
+							changed=true;
+							destBoardState.setCellContents(x,y,TreeTent.CELL_GRASS);
+						}
+					}
+				}
+			}
+		}
+		
+		String error = checkRuleRaw(destBoardState);
+		if(error != null)
+		{
+			System.out.println(error);
+			changed = false;
+		}
+		if(!changed)
+		{
+			destBoardState= origBoardState.copy();
+		}
+		return changed;
+	}
 }

@@ -174,10 +174,10 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 		{
 			error = "This rule only involves having a single branch!";
 		}
-		else if (!destBoardState.getExtraData().equals(origBoardState.getExtraData()))
+		/*else if (!destBoardState.getExtraData().equals(origBoardState.getExtraData()))
 		{
 			error = "This rule does not involve changing tree-tent links.";
-		}
+		}*/
 		else
 		{
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
@@ -230,26 +230,10 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 			{
 				for(int y = 0; y<height;++y)
 				{
-					connected= false;
-					for(int i = 0; i<destExtra.size();i++)
-					{
-						ExtraTreeTentLink e = (ExtraTreeTentLink)destExtra.get(x);
-						Point tree = e.pos1;
-						Point tent = e.pos2;
-						int state = destBoardState.getCellContents(tree.x,tree.y);
-						if (state == TreeTent.CELL_TENT)
-						{ // swap them
-							Point temp = tree;
-							tree = tent;
-							tent = temp;
-						}
-						if(tree.x==x && tree.y==y)
-						{
-							connected =true;
-							break;
-						}
-					}
-					if(connected!=true&& destBoardState.getCellContents(x,y)==TreeTent.CELL_TREE)
+					
+					if(TreeTent.isLinked(destExtra, new Point(x,y)))
+						continue;
+					if(destBoardState.getCellContents(x,y)==TreeTent.CELL_TREE)
 					{
 						empty_cells=0;
 						for(int i =-1;i<2;i++)
@@ -258,9 +242,12 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 							{
 								if(i==0 && j==0)
 									continue;
-								if(x+i>=width || x+i<=0)
+								if((x+i)>=width || (x+i)<0)
 									continue;
-								if(y+j>=height || y+j<=0)
+								if((y+j)>=height || (y+j)<0)
+									continue;
+									
+								if(TreeTent.isLinked(destExtra, new Point(x+i,y+j)))
 									continue;
 								if(destBoardState.getCellContents(x+i,y+j)==0)
 								{
@@ -276,13 +263,16 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 								{
 									if(i==0 && j==0)
 										continue;
-									if(x+i>=width || x+i<=0)
+									if((x+i)>=width || (x+i)<0)
 										continue;
-									if(y+j>=height || y+j<=0)
+									if((y+j)>=height || (y+j)<0)
 										continue;
 									if(destBoardState.getCellContents(x+i,y+j)==0)
 									{
+										changed = true;
 										destBoardState.setCellContents(x+i, y+j, TreeTent.CELL_TENT);
+										destExtra.add((Object) new ExtraTreeTentLink(new Point(x,y), new Point(x+i,y+j)));
+										destBoardState.setExtraData(destExtra);
 									}
 								}
 							}

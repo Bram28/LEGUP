@@ -38,18 +38,16 @@ public class ContradictionTentNotNearTree extends Contradiction
     	    {
     	    	if (state.getCellContents(x,y) == TreeTent.CELL_TENT)
     	    	{
-    	    		Point tent = new Point();
+    	    		Point tent = new Point(x,y);
     	    		if(TreeTent.isLinked(validLinks, tent))
-    	    		{
     	    			continue;
-    	    		}
     	    		
     	    		found = false;
     	    		if(y > 0)
     	    		{
     	    			if(state.getCellContents( x, y-1 ) == TreeTent.CELL_TREE)
     	    			{
-    	    				if(TreeTent.isLinked(validLinks, new Point(x,y-1)))
+    	    				if(!TreeTent.isLinked(validLinks, new Point(x,y-1)))
     	    					found = true;
     	    			}
     	    		}
@@ -57,7 +55,7 @@ public class ContradictionTentNotNearTree extends Contradiction
     	    		{
     	    			if(state.getCellContents( x, y+1 ) == TreeTent.CELL_TREE)
     	    			{
-    	    				if(TreeTent.isLinked(validLinks, new Point(x,y+1)))
+    	    				if(!TreeTent.isLinked(validLinks, new Point(x,y+1)))
     	    					found = true;
     	    			}
     	    		}
@@ -65,7 +63,7 @@ public class ContradictionTentNotNearTree extends Contradiction
     	    		{
     	    			if(state.getCellContents( x-1, y ) == TreeTent.CELL_TREE)
     	    			{
-    	    				if(TreeTent.isLinked(validLinks, new Point(x-1,y)))
+    	    				if(!TreeTent.isLinked(validLinks, new Point(x-1,y)))
     	    					found = true;
     	    			}
     	    		}
@@ -73,7 +71,7 @@ public class ContradictionTentNotNearTree extends Contradiction
     	    		{
     	    			if(state.getCellContents( x+1, y ) == TreeTent.CELL_TREE)
     	    			{
-    	    				if(TreeTent.isLinked(validLinks, new Point(x+1,y)))
+    	    				if(!TreeTent.isLinked(validLinks, new Point(x+1,y)))
     	    					found = true;
     	    			}
     	    		}

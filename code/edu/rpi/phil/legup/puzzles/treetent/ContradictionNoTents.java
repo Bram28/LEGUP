@@ -36,7 +36,7 @@ public class ContradictionNoTents extends Contradiction
     	{
     	    for (int x=0;x<width;x++)
     	    {
-    	    	Point tree = new Point();
+    	    	Point tree = new Point(x,y);
     	    	if (state.getCellContents(x,y) == TreeTent.CELL_TREE)
     	    	{
     	    		//If linked, skip it

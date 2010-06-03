@@ -148,10 +148,11 @@ public class RuleGrassNextToTent extends PuzzleRule{
 							{
 								if(i==0 && j==0)
 									continue;
-								if(x+i>=width || x+i<=0)
+								if((x+i)>=width || (x+i)<0)
 									continue;
-								if(y+j>=height || y+j<=0)
+								if((y+j)>=height || (y+j)<0)
 									continue;
+								
 								if(destBoardState.getCellContents(x+i,y+j)==0)
 								{
 									destBoardState.setCellContents(x, y, TreeTent.CELL_GRASS);

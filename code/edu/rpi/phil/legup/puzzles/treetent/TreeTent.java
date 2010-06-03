@@ -34,6 +34,7 @@ public class TreeTent extends PuzzleModule
 	public static int CELL_TREE = 1;
 	public static int CELL_TENT = 2;
 	public static int CELL_GRASS = 3;
+	public static int CELL_UNKNOWN = 0;
 
 	private static Stroke med = new BasicStroke(2);
 
@@ -297,11 +298,14 @@ public class TreeTent extends PuzzleModule
 	public Vector <PuzzleRule> getRules(){
 		Vector <PuzzleRule>ruleList = new Vector <PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
+		ruleList.add(new RuleNewTentLink());
 		ruleList.add(new RuleAllGrass());
-		ruleList.add(new RuleGrassNextToTent());
-		ruleList.add(new RuleAllTents());
 		ruleList.add(new RuleNoTreesAround());
+		ruleList.add(new RuleGrassNextToTent());
+		
 		ruleList.add(new RuleOneUnknownNearTree());
+		ruleList.add(new RuleAllTents());
+		
 		//ruleList.add(new RuleNewLink());
 		//ruleList.add(new RuleNewLink());
 		return ruleList;
