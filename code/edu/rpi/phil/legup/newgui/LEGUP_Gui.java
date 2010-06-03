@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 //TODO
 import javax.swing.ScrollPaneConstants;
+import java.awt.Font;
 
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
@@ -82,7 +83,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private static final int BOARD = 0;
 	private static final int JUSTIFICATION = 1;
 	private static final int TREE = 2;
-	private static final int TUTOR = 3;
+	//private static final int TUTOR = 3;
 
 	private static final int TOOLBAR_NEW = 0;
 	private static final int TOOLBAR_OPEN = 1;
@@ -166,16 +167,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	{
 			"Board",
 			"Justification",
-			"Tree",
-			"Tutor",
+			"Tree"
+			//"Tutor",
 	};
 
 	private JCheckBoxMenuItem[] viewItem =
 	{
 			new JCheckBoxMenuItem(types[0],false),
 			new JCheckBoxMenuItem(types[1],false),
-			new JCheckBoxMenuItem(types[2],false),
-			new JCheckBoxMenuItem(types[3],false),
+			new JCheckBoxMenuItem(types[2],false)
+			//new JCheckBoxMenuItem(types[3],false),
 	};
 
 	private JustificationFrame justificationFrame;
@@ -184,8 +185,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	{
 			new JInternalFrame(types[0]),
 			null, // justification is initialized in construtor
-			null, // tree is initialized in constructor
-			null // tutor is initialized in constructor
+			null//, // tree is initialized in constructor
+			//null // tutor is initialized in constructor
 	};
 
 	private JCheckBoxMenuItem allowDefault =
@@ -207,13 +208,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		this.setLayout(new BorderLayout());
 		this.add(mdiPane, BorderLayout.CENTER);
 		
-		// TODO
+		// TODO console
 		tutorOutput.setAutoscrolls(true);
 		tutorOutput.setEditable(false);
+		tutorOutput.setWrapStyleWord(true);
+		tutorOutput.setFont( new Font("Monospaced", Font.PLAIN, 12) );
+		
 		scrollPane = new JScrollPane(tutorOutput);
 		scrollPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
 		scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
-		scrollPane.setMinimumSize( new Dimension(500,200) );
+		scrollPane.setPreferredSize( new Dimension(600,150) );
 		this.add(scrollPane, BorderLayout.SOUTH);
 		
 		this.legupMain = legupMain;
@@ -267,7 +271,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		frames[JUSTIFICATION] = justificationFrame;
 
 		frames[TREE] = new TreeFrame(types[TREE],legupMain,this);
-		frames[TUTOR] = new TutorFrame();
+		//frames[TUTOR] = new TutorFrame();
 
 		boardPanel = new BoardPanel(this);
 
@@ -359,7 +363,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 			showFrame(JUSTIFICATION);
 			showFrame(BOARD);
 			showFrame(TREE);
-			showFrame(TUTOR);
+			//showFrame(TUTOR);
 		}
 	}
 
@@ -373,10 +377,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		if (filename != null) // user didn't pressed cancel
 		{
 			filename = fileChooser.getDirectory() + filename;
-
 			if (!filename.toLowerCase().endsWith(".proof"))
-	    		filename = filename + ".proof";
-
+				filename += ".proof";
 			Legup.getInstance().loadProofFile(filename);
 		}
 
@@ -457,10 +459,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		{
 			frames[ID].setLocation(frames[BOARD].getX() + frames[BOARD].getWidth(),frames[BOARD].getY());
 		}
-		else if (ID == TUTOR)
+		/*else if (ID == TUTOR)
 		{
 			frames[ID].setLocation(frames[JUSTIFICATION].getX() + frames[JUSTIFICATION].getWidth(),0);
-		}
+		}*/
 
 		frames[ID].pack();
 		frames[ID].setVisible(true);
@@ -519,7 +521,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		pgd = new PickGameDialog(this,legupMain,true);
 		selectNewPuzzle();
 
-		mdiPane.setPreferredSize(new Dimension(frames[JUSTIFICATION].getWidth() + frames[TUTOR].getWidth(), frames[TREE].getHeight() + frames[JUSTIFICATION].getHeight()));
+		mdiPane.setPreferredSize(new Dimension(frames[JUSTIFICATION].getWidth() /*+ frames[TUTOR].getWidth()*/, frames[TREE].getHeight() + frames[JUSTIFICATION].getHeight()));
 		pack();
 	}
 
@@ -534,7 +536,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		showFrame(JUSTIFICATION);
 		showFrame(BOARD);
 		showFrame(TREE);
-		showFrame(TUTOR);
+		//showFrame(TUTOR);
 	}
 
 
@@ -576,7 +578,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 				showFrame(JUSTIFICATION);
 				showFrame(BOARD);
 				showFrame(TREE);
-				showFrame(TUTOR);
+				//showFrame(TUTOR);
 			}
 		}
 		else if (e.getSource() == exit)
@@ -599,10 +601,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		{
 			myAI.setBoard(Legup.getInstance().getPuzzleModule());
 			String text = new String( myAI.findRuleApplication(Legup.getInstance().getSelections().getFirstSelection().getState()) );
-			tutorOutput.append( text + "\n");
+			tutorOutput.append("Tutor: " + text + "\n");
 			tutorOutput.setCaretPosition( tutorOutput.getDocument().getLength() );
-		tutorOutput.setCaretPosition( tutorOutput.getDocument().getLength() );
-			((TutorFrame)frames[TUTOR]).tutorPrintln(text);
+			//((TutorFrame)frames[TUTOR]).tutorPrintln(text);
 		}
 		else if (e.getSource() == allowDefault)
 		{

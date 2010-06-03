@@ -114,25 +114,25 @@ public class Legup
 	public void loadProofFile(String filename)
 	{
 		try
-    	{
+		{
 			initialBoardState = SaveableProof.loadProof(filename);
 			selections.setSelection(new Selection(initialBoardState,false));
-    	}
-    	catch (Exception e)
-    	{
-    		initialBoardState = null;
-    		errorMessage("Error loading proof:" + e.toString());
-    		return;
-    	}
+		}
+		catch (Exception e)
+		{
+			initialBoardState = null;
+			errorMessage("Error loading proof:" + e.toString());
+			return;
+		}
 
-    	String puzzle = initialBoardState.getPuzzleName();
+		String puzzle = initialBoardState.getPuzzleName();
 		System.out.println("Loading puzzle module: " + puzzle);
 		if(loadPuzzleModule(puzzle))
 		{
 			errorMessage("Error encountered loading PuzzleModule.");
 		}
 
-    	gui.reloadGui();
+		gui.reloadGui();
 	}
 
 	/*
