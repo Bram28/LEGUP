@@ -18,6 +18,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+//TODO
+import javax.swing.ScrollPaneConstants;
+
+import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.event.InternalFrameEvent;
@@ -98,6 +103,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	Legup legupMain = null;
 
 	private JDesktopPane mdiPane = new JDesktopPane();
+	// TODO copied from TutorFrame
+	private JTextArea tutorOutput = new JTextArea();
+	private JScrollPane scrollPane = new JScrollPane();
 
 	private JMenuBar bar = new JMenuBar();
 	private JMenu file = new JMenu("File");
@@ -195,8 +203,19 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 	public LEGUP_Gui(Legup legupMain)
 	{
+		
 		this.setLayout(new BorderLayout());
 		this.add(mdiPane, BorderLayout.CENTER);
+		
+		// TODO
+		tutorOutput.setAutoscrolls(true);
+		tutorOutput.setEditable(false);
+		scrollPane = new JScrollPane(tutorOutput);
+		scrollPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+		scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
+		scrollPane.setMinimumSize( new Dimension(500,200) );
+		this.add(scrollPane, BorderLayout.SOUTH);
+		
 		this.legupMain = legupMain;
 		legupMain.getSelections().addTreeSelectionListener(this);
 		setTitle("LEGUP");
@@ -579,7 +598,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		else if (e.getSource() == toolBarButtons[TOOLBAR_TUTOR])
 		{
 			myAI.setBoard(Legup.getInstance().getPuzzleModule());
-			((TutorFrame)frames[TUTOR]).tutorPrintln(myAI.findRuleApplication(Legup.getInstance().getSelections().getFirstSelection().getState()));
+			String text = new String( myAI.findRuleApplication(Legup.getInstance().getSelections().getFirstSelection().getState()) );
+			tutorOutput.append( text + "\n");
+			tutorOutput.setCaretPosition( tutorOutput.getDocument().getLength() );
+		tutorOutput.setCaretPosition( tutorOutput.getDocument().getLength() );
+			((TutorFrame)frames[TUTOR]).tutorPrintln(text);
 		}
 		else if (e.getSource() == allowDefault)
 		{

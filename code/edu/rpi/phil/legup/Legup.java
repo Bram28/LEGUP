@@ -12,6 +12,10 @@ import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.newgui.TreeSelectionListener;
 import edu.rpi.phil.legup.saveable.SaveableProof;
 
+//TODO system l&f
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager;
+
 /**
  * The <code>Legup</code> class is the main class for the Legup Application. It
  * provides access to all the major data structures and functionality necessary.
@@ -216,7 +220,27 @@ public class Legup
 	public static void main(String[] args)
 	{
 		Legup legup = Legup.getInstance();
+		
+		// TODO system look & feel
+		try {
+			// Set System L&F
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (UnsupportedLookAndFeelException e) {
+			// handle exception
+		}
+		catch (ClassNotFoundException e) {
+			// handle exception
+		}
+		catch (InstantiationException e) {
+			// handle exception
+		}
+		catch (IllegalAccessException e) {
+			// handle exception
+		}
+
 		legup.gui = new LEGUP_Gui(legup);
+		
 		legup.gui.promptPuzzle();
 
 		// This is for the animation - Daniel P

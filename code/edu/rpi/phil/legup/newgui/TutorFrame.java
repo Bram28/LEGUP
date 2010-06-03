@@ -29,7 +29,7 @@ public class TutorFrame extends JInternalFrame
 		this.add(scrollPane, BorderLayout.CENTER);
 
 		tutorToolbar = new TutorToolbarPanel(this);
-		this.add(tutorToolbar, BorderLayout.NORTH);
+		this.add(tutorToolbar, BorderLayout.WEST);
 
 		this.pack();
 	}
