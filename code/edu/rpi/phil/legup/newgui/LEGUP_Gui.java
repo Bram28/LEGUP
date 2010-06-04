@@ -95,8 +95,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private static final int TOOLBAR_REDO = 4;
 
 	private static final int TOOLBAR_CONSOLE = 5;
-	private static final int TOOLBAR_CHECK = 6;
-	private static final int TOOLBAR_TUTOR = 7;
+	private static final int TOOLBAR_TUTOR = 6;
+	private static final int TOOLBAR_CHECK = 7;
 	
 	/*private static final int TOOLBAR_BOARD = 5;
 	private static final int TOOLBAR_JUSTIFICATION = 6;
@@ -137,8 +137,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		"Undo",
 		"Redo",
 		"Console",
-		"Check",
-		"Tutor"
+		"Tutor",
+		"Check"
 /*		"Board",
 		"Justification",
 		"Tree",
@@ -213,12 +213,13 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		this.setLayout(new BorderLayout());
 		this.add(mdiPane, BorderLayout.CENTER);
 		
+		mdiPane.setPreferredSize(new Dimension(800,600));
 		// TODO console
 		tutorOutput.setAutoscrolls(true);
 		tutorOutput.setEditable(false);
 		tutorOutput.setWrapStyleWord(true);
 		// optional console settings
-		tutorOutput.setFont( new Font("Monospaced", Font.PLAIN, 12) );
+		tutorOutput.setFont( new Font("Monospaced", Font.PLAIN, 14) );
 		//tutorOutput.setBackground( Color.BLACK );
 		//tutorOutput.setForeground( Color.GREEN );
 		//
@@ -238,8 +239,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		pack();
 
 		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation(100,50);
-		setSize(800,600);
+		/*setLocation(100,50);
+		setSize(800,600);*/
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -271,6 +272,12 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 			toolBarButtons[x].setVerticalTextPosition( SwingConstants.BOTTOM );
 			toolBarButtons[x].setHorizontalTextPosition( SwingConstants.CENTER );
 		}
+
+		// TODO disable buttons
+		toolBarButtons[TOOLBAR_UNDO].setEnabled(false);
+		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
+		toolBarButtons[TOOLBAR_TUTOR].setEnabled(false);
+		toolBarButtons[TOOLBAR_CHECK].setEnabled(false);
 
 		this.add(toolBar, BorderLayout.NORTH);
 	}
@@ -371,10 +378,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 			}
 
 			// show them all
-			showFrame(JUSTIFICATION);
-			showFrame(BOARD);
-			showFrame(TREE);
-			//showFrame(TUTOR);
+			showAll();
 		}
 	}
 
@@ -503,6 +507,18 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		viewItem[frameIndex].setState(newState);
 	}
 
+	private void showAll() {
+		showFrame(JUSTIFICATION);
+		showFrame(BOARD);
+		showFrame(TREE);
+		//showFrame(TUTOR);
+		// TODO disable buttons
+		toolBarButtons[TOOLBAR_UNDO].setEnabled(true);
+		toolBarButtons[TOOLBAR_REDO].setEnabled(true);
+		toolBarButtons[TOOLBAR_TUTOR].setEnabled(true);
+		toolBarButtons[TOOLBAR_CHECK].setEnabled(true);
+	}
+
 	private void repaintAll()
 	{
 		for (int x = 0; x < frames.length; ++x)
@@ -544,10 +560,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		myAI.setBoard(Legup.getInstance().getPuzzleModule());
 
 		// show them all
-		showFrame(JUSTIFICATION);
-		showFrame(BOARD);
-		showFrame(TREE);
-		//showFrame(TUTOR);
+		showAll();
 	}
 
 
@@ -586,10 +599,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 				myAI.setBoard(module);
 
 				// show them all
-				showFrame(JUSTIFICATION);
-				showFrame(BOARD);
-				showFrame(TREE);
-				//showFrame(TUTOR);
+				showAll();
 			}
 		}
 		else if (e.getSource() == exit)
