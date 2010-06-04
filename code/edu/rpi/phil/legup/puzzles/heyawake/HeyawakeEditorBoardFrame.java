@@ -314,9 +314,9 @@ public class HeyawakeEditorBoardFrame extends JDialog implements WindowListener,
 							int val = getNeighbors(x,y);
 							String imagePath = "";
 							if(((int[][])state.getExtraData().get(2))[y][x] == selectedRegion)
-								imagePath = "images/regions/selected/" + val+ ".gif";
+								imagePath = "images/heyawake/regions/selected/" + val+ ".gif";
 							else
-								imagePath = "images/regions/" + val+ ".gif";
+								imagePath = "images/heyawake/regions/" + val+ ".gif";
 							
 							Image i = new ImageIcon(imagePath).getImage();
 							
