@@ -22,6 +22,8 @@ import javax.swing.JScrollPane;
 //TODO
 import javax.swing.ScrollPaneConstants;
 import java.awt.Font;
+import java.awt.Color;
+import javax.swing.SwingConstants;
 
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
@@ -143,13 +145,13 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 	AbstractButton[] toolBarButtons =
 	{
-		new JButton(new ImageIcon("images/" + toolBarNames[0] + ".png")),
-		new JButton(new ImageIcon("images/" + toolBarNames[1] + ".png")),
-		new JButton(new ImageIcon("images/" + toolBarNames[2] + ".png")),
-		new JButton(new ImageIcon("images/" + toolBarNames[3] + ".png")),
-		new JButton(new ImageIcon("images/" + toolBarNames[4] + ".png")),
-		new JButton(new ImageIcon("images/" + toolBarNames[5] + ".png")),
-		new JButton(new ImageIcon("images/" + toolBarNames[6] + ".png"))
+		new JButton(toolBarNames[0], new ImageIcon("images/" + toolBarNames[0] + ".png")),
+		new JButton(toolBarNames[1], new ImageIcon("images/" + toolBarNames[1] + ".png")),
+		new JButton(toolBarNames[2], new ImageIcon("images/" + toolBarNames[2] + ".png")),
+		new JButton(toolBarNames[3], new ImageIcon("images/" + toolBarNames[3] + ".png")),
+		new JButton(toolBarNames[4], new ImageIcon("images/" + toolBarNames[4] + ".png")),
+		new JButton(toolBarNames[5], new ImageIcon("images/" + toolBarNames[5] + ".png")),
+		new JButton(toolBarNames[6], new ImageIcon("images/" + toolBarNames[6] + ".png"))
 		/*new JToggleButton(new ImageIcon("images/" + toolBarNames[5] + ".png")),
 		new JToggleButton(new ImageIcon("images/" + toolBarNames[6] + ".png")),
 		new JToggleButton(new ImageIcon("images/" + toolBarNames[7] + ".png")),
@@ -212,8 +214,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		tutorOutput.setAutoscrolls(true);
 		tutorOutput.setEditable(false);
 		tutorOutput.setWrapStyleWord(true);
+		// optional console settings
 		tutorOutput.setFont( new Font("Monospaced", Font.PLAIN, 12) );
-		
+		//tutorOutput.setBackground( Color.BLACK );
+		//tutorOutput.setForeground( Color.GREEN );
+		//
 		scrollPane = new JScrollPane(tutorOutput);
 		scrollPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
 		scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
@@ -252,13 +257,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 			{
 				if (x == toolbarSeperatorBefore[y])
 				{
-					toolBar.addSeparator(new Dimension(30,24));
+					toolBar.addSeparator(/*new Dimension(30,24)*/);
 				}
 			}
 
 			toolBar.add(toolBarButtons[x]);
 			toolBarButtons[x].addActionListener(this);
 			toolBarButtons[x].setToolTipText(toolBarNames[x]);
+			// TODO text under icons
+			toolBarButtons[x].setVerticalTextPosition( SwingConstants.BOTTOM );
+			toolBarButtons[x].setHorizontalTextPosition( SwingConstants.CENTER );
 		}
 
 		this.add(toolBar, BorderLayout.NORTH);
