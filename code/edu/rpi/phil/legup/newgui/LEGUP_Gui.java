@@ -94,8 +94,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private static final int TOOLBAR_UNDO = 3;
 	private static final int TOOLBAR_REDO = 4;
 
-	private static final int TOOLBAR_CHECK = 5;
-	private static final int TOOLBAR_TUTOR = 6;
+	private static final int TOOLBAR_CONSOLE = 5;
+	private static final int TOOLBAR_CHECK = 6;
+	private static final int TOOLBAR_TUTOR = 7;
 	
 	/*private static final int TOOLBAR_BOARD = 5;
 	private static final int TOOLBAR_JUSTIFICATION = 6;
@@ -107,7 +108,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 	private JDesktopPane mdiPane = new JDesktopPane();
 	// TODO copied from TutorFrame
-	private JTextArea tutorOutput = new JTextArea();
+	private JTextArea tutorOutput = new JTextArea("LEGUP Console v1.0b\n");
 	private JScrollPane scrollPane = new JScrollPane();
 
 	private JMenuBar bar = new JMenuBar();
@@ -135,6 +136,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		"Save",
 		"Undo",
 		"Redo",
+		"Console",
 		"Check",
 		"Tutor"
 /*		"Board",
@@ -151,7 +153,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		new JButton(toolBarNames[3], new ImageIcon("images/" + toolBarNames[3] + ".png")),
 		new JButton(toolBarNames[4], new ImageIcon("images/" + toolBarNames[4] + ".png")),
 		new JButton(toolBarNames[5], new ImageIcon("images/" + toolBarNames[5] + ".png")),
-		new JButton(toolBarNames[6], new ImageIcon("images/" + toolBarNames[6] + ".png"))
+		new JButton(toolBarNames[6], new ImageIcon("images/" + toolBarNames[6] + ".png")),
+		new JButton(toolBarNames[7], new ImageIcon("images/" + toolBarNames[7] + ".png"))
 		/*new JToggleButton(new ImageIcon("images/" + toolBarNames[5] + ".png")),
 		new JToggleButton(new ImageIcon("images/" + toolBarNames[6] + ".png")),
 		new JToggleButton(new ImageIcon("images/" + toolBarNames[7] + ".png")),
@@ -222,7 +225,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		scrollPane = new JScrollPane(tutorOutput);
 		scrollPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
 		scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
-		scrollPane.setPreferredSize( new Dimension(600,150) );
+		scrollPane.setPreferredSize( new Dimension(800,100) );
 		this.add(scrollPane, BorderLayout.SOUTH);
 		
 		this.legupMain = legupMain;
@@ -236,7 +239,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(100,50);
-		setSize(370,getHeight());
+		setSize(800,600);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -529,7 +532,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		pgd = new PickGameDialog(this,legupMain,true);
 		selectNewPuzzle();
 
-		mdiPane.setPreferredSize(new Dimension(frames[JUSTIFICATION].getWidth() /*+ frames[TUTOR].getWidth()*/, frames[TREE].getHeight() + frames[JUSTIFICATION].getHeight()));
+		mdiPane.setPreferredSize(new Dimension(800/*frames[JUSTIFICATION].getWidth() //+ frames[TUTOR].getWidth()*/, 600/*frames[TREE].getHeight() + frames[JUSTIFICATION].getHeight()*/));
 		pack();
 	}
 
@@ -600,6 +603,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		else if (e.getSource() == toolBarButtons[TOOLBAR_REDO])
 		{
 			System.out.println("Redo!");
+		}
+		else if (e.getSource() == toolBarButtons[TOOLBAR_CONSOLE])
+		{
+			scrollPane.setVisible(!scrollPane.isVisible());
+			pack();
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_CHECK])
 		{

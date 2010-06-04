@@ -42,7 +42,7 @@ public class TreeFrame extends JInternalFrame implements JustificationAppliedLis
 		c.add(treePanel,BorderLayout.CENTER);
 		
 		status.setPreferredSize(new Dimension(150,20));
-		//c.add(status,BorderLayout.SOUTH);
+		c.add(status,BorderLayout.SOUTH);
 		
 		JustificationFrame.addJustificationAppliedListener(this);
 		
