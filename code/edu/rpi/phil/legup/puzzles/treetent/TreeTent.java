@@ -565,8 +565,8 @@ public class TreeTent extends PuzzleModule
     	int width = Board.getWidth();
     	double currentOff = Double.POSITIVE_INFINITY;
     	double BESTPROB = .25;
-    	for (int r = 0; r < height; r++ ) {
-    		for (int c = 0; c < width; c++) {
+    	for (int r = 0; r < width; r++ ) {
+    		for (int c = 0; c < height; c++) {
     			if (Board.getCellContents(r,c) == 0) {
     				// compute probability of a hit
     				double myProb = HitProb(r,c,Board);

@@ -152,10 +152,13 @@ public class RuleGrassNextToTent extends PuzzleRule{
 									continue;
 								if((y+j)>=height || (y+j)<0)
 									continue;
+								if(i!=0 && j!=0)
+									continue;
 								
 								if(destBoardState.getCellContents(x+i,y+j)==0)
 								{
-									destBoardState.setCellContents(x, y, TreeTent.CELL_GRASS);
+									destBoardState.setCellContents(x+i, y+j, TreeTent.CELL_GRASS);
+									changed=true;
 								}
 							}
 						}
@@ -164,6 +167,7 @@ public class RuleGrassNextToTent extends PuzzleRule{
 			}
 		}
 		String error = checkRuleRaw(destBoardState);
+		System.out.println(error);
 		if(error != null)
 		{
 			System.out.println(error);

@@ -51,7 +51,7 @@ public class Masyu extends PuzzleModule
 	 */
 	public void mouseDraggedEvent(BoardState state, Point from, Point to)
 	{
-				if (from.equals(to))
+		if (from.equals(to))
 		{ // click
 			int next = getNextCellValue(from.x,from.y,state);
 			state.setCellContents(from.x,from.y,next);

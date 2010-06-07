@@ -313,8 +313,9 @@ public class AI implements Runnable {
 
 	/**
 	 * Runs the AI one move into the future. Returns the boardstate after the
-	 * move.
-	 *
+	 * move.  First checks the current board for contradictions and then applies
+	 * "basic" rules.  If the basic rule doesn't work it asks the module to make a
+	 * guess.  
 	 * @param Board
 	 *            the BoardState to start from
 	 * @return the Boardstate after the move

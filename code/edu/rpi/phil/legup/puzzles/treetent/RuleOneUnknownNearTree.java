@@ -224,7 +224,8 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 		int height = destBoardState.getHeight();
 		int empty_cells= 0;
 		ArrayList <Object> destExtra = destBoardState.getExtraData();
-		if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+		ArrayList <Object> origExtra = origBoardState.getExtraData();
+		if (origBoardState != null && origBoardState.getTransitionsTo().size() == 1)
 		{
 			for(int x = 0; x < width; ++x)
 			{
@@ -233,7 +234,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 					
 					if(TreeTent.isLinked(destExtra, new Point(x,y)))
 						continue;
-					if(destBoardState.getCellContents(x,y)==TreeTent.CELL_TREE)
+					if(origBoardState.getCellContents(x,y)==TreeTent.CELL_TREE)
 					{
 						empty_cells=0;
 						for(int i =-1;i<2;i++)
@@ -246,10 +247,12 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 									continue;
 								if((y+j)>=height || (y+j)<0)
 									continue;
-									
-								if(TreeTent.isLinked(destExtra, new Point(x+i,y+j)))
+								if(i!=0 && j!=0)
 									continue;
-								if(destBoardState.getCellContents(x+i,y+j)==0)
+									
+								if(TreeTent.isLinked(origExtra, new Point(x+i,y+j)))
+									continue;
+								if(origBoardState.getCellContents(x+i,y+j)==0)
 								{
 									empty_cells++;
 								}
@@ -267,7 +270,9 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 										continue;
 									if((y+j)>=height || (y+j)<0)
 										continue;
-									if(destBoardState.getCellContents(x+i,y+j)==0)
+									if(i!=0 && j!=0)
+										continue;
+									if(origBoardState.getCellContents(x+i,y+j)==0)
 									{
 										changed = true;
 										destBoardState.setCellContents(x+i, y+j, TreeTent.CELL_TENT);
