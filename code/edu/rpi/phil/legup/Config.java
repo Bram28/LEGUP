@@ -61,8 +61,7 @@ public class Config
 	 */
 	public Vector<String> getBoardsForPuzzle(String puzzleName)
 	{
-		Vector<String> boards = (Vector<String>) puzzles.get(puzzleName).get(
-				"boards");
+		Vector<String> boards = (Vector<String>) puzzles.get(puzzleName).get("boards");
 		if (boards == null)
 		{
 			boards = new Vector<String>();

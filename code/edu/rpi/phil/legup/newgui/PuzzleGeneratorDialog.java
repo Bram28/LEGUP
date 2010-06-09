@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 
 public class PuzzleGeneratorDialog extends JDialog
 {
+	private static final long serialVersionUID = 2272172647189357845L;
 
 	public static final int PUZZLE_CHOSEN = 1,
 									CANCELED = 2;

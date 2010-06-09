@@ -104,7 +104,6 @@ public class Region
 		this.value = value;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setCells(Vector <CellLocation> cells)
 	{
 		this.cells = cells;
@@ -114,7 +113,7 @@ public class Region
 	{
 		Region tempRegion = new Region();
 		tempRegion.value = this.value;
-		tempRegion.cells = (Vector <CellLocation>)this.cells.clone();
+		tempRegion.cells = new Vector<CellLocation>(this.cells);
 		return tempRegion;
 	}
 	

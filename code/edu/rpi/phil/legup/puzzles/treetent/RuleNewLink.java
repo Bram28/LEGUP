@@ -197,7 +197,7 @@ public abstract class RuleNewLink extends PuzzleRule
 		}
 		
 		//Make sure they added a link
-		ArrayList <Object> dif = (ArrayList<Object>)destExtra.clone();
+		ArrayList <Object> dif = new ArrayList<Object>(destExtra);
 		dif.removeAll(origExtra);
 		
 		if (dif.size() == 0)

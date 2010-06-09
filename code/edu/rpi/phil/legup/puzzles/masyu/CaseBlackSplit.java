@@ -31,7 +31,7 @@ public class CaseBlackSplit extends CaseRule
 			ArrayList<Point> dif1 = BoardState.getDifferenceLocations(state, one);
 			ArrayList<Point> dif2 = BoardState.getDifferenceLocations(state, two);
 
-			ArrayList<Point> dif = (ArrayList<Point>) dif1.clone();
+			ArrayList<Point> dif = new ArrayList<Point>( dif1 );
 			dif.retainAll(dif2);
 
 			if(dif.size() != 1)

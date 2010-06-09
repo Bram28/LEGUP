@@ -959,7 +959,7 @@ public class BoardState
 
 	protected ArrayList<Object> copyExtraData()
 	{
-		return (ArrayList<Object>)extraData.clone();
+		return new ArrayList<Object>( extraData );
 	}
 
 	/**

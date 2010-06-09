@@ -34,8 +34,8 @@ public class CaseTentsInRow extends CaseRule
 		}
 		else
 		{
-			BoardState one = (BoardState)state.getTransitionsFrom().get(0);
-			BoardState two = (BoardState)state.getTransitionsFrom().get(1);
+			BoardState one = state.getTransitionsFrom().get(0);
+			BoardState two = state.getTransitionsFrom().get(1);
 						
 			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
 			
@@ -49,7 +49,7 @@ public class CaseTentsInRow extends CaseRule
 			}
 			else
 			{
-				Point p = (Point)dif.get(0);
+				Point p = dif.get(0);
 				
 				if (!((one.getCellContents(p.x,p.y) == TreeTent.CELL_TENT && 
 					two.getCellContents(p.x,p.y) == TreeTent.CELL_GRASS) ||

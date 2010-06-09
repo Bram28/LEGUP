@@ -30,7 +30,7 @@ public class RuleNoTreesAround extends PuzzleRule{
     private boolean hasLink(BoardState state, int x, int y)
     {
     	Point p = new Point(x,y);
-    	ArrayList<Object> validLinks = (ArrayList<Object>)state.getExtraData();
+    	ArrayList<Object> validLinks = state.getExtraData();
 		for (int a = 0; a < validLinks.size(); ++a)
 		{
 			ExtraTreeTentLink e = (ExtraTreeTentLink)validLinks.get(a);

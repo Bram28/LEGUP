@@ -540,6 +540,7 @@ public class AI implements Runnable {
  */
 class ProblemWithBoardStateCopyException extends RuntimeException
 {
+	private static final long serialVersionUID = 7684140578377303117L;
 
 	BoardState defaultReturn;
 
