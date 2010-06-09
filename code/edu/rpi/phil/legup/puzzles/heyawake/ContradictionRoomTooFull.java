@@ -17,53 +17,53 @@ public class ContradictionRoomTooFull extends Contradiction
 	 }
 	 
 	 /**
-     * Checks if the contradiction was applied correctly to this board state
-     *
-     * @param state The board state
-     * @return null if the contradiction was applied correctly, the error String otherwise
-     */
-    protected String checkContradictionRaw(BoardState state)
-    {
-    	String error = null;
+	 * Checks if the contradiction was applied correctly to this board state
+	 *
+	 * @param state The board state
+	 * @return null if the contradiction was applied correctly, the error String otherwise
+	 */
+	protected String checkContradictionRaw(BoardState state)
+	{
+		String error = null;
 
-    	int countwhite, countblack, countunknown, cellval;
-    	Vector<CellLocation> cells;
-    	CellLocation tempcell;
-    	Region[] regions = (Region[])state.getExtraData().get(0);
-    	int regionCount = ((Integer)(state.getExtraData().get(1))).intValue();
-    	for(int indx = 0; indx < regionCount; ++indx)
-    	{
-    		countwhite = countblack = countunknown = 0;
-    		cells = regions[indx].getCells();
-    		if(cells.size() > 0)
-    		{
-	    		for(int c = 0; c < cells.size(); ++c)
-	    		{
-	    			tempcell = (CellLocation)cells.get(c);
-	    			cellval = state.getCellContents(tempcell.x, tempcell.y);
-	    			if(cellval == 1)
-	    			{
-	    				++countwhite;
-	    			}
-	    			else if(cellval == 2)
-	    			{
-	    				++countblack;
-	    			}
-	    			else
-	    			{
-	    				++countunknown;
-	    			}
-	    		}
-	    		if(countblack > regions[indx].getValue() && regions[indx].getValue() > -1)
-	    		{
-	    			return error;
-	    		}
-    		}
-    		
-    	}
-    	
-    	error = "No room has too many black cells in it.";
+		int countwhite, countblack, countunknown, cellval;
+		Vector<CellLocation> cells;
+		CellLocation tempcell;
+		Region[] regions = (Region[])state.getExtraData().get(0);
+		int regionCount = ((Integer)(state.getExtraData().get(1))).intValue();
+		for(int indx = 0; indx < regionCount; ++indx)
+		{
+			countwhite = countblack = countunknown = 0;
+			cells = regions[indx].getCells();
+			if(cells.size() > 0)
+			{
+				for(int c = 0; c < cells.size(); ++c)
+				{
+					tempcell = cells.get(c);
+					cellval = state.getCellContents(tempcell.x, tempcell.y);
+					if(cellval == 1)
+					{
+						++countwhite;
+					}
+					else if(cellval == 2)
+					{
+						++countblack;
+					}
+					else
+					{
+						++countunknown;
+					}
+				}
+				if(countblack > regions[indx].getValue() && regions[indx].getValue() > -1)
+				{
+					return error;
+				}
+			}
+			
+		}
+		
+		error = "No room has too many black cells in it.";
 
 		return error;
-    }
+	}
 }

@@ -1,73 +1,48 @@
-<?xml version="1.0"?>
 <project name="LEGUP" default="compile">
-  <description>Compiles and runs LEGUP code</description>
+	<description>ANT file to compile and run LEGUP code</description>
 
-  
+	<target name="compile" description="Generates executable java code from source">
+		<javac srcdir="code/edu" destdir="run">
+			<compilerarg value="-Xlint"/>
+		</javac>
+	</target>
 
-  <property name="distdir" location="dist"/>
-  <property name="srcdir" location="code"/>
-  <property name="classdir" location="class"/>
-  <property name="manifestfilename" value="reasoning.mf"/>
-  <property name="manifestfile" location="${classdir}/${manifestfilename}"/>
+	<target name="run" depends="compile" description="Runs the LEGUP main program">
+		<java classname="edu.rpi.phil.legup.Legup" fork="true" dir="run"/>
+	</target>
 
-  <path id="compile.classpath">
-    <pathelement location="${classdir}"/>
-  </path>
+	<target name="editor" depends="compile" description="Runs the LEGUP puzzle editor">
+		<java classname="edu.rpi.phil.legup.editor.PuzzleEditor" fork="true" dir="run"/>
+	</target>
 
+	<!-- JAR has unresolved dependency issues
+	<target name="jar" depends="compile" description="Creates a distributable JAR file for the LEGUP program">
+		<delete file="run/LEGUP.jar"/>
+		<jar destfile="run/LEGUP.jar" basedir="run" includes="edu/**/*.class">
+			<manifest>
+				<attribute name="Main-Class" value="edu.rpi.phil.legup.Legup"/>
+			</manifest>
+		</jar>
+	</target>
+	-->
 
-  <target name="compile"
-	  depends="init"
-	  description="Compiles the source code">
-    <javac srcdir="${srcdir}"
-	   destdir="${classdir}"
-	   classpathref="compile.classpath"
-	   deprecation="true"/>
-  </target>
- 
+	<target name="clean" description="Removes files generated from compilation">
+		<delete dir="run/edu"/>
+		<delete file="run/LEGUP.jar"/>
+		<delete dir="docs"/>
+	</target>
 
-  <target name="doc">
-    <mkdir dir="docs" />
-    <javadoc packagenames="edu.rpi.phil.legup"
-	     sourcepath="code"
-	     destdir="docs"
-	     author="true"
-	     version="true"
-	     windowtitle="LEGUP API"
-	     doctitle="LEGUP"
-	     bottom = "www.rpi.edu"/>
-</target>
-  
-  <target name="archive"
-	  depends="compile"
-	  description="Creates the JAR files">
-    <jar jarfile="${distdir}/legup.jar"
-	 basedir="${classdir}"
-	 includes="edu/**/*.class"/>
-  </target>
-
-
-  <target name="clean"
-	  depends="init"
-	  description="Removes temporary directory contents">
-    <delete dir="${classdir}"/>
-    <delete dir="${distdir}"/>
-  </target>
-
-  
-  <target name="init">
-    <echo message="Building reasoning."/>
-    <mkdir dir="${classdir}"/>
-    <mkdir dir="${distdir}"/>
-  </target>
-
-  <target name="manifest"
-	  depends="init">
-    <manifest file="${manifestfile}">
-      <attribute name="Built-By" value="Drew Housten"/>
-      <attribute name="Built-On" value="2005"/>
-      <attribute name="Main-Class" value="edu.rpi.phil.legup"/>
-    </manifest>
-  </target>
+	<target name="doc" description="Generates the documentation files">
+		<mkdir dir="docs"/>
+		<javadoc packagenames="edu.rpi.phil.legup"
+			sourcepath="code"
+			destdir="docs"
+			author="true"
+			version="true"
+			windowtitle="LEGUP API"
+			doctitle="LEGUP"
+			bottom="www.rpi.edu"/>
+	</target>
 
 </project>
-  
+

@@ -144,9 +144,9 @@ public class Heyawake extends PuzzleModule
 						int cellRegion = cellRegions[y][x];
 						if(cellRegion > -1)
 						{
-							if(!valueDrawn[cellRegion] && ((Region)stateRegions.elementAt(cellRegion)).getValue() != -1)
+							if(!valueDrawn[cellRegion] && (stateRegions.elementAt(cellRegion)).getValue() != -1)
 							{
-								g.drawString(String.valueOf(((Region)stateRegions.elementAt(cellRegion)).getValue()), (float)(bounds.x + (dx * x)) + 4, (float)(bounds.y + (dy * y)) + fontsize);
+								g.drawString(String.valueOf((stateRegions.elementAt(cellRegion)).getValue()), (float)(bounds.x + (dx * x)) + 4, (float)(bounds.y + (dy * y)) + fontsize);
 								valueDrawn[cellRegion] = true;
 							}
 						}
@@ -484,7 +484,7 @@ public class Heyawake extends PuzzleModule
     		{
 	    		for(int c = 0; c < cells.size(); ++c)
 	    		{
-	    			tempcell = (CellLocation)cells.get(c);
+	    			tempcell = cells.get(c);
 	    			cellval = boardState.getCellContents(tempcell.x, tempcell.y);
 	    			if(cellval == CELL_WHITE)
 	    			{
@@ -525,7 +525,7 @@ public class Heyawake extends PuzzleModule
     		{
 	    		for(int c = 0; c < cells.size(); ++c)
 	    		{
-	    			tempcell = (CellLocation)cells.get(c);
+	    			tempcell = cells.get(c);
 	    			cellval = boardState.getCellContents(tempcell.x, tempcell.y);
 	    			if(cellval == CELL_WHITE)
 	    			{
@@ -566,7 +566,7 @@ public class Heyawake extends PuzzleModule
     		{
 	    		for(int c = 0; c < cells.size(); ++c)
 	    		{
-	    			tempcell = (CellLocation)cells.get(c);
+	    			tempcell = cells.get(c);
 	    			cellval = boardState.getCellContents(tempcell.x, tempcell.y);
 	    			if(cellval == CELL_WHITE)
 	    			{

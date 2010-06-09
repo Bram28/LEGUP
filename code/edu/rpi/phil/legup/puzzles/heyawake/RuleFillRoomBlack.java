@@ -158,9 +158,9 @@ public class RuleFillRoomBlack extends PuzzleRule{
 	    			Vector<CellLocation> cells = region.getCells();
 	    			for(int y =0; y < cells.size(); ++y)
 	    			{
-	    				if(destBoardState.getCellContents(((CellLocation)cells.get(y)).x,((CellLocation)cells.get(y)).y) == 0)
+	    				if(destBoardState.getCellContents((cells.get(y)).x,(cells.get(y)).y) == 0)
 	    				{
-	    					destBoardState.setCellContents(((CellLocation)cells.get(y)).x,((CellLocation)cells.get(y)).y,2);
+	    					destBoardState.setCellContents((cells.get(y)).x,(cells.get(y)).y,2);
 	    				}
 	    			}
 	    		}

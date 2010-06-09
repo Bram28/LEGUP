@@ -60,7 +60,7 @@ public class RuleFillRoomWhite extends PuzzleRule{
 		{
     		for(int c = 0; c < cells.size(); ++c)
     		{
-    			tempcell = (CellLocation)cells.get(c);
+    			tempcell = cells.get(c);
     			cellval = state.getCellContents(tempcell.x, tempcell.y);
     			if(cellval == 1)
     			{

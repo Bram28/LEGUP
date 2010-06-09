@@ -33,7 +33,7 @@ public class Region
 	
 	public CellLocation getCell(int indx)
 	{
-		return (CellLocation)cells.elementAt(indx);
+		return cells.elementAt(indx);
 	}
 	
 	public int getCellIndex(int x, int y)
@@ -43,7 +43,7 @@ public class Region
 		int cnt;
 		for(cnt = 0; cnt < cells.size(); ++cnt)
 		{
-			if(((CellLocation)cells.elementAt(cnt)).getX() == x && ((CellLocation)cells.elementAt(cnt)).getY() == y)
+			if((cells.elementAt(cnt)).getX() == x && (cells.elementAt(cnt)).getY() == y)
 				break;
 		}
 		if(cnt >= cells.size())

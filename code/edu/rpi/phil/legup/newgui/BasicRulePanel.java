@@ -121,7 +121,7 @@ public class BasicRulePanel extends JustificationPanel
 	@Override
 	protected void doDefaultApplication(int index, BoardState state)
 	{
-		PuzzleRule r = (PuzzleRule)rules.get(index);
+		PuzzleRule r = rules.get(index);
 		state.setJustification(r);
 		JustificationFrame.justificationApplied(state, r);
 		boolean legal = r.doDefaultApplication(state);

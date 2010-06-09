@@ -103,7 +103,7 @@ public class EditorBoardFrame extends JFrame implements WindowListener
 			
 			BoardState state = curState;
 			
-			if (state != null);
+			if (state != null)
 			{
 				PuzzleModule pz = pm;
 				
@@ -174,7 +174,7 @@ public class EditorBoardFrame extends JFrame implements WindowListener
 		{
 			BoardState state = curState;
 			
-			if (state != null);
+			if (state != null)
 			{
 				PuzzleModule pz = pm;
 				

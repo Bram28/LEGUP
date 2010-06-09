@@ -65,7 +65,7 @@ public class Permutations
 		
 		
 		BoardState.deleteState( permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0));
-		boardState.arrangeChildren( );
+		//boardState.arrangeChildren( );
 	}
 	
 	public static void permutationGeneral(BoardState boardState, Vector<Point> cells, Vector<Integer> states, Vector<Integer> stateCounts)
@@ -73,7 +73,7 @@ public class Permutations
 		if(states.size() != stateCounts.size())
 			return;
 		BoardState.deleteState( permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0));
-		boardState.arrangeChildren( );
+		//boardState.arrangeChildren( );
 	}
 	
 	private static BoardState permutationGeneral(BoardState boardState, Vector<Point> cells, Vector<Integer> states, Vector<Integer> stateCounts, int current )
@@ -114,7 +114,7 @@ public class Permutations
 		if(states.size() != stateCounts.size())
 			return;
 		BoardState.deleteState( permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,0));
-		boardState.arrangeChildren( );
+		//boardState.arrangeChildren( );
 	}
 	
 	private static BoardState permutationRow(BoardState boardState, int row, Vector<Integer> states, Vector<Integer> stateCounts, int current)
@@ -155,7 +155,7 @@ public class Permutations
 		if(states.size() != stateCounts.size())
 			return;
 		BoardState.deleteState( permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,conditions,0));
-		boardState.arrangeChildren( );
+		//boardState.arrangeChildren( );
 	}
 	
 	private static BoardState permutationRow(BoardState boardState, int row, Vector<Integer> states, Vector<Integer> stateCounts, Vector<Integer> conditions, int current)
@@ -206,7 +206,7 @@ public class Permutations
 			boardState.addTransitionFrom( newboardState, null );
 			newboardState.setCellContents( cell.x, cell.y, states.get( i ) );
 		}
-		boardState.arrangeChildren( );
+		//boardState.arrangeChildren( );
 	}
 	
 	public static void caseContradictionFinder(BoardState boardState, PuzzleModule pm)
@@ -218,7 +218,7 @@ public class Permutations
 			temp = caseState.copy( );
 			temp.setLocation( new Point(temp.getLocation( ).x, temp.getLocation( ).y + 25 ));
 			caseState.addTransitionFrom( temp, null );
-			caseState.arrangeChildren( );
+			//caseState.arrangeChildren( );
 			String valid = null;
 			for(int j = 0; j < pm.getContradictions( ).size( ); ++j)
 			{

@@ -29,70 +29,70 @@ public class BoardState
 	private static ArrayList<BoardDataChangeListener> boardDataChangeListeners = new ArrayList<BoardDataChangeListener>();
 	private static ArrayList<TransitionChangeListener> transitionChangeListeners = new ArrayList<TransitionChangeListener>();
 
-    static final public int LABEL_TOP = 0;
-    static final public int LABEL_BOTTOM = 1;
-    static final public int LABEL_LEFT = 2;
-    static final public int LABEL_RIGHT = 3;
+	static final public int LABEL_TOP = 0;
+	static final public int LABEL_BOTTOM = 1;
+	static final public int LABEL_LEFT = 2;
+	static final public int LABEL_RIGHT = 3;
 
-    static final public int STATUS_UNJUSTIFIED = 0;
-    static final public int STATUS_RULE_CORRECT = 1;
-    static final public int STATUS_RULE_INCORRECT = 2;
-    static final public int STATUS_CONTRADICTION_CORRECT = 3;
-    static final public int STATUS_CONTRADICTION_INCORRECT = 4;
+	static final public int STATUS_UNJUSTIFIED = 0;
+	static final public int STATUS_RULE_CORRECT = 1;
+	static final public int STATUS_RULE_INCORRECT = 2;
+	static final public int STATUS_CONTRADICTION_CORRECT = 3;
+	static final public int STATUS_CONTRADICTION_INCORRECT = 4;
 
-    private int height;
-    private int width;
-    private int[][] boardCells;
-    private boolean[][] modifiableCells;
-    private int[] topLabels;
-    private int[] bottomLabels;
-    private int[] leftLabels;
-    private int[] rightLabels;
+	private int height;
+	private int width;
+	private int[][] boardCells;
+	private boolean[][] modifiableCells;
+	private int[] topLabels;
+	private int[] bottomLabels;
+	private int[] leftLabels;
+	private int[] rightLabels;
 
-    private int hintsGiven = 0;
+	private int hintsGiven = 0;
 
-    private String puzzleName = null;
+	private String puzzleName = null;
 
-    // the location of this node within the proof
-    private Point offset = new Point(0,0);
-    private Point location = new Point(0,0);
+	// the location of this node within the proof
+	private Point offset = new Point(0,0);
+	private Point location = new Point(0,0);
 
-    // parents
-    private Vector<BoardState> transitionsTo = new Vector<BoardState>();
+	// parents
+	private Vector<BoardState> transitionsTo = new Vector<BoardState>();
 
-    // children
-    private Vector<BoardState> transitionsFrom = new Vector<BoardState>();
+	// children
+	private Vector<BoardState> transitionsFrom = new Vector<BoardState>();
 
-    // a PuzzleRule or Contradiction
-    private Object justification = null;
+	// a PuzzleRule or Contradiction
+	private Object justification = null;
 
-    // the justification case rule for this parent state
-    private CaseRule caseRuleJustification = null;
+	// the justification case rule for this parent state
+	private CaseRule caseRuleJustification = null;
 
-    // puzzle specific extra data
-    // for example, in tree tent, the tree which each tent belongs to
-    protected ArrayList <Object> extraData = new ArrayList <Object>();
+	// puzzle specific extra data
+	// for example, in tree tent, the tree which each tent belongs to
+	protected ArrayList <Object> extraData = new ArrayList <Object>();
 
-    private boolean collapsed = false;
+	private boolean collapsed = false;
 
-    private ArrayList<Point> hintCells = new ArrayList<Point>();
+	private ArrayList<Point> hintCells = new ArrayList<Point>();
 
-    private boolean isSolution = false;
+	private boolean isSolution = false;
 
 	private ArrayList<BoardState> mergeChildren = new ArrayList<BoardState>();
 	private BoardState mergeOverlord;
 
 	private boolean virtualBoard = false;
 
-    /**
-     * Constructor
-     *
-     * @param height Height of the board state
-     * @param width Width of the board state
-     * @throws Exception if the extents are invalid
-     */
-    public BoardState(int height, int width)
-    {
+	/**
+	 * Constructor
+	 *
+	 * @param height Height of the board state
+	 * @param width Width of the board state
+	 * @throws Exception if the extents are invalid
+	 */
+	public BoardState(int height, int width)
+	{
 		// Set the height and width
 		this.height = height;
 		this.width = width;
@@ -108,25 +108,25 @@ public class BoardState
 		// Initialize the arrays
 		for (int i=0;i<height;i++)
 		{
-		    leftLabels[i]=0;
-		    rightLabels[i]=0;
+			leftLabels[i]=0;
+			rightLabels[i]=0;
 
-		    for (int j=0;j<width;j++)
-		    {
-		    	modifiableCells[i][j] = true;
-		    	boardCells[i][j] = 0;
+			for (int j=0;j<width;j++)
+			{
+				modifiableCells[i][j] = true;
+				boardCells[i][j] = 0;
 
-		    	if (i==0)
-		    	{
-		    		topLabels[j] = 0;
-		    		bottomLabels[j] = 0;
-		    	}
-		    }
+				if (i==0)
+				{
+					topLabels[j] = 0;
+					bottomLabels[j] = 0;
+				}
+			}
 		}
 
 		if(Legup.getInstance().getPuzzleModule() != null)
 			this.puzzleName = Legup.getInstance().getPuzzleModule().name;
-    }
+	}
 
 	/**
 	 *	Constructor
@@ -154,329 +154,329 @@ public class BoardState
 		virtualBoard = virtual;
 	}
 
-    /**
-     * Toggle whether this state and all its (single) children are collapsed
-     * <not> called recursively to do the work
-     * @see toggleCollapseRecursive
-     */
-    public void toggleCollapse()
-    {
-    	// if we can collapse it legally
-    	if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
-    	{
-	    	if (!collapsed)
-	    		location.y += TreePanel.NODE_RADIUS;
-	    	else
-	    		location.y -= TreePanel.NODE_RADIUS;
+	/**
+	 * Toggle whether this state and all its (single) children are collapsed
+	 * <not> called recursively to do the work
+	 * @see toggleCollapseRecursive
+	 */
+	public void toggleCollapse()
+	{
+		// if we can collapse it legally
+		if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
+		{
+			if (!collapsed)
+				location.y += TreePanel.NODE_RADIUS;
+			else
+				location.y -= TreePanel.NODE_RADIUS;
 
-	    	toggleCollapseRecursive(location.x,location.y);
+			toggleCollapseRecursive(location.x,location.y);
 
-	    	transitionsChanged();
-    	}
-    	else
-    	{
-    		// TODO: elegant error handling, add error label to treeframe
-    	}
-    }
+			transitionsChanged();
+		}
+		else
+		{
+			// TODO: elegant error handling, add error label to treeframe
+		}
+	}
 
-    /**
-     * Recursively toggle the collapse value of this state and all it's children
-     * @param x the x coordinate of the collapsed but selectable (grand)parent
-     * @param y the y coordinate of the collapsed but selectable (grand)parent
-     */
-    public void toggleCollapseRecursive(int x, int y)
-    {
-    	if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
-    	{
-    		BoardState child = transitionsFrom.get(0);
-    		collapsed = !collapsed;
+	/**
+	 * Recursively toggle the collapse value of this state and all it's children
+	 * @param x the x coordinate of the collapsed but selectable (grand)parent
+	 * @param y the y coordinate of the collapsed but selectable (grand)parent
+	 */
+	public void toggleCollapseRecursive(int x, int y)
+	{
+		if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
+		{
+			BoardState child = transitionsFrom.get(0);
+			collapsed = !collapsed;
 
-    		// collapse the child too
-    		if (collapsed != child.collapsed)
-    			child.toggleCollapseRecursive(x,y);
-    	}
-    	else // TODO: fix positioning of children
-    	{
+			// collapse the child too
+			if (collapsed != child.collapsed)
+				child.toggleCollapseRecursive(x,y);
+		}
+		else // TODO: fix positioning of children
+		{
 
-    	}
-    }
+		}
+	}
 
-    /**
-     * Is the case rule applied at this parent state valid ?!?
-     * @return null iff it is validly applied, the error string otherwise
-     */
-    public String isJustifiedCaseSplit()
-    {
-    	String rv = "No rule selected!";
+	/**
+	 * Is the case rule applied at this parent state valid ?!?
+	 * @return null iff it is validly applied, the error string otherwise
+	 */
+	public String isJustifiedCaseSplit()
+	{
+		String rv = "No rule selected!";
 
-    	if (caseRuleJustification != null)
-    	{
-    		rv = caseRuleJustification.checkCaseRuleRaw(this);
-    	}
+		if (caseRuleJustification != null)
+		{
+			rv = caseRuleJustification.checkCaseRuleRaw(this);
+		}
 
-    	return rv;
-    }
+		return rv;
+	}
 
-    /**
-     * Is the user allowed to modify this cell? This is used to prevent the user from
-     * modifying initial data for sudoku, for example
-     * @param x the x cell 0 = leftmost
-     * @param y the y cell 0 = topmost
-     * @return true iff the user is allowed to modify the cell during the proof
-     */
-    public boolean isModifiableCell(int x, int y)
-    {
-    	return modifiableCells[y][x];
-    }
+	/**
+	 * Is the user allowed to modify this cell? This is used to prevent the user from
+	 * modifying initial data for sudoku, for example
+	 * @param x the x cell 0 = leftmost
+	 * @param y the y cell 0 = topmost
+	 * @return true iff the user is allowed to modify the cell during the proof
+	 */
+	public boolean isModifiableCell(int x, int y)
+	{
+		return modifiableCells[y][x];
+	}
 
-    /**
-     * Get the case split justification at this cell (null if not defined)
-     * @return the CaseRule used to justify this state's children
-     */
-    public CaseRule getCaseSplitJustification()
-    {
-    	return caseRuleJustification;
-    }
+	/**
+	 * Get the case split justification at this cell (null if not defined)
+	 * @return the CaseRule used to justify this state's children
+	 */
+	public CaseRule getCaseSplitJustification()
+	{
+		return caseRuleJustification;
+	}
 
-    /**
-     * Set the justification in the parent state of the split
-     * @param jusification
-     */
-    public void setCaseSplitJustification(CaseRule jusification)
-    {
-    	delayStatus = STATUS_UNJUSTIFIED;
-    	caseRuleJustification = jusification;
-    	modifyStatus();
-    }
-
-    /**
-     * Get an array of all the defined extra data for this puzzle
-     * @return
-     */
-    public ArrayList<Object> getExtraData()
-    {
-    	return extraData;
-    }
-
-    /**
-     * Add an object to this state's extra data
-     * @param o the extra data we're adding
-     */
-    public void addExtraData(Object o)
-    {
-    	extraData.add(o);
-
-    	boardDataChanged();
-    }
-
-    /**
-     * the board data was changed, tell the listeners
-     */
-    public void boardDataChanged()
-    {
+	/**
+	 * Set the justification in the parent state of the split
+	 * @param jusification
+	 */
+	public void setCaseSplitJustification(CaseRule jusification)
+	{
 		delayStatus = STATUS_UNJUSTIFIED;
-    	modifyStatus();
-    	for (BoardState B : transitionsTo) B.modifyStatus();
-    	for (BoardState B : transitionsFrom) B.modifyStatus();
-    	for (int a = 0; a < boardDataChangeListeners.size(); ++a)
-    	{
-    		BoardDataChangeListener c = boardDataChangeListeners.get(a);
+		caseRuleJustification = jusification;
+		modifyStatus();
+	}
 
-    		c.boardDataChanged(this);
-    	}
-    }
+	/**
+	 * Get an array of all the defined extra data for this puzzle
+	 * @return
+	 */
+	public ArrayList<Object> getExtraData()
+	{
+		return extraData;
+	}
+
+	/**
+	 * Add an object to this state's extra data
+	 * @param o the extra data we're adding
+	 */
+	public void addExtraData(Object o)
+	{
+		extraData.add(o);
+
+		boardDataChanged();
+	}
+
+	/**
+	 * the board data was changed, tell the listeners
+	 */
+	public void boardDataChanged()
+	{
+		delayStatus = STATUS_UNJUSTIFIED;
+		modifyStatus();
+		for (BoardState B : transitionsTo) B.modifyStatus();
+		for (BoardState B : transitionsFrom) B.modifyStatus();
+		for (int a = 0; a < boardDataChangeListeners.size(); ++a)
+		{
+			BoardDataChangeListener c = boardDataChangeListeners.get(a);
+
+			c.boardDataChanged(this);
+		}
+	}
 
 
-    /**
-     * Gets the cell contents at a particular row and column
-     *
-     * @param x Column of the cell
-     * @param y Row of the cell
-     * @return Cell Value
-     * @throws IndexOutOfBoundsException if the row or column is invalid
-     */
-    public int getCellContents(int x, int y)
-    {
-    	return boardCells[y][x];
-    }
+	/**
+	 * Gets the cell contents at a particular row and column
+	 *
+	 * @param x Column of the cell
+	 * @param y Row of the cell
+	 * @return Cell Value
+	 * @throws IndexOutOfBoundsException if the row or column is invalid
+	 */
+	public int getCellContents(int x, int y)
+	{
+		return boardCells[y][x];
+	}
 
 
-    /**
-     * Sets the cell contents at a particular row and column
-     *
-     * @param x Column of the cell
-     * @param y Row of the cell
-     * @param value Value to set
-     * @throws IndexOutOfBoundsException if the row or column is invalid
-     */
-    public void setCellContents(int x, int y,int value)
-    {
-    	//TODO: Settings
-    	boolean playmode = false;
+	/**
+	 * Sets the cell contents at a particular row and column
+	 *
+	 * @param x Column of the cell
+	 * @param y Row of the cell
+	 * @param value Value to set
+	 * @throws IndexOutOfBoundsException if the row or column is invalid
+	 */
+	public void setCellContents(int x, int y,int value)
+	{
+		//TODO: Settings
+		boolean playmode = false;
 
-    	if(value == boardCells[y][x])
-    		return;
+		if(value == boardCells[y][x])
+			return;
 
 		// Obsolete with new proof mode system
-    	/*if(playmode)
-    	{
-    		if(value == PuzzleModule.CELL_UNKNOWN)
-    		{
-    			BoardState parent = this.getSingleParentState();
-    			Legup.getInstance().getSelections().setSelection(new Selection(parent, false));
-    			deleteState(this);
-    		}
-    		else if(boardCells[y][x] == PuzzleModule.CELL_UNKNOWN)
-    		{
-    			BoardState child = this.addTransitionFrom();
-    			Legup.getInstance().getSelections().setSelection(new Selection(child, false));
-    			child.boardCells[y][x] = value;
-    			Legup.getInstance().getPuzzleModule().updateState(child);
-    			child.boardDataChanged();
-    		}
-    		else
-    		{
-    			boardCells[y][x] = value;
-    			boardDataChanged();
-    		}
-    	}*/
+		/*if(playmode)
+		{
+			if(value == PuzzleModule.CELL_UNKNOWN)
+			{
+				BoardState parent = this.getSingleParentState();
+				Legup.getInstance().getSelections().setSelection(new Selection(parent, false));
+				deleteState(this);
+			}
+			else if(boardCells[y][x] == PuzzleModule.CELL_UNKNOWN)
+			{
+				BoardState child = this.addTransitionFrom();
+				Legup.getInstance().getSelections().setSelection(new Selection(child, false));
+				child.boardCells[y][x] = value;
+				Legup.getInstance().getPuzzleModule().updateState(child);
+				child.boardDataChanged();
+			}
+			else
+			{
+				boardCells[y][x] = value;
+				boardDataChanged();
+			}
+		}*/
   		boardCells[y][x] = value;
   		if (!virtualBoard) boardDataChanged();
-    }
+	}
 
 	 /**
 	  * Used for puzzle generation.
 	  */
 	 public void setModifiableCell(int x, int y, boolean value)
 	 {
-	 	modifiableCells[y][x] = value;
+		modifiableCells[y][x] = value;
 	 }
 
-    /**
-     * Add a cell change listener that will listen to any and all cell changes
-     * @param listener the listener we're adding
-     */
-    public static void addCellChangeListener(BoardDataChangeListener listener)
-    {
-    	boardDataChangeListeners.add(listener);
-    }
-
-    /**
-     * Add a transition change listener to listen to any transition changes that occur
-     * @param l the listener we're adding
-     */
-    public static void addTransitionChangeListener(TransitionChangeListener l)
-    {
-    	transitionChangeListeners.add(l);
-    }
-
-    /**
-     * Gets the height of the Board
-     *
-     * @return The height of the board
-     */
-    public int getHeight(){
-	return height;
-    }
-
-    /**
-     * Gets the width of the Board
-     *
-     * @return The width of the board
-     */
-    public int getWidth(){
-	return width;
-    }
-
-
-    /**
-     * Gets the value for one of the labels.
-     * labelLocation should be either <code>LABEL_TOP</code>, <code>LABEL_BOTTOM</code>,<code>LABEL_LEFT</code>,
-     * or <code>LABEL_RIGHT</code>
-     *
-     * @param labelLocation Location of the label in relation to the board
-     * @param pos The position of the particular label value
-     * @return The label value
-     * @throws IndexOutOfBoundsException if the pos or labelLocation are invalid
-     */
-    public int getLabel(int labelLocation, int pos) throws IndexOutOfBoundsException{
-	switch(labelLocation){
-	case 0:
-	    if (pos<0 || pos >= width){
-		throw new IndexOutOfBoundsException("Invalid index");
-	    }
-	    return topLabels[pos];
-	case 1:
-	    if (pos<0 || pos >= width){
-		throw new IndexOutOfBoundsException("Invalid index");
-	    }
-	    return bottomLabels[pos];
-	case 2:
-	    if (pos<0 || pos >= height){
-		throw new IndexOutOfBoundsException("Invalid index");
-	    }
-	    return leftLabels[pos];
-	case 3:
-	    if (pos<0 || pos >= height){
-		throw new IndexOutOfBoundsException("Invalid index");
-	    }
-	    return rightLabels[pos];
-	default:
-	    throw new IndexOutOfBoundsException("Invalid label"); // CHANGE THIS!!!! not index
+	/**
+	 * Add a cell change listener that will listen to any and all cell changes
+	 * @param listener the listener we're adding
+	 */
+	public static void addCellChangeListener(BoardDataChangeListener listener)
+	{
+		boardDataChangeListeners.add(listener);
 	}
-    }
 
-    /**
-     * Sets the value for one of the labels.
-     * labelLocation should be either <code>LABEL_TOP</code>,
-     * <code>LABEL_BOTTOM</code>,<code>LABEL_LEFT</code>,or <code>LABEL_RIGHT</code>
-     *
-     * @param labelLocation Location of the label in relation to the board
-     * @param pos The position of the particular label value
-     * @param value The new label value
-     */
-    public void setLabel(int labelLocation, int pos, int value) {
+	/**
+	 * Add a transition change listener to listen to any transition changes that occur
+	 * @param l the listener we're adding
+	 */
+	public static void addTransitionChangeListener(TransitionChangeListener l)
+	{
+		transitionChangeListeners.add(l);
+	}
+
+	/**
+	 * Gets the height of the Board
+	 *
+	 * @return The height of the board
+	 */
+	public int getHeight(){
+	return height;
+	}
+
+	/**
+	 * Gets the width of the Board
+	 *
+	 * @return The width of the board
+	 */
+	public int getWidth(){
+	return width;
+	}
+
+
+	/**
+	 * Gets the value for one of the labels.
+	 * labelLocation should be either <code>LABEL_TOP</code>, <code>LABEL_BOTTOM</code>,<code>LABEL_LEFT</code>,
+	 * or <code>LABEL_RIGHT</code>
+	 *
+	 * @param labelLocation Location of the label in relation to the board
+	 * @param pos The position of the particular label value
+	 * @return The label value
+	 * @throws IndexOutOfBoundsException if the pos or labelLocation are invalid
+	 */
+	public int getLabel(int labelLocation, int pos) throws IndexOutOfBoundsException{
+	switch(labelLocation){
+	case 0:
+		if (pos<0 || pos >= width){
+		throw new IndexOutOfBoundsException("Invalid index");
+		}
+		return topLabels[pos];
+	case 1:
+		if (pos<0 || pos >= width){
+		throw new IndexOutOfBoundsException("Invalid index");
+		}
+		return bottomLabels[pos];
+	case 2:
+		if (pos<0 || pos >= height){
+		throw new IndexOutOfBoundsException("Invalid index");
+		}
+		return leftLabels[pos];
+	case 3:
+		if (pos<0 || pos >= height){
+		throw new IndexOutOfBoundsException("Invalid index");
+		}
+		return rightLabels[pos];
+	default:
+		throw new IndexOutOfBoundsException("Invalid label"); // CHANGE THIS!!!! not index
+	}
+	}
+
+	/**
+	 * Sets the value for one of the labels.
+	 * labelLocation should be either <code>LABEL_TOP</code>,
+	 * <code>LABEL_BOTTOM</code>,<code>LABEL_LEFT</code>,or <code>LABEL_RIGHT</code>
+	 *
+	 * @param labelLocation Location of the label in relation to the board
+	 * @param pos The position of the particular label value
+	 * @param value The new label value
+	 */
+	public void setLabel(int labelLocation, int pos, int value) {
 	switch(labelLocation){
 	case 0:
 
-	    topLabels[pos] = value;
-	    return;
+		topLabels[pos] = value;
+		return;
 	case 1:
 
-	    bottomLabels[pos] = value;
-	    return;
+		bottomLabels[pos] = value;
+		return;
 	case 2:
 
-	    leftLabels[pos] = value;
-	    return;
+		leftLabels[pos] = value;
+		return;
 	case 3:
 
-	    rightLabels[pos] = value;
-	    return;
+		rightLabels[pos] = value;
+		return;
 	}
 
 	System.err.println("error: invalid label in BoardState::setLabel -> " + labelLocation);
 
-    }
+	}
 
-    /**
-     * Gets the vector of all Transitions to this board state
-     *
-     * @return A Vector of the Transitions to this board state which are BoardStates
-     */
-    public Vector<BoardState> getTransitionsTo()
-    {
-    	return transitionsTo;
-    }
+	/**
+	 * Gets the vector of all Transitions to this board state
+	 *
+	 * @return A Vector of the Transitions to this board state which are BoardStates
+	 */
+	public Vector<BoardState> getTransitionsTo()
+	{
+		return transitionsTo;
+	}
 
-    /**
-     * Gets the vector of all Transitions from this board state
-     *
-     * @return A Vector of the Transitions from this board state which are BoardStates
-     */
-    public Vector<BoardState> getTransitionsFrom(){
+	/**
+	 * Gets the vector of all Transitions from this board state
+	 *
+	 * @return A Vector of the Transitions from this board state which are BoardStates
+	 */
+	public Vector<BoardState> getTransitionsFrom(){
 	return transitionsFrom;
-    }
+	}
 
 	public void evalDelayStatus()
 	{
@@ -497,10 +497,10 @@ public class BoardState
 			for (BoardState B : transitionsFrom) B.modifyStatus();
 	}
 
-    /**
-     * Fire a transitions changed event
-     *
-     */
+	/**
+	 * Fire a transitions changed event
+	 *
+	 */
 	private void transitionsChanged()
 	{
 		delayStatus = STATUS_UNJUSTIFIED;
@@ -515,14 +515,14 @@ public class BoardState
 		for (int x = 0; x < transitionChangeListeners.size(); ++x) transitionChangeListeners.get(x).transitionChanged();
 	}
 
-    /**
-     * Adds a transition from this board state.
-     *
-     */
-    public BoardState addTransitionFrom()
-    {
+	/**
+	 * Adds a transition from this board state.
+	 *
+	 */
+	public BoardState addTransitionFrom()
+	{
 		return addTransitionFrom(null);
-    }
+	}
 
 	public boolean parents(BoardState child)
 	{
@@ -546,7 +546,7 @@ public class BoardState
 			// If they still remain, move all nodes up one level, and repeat
 			// When merge node references goes up, send it automatically to the merge overlord
 			// Default: If the root node is reached, just return it
-			//          No where else to go
+			//		  No where else to go
 
 			// Step 1: move all nodes up
 			for (int i = 0; i < states.size(); i++)
@@ -599,41 +599,41 @@ public class BoardState
 			return states.get(0);
 	}
 
-    /**
-     * Merge some board states
-     * @param states the states to merge
-     */
-    public static void merge(ArrayList <BoardState> states)
-    {
-    	BoardState child = states.get(0).copy();
+	/**
+	 * Merge some board states
+	 * @param states the states to merge
+	 */
+	public static void merge(ArrayList <BoardState> states)
+	{
+		BoardState child = states.get(0).copy();
 
-    	for (int c = 1; c < states.size(); ++c)
-    	{
-    		BoardState parent = states.get(c);
+		for (int c = 1; c < states.size(); ++c)
+		{
+			BoardState parent = states.get(c);
 
-    		for (int y = 0; y < child.height; ++y)
-    		{
-    			for (int x = 0; x < child.width; ++x)
-    			{
-    				int childCell = child.getCellContents(x,y);
-    				int parentCell = parent.getCellContents(x,y);
+			for (int y = 0; y < child.height; ++y)
+			{
+				for (int x = 0; x < child.width; ++x)
+				{
+					int childCell = child.getCellContents(x,y);
+					int parentCell = parent.getCellContents(x,y);
 
-    				// clear all differences
-    				if (childCell != PuzzleModule.CELL_UNKNOWN && childCell != parentCell)
-    				{
-    					child.setCellContents(x, y, PuzzleModule.CELL_UNKNOWN);
-    				}
-    			}
-    		}
-    	}
+					// clear all differences
+					if (childCell != PuzzleModule.CELL_UNKNOWN && childCell != parentCell)
+					{
+						child.setCellContents(x, y, PuzzleModule.CELL_UNKNOWN);
+					}
+				}
+			}
+		}
 
-    	// add transitions
-    	for (int c = 0; c < states.size(); ++c)
-    	{
-    		BoardState parent = states.get(c);
-    		parent.transitionsFrom.add(child);
-    		child.transitionsTo.add(parent);
-    	}
+		// add transitions
+		for (int c = 0; c < states.size(); ++c)
+		{
+			BoardState parent = states.get(c);
+			parent.transitionsFrom.add(child);
+			child.transitionsTo.add(parent);
+		}
 
 		child.justification = RuleMerge.getInstance();
 
@@ -642,10 +642,10 @@ public class BoardState
 		child.mergeOverlord.evalMergeY();
 		child.mergeOverlord.evalMerge(1);
 
-    	Legup.getInstance().getSelections().setSelection(new Selection(child, false));
+		Legup.getInstance().getSelections().setSelection(new Selection(child, false));
 
-    	_transitionsChanged();
-    }
+		_transitionsChanged();
+	}
 
 	// The methods contained from this comment....
 	private void expandXSpace(BoardState child)
@@ -796,75 +796,75 @@ public class BoardState
 		}
 	}
 
-    /**
-     * Adds a transition from this board state given a PuzzleRule
-     * @param rule the rule to be applied to go from this state to the child state
-     */
-    public BoardState addTransitionFrom(PuzzleRule rule)
-    {
-	    BoardState b = copy();
+	/**
+	 * Adds a transition from this board state given a PuzzleRule
+	 * @param rule the rule to be applied to go from this state to the child state
+	 */
+	public BoardState addTransitionFrom(PuzzleRule rule)
+	{
+		BoardState b = copy();
 
 		 addTransitionFrom(b, rule);
 
 		 return b;
-    }
+	}
 
-    /**
-     * Adds a transition from this board state.
-     * @param child the new child state
-     * @param rule the rule we applied
-     */
-    public void addTransitionFrom(BoardState b, PuzzleRule rule)
-    {
-	    transitionsFrom.add(b);
+	/**
+	 * Adds a transition from this board state.
+	 * @param child the new child state
+	 * @param rule the rule we applied
+	 */
+	public void addTransitionFrom(BoardState b, PuzzleRule rule)
+	{
+		transitionsFrom.add(b);
 		 b.transitionsTo.add(this);
 		 b.justification = rule;
 
-	    b.offset.x = 0;
-	    b.offset.y = TreePanel.NODE_RADIUS * 3;
+		b.offset.x = 0;
+		b.offset.y = TreePanel.NODE_RADIUS * 3;
 
 		ArrayList<BoardState> valid = new ArrayList<BoardState>();
 		for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1) valid.add(B);
 
-	    if (valid.size() != 1) // if there are other children
-	    {
-	    	// move all the children over by node radius, then add it
-	    	for (int x = 0; x < valid.size()-1; ++x)
-	    	{
-	    		BoardState child = valid.get(x);
-	    		child.offset.x -= (1.5 * TreePanel.NODE_RADIUS);
-	    	}
+		if (valid.size() != 1) // if there are other children
+		{
+			// move all the children over by node radius, then add it
+			for (int x = 0; x < valid.size()-1; ++x)
+			{
+				BoardState child = valid.get(x);
+				child.offset.x -= (1.5 * TreePanel.NODE_RADIUS);
+			}
 
 			if (valid.size() >= 2)
-	    		b.offset.x = valid.get(valid.size()-2).offset.x+(valid.get(valid.size()-2).numBranches()+1)*(int)(1.5*TreePanel.NODE_RADIUS);
+				b.offset.x = valid.get(valid.size()-2).offset.x+(valid.get(valid.size()-2).numBranches()+1)*(int)(1.5*TreePanel.NODE_RADIUS);
 
-	    	if (transitionsTo.size() >= 2)
-	    		mergeOverlord.evalMerge(1);
-	    	else if (transitionsTo.size() == 1)
-	    		transitionsTo.get(0).expandXSpace(this);
-	    }
+			if (transitionsTo.size() >= 2)
+				mergeOverlord.evalMerge(1);
+			else if (transitionsTo.size() == 1)
+				transitionsTo.get(0).expandXSpace(this);
+		}
 
-	    if (transitionsTo.size() == 0)
-	    	recalculateLocation();
-	    else if (transitionsTo.size() >= 2)
-	    	mergeOverlord.evalMergeY();
-	    else
-	    	transitionsTo.get(0).evalMergeY();
+		if (transitionsTo.size() == 0)
+			recalculateLocation();
+		else if (transitionsTo.size() >= 2)
+			mergeOverlord.evalMergeY();
+		else
+			transitionsTo.get(0).evalMergeY();
 
-    	if (!virtualBoard)
-    	{
+		if (!virtualBoard)
+		{
 			transitionsChanged();
 			_transitionsChanged();
-    	}
-    }
+		}
+	}
 
-    /**
-     * Adds a transition from this board state.
-     * @param child the new child state
-     */
-    public void addTransitionFrom(BoardState child, String justification, boolean isCase)
-    {
-	    transitionsFrom.add(child);
+	/**
+	 * Adds a transition from this board state.
+	 * @param child the new child state
+	 */
+	public void addTransitionFrom(BoardState child, String justification, boolean isCase)
+	{
+		transitionsFrom.add(child);
 		child.transitionsTo.add(this);
 		if(isCase)
 		{
@@ -877,28 +877,28 @@ public class BoardState
 
 		transitionsChanged();
 		_transitionsChanged();
-    }
+	}
 
-    /**
-     * Arranges children to be next to each other
-     */
-    @Deprecated // As of 10-09-08
-    public void arrangeChildren()
-    {
-	    int size = transitionsFrom.size();
-	    if (size != 0)
-	    {
-	    	for (int x = 0; x < size; ++x)
-	    	{
-	    		BoardState child = transitionsFrom.get(x);
-	    		child.offset.x = (int)(3 * TreePanel.NODE_RADIUS * (x-((size-1)/2.0)));
-	    		child.offset.y = TreePanel.NODE_RADIUS * 3;
-	    	}
-	    	recalculateLocation();
-	    }
-    }
+	/**
+	 * Arranges children to be next to each other
+	 */
+	@Deprecated // As of 10-09-08
+	public void arrangeChildren()
+	{
+		int size = transitionsFrom.size();
+		if (size != 0)
+		{
+			for (int x = 0; x < size; ++x)
+			{
+				BoardState child = transitionsFrom.get(x);
+				child.offset.x = (int)(3 * TreePanel.NODE_RADIUS * (x-((size-1)/2.0)));
+				child.offset.y = TreePanel.NODE_RADIUS * 3;
+			}
+			recalculateLocation();
+		}
+	}
 
-    /**
+	/**
 	 * Get the single parent state of this state, or null if there are multiple or no parents
 	 * @return the parent state, or null if there isn't a single parent
 	 */
@@ -915,37 +915,37 @@ public class BoardState
 	}
 
 
-    /**
-     * Makes a copy of the current board state.
-     *
-     * @return New BoardState that is a copy of this board state
-     */
+	/**
+	 * Makes a copy of the current board state.
+	 *
+	 * @return New BoardState that is a copy of this board state
+	 */
 	public BoardState copy(){
 	BoardState newBoardState = null;
 	try{
-	    newBoardState = new BoardState(this.height,this.width);
-	    newBoardState.virtualBoard = virtualBoard;
+		newBoardState = new BoardState(this.height,this.width);
+		newBoardState.virtualBoard = virtualBoard;
 	} catch (Exception e){
-	    return newBoardState;
+		return newBoardState;
 	}
 
 	// Initialize the arrays
 	for (int i=0;i<height;i++)
 	{
-	    newBoardState.leftLabels[i]=leftLabels[i];
-	    newBoardState.rightLabels[i]=rightLabels[i];
+		newBoardState.leftLabels[i]=leftLabels[i];
+		newBoardState.rightLabels[i]=rightLabels[i];
 
-	    for (int j=0;j<width;j++)
-	    {
+		for (int j=0;j<width;j++)
+		{
 			newBoardState.boardCells[i][j] = boardCells[i][j];
 			newBoardState.modifiableCells[i][j] = modifiableCells[i][j];
 
 			if (i==0)
 			{
-			    newBoardState.topLabels[j] = topLabels[j];
-			    newBoardState.bottomLabels[j] = bottomLabels[j];
+				newBoardState.topLabels[j] = topLabels[j];
+				newBoardState.bottomLabels[j] = bottomLabels[j];
 			}
-	    }
+		}
 	}
 
 	// copy the extra data
@@ -955,254 +955,254 @@ public class BoardState
 	newBoardState.location = new Point(location.x, location.y);
 
 	return newBoardState;
-    }
+	}
 
 	protected ArrayList<Object> copyExtraData()
 	{
 		return (ArrayList<Object>)extraData.clone();
 	}
 
-    /**
-     * Compares two boards.  If all the cell values match, it will return true.
-     *
-     * @param compareBoard BoardState to compare to
-     * @return True if the board states match
-     */
-    public boolean compareBoard(BoardState compareBoard){
+	/**
+	 * Compares two boards.  If all the cell values match, it will return true.
+	 *
+	 * @param compareBoard BoardState to compare to
+	 * @return True if the board states match
+	 */
+	public boolean compareBoard(BoardState compareBoard){
 	if (this.height != compareBoard.height ||
-	    this.width != compareBoard.width){
-	    return false;
+		this.width != compareBoard.width){
+		return false;
 	}
 
 	for (int i=0;i<height;i++){
-	    for (int j=0;j<width;j++){
+		for (int j=0;j<width;j++){
 		if (this.boardCells[i][j] != compareBoard.boardCells[i][j]){
-		    return false;
+			return false;
 		}
-	    }
+		}
 	}
 
 	return true;
-    }
+	}
 
-    /**
-     * Gets the Justification for this board state
-     *
-     * @return a PuzzleRule, Contradiction, or null
-     */
-    public Object getJustification()
-    {
-    	return justification;
-    }
+	/**
+	 * Gets the Justification for this board state
+	 *
+	 * @return a PuzzleRule, Contradiction, or null
+	 */
+	public Object getJustification()
+	{
+		return justification;
+	}
 
-    /**
-     * Sets the Justification for this board state
-     */
-    public void setJustification(Object j)
-    {
-    	// don't set justifications for the root state
-    	if (this != Legup.getInstance().getInitialBoardState())
-    		justification = j;
-    	modifyStatus();
-    	delayStatus = STATUS_UNJUSTIFIED;
-    }
+	/**
+	 * Sets the Justification for this board state
+	 */
+	public void setJustification(Object j)
+	{
+		// don't set justifications for the root state
+		if (this != Legup.getInstance().getInitialBoardState())
+			justification = j;
+		modifyStatus();
+		delayStatus = STATUS_UNJUSTIFIED;
+	}
 
 	 int delayStatus = -1;
 	 public int getDelayStatus()
 	 {
-	 	return delayStatus;
+		return delayStatus;
 	 }
 
 	 // Used to keep track of last verdict
 	 private int status = -1;
-    /**
-     * Get the STATUS_ value of this state's justification
-     * @return the status of the board state's justification
-     */
-    public int getStatus()
-    {
-    	if (status == -1)
-    	{
-    		leadsToContradiction();
-    		leadsToSolution();
+	/**
+	 * Get the STATUS_ value of this state's justification
+	 * @return the status of the board state's justification
+	 */
+	public int getStatus()
+	{
+		if (status == -1)
+		{
+			leadsToContradiction();
+			leadsToSolution();
 
-    		status = STATUS_UNJUSTIFIED;
+			status = STATUS_UNJUSTIFIED;
 
-    		Object o = getJustification();
+			Object o = getJustification();
 
-	    	if (o != null)
-	    	{
-	    		if (o instanceof Contradiction)
-		    	{
-		    		Contradiction c = (Contradiction)o;
+			if (o != null)
+			{
+				if (o instanceof Contradiction)
+				{
+					Contradiction c = (Contradiction)o;
 
-		    		if (c.checkContradiction(this) == null)
-		    			status = STATUS_CONTRADICTION_CORRECT;
-		    		else
-		    			status = STATUS_CONTRADICTION_INCORRECT;
-		    	}
-	    		else if (o instanceof PuzzleRule)
-	    		{
-	    			PuzzleRule pz = (PuzzleRule)o;
+					if (c.checkContradiction(this) == null)
+						status = STATUS_CONTRADICTION_CORRECT;
+					else
+						status = STATUS_CONTRADICTION_INCORRECT;
+				}
+				else if (o instanceof PuzzleRule)
+				{
+					PuzzleRule pz = (PuzzleRule)o;
 
-		    		if (pz.checkRuleRaw(this) == null)
-		    			status = STATUS_RULE_CORRECT;
-		    		else
-		    			status = STATUS_RULE_INCORRECT;
-	    		}
-	    	}
-	    	else
-	    	{
-	    		BoardState parent = getSingleParentState();
+					if (pz.checkRuleRaw(this) == null)
+						status = STATUS_RULE_CORRECT;
+					else
+						status = STATUS_RULE_INCORRECT;
+				}
+			}
+			else
+			{
+				BoardState parent = getSingleParentState();
 
-	    		if (parent != null)
-	    		{
-	    			if (parent.getTransitionsFrom().size() > 1 &&
-	    					parent.getCaseSplitJustification() != null)
-	    			{
-	    				if (parent.isJustifiedCaseSplit() == null)
-	    					status = STATUS_RULE_CORRECT;
-	    				else
-	    					status = STATUS_RULE_INCORRECT;
-	    			}
-	    		}
-	    	}
-    	}
+				if (parent != null)
+				{
+					if (parent.getTransitionsFrom().size() > 1 &&
+							parent.getCaseSplitJustification() != null)
+					{
+						if (parent.isJustifiedCaseSplit() == null)
+							status = STATUS_RULE_CORRECT;
+						else
+							status = STATUS_RULE_INCORRECT;
+					}
+				}
+			}
+		}
 
-    	return status;
-    }
+		return status;
+	}
 
-    /**
-     * Does boardState s follow from the root state (with rules)
-     * @param s the BoardState to check
-     */
-    public static boolean followsFromRoot(BoardState s)
-    {
-    	BoardState root = Legup.getInstance().getInitialBoardState();
-    	boolean rv = false;
+	/**
+	 * Does boardState s follow from the root state (with rules)
+	 * @param s the BoardState to check
+	 */
+	public static boolean followsFromRoot(BoardState s)
+	{
+		BoardState root = Legup.getInstance().getInitialBoardState();
+		boolean rv = false;
 
-    	if (s == root)
-    		rv = true;
-    	else
-    	{
-    		if (s.getStatus() == STATUS_RULE_CORRECT)
-    		{
-    			for (int x = 0; x < s.transitionsTo.size(); ++x)
-    			{
-    				rv = followsFromRoot(s.transitionsTo.get(x));
+		if (s == root)
+			rv = true;
+		else
+		{
+			if (s.getStatus() == STATUS_RULE_CORRECT)
+			{
+				for (int x = 0; x < s.transitionsTo.size(); ++x)
+				{
+					rv = followsFromRoot(s.transitionsTo.get(x));
 
-    				if (rv)
-    					break;
-    			}
-    		}
-    	}
+					if (rv)
+						break;
+				}
+			}
+		}
 
-    	return rv;
-    }
+		return rv;
+	}
 
-    /**
-     * Convert this boardstate to a SaveablBoardState (used to save puzzles)
-     * @return the SaveableBoardState equivilent to this BoardState
-     */
-    public SaveableBoardState getAsSaveableBoardState()
-    {
-    	SaveableBoardState s = new SaveableBoardState();
+	/**
+	 * Convert this boardstate to a SaveablBoardState (used to save puzzles)
+	 * @return the SaveableBoardState equivilent to this BoardState
+	 */
+	public SaveableBoardState getAsSaveableBoardState()
+	{
+		SaveableBoardState s = new SaveableBoardState();
 
-    	s.height = height;
-    	s.width = width;
-    	s.boardCells = boardCells;
-    	s.bottomLabels = bottomLabels;
-    	s.leftLabels = leftLabels;
-    	s.rightLabels = rightLabels;
-    	s.topLabels = topLabels;
-    	s.extraData = extraData;
-    	s.location = location;
+		s.height = height;
+		s.width = width;
+		s.boardCells = boardCells;
+		s.bottomLabels = bottomLabels;
+		s.leftLabels = leftLabels;
+		s.rightLabels = rightLabels;
+		s.topLabels = topLabels;
+		s.extraData = extraData;
+		s.location = location;
 
-    	return s;
-    }
+		return s;
+	}
 
-    /**
-     * Set this board state from a given SaveableBoardState (which we probably loaded from a file)
-     * @param s the saveableboardstate we're loading from
-     * @return the resultant BoardState
-     */
-    public static BoardState loadFromSaveableBoardState(SaveableBoardState s)
-    {
-    	BoardState rv = null;
+	/**
+	 * Set this board state from a given SaveableBoardState (which we probably loaded from a file)
+	 * @param s the saveableboardstate we're loading from
+	 * @return the resultant BoardState
+	 */
+	public static BoardState loadFromSaveableBoardState(SaveableBoardState s)
+	{
+		BoardState rv = null;
 
-    	if (s != null)
-    	{
-    		rv = new BoardState(s.height,s.width);
+		if (s != null)
+		{
+			rv = new BoardState(s.height,s.width);
 
-    		rv.puzzleName = s.puzzleMod;
+			rv.puzzleName = s.puzzleMod;
 
-    		rv.boardCells = s.boardCells;
-    		rv.bottomLabels = s.bottomLabels;
-    		rv.leftLabels = s.leftLabels;
-    		rv.rightLabels = s.rightLabels;
-    		rv.topLabels = s.topLabels;
-    		rv.extraData = s.extraData;
-    		rv.location = s.location;
+			rv.boardCells = s.boardCells;
+			rv.bottomLabels = s.bottomLabels;
+			rv.leftLabels = s.leftLabels;
+			rv.rightLabels = s.rightLabels;
+			rv.topLabels = s.topLabels;
+			rv.extraData = s.extraData;
+			rv.location = s.location;
 
-    		// set modification properties such that any initial data is unmodifiable
-    		for (int y = 0; y < rv.height; ++y) for (int x = 0; x < rv.width; ++x)
-    		{
-    			if (rv.boardCells[y][x] != PuzzleModule.CELL_UNKNOWN)
-    			{
-    				rv.modifiableCells[y][x] = false;
-    			}
-    		}
-    	}
+			// set modification properties such that any initial data is unmodifiable
+			for (int y = 0; y < rv.height; ++y) for (int x = 0; x < rv.width; ++x)
+			{
+				if (rv.boardCells[y][x] != PuzzleModule.CELL_UNKNOWN)
+				{
+					rv.modifiableCells[y][x] = false;
+				}
+			}
+		}
 
-    	return rv;
-    }
+		return rv;
+	}
 
-    /**
-     * Get an ArrayList consisting of the Points in which these two board states differ
-     * If they are not of the same size, null will be returned
-     *
-     * @param one a BoardState
-     * @param two another BoardState
-     * @return an ArrayList of the Points where these BoardStates differ
-     */
-    public static ArrayList<Point> getDifferenceLocations(BoardState one, BoardState two)
-    {
-    	ArrayList<Point> rv = new ArrayList<Point>();
+	/**
+	 * Get an ArrayList consisting of the Points in which these two board states differ
+	 * If they are not of the same size, null will be returned
+	 *
+	 * @param one a BoardState
+	 * @param two another BoardState
+	 * @return an ArrayList of the Points where these BoardStates differ
+	 */
+	public static ArrayList<Point> getDifferenceLocations(BoardState one, BoardState two)
+	{
+		ArrayList<Point> rv = new ArrayList<Point>();
 
-    	if (one.getWidth() != two.getWidth() || one.getHeight() != two.getHeight())
-    	{
-    		rv = null;
-    	}
-    	else
-    	{ // check each point
-    		for (int y = 0; y < one.getHeight(); ++y)
-    		{
-    			for (int x = 0; x < one.getWidth(); ++x)
-    			{
-    				int val1 = one.getCellContents(x,y);
-    				int val2 = two.getCellContents(x,y);
+		if (one.getWidth() != two.getWidth() || one.getHeight() != two.getHeight())
+		{
+			rv = null;
+		}
+		else
+		{ // check each point
+			for (int y = 0; y < one.getHeight(); ++y)
+			{
+				for (int x = 0; x < one.getWidth(); ++x)
+				{
+					int val1 = one.getCellContents(x,y);
+					int val2 = two.getCellContents(x,y);
 
-    				if (val1 != val2)
-    				{
-    					rv.add(new Point(x,y));
-    				}
-    			}
-    		}
-    	}
+					if (val1 != val2)
+					{
+						rv.add(new Point(x,y));
+					}
+				}
+			}
+		}
 
-    	return rv;
-    }
+		return rv;
+	}
 
 	 private boolean leadContradiction = false;
-    /**
-     * Does this board state lead to a contradiction?
-     * @param state the state we're checking
-     * @return true iff this board state (always) leads to a contradiction
-     */
-    public boolean leadsToContradiction()
-    {
-    	if (status != -1)
-    		return leadContradiction;
+	/**
+	 * Does this board state lead to a contradiction?
+	 * @param state the state we're checking
+	 * @return true iff this board state (always) leads to a contradiction
+	 */
+	public boolean leadsToContradiction()
+	{
+		if (status != -1)
+			return leadContradiction;
 
 		if (justification instanceof Contradiction && ((Contradiction)justification).checkContradiction(this) == null)
 		{
@@ -1210,84 +1210,84 @@ public class BoardState
 			return (leadContradiction = true);
 		}
 
-    	// does this boardstate lead to a contradiction?
-    	Vector <BoardState> children = this.getTransitionsFrom();
-    	boolean rv = false;
+		// does this boardstate lead to a contradiction?
+		Vector <BoardState> children = this.getTransitionsFrom();
+		boolean rv = false;
 
-    	if (children.size() == 1)
-    	{
-    		BoardState child = children.get(0);
+		if (children.size() == 1)
+		{
+			BoardState child = children.get(0);
 
-    		if (child.getStatus() == BoardState.STATUS_CONTRADICTION_CORRECT)
-    			rv = true;
-    		else if (child.getStatus() == BoardState.STATUS_RULE_CORRECT)
-    			rv = child.leadsToContradiction();
-    	}
-    	else if (children.size() > 1)
-    	{
-    		if (this.isJustifiedCaseSplit() == null) // if it's valid
-    		{
-    			rv = true; // we're valid until we find a child that doesn't lead to a contradiction
+			if (child.getStatus() == BoardState.STATUS_CONTRADICTION_CORRECT)
+				rv = true;
+			else if (child.getStatus() == BoardState.STATUS_RULE_CORRECT)
+				rv = child.leadsToContradiction();
+		}
+		else if (children.size() > 1)
+		{
+			if (this.isJustifiedCaseSplit() == null) // if it's valid
+			{
+				rv = true; // we're valid until we find a child that doesn't lead to a contradiction
 
-    			for (int c = 0; c < children.size(); ++c)
-    			{
-    				BoardState child = children.get(c);
+				for (int c = 0; c < children.size(); ++c)
+				{
+					BoardState child = children.get(c);
 
-    				if (child.getStatus() == BoardState.STATUS_CONTRADICTION_CORRECT)
-    	    			continue;
-    	    		else if (!child.leadsToContradiction()) // we've found an invalid one
-    	    		{
-    	    			rv = false;
-    	    			break;
-    	    		}
-    			}
-    		}
-    	}
+					if (child.getStatus() == BoardState.STATUS_CONTRADICTION_CORRECT)
+						continue;
+					else if (!child.leadsToContradiction()) // we've found an invalid one
+					{
+						rv = false;
+						break;
+					}
+				}
+			}
+		}
 
 		return (leadContradiction = rv);
-    }
+	}
 
 	private boolean leadSolution = false;
-    /**
-     * Does this board state lead to the solution?
-     * @param state the state we're checking
-     * @return true iff this board state (always) leads to a contradiction
-     */
-    public boolean leadsToSolution()
-    {
-    	if (status != -1)
-    		return leadSolution;
+	/**
+	 * Does this board state lead to the solution?
+	 * @param state the state we're checking
+	 * @return true iff this board state (always) leads to a contradiction
+	 */
+	public boolean leadsToSolution()
+	{
+		if (status != -1)
+			return leadSolution;
 
-    	if(this.isSolution)
-    		return (leadSolution = true);
+		if(this.isSolution)
+			return (leadSolution = true);
 
-    	Vector <BoardState> children = this.getTransitionsFrom();
+		Vector <BoardState> children = this.getTransitionsFrom();
 
-    	if (children.size() == 1)
-    	{
-    		BoardState child = children.get(0);
+		if (children.size() == 1)
+		{
+			BoardState child = children.get(0);
 
-    		if (child.getStatus() == BoardState.STATUS_RULE_CORRECT)
-    		{
-    			return (leadSolution = child.leadsToSolution());
-    		}
-    	}
-    	else if (children.size() > 1)
-    	{
-    		if (this.isJustifiedCaseSplit() == null) // if it's valid
-    		{
-    			for (int c = 0; c < children.size(); ++c)
-    			{
-    				BoardState child = children.get(c);
+			if (child.getStatus() == BoardState.STATUS_RULE_CORRECT)
+			{
+				return (leadSolution = child.leadsToSolution());
+			}
+		}
+		else if (children.size() > 1)
+		{
+			if (this.isJustifiedCaseSplit() == null) // if it's valid
+			{
+				for (int c = 0; c < children.size(); ++c)
+				{
+					BoardState child = children.get(c);
 
-	    			if(child.leadsToSolution())
-	    				return (leadSolution = true);
-    			}
-    		}
-    	}
+					if(child.leadsToSolution())
+						return (leadSolution = true);
+				}
+			}
+		}
 
-    	return (leadSolution = false);
-    }
+		return (leadSolution = false);
+	}
 
 	private void removeLeaf(BoardState B)
 	{
@@ -1307,43 +1307,43 @@ public class BoardState
 		evalMergeY();
 	}
 
-    /**
-     * Delete this state, and therefore all it's children too
-     * @param s the state we're deleting
-     * Modified 9/30/2008 to account for x-space methods
-     */
-    public static void deleteState(BoardState s)
-    {
-    	s.subDelete();
+	/**
+	 * Delete this state, and therefore all it's children too
+	 * @param s the state we're deleting
+	 * Modified 9/30/2008 to account for x-space methods
+	 */
+	public static void deleteState(BoardState s)
+	{
+		s.subDelete();
 
 		if (!s.virtualBoard) _transitionsChanged();
-    }
+	}
 
-    private void subDelete()
-    {
-    	while (mergeChildren.size() > 0) mergeChildren.get(0).subDelete();
-    	while (transitionsFrom.size() > 0) transitionsFrom.get(0).subDelete();
+	private void subDelete()
+	{
+		while (mergeChildren.size() > 0) mergeChildren.get(0).subDelete();
+		while (transitionsFrom.size() > 0) transitionsFrom.get(0).subDelete();
 
-    	if (mergeOverlord != null) { mergeOverlord.removeUnderling(this); mergeOverlord = null; }
-    	for (BoardState B : transitionsTo) B.removeLeaf(this);
-    	transitionsTo.clear();
-    }
+		if (mergeOverlord != null) { mergeOverlord.removeUnderling(this); mergeOverlord = null; }
+		for (BoardState B : transitionsTo) B.removeLeaf(this);
+		transitionsTo.clear();
+	}
 
-    /**public static void deleteState(BoardState s, boolean saveChildren)
-    {
-    	if(saveChildren)
-    	{
-    		for(BoardState parent : s.getTransitionsTo())
-    		{
-    			for(BoardState child : s.getTransitionsFrom())
-    			{
-    				parent.transitionsFrom.add(child);
-    				child.transitionsTo.add(parent);
-    			}
-    		}
-    	}
-    	deleteState(s);
-    }*/
+	/**public static void deleteState(BoardState s, boolean saveChildren)
+	{
+		if(saveChildren)
+		{
+			for(BoardState parent : s.getTransitionsTo())
+			{
+				for(BoardState child : s.getTransitionsFrom())
+				{
+					parent.transitionsFrom.add(child);
+					child.transitionsTo.add(parent);
+				}
+			}
+		}
+		deleteState(s);
+	}*/
 
 	public static void reparentChildren(BoardState oldParent, BoardState newParent)
 	{

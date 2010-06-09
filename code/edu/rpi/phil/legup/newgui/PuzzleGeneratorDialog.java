@@ -62,7 +62,7 @@ public class PuzzleGeneratorDialog extends JDialog
 		c.add(OK);
 		c.add(CANCEL);
 		c.validate();
-		c.setPreferredSize(new Dimension(dCombo.getWidth()+dCombo.location().x+20, OK.getHeight()+OK.location().y+20));
+		c.setPreferredSize(new Dimension(dCombo.getWidth()+dCombo.getLocation().x+20, OK.getHeight()+OK.getLocation().y+20));
 
 		pack();
 		int seg = (getWidth()-40-OK.getWidth()-CANCEL.getWidth())/3;

@@ -73,7 +73,7 @@ public class Legup
 	{
 		Vector<String> allBoards = config.getBoardsForPuzzle(puzzle);
 		Random random = new Random();
-		String filename = (String) allBoards.get(random.nextInt(allBoards.size()));
+		String filename = allBoards.get(random.nextInt(allBoards.size()));
 		System.out.println(filename + " selected");
 		loadBoardFile(filename);
 	}
@@ -251,11 +251,11 @@ public class Legup
 				private Thread myThread = null;
 				public void treeSelectionChanged(ArrayList<Selection> newSelections)
 				{
-					if (myThread != null)
+					/*if (myThread != null)
 					{
 						myThread.stop();
 						myThread = null;
-					}
+					}*/
 					if (newSelections.size() >= 1 && !newSelections.get(0).isState())
 					{
 						myThread = new Thread()

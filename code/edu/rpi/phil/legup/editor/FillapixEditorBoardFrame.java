@@ -105,7 +105,7 @@ public class FillapixEditorBoardFrame extends JFrame implements WindowListener
 
 			BoardState state = curState;
 
-			if (state != null);
+			if (state != null)
 			{
 				PuzzleModule pz = pm;
 
@@ -175,7 +175,7 @@ public class FillapixEditorBoardFrame extends JFrame implements WindowListener
 		{
 			BoardState state = curState;
 
-			if (state != null);
+			if (state != null)
 			{
 				PuzzleModule pz = pm;
 

@@ -148,7 +148,7 @@ public class HeyawakeEditorBoardFrame extends JDialog implements WindowListener,
 	{
 		for(int cnt = 0; cnt < regions.size(); ++cnt)
 		{
-			((Region)regions.elementAt(cnt)).removeCell(x, y);
+			(regions.elementAt(cnt)).removeCell(x, y);
 		}
 	}
 	
@@ -292,7 +292,7 @@ public class HeyawakeEditorBoardFrame extends JDialog implements WindowListener,
 			
 			BoardState state = curState;
 			
-			if (state != null);
+			if (state != null)
 			{
 				PuzzleModule pz = pm;
 				
@@ -368,7 +368,7 @@ public class HeyawakeEditorBoardFrame extends JDialog implements WindowListener,
 		{
 			BoardState state = curState;
 			
-			if (state != null);
+			if (state != null)
 			{
 				PuzzleModule pz = pm;
 				
@@ -413,7 +413,7 @@ public class HeyawakeEditorBoardFrame extends JDialog implements WindowListener,
 											else
 											{
 												cellRegions[miny][minx] = getNeighbors(minx,miny);
-												((Region)regions.elementAt(next)).addCell(minx, miny);
+												(regions.elementAt(next)).addCell(minx, miny);
 											}
 										}
 									}
@@ -430,7 +430,7 @@ public class HeyawakeEditorBoardFrame extends JDialog implements WindowListener,
 									else
 									{
 										cellRegions[p.y][p.x] = getNeighbors(p.x,p.y);
-										((Region)regions.elementAt(next)).addCell(p.x, p.y);
+										(regions.elementAt(next)).addCell(p.x, p.y);
 									}
 									lastx = p.x;
 									lasty = p.y;

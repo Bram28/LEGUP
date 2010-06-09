@@ -97,7 +97,7 @@ public class Fillapix extends PuzzleModule
 
 		JDialog loadPane = new JDialog(host, "Loading...", false);
 		loadPane.setBounds(150, 150, 250, 50);
-		loadPane.show();
+		loadPane.setVisible(true);
 
 		int attmpt = 0;
 		while (diff < difficulty)

@@ -30,8 +30,8 @@ public class CaseSatisfyNumber extends CaseRule
 		}
 		else if(state.getTransitionsFrom().size() == 2)
 		{
-			BoardState one = (BoardState)state.getTransitionsFrom().get(0);
-			BoardState two = (BoardState)state.getTransitionsFrom().get(1);
+			BoardState one = state.getTransitionsFrom().get(0);
+			BoardState two = state.getTransitionsFrom().get(1);
 			
 			if(BoardState.getDifferenceLocations(state,one).size() != 2
 					|| BoardState.getDifferenceLocations(state,two).size() != 2)
@@ -43,8 +43,8 @@ public class CaseSatisfyNumber extends CaseRule
 			{
 				return "A 2 way split of this type must have exactly 2 cells changed from the parent.";
 			}
-			Point cell1 = (Point)dif.get(0);
-			Point cell2 = (Point)dif.get(1);
+			Point cell1 = dif.get(0);
+			Point cell2 = dif.get(1);
 			Point block = findBlock(cell1, cell2, state);
 			
 			if(block == null)
@@ -65,9 +65,9 @@ public class CaseSatisfyNumber extends CaseRule
 		}
 		else if(state.getTransitionsFrom().size() == 3)
 		{
-			BoardState one = (BoardState)state.getTransitionsFrom().get(0);
-			BoardState two = (BoardState)state.getTransitionsFrom().get(1);
-			BoardState three = (BoardState)state.getTransitionsFrom().get(2);
+			BoardState one = state.getTransitionsFrom().get(0);
+			BoardState two = state.getTransitionsFrom().get(1);
+			BoardState three = state.getTransitionsFrom().get(2);
 			
 			if(BoardState.getDifferenceLocations(state,one).size() != 3
 					|| BoardState.getDifferenceLocations(state,two).size() != 3
@@ -197,10 +197,10 @@ public class CaseSatisfyNumber extends CaseRule
 		}
 		else if(state.getTransitionsFrom().size() == 4)
 		{
-			BoardState one = (BoardState)state.getTransitionsFrom().get(0);
-			BoardState two = (BoardState)state.getTransitionsFrom().get(1);
-			BoardState three = (BoardState)state.getTransitionsFrom().get(2);
-			BoardState four = (BoardState)state.getTransitionsFrom().get(3);
+			BoardState one = state.getTransitionsFrom().get(0);
+			BoardState two = state.getTransitionsFrom().get(1);
+			BoardState three = state.getTransitionsFrom().get(2);
+			BoardState four = state.getTransitionsFrom().get(3);
 			
 			if(BoardState.getDifferenceLocations(state,one).size() != 4
 					|| BoardState.getDifferenceLocations(state,two).size() != 4
@@ -212,12 +212,12 @@ public class CaseSatisfyNumber extends CaseRule
 		}
 		else if(state.getTransitionsFrom().size() == 6)
 		{
-			BoardState one = (BoardState)state.getTransitionsFrom().get(0);
-			BoardState two = (BoardState)state.getTransitionsFrom().get(1);
-			BoardState three = (BoardState)state.getTransitionsFrom().get(2);
-			BoardState four = (BoardState)state.getTransitionsFrom().get(3);
-			BoardState five = (BoardState)state.getTransitionsFrom().get(4);
-			BoardState six = (BoardState)state.getTransitionsFrom().get(5);
+			BoardState one = state.getTransitionsFrom().get(0);
+			BoardState two = state.getTransitionsFrom().get(1);
+			BoardState three = state.getTransitionsFrom().get(2);
+			BoardState four = state.getTransitionsFrom().get(3);
+			BoardState five = state.getTransitionsFrom().get(4);
+			BoardState six = state.getTransitionsFrom().get(5);
 			
 			if(BoardState.getDifferenceLocations(state,one).size() != 4
 					|| BoardState.getDifferenceLocations(state,two).size() != 4

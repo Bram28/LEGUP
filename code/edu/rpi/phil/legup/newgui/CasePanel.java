@@ -123,7 +123,7 @@ public class CasePanel extends JustificationPanel
 	protected void doDefaultApplication(int index, BoardState state)
 	{
 		//We set the current default application so we know which to apply for later
-		CaseRule r = (CaseRule)caseRules.get(index);
+		CaseRule r = caseRules.get(index);
 		boolean legal = r.startDefaultApplication(state);
 
 		if (!legal)

@@ -128,7 +128,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 		for (int c = 0; c < transitionsFrom.size(); ++c)
 		{
-			BoardState b = (BoardState)transitionsFrom.get(c);
+			BoardState b = transitionsFrom.get(c);
 			Point childPoint = (Point)b.getLocation().clone();
 
 			if (transitionsFrom.size() == 1)
@@ -185,7 +185,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 						if (c == index) // skip ourselves
 							continue;
 
-						BoardState sibling = (BoardState)transitionsFrom.get(index);
+						BoardState sibling = transitionsFrom.get(index);
 
 						if (!sibling.leadsToContradiction())
 						{
@@ -272,6 +272,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			else if(state.leadsToSolution())
 				i = leadsToSolutionImage;
 		}
+
 
 		if (i != null)
 		{
@@ -546,7 +547,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Selection rv = null;
 		Point loc = state.getLocation();
 		boolean isCollapsed = state.isCollapsed();
-		final int radius = isCollapsed ? ((int)2 * NODE_RADIUS) : NODE_RADIUS;
+		final int radius = isCollapsed ? (2 * NODE_RADIUS) : NODE_RADIUS;
 
 		Point draw = new Point(loc.x - radius, loc.y - radius);
 		// distance from a transition which is considered clicking on it, squared
@@ -574,7 +575,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 			for (int c = 0; c < transitionsFrom.size(); ++c)
 			{
-				BoardState b = (BoardState)transitionsFrom.get(c);
+				BoardState b = transitionsFrom.get(c);
 				Point childCenter = b.getLocation();
 
 				Line2D.Float transitionLine = new Line2D.Float(childCenter,loc);

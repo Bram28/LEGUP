@@ -28,8 +28,8 @@ public class CaseWhiteSplit extends CaseRule {
 		}
 		else
 		{
-			BoardState one = (BoardState)state.getTransitionsFrom().get(0);
-			BoardState two = (BoardState)state.getTransitionsFrom().get(1);
+			BoardState one = state.getTransitionsFrom().get(0);
+			BoardState two = state.getTransitionsFrom().get(1);
 						
 			ArrayList<Point> dif = BoardState.getDifferenceLocations(state,one);
 			dif.addAll(BoardState.getDifferenceLocations(state,two));
