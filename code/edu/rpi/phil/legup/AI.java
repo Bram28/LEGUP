@@ -495,7 +495,16 @@ public class AI implements Runnable {
 	// The thread function. Steps through a board until it is done
 	public void run() {
 		BoardState myBoard = toRun;
-		while (!ourPM.checkBoardComplete(myBoard) || contradiction(myBoard)) myBoard = step(myBoard);
+		BoardState origBoard = myBoard;
+		while (!ourPM.checkBoardComplete(myBoard) || contradiction(myBoard)) 
+		{
+			myBoard = step(myBoard);
+			if(myBoard==origBoard)
+			{
+				break;
+			}
+			origBoard=myBoard;
+		}
 		// More AIs should act like HK-47
 		// System.out.println("Statement: Your puzzle is compleated, Meatbag");
 		/*

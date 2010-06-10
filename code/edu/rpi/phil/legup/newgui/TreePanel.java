@@ -226,10 +226,19 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			}
 
 			currentStateBoxes.add(new Rectangle(draw.x - 23, draw.y - 23 + deltaY,45,yRad));
+			if(sel.size()==1)
+			{
+				double scale = getScale();
+				moveX = (getWidth()/(scale*2))-draw.x;
+				moveY = (getHeight()/(scale*2))-draw.y;
+			}
 		}
 
 		if (!isCollapsed)
+		{
 			drawNode(g,draw.x, draw.y,state);
+		
+		}
 		else
 			drawCollapsedNode(g,draw.x,draw.y);
 		// to prevent the drawing of contradictions from taking over the CPU

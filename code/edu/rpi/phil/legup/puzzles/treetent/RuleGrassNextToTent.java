@@ -152,8 +152,7 @@ public class RuleGrassNextToTent extends PuzzleRule{
 									continue;
 								if((y+j)>=height || (y+j)<0)
 									continue;
-								if(i!=0 && j!=0)
-									continue;
+								
 								
 								if(destBoardState.getCellContents(x+i,y+j)==0)
 								{

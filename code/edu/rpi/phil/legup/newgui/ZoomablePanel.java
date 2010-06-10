@@ -33,7 +33,7 @@ MouseListener, MouseMotionListener
 //	 negative = zoom in, positive = zoom out
 	private double desZoomFactor = 0;
 	private double curZoomFactor = 0;
-	private double moveX = 0, moveY = 0;
+	protected double moveX = 0, moveY = 0;
 	private double defaultMoveX = 0, defaultMoveY = 0;
 	private int lastX = -1, lastY = -1;
 	
@@ -239,7 +239,7 @@ MouseListener, MouseMotionListener
 	 * Gets the current scaling factor
 	 * @return A double corresponding to the current scale
 	 */
-	private double getScale()
+	protected double getScale()
 	{
 		//Find our min/max zoom exponents
 		double minFactor = (Math.log(minimumScale) / Math.log(2)) * 10;
@@ -310,6 +310,7 @@ MouseListener, MouseMotionListener
 			if (e.getClickCount() == 2)
 			{
 				moveX = defaultMoveX;
+
 				moveY = defaultMoveY;
 					
 				desZoomFactor = curZoomFactor = 0;
@@ -548,7 +549,7 @@ MouseListener, MouseMotionListener
 				
 				try
 				{
-					Thread.sleep(10);
+					Thread.sleep(100);
 				}
 				catch (Exception e) { }
 			}

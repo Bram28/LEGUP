@@ -19,6 +19,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 //TODO
 import javax.swing.ScrollPaneConstants;
 import java.awt.Font;
@@ -222,6 +223,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		tutorOutput.setFont( new Font("Monospaced", Font.PLAIN, 14) );
 		//tutorOutput.setBackground( Color.BLACK );
 		//tutorOutput.setForeground( Color.GREEN );
+
 		//
 		scrollPane = new JScrollPane(tutorOutput);
 		scrollPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
@@ -347,13 +349,18 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 		allowDefault.addActionListener(this);
 		newPuzzle.addActionListener(this);
+		newPuzzle.setAccelerator(KeyStroke.getKeyStroke('N',2));
 		genPuzzle.addActionListener(this);
 		openProof.addActionListener(this);
+		openProof.setAccelerator(KeyStroke.getKeyStroke('O',2));
 		saveProof.addActionListener(this);
+		saveProof.setAccelerator(KeyStroke.getKeyStroke('S',2));
 		exit.addActionListener(this);
 
 		Step.addActionListener(this);
+		Step.setAccelerator(KeyStroke.getKeyStroke("F9"));
 		Run.addActionListener(this);
+		Run.setAccelerator(KeyStroke.getKeyStroke("F10"));
 		Test.addActionListener(this);
 
 		setJMenuBar(bar);

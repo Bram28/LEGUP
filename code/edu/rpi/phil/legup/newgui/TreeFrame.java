@@ -72,6 +72,22 @@ public class TreeFrame extends JInternalFrame implements JustificationAppliedLis
 		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0);
 		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, "KeyEvent.VK_RIGHT");
 		this.getActionMap().put("KeyEvent.VK_RIGHT", new AbstractAction() {private static final long serialVersionUID = -2304281047341398965L; public void actionPerformed(ActionEvent event) {navigateTree(KeyEvent.VK_RIGHT);}});
+		/*
+		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_UP, 2);
+		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke,"Ctrl-KeyEvent.VK_UP");
+		this.getActionMap().put("Ctrl-KeyEvent.VK_UP",new AbstractAction(){});
+		
+		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 2);
+		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke,"Ctrl-KeyEvent.VK_DOWN");
+		this.getActionMap().put("Ctrl-KeyEvent.VK_DOWN",new AbstractAction(){});
+		
+		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 2);
+		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke,"Ctrl-KeyEvent.VK_LEFT");
+		this.getActionMap().put("Ctrl-KeyEvent.VK_LEFT",new AbstractAction(){});
+		
+		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 2);
+		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke,"Ctrl-KeyEvent.VK_RIGHT");
+		this.getActionMap().put("Ctrl-KeyEvent.VK_RIGHT",new AbstractAction(){});*/
 		
 	}
 	
@@ -228,5 +244,7 @@ public class TreeFrame extends JInternalFrame implements JustificationAppliedLis
 				}
 			}
 		}
+		treePanel.repaint();
+		Legup.getInstance().refresh();
 	}
 }
