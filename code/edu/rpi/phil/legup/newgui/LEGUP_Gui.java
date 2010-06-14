@@ -168,6 +168,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	};
 
 	private JToolBar toolBar;
+	
+	// TODO
+	JToolBar treet = null;
+	TreePanel treep = null;
+	//private TreeToolbarPanel treeb = new TreeToolbarPanel(this);
 
 	private final static String[] types =
 	{
@@ -276,6 +281,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		}
 
 		// TODO disable buttons
+		toolBarButtons[TOOLBAR_SAVE].setEnabled(false);
 		toolBarButtons[TOOLBAR_UNDO].setEnabled(false);
 		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
 		toolBarButtons[TOOLBAR_TUTOR].setEnabled(false);
@@ -292,6 +298,22 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 		frames[TREE] = new TreeFrame(types[TREE],legupMain,this);
 		//frames[TUTOR] = new TutorFrame();
+		// TODO
+		//this.add(new TreePanel(), BorderLayout.EAST);
+		
+		// TODO float
+		treet = new JToolBar("Tree");
+		treet.setLayout(new BorderLayout());
+		treet.setPreferredSize(new Dimension(150,500));
+		
+		treep = new TreePanel();
+		//treet.add(treeb,BorderLayout.NORTH);
+		treet.add(treep);
+		
+		
+		
+		
+		// end of TODO
 
 		boardPanel = new BoardPanel(this);
 
@@ -409,26 +431,21 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private void saveProof()
 	{
 		BoardState root = legupMain.getInitialBoardState();
-		if (root != null)
+		fileChooser.setMode(FileDialog.SAVE);
+		fileChooser.setTitle("Select Proof");
+		fileChooser.setVisible(true);
+		String filename = fileChooser.getFile();
+
+		if (filename != null) // user didn't pressed cancel
 		{
-			fileChooser.setMode(FileDialog.SAVE);
-			fileChooser.setTitle("Select Proof");
-			fileChooser.setVisible(true);
-			String filename = fileChooser.getFile();
+			filename = fileChooser.getDirectory() + filename;
 
-			if (filename != null) // user didn't pressed cancel
-			{
-				filename = fileChooser.getDirectory() + filename;
+			if (!filename.toLowerCase().endsWith(".proof"))
+	    		filename = filename + ".proof";
 
-				if (!filename.toLowerCase().endsWith(".proof"))
-		    		filename = filename + ".proof";
-
-			    SaveableProof.saveProof(root, filename);
-			}
-
+		    SaveableProof.saveProof(root, filename);
 		}
-		else
-			JOptionPane.showMessageDialog(null, "You do not have a puzzle open!");
+
 	}
 
 	private void checkProof()
@@ -437,17 +454,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		root.evalDelayStatus();
 		repaintAll();
 
-		if (root != null)
-		{
-			PuzzleModule pm = legupMain.getPuzzleModule();
-
-			if (pm.checkProof(root))
-				JOptionPane.showMessageDialog(null, "Your proof is correct.");
-			else
-				JOptionPane.showMessageDialog(null, "Your proof is INCORRECT.");
-		}
+		PuzzleModule pm = legupMain.getPuzzleModule();
+		if (pm.checkProof(root))
+			JOptionPane.showMessageDialog(null, "Your proof is correct.");
 		else
-			JOptionPane.showMessageDialog(null, "You do not have a puzzle open!");
+			JOptionPane.showMessageDialog(null, "Your proof is INCORRECT.");
 	}
 
 
@@ -514,16 +525,20 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		viewItem[frameIndex].setState(newState);
 	}
 
+
 	private void showAll() {
 		showFrame(JUSTIFICATION);
 		showFrame(BOARD);
 		showFrame(TREE);
-		//showFrame(TUTOR);
 		// TODO disable buttons
+		toolBarButtons[TOOLBAR_SAVE].setEnabled(true);
 		toolBarButtons[TOOLBAR_UNDO].setEnabled(true);
 		toolBarButtons[TOOLBAR_REDO].setEnabled(true);
 		toolBarButtons[TOOLBAR_TUTOR].setEnabled(true);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(true);
+		///
+		this.add( treet, BorderLayout.EAST);
+		this.pack();
 	}
 
 	private void repaintAll()
