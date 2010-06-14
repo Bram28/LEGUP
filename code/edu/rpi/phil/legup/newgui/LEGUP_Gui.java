@@ -114,8 +114,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 	private JMenuBar bar = new JMenuBar();
 	private JMenu file = new JMenu("File");
-	private JMenu proof = new JMenu("Proof");
+	private JMenu edit = new JMenu("Edit");
 	private JMenu view = new JMenu("View");
+	private JMenu proof = new JMenu("Proof");
 	//added by Jacob
 	private JMenu AI = new JMenu("AI");
 	private JMenuItem Run = new JMenuItem("Run AI to completion");
@@ -123,6 +124,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private JMenuItem Test = new JMenuItem("Test AI!");
 	private edu.rpi.phil.legup.AI myAI = new edu.rpi.phil.legup.AI();
 	//end additions
+	private JMenu help = new JMenu("Help");
+	
 	private JMenuItem newPuzzle = new JMenuItem("New Puzzle");
 	private JMenuItem genPuzzle = new JMenuItem("Puzzle Generators");
 	private JMenuItem openProof = new JMenuItem("Open LEGUP Proof");
@@ -138,7 +141,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		"Undo",
 		"Redo",
 		"Console",
-		"Tutor",
+		"Hint",
 		"Check"
 /*		"Board",
 		"Justification",
@@ -225,6 +228,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		tutorOutput.setEditable(false);
 		tutorOutput.setWrapStyleWord(true);
 		// optional console settings
+
 		tutorOutput.setFont( new Font("Monospaced", Font.PLAIN, 14) );
 		//tutorOutput.setBackground( Color.BLACK );
 		//tutorOutput.setForeground( Color.GREEN );
@@ -268,7 +272,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 			{
 				if (x == toolbarSeperatorBefore[y])
 				{
-					toolBar.addSeparator(/*new Dimension(30,24)*/);
+					toolBar.addSeparator();
 				}
 			}
 
@@ -339,9 +343,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private void setupMenu()
 	{
 		bar.add(file);
-		bar.add(proof);
+		bar.add(edit);
 		bar.add(view);
+		bar.add(proof);
 		bar.add(AI);
+		bar.add(help);
 
 		file.add(newPuzzle);
 		file.add(genPuzzle);
@@ -504,27 +510,13 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 	private void setFrameState(int index, boolean show)
 	{
-		setFrameViewersState(index,show);
+		viewItem[index].setState(show);
 
 		if (show)
 			showFrame(index);
 		else
 			frames[index].setVisible(false);
 	}
-
-	/**
-	 * Set the state of the frame viewers (menu / toggle button)
-	 * @param frameIndex the frame index from the frames array
-	 * @param newState the state we're setting it too
-	 */
-	private void setFrameViewersState(int frameIndex,boolean newState)
-	{
-		//JToggleButton b = (JToggleButton)toolBarButtons[frameIndexToButtonIndex(frameIndex)];
-		//b.setSelected(newState);
-
-		viewItem[frameIndex].setState(newState);
-	}
-
 
 	private void showAll() {
 		showFrame(JUSTIFICATION);
@@ -682,16 +674,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		}
 		else
 		{
-			/*for (int x = TOOLBAR_BOARD; x <= TOOLBAR_TUTOR; ++x)
-			{
-				if (e.getSource() == toolBarButtons[x])
-				{
-					JToggleButton b = (JToggleButton)e.getSource();
-					int index = buttonIndexToFrameIndex(x);
-
-					setFrameState(index,b.isSelected());
-				}
-			}*/
 			for (int x = 0; x < viewItem.length;++x)
 			{
 				if (e.getSource() == viewItem[x]) setFrameState(x,viewItem[x].isSelected());
@@ -706,23 +688,15 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	public void internalFrameClosing(InternalFrameEvent e)
 	{
 		for (int x = 0; x < frames.length; ++x)
-		{
 			if (e.getSource() == frames[x])
-			{
-				setFrameViewersState(x,false);
-			}
-		}
+				viewItem[x].setState(false);
 	}
 
 	public void internalFrameOpened(InternalFrameEvent e)
 	{
 		for (int x = 0; x < frames.length; ++x)
-		{
 			if (e.getSource() == frames[x])
-			{
-				setFrameViewersState(x,true);
-			}
-		}
+				viewItem[x].setState(true);
 	}
 
 	public void internalFrameClosed(InternalFrameEvent e) { }

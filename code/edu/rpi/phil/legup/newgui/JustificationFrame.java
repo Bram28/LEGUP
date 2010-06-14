@@ -51,21 +51,21 @@ public class JustificationFrame extends JInternalFrame implements TreeSelectionL
 		super(title);
 
 		basicRulePanel = new BasicRulePanel(this);
-		tabs.addTab(basicRulePanel.name, basicRulePanel.icon, basicRulePanel, basicRulePanel.toolTip);
+		tabs.addTab(basicRulePanel.name, basicRulePanel.icon, new JScrollPane(basicRulePanel), basicRulePanel.toolTip);
 
 		casePanel = new CasePanel(this);
-		tabs.addTab(casePanel.name, casePanel.icon, casePanel, casePanel.toolTip);
+		tabs.addTab(casePanel.name, casePanel.icon, new JScrollPane(casePanel), casePanel.toolTip);
 
 		contradictionPanel = new ContradictionPanel(this);
-		tabs.addTab(contradictionPanel.name, contradictionPanel.icon, contradictionPanel, contradictionPanel.toolTip);
+		tabs.addTab(contradictionPanel.name, contradictionPanel.icon, new JScrollPane(contradictionPanel), contradictionPanel.toolTip);
 
-		JScrollPane scroller = new JScrollPane(tabs);
+		//JScrollPane scroller = new JScrollPane(tabs);
 
 		JPanel main = new JPanel();
 		main.setLayout(new BorderLayout());
-		main.add(scroller,BorderLayout.CENTER);
+		main.add(tabs);
 
-		status.setPreferredSize(new Dimension(400,20));
+		status.setPreferredSize(new Dimension(128,20));
 		main.add(status,BorderLayout.SOUTH);
 
 		add(main);
@@ -85,7 +85,7 @@ public class JustificationFrame extends JInternalFrame implements TreeSelectionL
 	}
 
 	/**
-	 * Reset the status label to the emtpy string
+	 * Reset the status label to the empty string
 	 *
 	 */
 	public void resetStatus()

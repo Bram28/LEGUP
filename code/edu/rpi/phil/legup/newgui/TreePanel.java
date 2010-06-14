@@ -226,12 +226,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			}
 
 			currentStateBoxes.add(new Rectangle(draw.x - 23, draw.y - 23 + deltaY,45,yRad));
+			/* Moved to TreeFrame.java; should only snapto on a KeyEvent
 			if(sel.size()==1)
 			{
 				double scale = getScale();
 				moveX = (getWidth()/(scale*2))-draw.x;
 				moveY = (getHeight()/(scale*2))-draw.y;
-			}
+			}*/
 		}
 
 		if (!isCollapsed)
@@ -316,18 +317,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	}
 
 	/**
-	 * Setup the drawing (enable anti alias, set font, ect.)
-	 * @param g the graphics to use
-	 *//*
-	private static void setupDrawing(Graphics g)
-	{
-		Graphics2D g2 = (Graphics2D)g;
-		// Enable Anti-Aliasing
-		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-	}*/
-
-	/**
 	 * Draw the current state boxes (the cached selection)
 	 * @param g the graphics to use to draw
 	 */
@@ -407,9 +396,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 	protected void draw(Graphics2D g)
 	{
-		//fillBackground(g);
-		//setupDrawing(g);
-
 		currentStateBoxes.clear();
 		drawTree(g,Legup.getInstance().getInitialBoardState());
 		drawCurrentStateBoxes(g);
@@ -424,7 +410,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			if (B.getTransitionsFrom().size() > 1)
 			{
 				CaseRule CR = B.getCaseSplitJustification();
-				g.drawImage(CR.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
+				if(CR != null)
+					g.drawImage(CR.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
 			}
 			else // if (B.transitionsFrom.size() == 1)
 			{
@@ -434,16 +421,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			}
 		}
 	}
-
-	/**
-	 * Fill the background with white
-	 * @param g the Graphics object to use
-	 *//*
-	private void fillBackground(Graphics g)
-	{
-		g.setColor(Color.white);
-		g.fillRect(0,0,getWidth(),getHeight());
-	}*/
 
 	/**
 	 * Merge the two or more selected states
@@ -753,11 +730,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	private Point mousePoint;
 	protected void mouseMovedAt(Point p, MouseEvent e)
 	{
+		Selection prev = mouseOver;
 		Selection s = getSelectionAtPoint(Legup.getInstance().getInitialBoardState(), p);
 		mouseOver = s;
 		mousePoint = p;
 
-		repaint();
+		if( prev != null || mouseOver != null )
+			repaint();
 		Legup.getInstance().refresh();
 	}
 

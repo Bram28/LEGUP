@@ -7,15 +7,21 @@
 		</javac>
 	</target>
 
-	<target name="run" depends="compile" description="Runs the LEGUP main program">
+	<target name="legup" description="Runs the LEGUP main program">
 		<java classname="edu.rpi.phil.legup.Legup" fork="true" dir="run"/>
 	</target>
 
-	<target name="editor" depends="compile" description="Runs the LEGUP puzzle editor">
+	<target name="editor" description="Runs the LEGUP puzzle editor">
 		<java classname="edu.rpi.phil.legup.editor.PuzzleEditor" fork="true" dir="run"/>
 	</target>
 
-	<!-- JAR has unresolved dependency issues
+	<target name="test-legup" depends="compile,legup" description="Compiles and runs the LEGUP main program"/>
+
+	<target name="test-editor" depends="compile,editor" description="Compiles and runs the LEGUP puzzle editor"/>
+
+	<target name="run" depends="legup" description="Synonym for 'legup'"/>
+
+	<!-- JAR has unresolved dependency issues -->
 	<target name="jar" depends="compile" description="Creates a distributable JAR file for the LEGUP program">
 		<delete file="run/LEGUP.jar"/>
 		<jar destfile="run/LEGUP.jar" basedir="run" includes="edu/**/*.class">
@@ -24,7 +30,7 @@
 			</manifest>
 		</jar>
 	</target>
-	-->
+	<!-- -->
 
 	<target name="clean" description="Removes files generated from compilation">
 		<delete dir="run/edu"/>

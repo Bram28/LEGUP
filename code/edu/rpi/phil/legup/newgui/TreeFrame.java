@@ -17,6 +17,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
+import java.awt.Point;
+
 public class TreeFrame extends JInternalFrame implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
@@ -244,7 +246,16 @@ public class TreeFrame extends JInternalFrame implements JustificationAppliedLis
 				}
 			}
 		}
+		
+		// TODO snap to current selection
+		Point draw = (Point)s.get(0).getState().getLocation().clone();
+		double scale = treePanel.getScale();
+		treePanel.moveX = (treePanel.getWidth()/(scale*2))-draw.x;
+		treePanel.moveY = (treePanel.getHeight()/(scale*2))-draw.y;
+		
 		treePanel.repaint();
 		Legup.getInstance().refresh();
+		
+	
 	}
 }
