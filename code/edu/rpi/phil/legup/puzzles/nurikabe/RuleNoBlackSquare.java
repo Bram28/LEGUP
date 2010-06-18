@@ -89,18 +89,26 @@ public class RuleNoBlackSquare extends PuzzleRule
 	        		{
 	        			if(destBoardState.getCellContents(x,y) == Nurikabe.CELL_BLACK && destBoardState.getCellContents(x + 1,y) == Nurikabe.CELL_BLACK && destBoardState.getCellContents(x,y + 1) == Nurikabe.CELL_BLACK)
 	        			{
+	        				if(destBoardState.getCellContents(x+1,y+1)>0)
+	        					continue;
 	        				destBoardState.setCellContents(x + 1,y + 1, Nurikabe.CELL_WHITE);
 	        			}
 	        			else if(destBoardState.getCellContents(x,y) == Nurikabe.CELL_BLACK && destBoardState.getCellContents(x + 1,y) == Nurikabe.CELL_BLACK && destBoardState.getCellContents(x+1,y + 1) == Nurikabe.CELL_BLACK)
 	        			{
+	        				if(destBoardState.getCellContents(x,y+1)>0)
+	        					continue;
 	        				destBoardState.setCellContents(x,y + 1, Nurikabe.CELL_WHITE);
 	        			}
 	        			else if(destBoardState.getCellContents(x,y) == Nurikabe.CELL_BLACK && destBoardState.getCellContents(x + 1,y + 1) == Nurikabe.CELL_BLACK && destBoardState.getCellContents(x,y + 1) == Nurikabe.CELL_BLACK)
 	        			{
+	        				if(destBoardState.getCellContents(x+1,y)>0)
+	        					continue;
 	        				destBoardState.setCellContents(x + 1,y, Nurikabe.CELL_WHITE);
 	        			}
 	        			else if(destBoardState.getCellContents(x+1,y+1) == Nurikabe.CELL_BLACK && destBoardState.getCellContents(x + 1,y) == Nurikabe.CELL_BLACK && destBoardState.getCellContents(x,y + 1) == Nurikabe.CELL_BLACK)
 	        			{
+	        				if(destBoardState.getCellContents(x,y)>0)
+	        					continue;
 	        				destBoardState.setCellContents(x,y, Nurikabe.CELL_WHITE);
 	        			}      				
 	        		}

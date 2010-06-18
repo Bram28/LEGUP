@@ -281,9 +281,11 @@ public class Heyawake extends PuzzleModule
 	public Vector <PuzzleRule> getRules(){
 		Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
+		ruleList.add(new RuleOneRow());
 		ruleList.add(new RuleWhiteAroundBlack());
 		ruleList.add(new RuleFillRoomBlack());
 		ruleList.add(new RuleFillRoomWhite());
+		ruleList.add(new RuleOneUnknownWhite());
 		return ruleList;
 	}
 	
@@ -316,15 +318,15 @@ public class Heyawake extends PuzzleModule
 
     public boolean checkValidBoardState(BoardState boardState)
     {
-	int height = boardState.getHeight();
-	int width = boardState.getWidth();
+		int height = boardState.getHeight();
+		int width = boardState.getWidth();
 	
-	if(!checkWhiteConnected(boardState, width, height))
-	{
-		System.out.println("All the whites are not connected.");
-		return false;
-	}
-	return checkWhiteConnected(boardState, width, height) && checkBlackAdjacent(boardState, width, height) && checkRoomTooEmpty(boardState) && checkWhiteLine(boardState, width, height);
+		if(!checkWhiteConnected(boardState, width, height))
+		{
+			System.out.println("All the whites are not connected.");
+			return false;
+		}
+		return checkWhiteConnected(boardState, width, height) && checkBlackAdjacent(boardState, width, height) && checkRoomTooEmpty(boardState) && checkWhiteLine(boardState, width, height);
 	}
     
     public boolean checkWhiteConnected(BoardState boardState, int width, int height)

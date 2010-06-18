@@ -11,7 +11,7 @@ public class ContradictionNoNumber extends Contradiction
 	 ContradictionNoNumber()
 	 {
 		name = "No Number";
-		description = "All white regions must have a number.";
+		description = "All enclosed white regions must have a number.";
 		image = new ImageIcon("images/nurikabe/contradictions/NoNumber.png");
 	 }
 	 
@@ -61,6 +61,8 @@ public class ContradictionNoNumber extends Contradiction
     {
     	int numcount = 0;
     	if(boardState.getCellContents(x,y) > 0)
+    		++numcount;
+    	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
     		++numcount;
     	neighbors[y][x] = true;
     	if(x+1 < width)
