@@ -250,10 +250,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		setVisible(true);
 
 		// TODO experimental floating toolbar
+		/*
 		((BasicToolBarUI) console.getUI()).setFloatingLocation(500,500);
 		((BasicToolBarUI) console.getUI()).setFloating(true, new Point(500,500));
-		((BasicToolBarUI) console.getUI()).setFloatingColor(Color.black);
-		((BasicToolBarUI) console.getUI()).setDockingColor(Color.red);
+		*/
 
 		fileChooser = new FileDialog(this);
 	}
