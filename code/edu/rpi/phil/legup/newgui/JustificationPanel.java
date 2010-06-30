@@ -1,11 +1,15 @@
 package edu.rpi.phil.legup.newgui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.JViewport;
+import javax.swing.Scrollable;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Legup;
@@ -16,7 +20,7 @@ import edu.rpi.phil.legup.Selection;
  * Inherited by ContradictionPanel, BasicRulePanel, and CasePanel
  *
  */
-public abstract class JustificationPanel extends JPanel implements ActionListener
+public abstract class JustificationPanel extends JPanel implements ActionListener, Scrollable
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 
@@ -39,10 +43,10 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 	 */
 	protected void buttonPressed(int button, boolean defaultApplication)
 	{
-		if (!defaultApplication)
-			checkJustification(button);
-		else
+		if( defaultApplication )
 			startDefaultApplication(button);
+		else
+			checkJustification(button);
 	}
 	
 	protected abstract void checkJustification(int button);
@@ -119,5 +123,25 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 				return;
 			}
 		}
+	}
+	
+	/*** Scrollable interface ***/
+	public Dimension getPreferredScrollableViewportSize(){
+		return getPreferredSize();
+	}
+	public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ){
+		return 16;
+	}
+	public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ){
+		return 16;
+	}
+	public boolean getScrollableTracksViewportHeight(){
+		if (getParent() instanceof JViewport) {
+			return (((JViewport) getParent()).getHeight() > getPreferredSize().height);
+		}
+		return false;
+	}
+	public boolean getScrollableTracksViewportWidth(){
+		return true;
 	}
 }

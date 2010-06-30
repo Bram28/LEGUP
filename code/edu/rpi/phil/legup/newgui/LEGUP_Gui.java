@@ -62,16 +62,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	 *	AUTO_JUST:		AI automatically justifies moves as you make them.
 	 */
 	private static int CONFIG_INDEX = 0;
-	public static final int ALLOW_HINTS = 1,
-							ALLOW_DEFAPP = 2,
-							ALLOW_FULLAI = 4,
-							ALLOW_JUST = 8,
-							REQ_STEP_JUST = 16,
-							IMD_FEEDBACK = 32,
-							INTERN_RO = 64,
-							AUTO_JUST = 128;
-	public static boolean profFlag(int flag)
-	{
+	public static final int ALLOW_HINTS = 1;
+	public static final int ALLOW_DEFAPP = 2;
+	public static final int ALLOW_FULLAI = 4;
+	public static final int ALLOW_JUST = 8;
+	public static final int REQ_STEP_JUST = 16;
+	public static final int IMD_FEEDBACK = 32;
+	public static final int INTERN_RO = 64;
+	public static final int AUTO_JUST = 128;
+
+	public static boolean profFlag( int flag ){
 		return !((PROF_FLAGS[CONFIG_INDEX] & flag) == 0);
 	}
 
@@ -82,67 +82,45 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		"Assisted Proof",
 		"Guided Proof",
 		"Training-Wheels Proof",
-		"No Restrictions"};
-	private static final int[] PROF_FLAGS =  {
+		"No Restrictions" };
+	private static final int[] PROF_FLAGS = {
 		0,
 		ALLOW_JUST | REQ_STEP_JUST,
 		ALLOW_JUST,
 		ALLOW_HINTS | ALLOW_JUST | AUTO_JUST,
 		ALLOW_HINTS | ALLOW_JUST | REQ_STEP_JUST,
 		ALLOW_HINTS | ALLOW_DEFAPP | ALLOW_JUST | IMD_FEEDBACK | INTERN_RO,
-		ALLOW_HINTS | ALLOW_DEFAPP | ALLOW_FULLAI | ALLOW_JUST};
+		ALLOW_HINTS | ALLOW_DEFAPP | ALLOW_FULLAI | ALLOW_JUST };
 
 	private static final int BOARD = 0;
 	private static final int JUSTIFICATION = 1;
-	private static final int TREE = 2;
 
+	/*** TOOLBAR CONSTANTS ***/
 	private static final int TOOLBAR_NEW = 0;
 	private static final int TOOLBAR_OPEN = 1;
 	private static final int TOOLBAR_SAVE = 2;
-
+	/* --- */
 	private static final int TOOLBAR_UNDO = 3;
 	private static final int TOOLBAR_REDO = 4;
-
+	/* --- */
 	private static final int TOOLBAR_CONSOLE = 5;
 	private static final int TOOLBAR_HINT = 6;
 	private static final int TOOLBAR_CHECK = 7;
-	
-	/*private static final int TOOLBAR_BOARD = 5;
-	private static final int TOOLBAR_JUSTIFICATION = 6;
-	private static final int TOOLBAR_TREE = 7;*/
-	
+	/* --- */
+	private static final int TOOLBAR_ZOOMIN = 8;
+	private static final int TOOLBAR_ZOOMOUT = 9;
+	private static final int TOOLBAR_ZOOMRESET = 10;
+	private static final int TOOLBAR_ZOOMFIT = 11;
+
 
 	PickGameDialog pgd = null;
 	Legup legupMain = null;
-
+	private final FileDialog fileChooser;
+	
 	private JDesktopPane mdiPane = new JDesktopPane();
 
-	private JMenuBar bar = new JMenuBar();
-
-	private JMenu file = new JMenu("File");
-		private JMenuItem newPuzzle = new JMenuItem("New Puzzle");
-		private JMenuItem genPuzzle = new JMenuItem("Puzzle Generators");
-		private JMenuItem openProof = new JMenuItem("Open LEGUP Proof");
-		private JMenuItem saveProof = new JMenuItem("Save LEGUP Proof");
-		private JMenuItem exit = new JMenuItem("Exit");
-	private JMenu edit = new JMenu("Edit");
-		private JMenuItem undo = new JMenuItem("Undo");
-		private JMenuItem redo = new JMenuItem("Redo");
-	private JMenu view = new JMenu("View");
-	private JMenu proof = new JMenu("Proof");
-	//added by Jacob
-	private JMenu AI = new JMenu("AI");
-		private JMenuItem Run = new JMenuItem("Run AI to completion");
-		private JMenuItem Step = new JMenuItem("Run AI one Step");
-		private JMenuItem Test = new JMenuItem("Test AI!");
-		private JMenuItem hint = new JMenuItem("Hint");
-
 	private edu.rpi.phil.legup.AI myAI = new edu.rpi.phil.legup.AI();
-	//end additions
-	private JMenu help = new JMenu("Help");
-	
 
-	private final FileDialog fileChooser;
 
 	final static String[] toolBarNames =
 	{
@@ -166,10 +144,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		new JButton(toolBarNames[5], new ImageIcon("images/" + toolBarNames[5] + ".png")),
 		new JButton(toolBarNames[6], new ImageIcon("images/" + toolBarNames[6] + ".png")),
 		new JButton(toolBarNames[7], new ImageIcon("images/" + toolBarNames[7] + ".png"))
-		/*new JToggleButton(new ImageIcon("images/" + toolBarNames[5] + ".png")),
-		new JToggleButton(new ImageIcon("images/" + toolBarNames[6] + ".png")),
-		new JToggleButton(new ImageIcon("images/" + toolBarNames[7] + ".png")),
-		new JToggleButton(new ImageIcon("images/" + toolBarNames[8] + ".png"))*/
 	};
 
 	final static int[] toolbarSeperatorBefore =
@@ -177,25 +151,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		3, 5
 	};
 
-	private JToolBar toolBar;
-	
-	// TODO
-	JToolBar treet;
-	TreePanel treep;
-	//private TreeToolbarPanel treeb = new TreeToolbarPanel(this);
-
 	private final static String[] types =
 	{
-			"Board",
-			"Justification",
-			"Tree"
-	};
-
-	private JCheckBoxMenuItem[] viewItem =
-	{
-			new JCheckBoxMenuItem(types[0],false),
-			new JCheckBoxMenuItem(types[1],false),
-			new JCheckBoxMenuItem(types[2],false)
+		"Board",
+		"Justification"
 	};
 
 	private JustificationFrame justificationFrame;
@@ -203,140 +162,71 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private JInternalFrame[] frames =
 	{
 			new JInternalFrame(types[0]),
-			null, // justification is initialized in construtor
-			null // tree is initialized in constructor
+			null // justification is initialized in construtor
 	};
-
-	private JCheckBoxMenuItem allowDefault =
-		new JCheckBoxMenuItem("Allow Default Rule Applications",false);
-	private JMenu proofMode = new JMenu("Proof Mode");
-	private JCheckBoxMenuItem[] proofModeItems = new JCheckBoxMenuItem[PROF_FLAGS.length];
 
 	// Modified for access - Daniel P
 	private BoardPanel boardPanel = null;
+
 	public void repaintBoard()
 	{
 		if (boardPanel != null) boardPanel.boardDataChanged(null);
 	}
 
-	private Console console;
 	public LEGUP_Gui(Legup legupMain)
 	{
-		
-		this.setLayout(new BorderLayout());
-		this.add(mdiPane, BorderLayout.CENTER);
-		
-		mdiPane.setPreferredSize(new Dimension(800,600));
-		
-		// TODO Console
-		console = new Console();
-		this.add(console,BorderLayout.SOUTH);
-		
 		this.legupMain = legupMain;
 		legupMain.getSelections().addTreeSelectionListener(this);
+		
 		setTitle("LEGUP");
 
+		setLayout( new BorderLayout() );
+
+		add( mdiPane );
+		mdiPane.setPreferredSize( new Dimension(800,600) );
+		
 		setupMenu();
 		setupToolBar();
+		// TODO
+		setupContent();
+		/////
 		setupFrames();
 		pack();
 
-		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		/*setLocation(100,50);
-		setSize(800,600);*/
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		setVisible(true);
-
-		// TODO experimental floating toolbar
-		/*
-		((BasicToolBarUI) console.getUI()).setFloatingLocation(500,500);
-		((BasicToolBarUI) console.getUI()).setFloating(true, new Point(500,500));
-		*/
 
 		fileChooser = new FileDialog(this);
 	}
 
-	private void setupToolBar()
-	{
-		toolBar = new JToolBar();
-		toolBar.setFloatable( false );
-		toolBar.setRollover( true );
-
-		for (int x = 0; x < toolBarButtons.length; ++x){
-
-			for (int y = 0; y < toolbarSeperatorBefore.length; ++y){
-				if (x == toolbarSeperatorBefore[y]){
-					toolBar.addSeparator();
-				}
-			}
-
-			toolBar.add(toolBarButtons[x]);
-			toolBarButtons[x].addActionListener(this);
-			toolBarButtons[x].setToolTipText(toolBarNames[x]);
-			// TODO text under icons
-			toolBarButtons[x].setVerticalTextPosition( SwingConstants.BOTTOM );
-			toolBarButtons[x].setHorizontalTextPosition( SwingConstants.CENTER );
-		}
-
-		// TODO disable buttons
-		toolBarButtons[TOOLBAR_SAVE].setEnabled(false);
-		toolBarButtons[TOOLBAR_UNDO].setEnabled(false);
-		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
-		toolBarButtons[TOOLBAR_HINT].setEnabled(false);
-		toolBarButtons[TOOLBAR_CHECK].setEnabled(false);
-
-		this.add(toolBar, BorderLayout.NORTH);
-	}
-
-	private void setupFrames()
-	{
-		// initialize
-		justificationFrame = new JustificationFrame(types[1],this);
-		frames[JUSTIFICATION] = justificationFrame;
-
-		frames[TREE] = new TreeFrame(types[TREE],legupMain,this);
-		// TODO
-		//this.add(new TreePanel(), BorderLayout.EAST);
-		
-		// TODO float
-		treet = new JToolBar("Tree");
-		treet.setLayout(new BorderLayout());
-		treet.setPreferredSize(new Dimension(150,500));
-		
-		treep = new TreePanel();
-		//treet.add(treeb,BorderLayout.NORTH);
-		treet.add(treep);
-		
-		
-		
-		
-		// end of TODO
-
-		boardPanel = new BoardPanel(this);
-
-		// gui
-		//frames[BOARD].setLayout(new BorderLayout());
-		//frames[BOARD].add(boardPanel,BorderLayout.CENTER);
-		frames[BOARD].add(boardPanel);
-
-		//boardPanel.setLayout(new FlowLayout());
-
-//		 window listeners
-		for (int x = 0; x < frames.length; ++x)
-		{
-			frames[x].addInternalFrameListener(this);
-			frames[x].setResizable(true);
-			frames[x].setClosable(true);
-			frames[x].setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-			mdiPane.add(frames[x]);
-		}
-		//mdiPane.setSize(frames[JUSTIFICATION].getWidth(), frames[TREE].getHeight());
-	}
-
-	private void setupMenu()
-	{
+	// menubar related fields
+	private JMenuBar bar = new JMenuBar();
+	private JMenu file = new JMenu("File");
+		private JMenuItem newPuzzle = new JMenuItem("New Puzzle");
+		private JMenuItem genPuzzle = new JMenuItem("Puzzle Generators");
+		private JMenuItem openProof = new JMenuItem("Open LEGUP Proof");
+		private JMenuItem saveProof = new JMenuItem("Save LEGUP Proof");
+		private JMenuItem exit = new JMenuItem("Exit");
+	private JMenu edit = new JMenu("Edit");
+		private JMenuItem undo = new JMenuItem("Undo");
+		private JMenuItem redo = new JMenuItem("Redo");
+	private JMenu view = new JMenu("View");
+		private JCheckBoxMenuItem[] viewItem = {
+			new JCheckBoxMenuItem(types[0],false),
+			new JCheckBoxMenuItem(types[1],false)
+		};
+	private JMenu proof = new JMenu("Proof");
+		private JCheckBoxMenuItem allowDefault = new JCheckBoxMenuItem("Allow Default Rule Applications",false);
+		private JMenu proofMode = new JMenu("Proof Mode");
+			private JCheckBoxMenuItem[] proofModeItems = new JCheckBoxMenuItem[PROF_FLAGS.length];
+	private JMenu AI = new JMenu("AI");
+		private JMenuItem Run = new JMenuItem("Run AI to completion");
+		private JMenuItem Step = new JMenuItem("Run AI one Step");
+		private JMenuItem Test = new JMenuItem("Test AI!");
+		private JMenuItem hint = new JMenuItem("Hint");
+	private JMenu help = new JMenu("Help");
+	// contains all the code to setup the menubar
+	private void setupMenu(){
 		bar.add(file);
 			file.add(newPuzzle);
 				newPuzzle.addActionListener(this);
@@ -373,12 +263,12 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 			proof.add(allowDefault);
 				allowDefault.addActionListener(this);
 			proof.add(proofMode);
-			for (int i = 0; i < PROF_FLAGS.length; i++)
-			{
-				proofModeItems[i] = new JCheckBoxMenuItem(PROFILES[i], i == CONFIG_INDEX);
-				proofModeItems[i].addActionListener(this);
-				proofMode.add(proofModeItems[i]);
-			}
+				for (int i = 0; i < PROF_FLAGS.length; i++)
+				{
+					proofModeItems[i] = new JCheckBoxMenuItem(PROFILES[i], i == CONFIG_INDEX);
+					proofModeItems[i].addActionListener(this);
+					proofMode.add(proofModeItems[i]);
+				}
 
 		bar.add(AI);
 			AI.add(Step);
@@ -391,11 +281,99 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 				Test.addActionListener(this);
 			AI.add(hint);
 				hint.addActionListener(this);
-				hint.setAccelerator(KeyStroke.getKeyStroke('h'));
+				hint.setAccelerator(KeyStroke.getKeyStroke('H',0));
 
 		bar.add(help);
 
 		setJMenuBar(bar);
+	}
+
+	// toolbar related fields
+	private JToolBar toolBar;
+	// contains all the code to setup the toolbar
+	private void setupToolBar(){
+		toolBar = new JToolBar();
+		toolBar.setFloatable( false );
+		toolBar.setRollover( true );
+
+		for (int x = 0; x < toolBarButtons.length; ++x){
+
+			for (int y = 0; y < toolbarSeperatorBefore.length; ++y){
+				if (x == toolbarSeperatorBefore[y]){
+					toolBar.addSeparator();
+				}
+			}
+
+			toolBar.add(toolBarButtons[x]);
+			toolBarButtons[x].addActionListener(this);
+			toolBarButtons[x].setToolTipText(toolBarNames[x]);
+			// TODO text under icons
+			toolBarButtons[x].setVerticalTextPosition( SwingConstants.BOTTOM );
+			toolBarButtons[x].setHorizontalTextPosition( SwingConstants.CENTER );
+		}
+
+		// TODO disable buttons
+		toolBarButtons[TOOLBAR_SAVE].setEnabled(false);
+		toolBarButtons[TOOLBAR_UNDO].setEnabled(false);
+		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
+		toolBarButtons[TOOLBAR_HINT].setEnabled(false);
+		toolBarButtons[TOOLBAR_CHECK].setEnabled(false);
+
+		add( toolBar, BorderLayout.NORTH );
+	}
+
+
+	// TODO
+	JToolBar treet;
+	TreePanel treep;
+	Tree tree;
+	//private TreeToolbarPanel treeb = new TreeToolbarPanel(this);
+	private Console console;
+	// contains all the code to setup the main content
+	private void setupContent(){
+		
+		// TODO Console
+		console = new Console();
+		add( console, BorderLayout.SOUTH );
+		
+		// TODO experimental floating toolbar
+		/*
+		((BasicToolBarUI) console.getUI()).setFloatingLocation(500,500);
+		((BasicToolBarUI) console.getUI()).setFloating(true, new Point(500,500));
+		*/
+		
+		// TODO
+		
+		tree = new Tree( this );
+		add( tree, BorderLayout.EAST );
+	}
+
+	private void setupFrames(){
+		// initialize
+		justificationFrame = new JustificationFrame(types[1],this);
+		frames[JUSTIFICATION] = justificationFrame;
+
+		//frames[TREE] = new TreeFrame(types[TREE],legupMain,this);
+
+		boardPanel = new BoardPanel(this);
+
+		// gui
+		//frames[BOARD].setLayout(new BorderLayout());
+		//frames[BOARD].add(boardPanel,BorderLayout.CENTER);
+		frames[BOARD].add(boardPanel);
+
+		//boardPanel.setLayout(new FlowLayout());
+
+//		 window listeners
+		for (int x = 0; x < frames.length; ++x)
+		{
+			frames[x].addInternalFrameListener(this);
+			frames[x].setResizable(true);
+			frames[x].setClosable(true);
+			frames[x].setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+			mdiPane.add(frames[x]);
+		}
+		//mdiPane.setSize(frames[JUSTIFICATION].getWidth(), frames[TREE].getHeight());
 	}
 
 	private void selectNewPuzzle()
@@ -473,16 +451,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 
 
-	/*private int buttonIndexToFrameIndex(int buttonIndex)
-	{
-		return buttonIndex - TOOLBAR_BOARD;
-	}
-
-	private int frameIndexToButtonIndex(int frameIndex)
-	{
-		return TOOLBAR_BOARD + frameIndex;
-	}*/
-
 	/**
 	 * Show the JFrame cooresponding to the ID (like BOARD or TREE)
 	 * @param ID the frame type to show, static member of LEGUP_Gui
@@ -497,10 +465,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		else if (ID == JUSTIFICATION)
 		{
 			frames[ID].setLocation(0,0);
-		}
-		else if (ID == TREE)
-		{
-			frames[ID].setLocation(frames[BOARD].getX() + frames[BOARD].getWidth(),frames[BOARD].getY());
 		}
 
 		frames[ID].pack();
@@ -521,7 +485,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private void showAll() {
 		showFrame(JUSTIFICATION);
 		showFrame(BOARD);
-		showFrame(TREE);
 		// TODO disable buttons
 		toolBarButtons[TOOLBAR_SAVE].setEnabled(true);
 		toolBarButtons[TOOLBAR_UNDO].setEnabled(true);
@@ -529,16 +492,14 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		toolBarButtons[TOOLBAR_HINT].setEnabled(true);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(true);
 		///
-		this.add( treet, BorderLayout.EAST);
 		this.pack();
 	}
 
 	private void repaintAll()
 	{
-		for (int x = 0; x < frames.length; ++x)
-		{
-			frames[x].repaint();
-		}
+		frames[BOARD].repaint();
+		frames[JUSTIFICATION].repaint();
+		tree.repaint();
 	}
 
 
@@ -639,10 +600,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		}
 		else if (e.getSource() == hint || e.getSource() == toolBarButtons[TOOLBAR_HINT])
 		{
-			myAI.setBoard(Legup.getInstance().getPuzzleModule());
-			String text = new String( myAI.findRuleApplication(Legup.getInstance().getSelections().getFirstSelection().getState()) );
+			// Is this really necessary? It's already being set when the puzzle loads...
+			//myAI.setBoard(Legup.getInstance().getPuzzleModule());
 			// TODO console
-			console.println("Tutor: " + text);
+			console.println("Tutor: " + myAI.findRuleApplication(Legup.getInstance().getSelections().getFirstSelection().getState()) );
 		}
 		else if (e.getSource() == allowDefault)
 		{

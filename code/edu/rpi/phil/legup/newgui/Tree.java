@@ -1,50 +1,94 @@
 package edu.rpi.phil.legup.newgui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.swing.AbstractAction;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.KeyStroke;
-
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.Point;
 
-public class TreeFrame extends JInternalFrame implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
+public class Tree extends JToolBar implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 	
-	private TreeToolbarPanel toolbar = new TreeToolbarPanel(this);
+	private class TreeToolbar extends JPanel implements ActionListener
+	{
+		private static final long serialVersionUID = 8572197337878587284L;
+
+		JButton addChild = new JButton(new ImageIcon("images/AddChild.png"));
+		JButton delChild = new JButton(new ImageIcon("images/DelChild.png"));
+		JButton merge = new JButton(new ImageIcon("images/Merge.png"));
+		JButton collapse = new JButton(new ImageIcon("images/Collapse.png"));
+	
+		TreeToolbar()
+		{
+			add(addChild);
+			addChild.addActionListener(this);
+			add(delChild);
+			delChild.addActionListener(this);
+			add(merge);
+			merge.addActionListener(this);
+			add(collapse);
+			collapse.addActionListener(this);
+		}
+
+		public void actionPerformed(ActionEvent e)
+		{
+			if (e.getSource() == addChild)
+			{
+				addChildAtCurrentState();
+			}
+			else if (e.getSource() == delChild)
+			{
+				delChildAtCurrentState();
+			}
+			else if (e.getSource() == merge)
+			{
+				mergeStates();
+			}
+			else if (e.getSource() == collapse)
+			{
+				collapseStates();
+			}
+		}
+	}
+	
+	private TreeToolbar toolbar = new TreeToolbar();
 	TreePanel treePanel = null;
 	private LEGUP_Gui gui = null;
 	
 	private JLabel status = new JLabel();
 
-	TreeFrame(String title, Legup main, LEGUP_Gui gui)
-	{
-		super(title);
+	Tree( LEGUP_Gui gui ){
+		super("Tree");
 		
 		this.gui = gui;
 		treePanel = new TreePanel();	
 		
-		Container c = getContentPane();
 		
-		c.setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
 		
-		c.add(toolbar,BorderLayout.NORTH);
-		c.add(treePanel,BorderLayout.CENTER);
+		add(toolbar,BorderLayout.NORTH);
+		add(treePanel,BorderLayout.CENTER);
 		
 		status.setPreferredSize(new Dimension(150,20));
-		c.add(status,BorderLayout.SOUTH);
+		add(status,BorderLayout.SOUTH);
 		
 		JustificationFrame.addJustificationAppliedListener(this);
 		

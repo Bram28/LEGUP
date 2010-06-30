@@ -42,9 +42,9 @@ public abstract class BoardDrawingHelper
 		imageHeight = d.height;
 
 		Rectangle2D fontRect = g.getFontMetrics(labelFont).getStringBounds("AA", g);
-		fontLeft = (int)((pm.getImageSize().width - fontRect.getWidth()) / 2.0);
-		halffontLeft = (int)((pm.getImageSize().width - (fontRect.getWidth() / 2)) / 2.0);
-		fontTop = (int)(( pm.getImageSize().height - fontRect.getHeight()) / -2.0);
+		fontLeft = (int)((imageWidth - fontRect.getWidth()) / 2.0);
+		halffontLeft = (int)((imageWidth - (fontRect.getWidth() / 2)) / 2.0);
+		fontTop = (int)(( imageHeight - fontRect.getHeight()) / -2.0);
 	}
 
 

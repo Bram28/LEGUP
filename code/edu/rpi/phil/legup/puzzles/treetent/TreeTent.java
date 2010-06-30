@@ -132,11 +132,11 @@ public class TreeTent extends PuzzleModule
 		if (cellValue == 0){
 			return "images/treetent/unknown.gif";
 		} else if (cellValue == 3){
-			return "images/treetent/grass.gif";
+			return "images/treetent/grass.png";
 		} else if (cellValue == 1){
-		    return "images/treetent/tree.gif";
+		    return "images/treetent/tree.png";
 		} else if (cellValue == 2){
-		    return "images/treetent/tent.gif";
+		    return "images/treetent/tent.png";
 		} else if (cellValue >= 10 && cellValue < 30){
 		    return "images/treetent/" + (cellValue-10)+".gif"; }
 		  else if (cellValue >= 30 && cellValue <= 39){

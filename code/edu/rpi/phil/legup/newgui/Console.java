@@ -27,7 +27,7 @@ public class Console extends JToolBar
 
 	Console() {
 		super("LEGUP");
-		super.setLayout(new BorderLayout());
+		setLayout( new BorderLayout() );
 
 		output = new JTextArea("LEGUP Console v1.0\n");
 		output.setAutoscrolls(true);
@@ -39,16 +39,17 @@ public class Console extends JToolBar
 		//output.setBackground( Color.BLACK );
 		//output.setForeground( Color.GREEN );
 
-		scrollPane = new JScrollPane(output, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
-		this.add(scrollPane);
+		scrollPane = new JScrollPane(output);//, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
+		add(scrollPane);
 		
 		//ImageIcon icon = new ImageIcon("images/bar.png");
 		//Border titlebar= BorderFactory.createMatteBorder(24, 0, 0, 0, icon);
 		TitledBorder title = BorderFactory.createTitledBorder( /*titlebar,*/ "Console");
 		title.setTitleJustification(TitledBorder.CENTER);
-		this.setBorder(title);
+		
+		setBorder(title);
 
-		this.setPreferredSize( new Dimension(800,100) );
+		setPreferredSize( new Dimension( 200, 100 ) );
 		
 
 		/*/ extremely hackish way to prevent orientation changes

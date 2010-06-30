@@ -443,7 +443,7 @@ public abstract class PuzzleModule
 	 */
 	public void drawGrid(Graphics g, Rectangle bounds, int w, int h)
 	{
-		g.setColor(Color.black);
+		g.setColor(Color.gray);
 
 		double dx = bounds.width / (double)w;
 		double dy = bounds.height / (double)h;

@@ -66,7 +66,7 @@ public class LightUp extends PuzzleModule
 		if (cellValue == CELL_UNKNOWN){
 			return "images/lightup/unknown.gif";
 		} else if (cellValue == CELL_LIGHT){
-			return "images/lightup/light.gif";
+			return "images/lightup/light.png";
 		} else if (cellValue == CELL_BLANK){
 		    return "images/lightup/blank.gif";
 		} else if (cellValue >= 10 && cellValue < 15){

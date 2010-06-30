@@ -101,8 +101,20 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		return rv;
 	}
 
+	protected void draw(Graphics2D g)
+	{
+		currentStateBoxes.clear();
+		BoardState state = Legup.getInstance().getInitialBoardState();
+		if( state != null ){
+			drawTree(g,state);
+			drawCurrentStateBoxes(g);
+			if (mouseOver != null) drawMouseOver(g);
+		}
+	}
+
 	/**
-	 * Draw the tree past this state
+	 * Recursively renders the tree below <code>state</code>.
+	 * Passing in the root node will effectively draw the entire tree.
 	 * @param g the Graphics to draw on
 	 * @param state the state we're drawing
 	 */
@@ -226,13 +238,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			}
 
 			currentStateBoxes.add(new Rectangle(draw.x - 23, draw.y - 23 + deltaY,45,yRad));
-			/* Moved to TreeFrame.java; should only snapto on a KeyEvent
-			if(sel.size()==1)
-			{
-				double scale = getScale();
-				moveX = (getWidth()/(scale*2))-draw.x;
-				moveY = (getHeight()/(scale*2))-draw.y;
-			}*/
 		}
 
 		if (!isCollapsed)
@@ -251,28 +256,87 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	}
 
 	/**
+	 * Draw the current transition (will make it blue if it's part of the selection)
+
+	 * @param trans the line of the transition we're drawing, starting at the source
+	 * @param g the graphics to use
+	 * @param parent the parent board state of the transition we're drawing
+	 * @param collapsedChild is the child we're connecting to a collapsed state
+	 */
+	private void drawTransition(Line2D.Float trans, Graphics g,
+			BoardState parent, boolean collapsedChild)
+	{
+		Graphics2D g2d = (Graphics2D)g;
+		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
+		Selection theSelection = new Selection(parent,true);
+		int nodeRadius = collapsedChild ? SMALL_NODE_RADIUS : NODE_RADIUS;
+
+		if (sel.contains(theSelection))
+		{
+			g2d.setStroke(medium);
+			g.setColor(Color.blue);
+		}
+
+		g2d.draw(trans);
+
+		// we also want to draw the arrowhead
+		final int ARROW_SIZE = 8;
+
+		// find the tip of the arrow, the point NODE_RADIUS away from the destination endpoint
+		double theta = Math.atan2(trans.y2 - trans.y1, trans.x2 - trans.x1);
+
+		double nx = nodeRadius * Math.cos(theta);
+		double ny = nodeRadius * Math.sin(theta);
+
+		int px = (int)Math.round(trans.x2 - nx);
+		int py = (int)Math.round(trans.y2 - ny);
+
+		Polygon arrowhead = new Polygon();
+		arrowhead.addPoint(px, py);
+
+		nx = (nodeRadius + ARROW_SIZE) * Math.cos(theta);
+		ny = (nodeRadius + ARROW_SIZE) * Math.sin(theta);
+
+		px = (int)Math.round(trans.x2 - nx);
+		py = (int)Math.round(trans.y2 - ny);
+		// px and py are now the "base" of the arrowhead
+
+		theta += Math.PI / 2.0;
+		double dx = (ARROW_SIZE / 2) * Math.cos(theta);
+		double dy = (ARROW_SIZE / 2) * Math.sin(theta);
+
+		arrowhead.addPoint((int)Math.round(px + dx), (int)Math.round(py + dy));
+
+		theta -= Math.PI;
+		dx = (ARROW_SIZE / 2) * Math.cos(theta);
+		dy = (ARROW_SIZE / 2) * Math.sin(theta);
+
+		arrowhead.addPoint((int)Math.round(px + dx), (int)Math.round(py + dy));
+
+		g2d.fill(arrowhead);
+	}
+
+	/**
 	 * Draw a node at a given location
 	 * @param g the graphics to draw it with
 	 * @param x the x location of the center of the node
 	 * @param y the y location of the center of the node
 	 * @param state the state to draw
 	 */
-	private void drawNode(Graphics g,int x, int y, BoardState state)
-	{
-		final int rad = NODE_RADIUS;
-		final int diam = 2 * rad;
-		int status = state.getStatus();
+	private void drawNode( Graphics g, int x, int y, BoardState state ){
+		final int diam = NODE_RADIUS + NODE_RADIUS;
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
 
 		g.setColor(nodeColor);
-		g.fillOval(x - rad,y - rad,diam,diam);
+		g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
 		g.setColor(Color.black);
-		g.drawOval(x - rad,y - rad,diam,diam);
+		g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
 
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
 		// extra drawing instructions
+		int status = state.getStatus();
 		Image i = images[status];
 
 		if (i == null)
@@ -332,74 +396,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			for (int x = 0; x < currentStateBoxes.size(); ++x)
 				g2d.draw(currentStateBoxes.get(x));
 		}
-	}
-
-	/**
-	 * Draw the current transition (will make it blue if it's part of the selection)
-	 * @param trans the line of the transition we're drawing, starting at the source
-	 * @param g the graphics to use
-	 * @param parent the parent board state of the transition we're drawing
-	 * @param collapsedChild is the child we're connecting to a collapsed state
-	 */
-	private void drawTransition(Line2D.Float trans, Graphics g,
-			BoardState parent, boolean collapsedChild)
-	{
-		Graphics2D g2d = (Graphics2D)g;
-		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
-		Selection theSelection = new Selection(parent,true);
-		int nodeRadius = collapsedChild ? SMALL_NODE_RADIUS : NODE_RADIUS;
-
-		if (sel.contains(theSelection))
-		{
-			g2d.setStroke(medium);
-			g.setColor(Color.blue);
-		}
-
-		g2d.draw(trans);
-
-		// we also want to draw the arrowhead
-		final int ARROW_SIZE = 8;
-
-		// find the tip of the arrow, the point NODE_RADIUS away from the destination endpoint
-		double theta = Math.atan2(trans.y2 - trans.y1, trans.x2 - trans.x1);
-
-		double nx = nodeRadius * Math.cos(theta);
-		double ny = nodeRadius * Math.sin(theta);
-
-		int px = (int)Math.round(trans.x2 - nx);
-		int py = (int)Math.round(trans.y2 - ny);
-
-		Polygon arrowhead = new Polygon();
-		arrowhead.addPoint(px, py);
-
-		nx = (nodeRadius + ARROW_SIZE) * Math.cos(theta);
-		ny = (nodeRadius + ARROW_SIZE) * Math.sin(theta);
-
-		px = (int)Math.round(trans.x2 - nx);
-		py = (int)Math.round(trans.y2 - ny);
-		// px and py are now the "base" of the arrowhead
-
-		theta += Math.PI / 2.0;
-		double dx = (ARROW_SIZE / 2) * Math.cos(theta);
-		double dy = (ARROW_SIZE / 2) * Math.sin(theta);
-
-		arrowhead.addPoint((int)Math.round(px + dx), (int)Math.round(py + dy));
-
-		theta -= Math.PI;
-		dx = (ARROW_SIZE / 2) * Math.cos(theta);
-		dy = (ARROW_SIZE / 2) * Math.sin(theta);
-
-		arrowhead.addPoint((int)Math.round(px + dx), (int)Math.round(py + dy));
-
-		g2d.fill(arrowhead);
-	}
-
-	protected void draw(Graphics2D g)
-	{
-		currentStateBoxes.clear();
-		drawTree(g,Legup.getInstance().getInitialBoardState());
-		drawCurrentStateBoxes(g);
-		if (mouseOver != null) drawMouseOver(g);
 	}
 
 	private void drawMouseOver(Graphics2D g)

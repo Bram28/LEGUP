@@ -15,11 +15,16 @@
 		<java classname="edu.rpi.phil.legup.editor.PuzzleEditor" fork="true" dir="run"/>
 	</target>
 
-	<target name="test-legup" depends="compile,legup" description="Compiles and runs the LEGUP main program"/>
+	<target name="test-legup" description="Compiles and runs the LEGUP main program">
+		<javac srcdir="code/edu" destdir="run"/>
+		<java classname="edu.rpi.phil.legup.Legup" fork="true" dir="run"/>
+	</target>
 
 	<target name="test-editor" depends="compile,editor" description="Compiles and runs the LEGUP puzzle editor"/>
 
 	<target name="run" depends="legup" description="Synonym for 'legup'"/>
+
+	<target name="test" depends="test-legup" description="Synonym for 'test-legup'"/>
 
 	<!-- JAR has unresolved dependency issues -->
 	<target name="jar" depends="compile" description="Creates a distributable JAR file for the LEGUP program">
