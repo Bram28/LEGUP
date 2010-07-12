@@ -21,11 +21,15 @@ import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Selection;
 
+import javax.swing.BorderFactory; 
+//import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+
 /**
  * Frame for holding tabbed contradiction panels for user justification.
  *
  */
-public class JustificationFrame extends JInternalFrame implements TreeSelectionListener, BoardDataChangeListener
+public class JustificationFrame extends JToolBar implements TreeSelectionListener, BoardDataChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 
@@ -47,9 +51,9 @@ public class JustificationFrame extends JInternalFrame implements TreeSelectionL
 	private ButtonGroup bg = new ButtonGroup();
 	ButtonGroup getButtonGroup(){return bg;}
 
-	JustificationFrame(String title, LEGUP_Gui parent)
+	JustificationFrame( LEGUP_Gui parent )
 	{
-		super(title);
+		super("Rules");
 
 		basicRulePanel = new BasicRulePanel(this);
 		tabs.addTab(basicRulePanel.name, basicRulePanel.icon, new JScrollPane(basicRulePanel), basicRulePanel.toolTip);
@@ -62,14 +66,19 @@ public class JustificationFrame extends JInternalFrame implements TreeSelectionL
 
 		//JScrollPane scroller = new JScrollPane(tabs);
 
-		JPanel main = new JPanel();
-		main.setLayout(new BorderLayout());
-		main.add(tabs);
+		//JPanel main = new JPanel();
+		setLayout(new BorderLayout());
+		//setPreferredSize(new Dimension(128,256));
 
-		status.setPreferredSize(new Dimension(128,20));
-		main.add(status,BorderLayout.SOUTH);
+		//status.setPreferredSize(new Dimension(128,20));
+		/*main.*/add(tabs);
+		/*main.*/add(status,BorderLayout.SOUTH);
+		
+		//add(main);
 
-		add(main);
+		TitledBorder title = BorderFactory.createTitledBorder("Rules");
+		title.setTitleJustification(TitledBorder.CENTER);
+		setBorder(title);
 
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 		BoardState.addCellChangeListener(this);

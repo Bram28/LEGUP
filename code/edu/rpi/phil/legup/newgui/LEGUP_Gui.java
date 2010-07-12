@@ -93,7 +93,17 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		ALLOW_HINTS | ALLOW_DEFAPP | ALLOW_FULLAI | ALLOW_JUST };
 
 	private static final int BOARD = 0;
-	private static final int JUSTIFICATION = 1;
+	//private static final int JUSTIFICATION = 1;
+
+
+	PickGameDialog pgd = null;
+	Legup legupMain = null;
+	private final FileDialog fileChooser;
+	
+	private JDesktopPane mdiPane = new JDesktopPane();
+
+	private edu.rpi.phil.legup.AI myAI = new edu.rpi.phil.legup.AI();
+
 
 	/*** TOOLBAR CONSTANTS ***/
 	private static final int TOOLBAR_NEW = 0;
@@ -112,16 +122,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private static final int TOOLBAR_ZOOMRESET = 10;
 	private static final int TOOLBAR_ZOOMFIT = 11;
 
-
-	PickGameDialog pgd = null;
-	Legup legupMain = null;
-	private final FileDialog fileChooser;
-	
-	private JDesktopPane mdiPane = new JDesktopPane();
-
-	private edu.rpi.phil.legup.AI myAI = new edu.rpi.phil.legup.AI();
-
-
 	final static String[] toolBarNames =
 	{
 		"New",
@@ -131,7 +131,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		"Redo",
 		"Console",
 		"Hint",
-		"Check"
+		"Check",
+		"Zoom In",
+		"Zoom Out",
+		"Normal Zoom",
+		"Best Fit"
 	};
 
 	AbstractButton[] toolBarButtons =
@@ -143,26 +147,30 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		new JButton(toolBarNames[4], new ImageIcon("images/" + toolBarNames[4] + ".png")),
 		new JButton(toolBarNames[5], new ImageIcon("images/" + toolBarNames[5] + ".png")),
 		new JButton(toolBarNames[6], new ImageIcon("images/" + toolBarNames[6] + ".png")),
-		new JButton(toolBarNames[7], new ImageIcon("images/" + toolBarNames[7] + ".png"))
+		new JButton(toolBarNames[7], new ImageIcon("images/" + toolBarNames[7] + ".png")),
+		new JButton(/*toolBarNames[8],*/ new ImageIcon("images/" + toolBarNames[8] + ".png")),
+		new JButton(/*toolBarNames[9],*/ new ImageIcon("images/" + toolBarNames[9] + ".png")),
+		new JButton(/*toolBarNames[10],*/ new ImageIcon("images/" + toolBarNames[10] + ".png")),
+		new JButton(/*toolBarNames[11],*/ new ImageIcon("images/" + toolBarNames[11] + ".png"))
 	};
 
 	final static int[] toolbarSeperatorBefore =
 	{
-		3, 5
+		3, 5, 8
 	};
 
 	private final static String[] types =
 	{
-		"Board",
-		"Justification"
+		"Board"
+		//"Justification"
 	};
 
 	private JustificationFrame justificationFrame;
 
 	private JInternalFrame[] frames =
 	{
-			new JInternalFrame(types[0]),
-			null // justification is initialized in construtor
+			new JInternalFrame(types[0])
+			//null-- justification is initialized in construtor
 	};
 
 	// Modified for access - Daniel P
@@ -212,8 +220,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		private JMenuItem redo = new JMenuItem("Redo");
 	private JMenu view = new JMenu("View");
 		private JCheckBoxMenuItem[] viewItem = {
-			new JCheckBoxMenuItem(types[0],false),
-			new JCheckBoxMenuItem(types[1],false)
+			new JCheckBoxMenuItem(types[0],false)//,
+			//new JCheckBoxMenuItem(types[1],false)
 		};
 	private JMenu proof = new JMenu("Proof");
 		private JCheckBoxMenuItem allowDefault = new JCheckBoxMenuItem("Allow Default Rule Applications",false);
@@ -324,8 +332,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 
 	// TODO
-	JToolBar treet;
-	TreePanel treep;
+	//JToolBar treet;
+	//TreePanel treep;
 	Tree tree;
 	//private TreeToolbarPanel treeb = new TreeToolbarPanel(this);
 	private Console console;
@@ -346,14 +354,17 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		
 		tree = new Tree( this );
 		add( tree, BorderLayout.EAST );
+		
+		
+		justificationFrame = new JustificationFrame( this );
+		add( justificationFrame, BorderLayout.WEST );
 	}
 
 	private void setupFrames(){
 		// initialize
-		justificationFrame = new JustificationFrame(types[1],this);
-		frames[JUSTIFICATION] = justificationFrame;
+		//justificationFrame = new JustificationFrame(types[1],this);
+		//frames[JUSTIFICATION] = justificationFrame;
 
-		//frames[TREE] = new TreeFrame(types[TREE],legupMain,this);
 
 		boardPanel = new BoardPanel(this);
 
@@ -460,12 +471,12 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		if (ID == BOARD)
 		{ // location is under menuBar
 			boardPanel.initSize();
-			frames[ID].setLocation(0,frames[JUSTIFICATION].getHeight());
+			frames[ID].setLocation(0,0/*frames[JUSTIFICATION].getHeight()*/);
 		}
-		else if (ID == JUSTIFICATION)
+		/*else if (ID == JUSTIFICATION)
 		{
 			frames[ID].setLocation(0,0);
-		}
+		}*/
 
 		frames[ID].pack();
 		frames[ID].setVisible(true);
@@ -483,7 +494,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	}
 
 	private void showAll() {
-		showFrame(JUSTIFICATION);
+		//showFrame(JUSTIFICATION);
 		showFrame(BOARD);
 		// TODO disable buttons
 		toolBarButtons[TOOLBAR_SAVE].setEnabled(true);
@@ -498,7 +509,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	private void repaintAll()
 	{
 		frames[BOARD].repaint();
-		frames[JUSTIFICATION].repaint();
+		//frames[JUSTIFICATION].repaint();
+		justificationFrame.repaint();
 		tree.repaint();
 	}
 
@@ -511,6 +523,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	public void showStatus(String status)
 	{
 		justificationFrame.setStatus(false,status);
+		// TODO console
+		console.println( "Status: " + status );
 	}
 
 	public void errorEncountered(String error)

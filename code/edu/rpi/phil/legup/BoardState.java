@@ -376,7 +376,7 @@ public class BoardState
 	 * @return The height of the board
 	 */
 	public int getHeight(){
-	return height;
+		return height;
 	}
 
 	/**
@@ -385,7 +385,7 @@ public class BoardState
 	 * @return The width of the board
 	 */
 	public int getWidth(){
-	return width;
+		return width;
 	}
 
 

@@ -23,19 +23,22 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
+import javax.swing.BorderFactory; 
+//import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+
 public class Tree extends JToolBar implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
-	
-	private class TreeToolbar extends JPanel implements ActionListener
-	{
+
+	private class TreeToolbar extends JPanel implements ActionListener {
 		private static final long serialVersionUID = 8572197337878587284L;
 
 		JButton addChild = new JButton(new ImageIcon("images/AddChild.png"));
 		JButton delChild = new JButton(new ImageIcon("images/DelChild.png"));
 		JButton merge = new JButton(new ImageIcon("images/Merge.png"));
 		JButton collapse = new JButton(new ImageIcon("images/Collapse.png"));
-	
+
 		TreeToolbar()
 		{
 			add(addChild);
@@ -48,53 +51,54 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 			collapse.addActionListener(this);
 		}
 
-		public void actionPerformed(ActionEvent e)
-		{
-			if (e.getSource() == addChild)
-			{
+		public void actionPerformed(ActionEvent e){
+			if( e.getSource() == addChild ){
 				addChildAtCurrentState();
-			}
-			else if (e.getSource() == delChild)
-			{
+			} else if( e.getSource() == delChild ){
 				delChildAtCurrentState();
-			}
-			else if (e.getSource() == merge)
-			{
+			} else if( e.getSource() == merge ){
 				mergeStates();
-			}
-			else if (e.getSource() == collapse)
-			{
+			} else if( e.getSource() == collapse ){
 				collapseStates();
 			}
 		}
+
 	}
-	
+
 	private TreeToolbar toolbar = new TreeToolbar();
-	TreePanel treePanel = null;
-	private LEGUP_Gui gui = null;
+	TreePanel treePanel = new TreePanel();
+	private LEGUP_Gui gui;
 	
 	private JLabel status = new JLabel();
 
 	Tree( LEGUP_Gui gui ){
-		super("Tree");
+		super("LEGUP");
+		
+		System.out.println( isEnabled() );
 		
 		this.gui = gui;
-		treePanel = new TreePanel();	
 		
+		JPanel main = new JPanel();
 		
-		setLayout(new BorderLayout());
+		main.setLayout( new BorderLayout() );
 		
-		add(toolbar,BorderLayout.NORTH);
-		add(treePanel,BorderLayout.CENTER);
+		main.add(toolbar,BorderLayout.NORTH);
+		main.add(treePanel,BorderLayout.CENTER);
 		
-		status.setPreferredSize(new Dimension(150,20));
-		add(status,BorderLayout.SOUTH);
+		//status.setPreferredSize(new Dimension(150,20));
+		main.add(status,BorderLayout.SOUTH);
 		
+		TitledBorder title = BorderFactory.createTitledBorder("Tree");
+		title.setTitleJustification(TitledBorder.CENTER);
+		main.setBorder(title);
+		
+		setLayout( new BorderLayout() );
+		add(main);
+		
+		// listeners
 		JustificationFrame.addJustificationAppliedListener(this);
-		
 		gui.legupMain.getSelections().addTreeSelectionListener(this);
 		BoardState.addCellChangeListener(this);
-		
 		setupKeyEvents();
 	}
 	
@@ -104,11 +108,11 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 	private void setupKeyEvents()
 	{
 		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0);
-		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, "KeyEvent.VK_UP");
+		this.getInputMap(javax.swing.JComponent.WHEN_FOCUSED).put(stroke, "KeyEvent.VK_UP");
 		this.getActionMap().put("KeyEvent.VK_UP", new AbstractAction() {private static final long serialVersionUID = -2304281047341398965L; public void actionPerformed(ActionEvent event) {navigateTree(KeyEvent.VK_UP);}});
 		
 		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0);
-		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, "KeyEvent.VK_DOWN");
+		this.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).put(stroke, "KeyEvent.VK_DOWN");
 		this.getActionMap().put("KeyEvent.VK_DOWN", new AbstractAction() {private static final long serialVersionUID = -2304281047341398965L; public void actionPerformed(ActionEvent event) {navigateTree(KeyEvent.VK_DOWN);}});
 		
 		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0);

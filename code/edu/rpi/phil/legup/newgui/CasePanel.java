@@ -28,7 +28,7 @@ public class CasePanel extends JustificationPanel
 	private CaseRule defaultApplication; //NEEDED! Not yet reimplmented!
 
 	/**
-	 * Create a new ContradictionPanel
+	 * Create a new CasePanel
 	 */
 	CasePanel(JustificationFrame jf)
 	{

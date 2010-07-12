@@ -12,7 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
 import javax.swing.BorderFactory; 
-import javax.swing.border.Border;
+//import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.ImageIcon;
 
@@ -29,7 +29,11 @@ public class Console extends JToolBar
 		super("LEGUP");
 		setLayout( new BorderLayout() );
 
-		output = new JTextArea("LEGUP Console v1.0\n");
+		output = new JTextArea("LEGUP Console v1.0\n");/* implements Scrollable {
+			public boolean getScrollableTracksViewportWidth(){
+				return true;
+			}
+		};*/
 		output.setAutoscrolls(true);
 		output.setEditable(false);
 		output.setWrapStyleWord(true);
@@ -44,9 +48,11 @@ public class Console extends JToolBar
 		
 		//ImageIcon icon = new ImageIcon("images/bar.png");
 		//Border titlebar= BorderFactory.createMatteBorder(24, 0, 0, 0, icon);
-		TitledBorder title = BorderFactory.createTitledBorder( /*titlebar,*/ "Console");
-		title.setTitleJustification(TitledBorder.CENTER);
+		//TitledBorder title = BorderFactory.createTitledBorder( /*titlebar,*/ "Console");
+		//title.setTitleJustification(TitledBorder.CENTER);
 		
+		TitledBorder title = BorderFactory.createTitledBorder("Console");
+		title.setTitleJustification(TitledBorder.CENTER);
 		setBorder(title);
 
 		setPreferredSize( new Dimension( 200, 100 ) );

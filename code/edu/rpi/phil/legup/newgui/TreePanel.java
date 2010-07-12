@@ -615,108 +615,34 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		return s;
 	}
 
-	/**
-	 * Start moving a state at a point (where the user clicked)
-	 * @param p the point where we're starting to move the node
-	 */
-	private void startMoveAtPoint(Point p)
-	{
-		// first select it
-		Selection s = newSelection(Legup.getInstance().getInitialBoardState(),p);
-
-		// then set selection specific variables
-		if (s.isState())
-		{
-			Point loc = s.getState().getLocation();
-			selectionOffset = new Point(loc.x - p.x, loc.y - p.y);
-		}
-	}
-
-	protected void mousePressedAt(Point p, MouseEvent e)
-	{ // attempt to change the selection
-
-		if (e.getButton() == MouseEvent.BUTTON1)
-		{
-			if (e.isControlDown())
-				toggleSelection(Legup.getInstance().getInitialBoardState(),p); // add or remove from the selection
+	protected void mousePressedAt( Point p, MouseEvent e ){
+		// left click
+		if( e.getButton() == MouseEvent.BUTTON1 ){
+			// add to selection
+			if ( e.isControlDown() )
+				toggleSelection( Legup.getInstance().getInitialBoardState(), p );
+			// make a new selection
 			else
-				newSelection(Legup.getInstance().getInitialBoardState(),p);
+				newSelection( Legup.getInstance().getInitialBoardState(), p );
+		// right click
+		} else if( e.getButton() == MouseEvent.BUTTON3 ){
+			// create a new child node and select it
+			Selection s = new Selection( addChildAtCurrentState(), false );
+			Legup.getInstance().getSelections().setSelection( s );
 		}
-		else if (e.getButton() == MouseEvent.BUTTON3)
-		{
-			if (getSelectionAtPoint(Legup.getInstance().getInitialBoardState(), p) == null) // if they're not clicking on a state
-			{
-				Selection s = new Selection(addChildAtCurrentState(), false);
-
-				Legup.getInstance().getSelections().setSelection(s);
-			}
-			else // otherwise move the state around
-				startMoveAtPoint(p);
-		}
-	}
-
-	/**
-	 * Move a boardstate node
-	 * @param root the root state of the move that is occuring
-	 * @param state the recursive node that is being moved
-	 * @param xDif the x amount to move it
-	 * @param yDif the y amount to move it
-	 */
-	private void moveNode(BoardState root, BoardState state, int xDif, int yDif)
-	{
-		Point loc = state.getOffset();
-
-		state.setOffset(new Point(loc.x + xDif, loc.y + yDif));
-
-		repaint();
-	}
-
-	/**
-	 * The mouse was moved or released at the following point; move states around
-	 * @param p the point where it was released
-	 */
-	private void mouseDownAt(Point p)
-	{
-		if (selectionOffset != null)
-		{ // if they're moving a node around, move around all it's children
-			ArrayList<Selection> s = Legup.getInstance().getSelections().getCurrentSelection();
-
-			if (s == null || s.size() != 1 || s.get(0).isTransition()) // sanity check
-			{
-				System.out.println("bad selection state?!?!");
-			}
-			else
-			{
-				BoardState selectedState = s.get(0).getState();
-				Point loc = selectedState.getLocation();
-
-				moveNode(selectedState, selectedState,
-						p.x - loc.x + selectionOffset.x, p.y - loc.y + selectionOffset.y);
-			}
-		}
-		mouseOver = null;
-	}
-
-	protected void mouseDraggedAt(Point realPoint, MouseEvent e)
-	{
-		mouseDownAt(realPoint);
-		mouseOver = null;
+		// TODO focus
+		//grabFocus();
 	}
 
 	protected void mouseReleasedAt(Point p, MouseEvent e)
 	{
-		mouseDownAt(p);
-
 		selectionOffset = null;
-		mouseOver = null;
 	}
 
 	protected void mouseExitedAt(Point realPoint, MouseEvent e)
 	{
-		mouseDownAt(realPoint);
-
 		selectionOffset = null;
-		mouseOver = null;
+		
 		repaint();
 
 		Legup.getInstance().refresh();
@@ -727,8 +653,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	protected void mouseMovedAt(Point p, MouseEvent e)
 	{
 		Selection prev = mouseOver;
-		Selection s = getSelectionAtPoint(Legup.getInstance().getInitialBoardState(), p);
-		mouseOver = s;
+		mouseOver = getSelectionAtPoint(Legup.getInstance().getInitialBoardState(), p);
 		mousePoint = p;
 
 		if( prev != null || mouseOver != null )
@@ -736,13 +661,11 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Legup.getInstance().refresh();
 	}
 
-	public static Selection getMouseOver()
-	{
+	public static Selection getMouseOver(){
 		return mouseOver;
 	}
 
-	public void transitionChanged()
-	{ // transitions have been changed
+	public void transitionChanged(){
 		repaint();
 	}
 
