@@ -14,6 +14,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -43,7 +44,11 @@ import javax.swing.plaf.basic.BasicToolBarUI;
 import java.awt.Color;
 import java.awt.Point;
 
-public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameListener, TreeSelectionListener, ILegupGui
+import javax.swing.BorderFactory; 
+//import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+
+public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionListener, ILegupGui
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 
@@ -92,18 +97,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		ALLOW_HINTS | ALLOW_DEFAPP | ALLOW_JUST | IMD_FEEDBACK | INTERN_RO,
 		ALLOW_HINTS | ALLOW_DEFAPP | ALLOW_FULLAI | ALLOW_JUST };
 
-	private static final int BOARD = 0;
-	//private static final int JUSTIFICATION = 1;
-
-
 	PickGameDialog pgd = null;
 	Legup legupMain = null;
 	private final FileDialog fileChooser;
-	
-	private JDesktopPane mdiPane = new JDesktopPane();
 
 	private edu.rpi.phil.legup.AI myAI = new edu.rpi.phil.legup.AI();
-
 
 	/*** TOOLBAR CONSTANTS ***/
 	private static final int TOOLBAR_NEW = 0;
@@ -159,26 +157,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		3, 5, 8
 	};
 
-	private final static String[] types =
-	{
-		"Board"
-		//"Justification"
-	};
-
-	private JustificationFrame justificationFrame;
-
-	private JInternalFrame[] frames =
-	{
-			new JInternalFrame(types[0])
-			//null-- justification is initialized in construtor
-	};
-
-	// Modified for access - Daniel P
-	private BoardPanel boardPanel = null;
-
 	public void repaintBoard()
 	{
-		if (boardPanel != null) boardPanel.boardDataChanged(null);
+		if (board != null) board.boardDataChanged(null);
 	}
 
 	public LEGUP_Gui(Legup legupMain)
@@ -187,21 +168,14 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		legupMain.getSelections().addTreeSelectionListener(this);
 		
 		setTitle("LEGUP");
-
 		setLayout( new BorderLayout() );
-
-		add( mdiPane );
-		mdiPane.setPreferredSize( new Dimension(800,600) );
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setupMenu();
 		setupToolBar();
-		// TODO
 		setupContent();
-		/////
-		setupFrames();
 		pack();
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
 		fileChooser = new FileDialog(this);
@@ -219,10 +193,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		private JMenuItem undo = new JMenuItem("Undo");
 		private JMenuItem redo = new JMenuItem("Redo");
 	private JMenu view = new JMenu("View");
-		private JCheckBoxMenuItem[] viewItem = {
-			new JCheckBoxMenuItem(types[0],false)//,
-			//new JCheckBoxMenuItem(types[1],false)
-		};
 	private JMenu proof = new JMenu("Proof");
 		private JCheckBoxMenuItem allowDefault = new JCheckBoxMenuItem("Allow Default Rule Applications",false);
 		private JMenu proofMode = new JMenu("Proof Mode");
@@ -261,11 +231,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 				redo.setAccelerator(KeyStroke.getKeyStroke('Y',2));
 
 		bar.add(view);
-			for (int x = 0; x < viewItem.length; ++x)
-			{
-				view.add(viewItem[x]);
-				viewItem[x].addActionListener(this);
-			}
 
 		bar.add(proof);
 			proof.add(allowDefault);
@@ -332,11 +297,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 
 
 	// TODO
-	//JToolBar treet;
-	//TreePanel treep;
-	Tree tree;
-	//private TreeToolbarPanel treeb = new TreeToolbarPanel(this);
+	private JustificationFrame justificationFrame;
+	private Tree tree;
 	private Console console;
+	private Board board;
 	// contains all the code to setup the main content
 	private void setupContent(){
 		
@@ -355,56 +319,33 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		tree = new Tree( this );
 		add( tree, BorderLayout.EAST );
 		
+		board = new Board( this );
+		board.setPreferredSize( new Dimension( 600, 400 ) );
+		
+		JPanel boardPanel = new JPanel( new BorderLayout() );
+		boardPanel.add( board );
+		TitledBorder title = BorderFactory.createTitledBorder("Board");
+		title.setTitleJustification(TitledBorder.CENTER);
+		boardPanel.setBorder(title);
+		add( boardPanel );
+		//JLabel placeholder = new JLabel( "Nothing." );
+		//placeholder.setPreferredSize( new Dimension( 600, 400 ) );
+		//add( placeholder );
 		
 		justificationFrame = new JustificationFrame( this );
 		add( justificationFrame, BorderLayout.WEST );
 	}
 
-	private void setupFrames(){
-		// initialize
-		//justificationFrame = new JustificationFrame(types[1],this);
-		//frames[JUSTIFICATION] = justificationFrame;
-
-
-		boardPanel = new BoardPanel(this);
-
-		// gui
-		//frames[BOARD].setLayout(new BorderLayout());
-		//frames[BOARD].add(boardPanel,BorderLayout.CENTER);
-		frames[BOARD].add(boardPanel);
-
-		//boardPanel.setLayout(new FlowLayout());
-
-//		 window listeners
-		for (int x = 0; x < frames.length; ++x)
-		{
-			frames[x].addInternalFrameListener(this);
-			frames[x].setResizable(true);
-			frames[x].setClosable(true);
-			frames[x].setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-			mdiPane.add(frames[x]);
-		}
-		//mdiPane.setSize(frames[JUSTIFICATION].getWidth(), frames[TREE].getHeight());
-	}
-
-	private void selectNewPuzzle()
-	{
+	private void selectNewPuzzle(){
 		pgd.setVisible(true);
-
-		if (pgd.okPressed)
-		{
+		if (pgd.okPressed){
 			legupMain.loadBoardFile(pgd.getPuzzle());
-
 			PuzzleModule pm = legupMain.getPuzzleModule();
-
-			if (pm != null)
-			{
+			if (pm != null){
 				justificationFrame.setJustifications(pm);
-
 				// AI setup
 				myAI.setBoard(pm);
 			}
-
 			// show them all
 			showAll();
 		}
@@ -440,9 +381,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 			filename = fileChooser.getDirectory() + filename;
 
 			if (!filename.toLowerCase().endsWith(".proof"))
-	    		filename = filename + ".proof";
+				filename = filename + ".proof";
 
-		    SaveableProof.saveProof(root, filename);
+			SaveableProof.saveProof(root, filename);
 		}
 
 	}
@@ -460,42 +401,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 			JOptionPane.showMessageDialog(null, "Your proof is INCORRECT.");
 	}
 
-
-
-	/**
-	 * Show the JFrame cooresponding to the ID (like BOARD or TREE)
-	 * @param ID the frame type to show, static member of LEGUP_Gui
-	 */
-	private void showFrame(int ID)
-	{
-		if (ID == BOARD)
-		{ // location is under menuBar
-			boardPanel.initSize();
-			frames[ID].setLocation(0,0/*frames[JUSTIFICATION].getHeight()*/);
-		}
-		/*else if (ID == JUSTIFICATION)
-		{
-			frames[ID].setLocation(0,0);
-		}*/
-
-		frames[ID].pack();
-		frames[ID].setVisible(true);
-
-	}
-
-	private void setFrameState(int index, boolean show)
-	{
-		viewItem[index].setState(show);
-
-		if (show)
-			showFrame(index);
-		else
-			frames[index].setVisible(false);
-	}
-
 	private void showAll() {
-		//showFrame(JUSTIFICATION);
-		showFrame(BOARD);
+		board.initSize();
 		// TODO disable buttons
 		toolBarButtons[TOOLBAR_SAVE].setEnabled(true);
 		toolBarButtons[TOOLBAR_UNDO].setEnabled(true);
@@ -506,10 +413,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		this.pack();
 	}
 
-	private void repaintAll()
-	{
-		frames[BOARD].repaint();
-		//frames[JUSTIFICATION].repaint();
+	private void repaintAll(){
+		board.repaint();
 		justificationFrame.repaint();
 		tree.repaint();
 	}
@@ -536,9 +441,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 	{
 		pgd = new PickGameDialog(this,legupMain,true);
 		selectNewPuzzle();
-
-		mdiPane.setPreferredSize(new Dimension(800, 600));
-		pack();
 	}
 
 	public void reloadGui()
@@ -648,36 +550,12 @@ public class LEGUP_Gui extends JFrame implements ActionListener, InternalFrameLi
 		}
 		else
 		{
-			for (int x = 0; x < viewItem.length;++x)
-			{
-				if (e.getSource() == viewItem[x]) setFrameState(x,viewItem[x].isSelected());
-			}
 			for (int x = 0; x < PROF_FLAGS.length; ++x)
 			{
 				if (e.getSource() == proofModeItems[x]) processConfig(x);
 			}
 		}
 	}
-
-	public void internalFrameClosing(InternalFrameEvent e)
-	{
-		for (int x = 0; x < frames.length; ++x)
-			if (e.getSource() == frames[x])
-				viewItem[x].setState(false);
-	}
-
-	public void internalFrameOpened(InternalFrameEvent e)
-	{
-		for (int x = 0; x < frames.length; ++x)
-			if (e.getSource() == frames[x])
-				viewItem[x].setState(true);
-	}
-
-	public void internalFrameClosed(InternalFrameEvent e) { }
-	public void internalFrameIconified(InternalFrameEvent e) { }
-	public void internalFrameDeiconified(InternalFrameEvent e) { }
-	public void internalFrameActivated(InternalFrameEvent e) { }//e.getInternalFrame().requestFocusInWindow(); }
-	public void internalFrameDeactivated(InternalFrameEvent e) { }
 
 	public void treeSelectionChanged(ArrayList <Selection> s)
 	{

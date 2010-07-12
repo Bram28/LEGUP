@@ -1,5 +1,6 @@
 package edu.rpi.phil.legup.newgui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -11,24 +12,27 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Selection;
 
-public class BoardPanel extends ZoomablePanel implements BoardDataChangeListener
+public class Board extends DynamicViewer implements BoardDataChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 
 	private LEGUP_Gui parent = null;
 	private Point lastMousePoint = null; // the last left click mouse location
 
-	BoardPanel(LEGUP_Gui gui)
+	Board(LEGUP_Gui gui)
 	{
 		parent = gui;
 
 		BoardState.addCellChangeListener(this);
+		
+		setBackground( new Color(0xE0E0E0) );
 	}
 
 	public void initSize()
 	{ // initialize the size of the panel (can't do it on init because we don't know the size of tile)
-		setPreferredSize(getProperSize());
-		revalidate();
+		//setPreferredSize(getProperSize());
+		//revalidate();
+		setSize( getProperSize() );
 	}
 
 	private Dimension getProperSize()
