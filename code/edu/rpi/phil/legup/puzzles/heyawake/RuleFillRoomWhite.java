@@ -156,24 +156,37 @@ public class RuleFillRoomWhite extends PuzzleRule{
 	    		{
 	    			Region region = ((Region[])destBoardState.getExtraData().get(0))[x];
 	    			Vector<CellLocation> cells = region.getCells();
+	    			
+	    			int numBlack = 0;
 	    			for(int y =0; y < cells.size(); ++y)
 	    			{
-	    				if(destBoardState.getCellContents(cells.get(y).x,cells.get(y).y) == 0)
+	    				if(destBoardState.getCellContents(cells.get(y).x,cells.get(y).y) == Heyawake.CELL_BLACK)
 	    				{
-	    					destBoardState.setCellContents(cells.get(y).x,cells.get(y).y,1);
+	    					numBlack++;
+	    				}
+	    			}
+	    			
+	    			if(region.getValue()==numBlack && region.getValue() > -1)
+	    			{
+	    				for(int y =0; y < cells.size(); ++y)
+	    				{
+	    					if(destBoardState.getCellContents(cells.get(y).x,cells.get(y).y) == 0)
+	    					{
+	    						changed = true;
+	    						destBoardState.setCellContents(cells.get(y).x,cells.get(y).y,1);
+	    					}
 	    				}
 	    			}
 	    		}
 	    	}
-	    	String error = checkRuleRaw(destBoardState);
 	    	
-			if (error == null)
-			{
-				changed = true;
-				// valid change
-			}
     	}
-    	
+    	String error = checkRuleRaw(destBoardState);
+	    if (error != null)
+		{
+			System.out.println(error);
+			changed =false;
+		}
     	if(!changed)
     	{
     		destBoardState = origBoardState.copy();

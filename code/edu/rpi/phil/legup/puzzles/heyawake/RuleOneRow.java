@@ -32,8 +32,13 @@ public class RuleOneRow extends PuzzleRule
 		xmax = ymax =-1000000;
 		Region region = ((Region[])origState.getExtraData().get(0))[cellregion];
 		cells = region.getCells();
+		
 		for(int c = 0; c<cells.size(); ++c)
 		{
+			if(origState.getCellContents(cells.get(c).getX(),cells.get(c).getY())==Heyawake.CELL_WHITE)
+			{
+				continue;
+			}
 			if(cells.get(c).getX()<xmin)
 				xmin = cells.get(c).getX();
 			if(cells.get(c).getY()<ymin)
@@ -59,6 +64,10 @@ public class RuleOneRow extends PuzzleRule
 		cells = region.getCells();
 		for(int c = 0; c<cells.size(); ++c)
 		{
+			if(origState.getCellContents(cells.get(c).getX(),cells.get(c).getY())==Heyawake.CELL_WHITE)
+			{
+				continue;
+			}
 			if(cells.get(c).getX()<xmin)
 				xmin = cells.get(c).getX();
 			if(cells.get(c).getY()<ymin)

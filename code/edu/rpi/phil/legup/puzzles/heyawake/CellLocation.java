@@ -36,4 +36,8 @@ public class CellLocation
 	{
 		this.y = y;
 	}
+	public String toString()
+	{
+		return ""+x+", "+y;
+	}
 }

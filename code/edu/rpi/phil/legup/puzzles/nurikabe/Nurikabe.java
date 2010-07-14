@@ -170,14 +170,16 @@ public class Nurikabe extends PuzzleModule
 	public Vector <PuzzleRule> getRules(){
 		Vector <PuzzleRule>ruleList = new Vector <PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
+		
 		ruleList.add(new RuleNoBlackSquare());
 		ruleList.add(new RuleSurroundRegion());
-		
-		ruleList.add(new RuleOneUnknownRegion());
+		ruleList.add(new RuleCornerBlack());
+		ruleList.add(new RuleOneUnknownRegion());//Same as one unknown white make it one rule.
 		ruleList.add(new RuleOneUnknownBlack());
 		ruleList.add(new RuleOneUnknownWhite());
 		ruleList.add(new RuleBetweenRegions());
 		ruleList.add(new RuleUnknownSurrounded());
+		ruleList.add(new RuleBottleNeck());
 		return ruleList;
 	}
 	

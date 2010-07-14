@@ -55,6 +55,8 @@ public class RuleUnknownSurrounded extends PuzzleRule
 							{
 								if(dx!=0 && dy!=0)
 									continue;
+								if(dx==0 && dy==0)
+									continue;
 								if((dx+x>=width) || (dx+x<0))
 									continue;
 								if((dy+y>=height) || (dy+y<0))
@@ -124,6 +126,7 @@ public class RuleUnknownSurrounded extends PuzzleRule
 		if(error!=null)
 		{
 			changed = false;
+			System.out.println(error);
 		}
 		if(!changed)
 		{

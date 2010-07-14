@@ -24,11 +24,11 @@ public class ContradictionWhiteLine extends Contradiction
     {
     	String error = null;
     	int height = state.getHeight();
-    	int width = state.getWidth();
+    	int width  = state.getWidth();
 
-    	int[][] arrayacross= new int[height][width];
-    	int[][] arraydown = new int[height][width];
-    	int[][]cellRegions = (int[][])state.getExtraData().get(2);
+    	int[][] arrayacross = new int[height][width];
+    	int[][] arraydown   = new int[height][width];
+    	int[][] cellRegions = (int[][])state.getExtraData().get(2);
     	for(int x = 0; x < width; ++x)
     	{
     		for(int y = 0; y < height; ++y)

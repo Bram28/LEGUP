@@ -281,11 +281,19 @@ public class Heyawake extends PuzzleModule
 	public Vector <PuzzleRule> getRules(){
 		Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
-		ruleList.add(new RuleOneRow());
-		ruleList.add(new RuleWhiteAroundBlack());
-		ruleList.add(new RuleFillRoomBlack());
+		
 		ruleList.add(new RuleFillRoomWhite());
+		ruleList.add(new RuleFillRoomBlack());
+		ruleList.add(new RuleWhiteAroundBlack());
 		ruleList.add(new RuleOneUnknownWhite());
+		ruleList.add(new RulePreventWhiteLine());
+		ruleList.add(new RuleOneRow());
+		ruleList.add(new Rule3x3());
+		ruleList.add(new Rule3OnWall());
+		ruleList.add(new Rule2InCorner());
+		ruleList.add(new RuleZigZagWhite());
+		ruleList.add(new RuleBottleNeck());
+		ruleList.add(new RuleForcedBlack());
 		return ruleList;
 	}
 	
@@ -312,6 +320,7 @@ public class Heyawake extends PuzzleModule
     	Vector <CaseRule> caseRules = new Vector <CaseRule>();
     	
     	caseRules.add(new CaseBlackOrWhite());
+    	caseRules.add(new CaseZigZag());
     	
     	return caseRules;
     }
@@ -624,5 +633,95 @@ public class Heyawake extends PuzzleModule
     	}
     	return true;
     }
-    
+    public BoardState guess(BoardState Board) 
+    {
+		// out of forced moves, need to guess
+		Point guess = GenerateBestGuess(Board);
+		// guess, if we found one
+		if (guess.x != -1 && guess.y != -1) 
+		{
+			BoardState Parent = Board.getSingleParentState();
+			BoardState CaseBlack = Board;
+			BoardState CaseWhite = Parent.addTransitionFrom();
+			CaseBlack.setCellContents(guess.x, guess.y, CELL_BLACK);
+			CaseWhite.setCellContents(guess.x, guess.y, CELL_WHITE);
+			Parent.setCaseSplitJustification(new CaseBlackOrWhite());
+			System.out.println("Guessed at "+guess.x+","+guess.y);
+			//Legup.setSelection(CaseTent,false);
+			return CaseBlack;
+		}
+		// if we didn't then the board is full, and we are finished (thus, the returned board will be the same as the one we were given
+		System.out.println("Statement: Your puzzle has been solved already. Why do you persist?");
+		return Board;
+	}
+    private Point GenerateBestGuess(BoardState Board) {
+		// this should more properly be some kind of ranking system whereby different
+		// conditions scored points and the highest scoring square was chosen.
+		// until there is more time to actually watch the AI, it scores based on closeness
+		// to a probability. In the future, it might include points for having only one extra
+		// free space or something like that.
+		int currentX=-1;
+		int currentY=-1;
+		int height = Board.getHeight();
+		int width = Board.getWidth();
+		double currentOff = Double.POSITIVE_INFINITY;
+		double BESTPROB = .25;
+		Region bestRegion=null;
+		//Create a counter that will hold the number of white regions found
+		int regioncount = 0;
+		//Booleans which hold whether or not a cell is valid for the rule
+		boolean[][]white = new boolean[width][height];
+		ArrayList<Object> extraData = Board.getExtraData();
+		Region[] regions = (Region[])extraData.get(0);
+		Region curRegion;
+		CellLocation curCell;
+		Point tempPoint;
+		Point temp;
+		//For each cell
+		for(int r = 0;r<regions.length;r++)
+		{
+			curRegion = regions[r];
+			int cUnknown=0;
+			for(int c = 0; c<curRegion.getCells().size();c++)
+			{
+				curCell = curRegion.getCells().get(c);
+				if(Board.getCellContents(curCell.getX(),curCell.getY()) == CELL_UNKNOWN)
+				{
+					cUnknown++;
+					
+				}
+			}
+			if(cUnknown==0)
+				continue;
+			double myProb;
+			if(curRegion.getValue()>0)
+				myProb = (cUnknown/curRegion.getValue());
+			else
+				myProb = 10000;
+			double myOff = Math.abs(BESTPROB-myProb);
+			if(myOff<currentOff)
+			{
+				
+				bestRegion = curRegion;
+				currentOff=myOff;
+			}
+		}
+		if(bestRegion == null)
+		{
+			return new Point(currentX,currentY);
+		}
+		System.out.println("Updated");
+		for(int c = 0; c<bestRegion.getCells().size();c++)
+		{
+			curCell = bestRegion.getCells().get(c);
+			System.out.println(curCell);
+			if(Board.getCellContents(curCell.getX(),curCell.getY()) == CELL_UNKNOWN)
+			{
+				currentX=curCell.getX();
+				currentY=curCell.getY();
+				break;
+			}
+		}
+		return new Point(currentX,currentY);
+	}
 }
