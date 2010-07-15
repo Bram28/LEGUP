@@ -33,6 +33,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 		//setPreferredSize(getProperSize());
 		//revalidate();
 		setSize( getProperSize() );
+		zoomFit();
 	}
 
 	private Dimension getProperSize()

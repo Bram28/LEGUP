@@ -5,6 +5,8 @@
 package edu.rpi.phil.legup;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -34,7 +36,7 @@ import javax.swing.JOptionPane;
 public abstract class PuzzleModule
 {
 	public static int CELL_UNKNOWN = 0;
-	static final Dimension imageDimension = new Dimension(32,32);
+	protected static final Dimension cellSize = new Dimension(32,32);
 	static final Color clear = new Color(0,0,0,0);
 	public String name;
 	public CaseRule defaultApplication;
@@ -110,11 +112,6 @@ public abstract class PuzzleModule
 
 	}
 
-	public Dimension getImageSize()
-	{
-		return imageDimension;
-	}
-
 	/**
 	 * Initialize the board
 	 * This is the function that gets called by the editor to
@@ -127,28 +124,6 @@ public abstract class PuzzleModule
 	}
 
 	/**
-	 *	Separate method, intended for overwriting when extra data needs to be incorporated
-	 */
-	public String getImageLocation(int x, int y, BoardState boardState)
-	{
-		return getImageLocation(boardState.getCellContents(x, y));
-	}
-
-    /**
-     * Gets the image location for the cellValue
-     * Method is not used if the overloaded method is overwritten
-     *
-     * @return A location for the image
-     */
-    public String getImageLocation(int cellValue)
-	{
-		if (cellValue == 0)
-			return "images/blank.gif";
-		else
-			return "images/unknown.gif";
-	}
-
-	/**
 	 * Method used for automated puzzle generation.  Needs to be overwritten in subclasses.
 	 */
 	public BoardState generatePuzzle(int difficulty, JFrame host)
@@ -156,88 +131,66 @@ public abstract class PuzzleModule
 		return null;
 	}
 
-    /**
-     * Get all the images (as strings to the image path) used by this puzzle in the center part
-     * @return an array of strings to image paths
-     */
-    public BoardImage[] getAllCenterImages()
-    {
-    	BoardImage[] s = new BoardImage[0];
+	/**
+	 * Get the next label value if we're at this one (like the numbers around the border)
+	 * This is used when we're creating puzzles
+	 *
+	 * @param curValue the current value of the label
+	 * @return the next value of the label
+	 */
+	public int getNextLabelValue(int curValue)
+	{
+		return 0;
+	}
 
-    	return s;
-    }
-
-    /**
-     * Get all the images (as strings to the image path) used by this puzzle in the border part
-     * @return an array of strings to image paths
-     */
-    public BoardImage[] getAllBorderImages()
-    {
-    	BoardImage[] s = new BoardImage[0];
-
-    	return s;
-    }
-
-    /**
-     * Get the next label value if we're at this one (like the numbers around the border)
-     * This is used when we're creating puzzles
-     *
-     * @param curValue the current value of the label
-     * @return the next value of the label
-     */
-    public int getNextLabelValue(int curValue)
-    {
-    	return 0;
-    }
-
-    /**
-     * Get the next call value of all of them (so if we're editing tree tent, for example, we can
-     * change to and from trees)
-     *
-     * @param x Column coordinate of the cell
-     * @param y Row coordinate of the cell
-     * @param boardState BoardState that the cell should be looked up in
-     * @return The next cell value
-     */
-    public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
-    {
-    	int rv = 0;
+	/**
+	 * Get the next call value of all of them (so if we're editing tree tent, for example, we can
+	 * change to and from trees)
+	 *
+	 * @param x Column coordinate of the cell
+	 * @param y Row coordinate of the cell
+	 * @param boardState BoardState that the cell should be looked up in
+	 * @return The next cell value
+	 */
+	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
+	{
+		int rv = 0;
 
 		if (boardState.getCellContents(x,y) == 0)
 		   rv = 1;
 
 		return rv;
-    }
+	}
 
-    /**
-     * Gets the next cell value for a specified cell in a boardstate
-     *
-     * @param x Column coordinate of the cell
-     * @param y Row coordinate of the cell
-     * @param boardState BoardState that the cell should be looked up in
-     * @return The next cell value
-     */
-    public int getNextCellValue(int x, int y, BoardState boardState)
-    {
-    	int rv = 0;
+	/**
+	 * Gets the next cell value for a specified cell in a boardstate
+	 *
+	 * @param x Column coordinate of the cell
+	 * @param y Row coordinate of the cell
+	 * @param boardState BoardState that the cell should be looked up in
+	 * @return The next cell value
+	 */
+	public int getNextCellValue(int x, int y, BoardState boardState)
+	{
+		int rv = 0;
 
 		if (boardState.getCellContents(x,y) == 0)
 		   rv = 1;
 
 		return rv;
-    }
+	}
 
 
-    /**
-     * Checks if the current board is the goal board
-     *
-     * @param currentBoard The current board state
-     * @param goalBoard The goal board state
-     * @return True if the goal has been reached
-     */
-    public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
+	/**
+	 * Checks if the current board is the goal board
+	 *
+	 * @param currentBoard The current board state
+	 * @param goalBoard The goal board state
+	 * @return True if the goal has been reached
+	 */
+	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 	return currentBoard.compareBoard(goalBoard);
-    }
+	}
 
 	/**
 	 *	Returns the rules of the PuzzleModule in the order they should be applied to the AI
@@ -258,183 +211,254 @@ public abstract class PuzzleModule
 		return rv;
 	}
 
-    /**
-     * Gets a list of puzzle rules associated with this puzzle
-     *
-     * @return A Vector of PuzzleRules
-     */
-    public abstract Vector<PuzzleRule> getRules();
+	/**
+	 * Gets a list of puzzle rules associated with this puzzle
+	 *
+	 * @return A Vector of PuzzleRules
+	 */
+	public abstract Vector<PuzzleRule> getRules();
 
-    /**
-     * Gets a list of Contradictions associated with this puzzle
-     *
-     * @return A Vector of Contradictions
-     */
-    public abstract Vector <Contradiction> getContradictions();
+	/**
+	 * Gets a list of Contradictions associated with this puzzle
+	 *
+	 * @return A Vector of Contradictions
+	 */
+	public abstract Vector <Contradiction> getContradictions();
 
-    /**
-     * Get a list of the case rules applicable for the puzzle
-     * @return a Vector of CaseRules
-     */
-    public abstract Vector<CaseRule> getCaseRules();
+	/**
+	 * Get a list of the case rules applicable for the puzzle
+	 * @return a Vector of CaseRules
+	 */
+	public abstract Vector<CaseRule> getCaseRules();
 
 
-    /**
-     * Checks if a board state is valid according to the rules of the puzzle
-     *
-     * @return True if the board state is valid
-     */
-    public boolean checkValidBoardState(BoardState boardState){
+	/**
+	 * Checks if a board state is valid according to the rules of the puzzle
+	 *
+	 * @return True if the board state is valid
+	 */
+	public boolean checkValidBoardState(BoardState boardState){
 	return true;
-    }
+	}
 
-    /**
-     * Get the forced dimension for this puzzle, or null if there isn't a forced dimension
-     * @return the size the puzzle must be, or null if the size is allowed to vary
-     */
-    public Dimension getForcedDimension()
-    {
-    	return null;
-    }
+	/**
+	 * Get the forced dimension for this puzzle, or null if there isn't a forced dimension
+	 * @return the size the puzzle must be, or null if the size is allowed to vary
+	 */
+	public Dimension getForcedDimension()
+	{
+		return null;
+	}
 
-    /**
-     * Call the extra data editor for this puzzle
-     * @return whether or not the initialization was sucessful
-     */
-    public boolean editExtraData(BoardState boardState, edu.rpi.phil.legup.editor.PuzzleEditor peditor)
-    {
-    	JOptionPane.showMessageDialog(null,"This puzzle type has no extra data to edit.");
-    	return false;
-    }
+	/**
+	 * Call the extra data editor for this puzzle
+	 * @return whether or not the initialization was sucessful
+	 */
+	public boolean editExtraData(BoardState boardState, edu.rpi.phil.legup.editor.PuzzleEditor peditor)
+	{
+		JOptionPane.showMessageDialog(null,"This puzzle type has no extra data to edit.");
+		return false;
+	}
 
-    public BoardState importPuzzle(String filename)
-    {
-    	try
-    	{
-	    	int width = 0;
-	    	int height = 0;
-	    	Dimension d = getForcedDimension();
-	    	if(d != null)
-	    	{
-	    		width = d.width;
-	    		height = d.height;
-	    	}
+	public BoardState importPuzzle(String filename)
+	{
+		try
+		{
+			int width = 0;
+			int height = 0;
+			Dimension d = getForcedDimension();
+			if(d != null)
+			{
+				width = d.width;
+				height = d.height;
+			}
 
-    		//Loop through file and get size and data
+			//Loop through file and get size and data
 
-    		Vector<Vector<Integer>> cells = new Vector<Vector<Integer>>();
+			Vector<Vector<Integer>> cells = new Vector<Vector<Integer>>();
 
-	    	FileReader file = new FileReader(filename);
-	    	BufferedReader bf = new BufferedReader(file);
+			FileReader file = new FileReader(filename);
+			BufferedReader bf = new BufferedReader(file);
 
-	    	String line;
-	    	while((line = bf.readLine()) != null)
-	    	{
-	    		line = line.trim( );
-	    		if(line.length( ) == 0)
-	    			continue;
-	    		String[] row = line.split( "," );
-	    		if(row.length != width && width != 0)
-	    			return null;
-	    		else
-	    		{
-	    			width = row.length;
-	    			Vector<Integer> rowCells = new Vector<Integer>();
-	    			for(int i = 0; i < width; ++ i )
-	    			{
-	    				rowCells.add( Integer.parseInt( row[i] ) );
-	    			}
-	    			cells.add( rowCells );
-	    		}
-	    	}
-	    	bf.close( );
-	    	file.close( );
+			String line;
+			while((line = bf.readLine()) != null)
+			{
+				line = line.trim( );
+				if(line.length( ) == 0)
+					continue;
+				String[] row = line.split( "," );
+				if(row.length != width && width != 0)
+					return null;
+				else
+				{
+					width = row.length;
+					Vector<Integer> rowCells = new Vector<Integer>();
+					for(int i = 0; i < width; ++ i )
+					{
+						rowCells.add( Integer.parseInt( row[i] ) );
+					}
+					cells.add( rowCells );
+				}
+			}
+			bf.close( );
+			file.close( );
 
-	    	if(cells.size( ) == 0 || (cells.size() != height && height != 0))
-	    		return null;
+			if(cells.size( ) == 0 || (cells.size() != height && height != 0))
+				return null;
 
-	    	BoardState state = new BoardState(cells.size(), width);
-	    	for(int y = 0; y < cells.size(); ++y)
-	    	{
-	    		for(int x = 0; x < cells.get( y ).size( ); ++x)
-	    		{
-	    			state.setCellContents( x, y, cells.get( y ).get( x ) );
-	    		}
-	    	}
+			BoardState state = new BoardState(cells.size(), width);
+			for(int y = 0; y < cells.size(); ++y)
+			{
+				for(int x = 0; x < cells.get( y ).size( ); ++x)
+				{
+					state.setCellContents( x, y, cells.get( y ).get( x ) );
+				}
+			}
 
 
-	    	return state;
-    	}
-    	catch(Exception e)
-    	{
-    		return null;
-    	}
-    }
+			return state;
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
 	/* AI stuff */
-    /**
-     * @param Board the boardstate to make a guess on
-     * @return the board after the guess has been made
-     */
-    public BoardState guess(BoardState B) {
-    	// by default, just return what we were passed in
-    	return B;
-    }
+	/**
+	 * @param Board the boardstate to make a guess on
+	 * @return the board after the guess has been made
+	 */
+	public BoardState guess(BoardState B) {
+		// by default, just return what we were passed in
+		return B;
+	}
 
-    public Object getRuleByName(String name)
-    {
-    	if(name == null)
-    		return null;
+	public Object getRuleByName(String name)
+	{
+		if(name == null)
+			return null;
 
-    	if(RuleMerge.getInstance().getName().compareTo(name) == 0)
-    		return RuleMerge.getInstance();
+		if(RuleMerge.getInstance().getName().compareTo(name) == 0)
+			return RuleMerge.getInstance();
 
-    	for(PuzzleRule p : getRules())
-    	{
-    		if(p.getName().compareTo(name) == 0)
-    			return p;
-    	}
+		for(PuzzleRule p : getRules())
+		{
+			if(p.getName().compareTo(name) == 0)
+				return p;
+		}
 
-    	for(Contradiction p : getContradictions())
-    	{
-    		if(p.getName().compareTo(name) == 0)
-    			return p;
-    	}
-    	return null;
-    }
+		for(Contradiction p : getContradictions())
+		{
+			if(p.getName().compareTo(name) == 0)
+				return p;
+		}
+		return null;
+	}
 
-    public CaseRule getCaseRuleByName(String name)
-    {
-    	if(name == null)
-    		return null;
+	public CaseRule getCaseRuleByName(String name)
+	{
+		if(name == null)
+			return null;
 
-    	for(CaseRule p : getCaseRules())
-    	{
-    		if(p.getName().compareTo(name) == 0)
-    			return p;
-    	}
+		for(CaseRule p : getCaseRules())
+		{
+			if(p.getName().compareTo(name) == 0)
+				return p;
+		}
 
-    	return null;
-    }
+		return null;
+	}
 
-    /**
-     * Performs any final processing on a state that has been altered
-     * @param state
-     */
-    public void updateState(BoardState state){}
+	/**
+	 * Performs any final processing on a state that has been altered
+	 * @param state
+	 */
+	public void updateState(BoardState state){}
 
 
 
-    /**
-     * Drawing methods
-     */
-    public void drawCell(Graphics2D g, int x, int y, BoardState state)
-    {
-		String imagePath = getImageLocation(x, y, state);
+	/**
+	 * Get all the images (as strings to the image path) used by this puzzle in the center part
+	 * @return an array of strings to image paths
+	 */
+	public BoardImage[] getAllCenterImages()
+	{
+		BoardImage[] s = new BoardImage[0];
+
+		return s;
+	}
+
+	/**
+	 * Get all the images (as strings to the image path) used by this puzzle in the border part
+	 * @return an array of strings to image paths
+	 */
+	public BoardImage[] getAllBorderImages()
+	{
+		BoardImage[] s = new BoardImage[0];
+
+		return s;
+	}
+
+	public Dimension getImageSize()
+	{
+		return cellSize;
+	}
+
+	/**
+	 *	Separate method, intended for overwriting when extra data needs to be incorporated
+	 */
+	public String getImageLocation(int x, int y, BoardState boardState)
+	{
+		return getImageLocation(boardState.getCellContents(x, y));
+	}
+
+	/**
+	 * Gets the image location for the cellValue
+	 * Method is not used if the overloaded method is overwritten
+	 *
+	 * @return A location for the image
+	 */
+	public String getImageLocation(int cellValue)
+	{
+		if (cellValue == 0)
+			return "images/blank.gif";
+		else
+			return "images/unknown.gif";
+	}
+
+	private Font font = new Font( "Arial", Font.BOLD, 20 );
+	protected void drawText( Graphics2D g, int x, int y, String text ){
+		g.setColor( Color.black );
+		g.setFont( font );
+		FontMetrics fm = g.getFontMetrics();
+		int w = ( cellSize.width - fm.stringWidth(text) ) / 2;
+		int h = ( cellSize.height - fm.getAscent() ) / 2 + fm.getAscent();
+		g.drawString( text,
+			cellSize.width * (x + 1) + w,
+			cellSize.height * (y + 1) + h );
+	}
+
+	protected void drawImage( Graphics2D g, int x, int y, Image img ){
+		g.drawImage( img,
+			cellSize.width * (x + 1), cellSize.height * (y + 1),
+			cellSize.width, cellSize.height, null );
+	}
+
+	/**
+	 * Drawing methods
+	 */
+	public void drawCell(Graphics2D g, int x, int y, BoardState state)
+	{
+		drawCell( g, x, y, state.getCellContents(x, y) );
+	}
+
+	public void drawCell( Graphics2D g, int x, int y, int state ){
+		String imagePath = getImageLocation(state);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);
-    }
+		drawImage(g,x,y,i);
+	}
 
-    /**
+	/**
 	 * Draw the grid for the puzzle in the specified coords
 	 * @param g the Graphics to draw with
 	 * @param bounds the bounds of the grid

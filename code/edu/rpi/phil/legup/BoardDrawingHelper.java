@@ -7,8 +7,10 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+
 
 public abstract class BoardDrawingHelper
 {
@@ -45,15 +47,24 @@ public abstract class BoardDrawingHelper
 		fontLeft = (int)((imageWidth - fontRect.getWidth()) / 2.0);
 		halffontLeft = (int)((imageWidth - (fontRect.getWidth() / 2)) / 2.0);
 		fontTop = (int)(( imageHeight - fontRect.getHeight()) / -2.0);
+		
+		// TODO new stuff --kueblc
+		g.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
+			RenderingHints.VALUE_ANTIALIAS_ON );
+		g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING,
+			RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+
 	}
 
-
+	@Deprecated
+	// use PuzzleModule.drawImage instead
 	public static void drawImage(Graphics2D g, int x, int y, Image img)
 	{
 		g.drawImage(img, imageWidth * (x + 1), imageHeight * (y + 1), imageWidth, imageHeight, null);
 	}
 
-
+	@Deprecated
+	// use PuzzleModule.drawText instead
 	public static void drawText( Graphics2D g, int x, int y, String text)
 	{
 
@@ -69,18 +80,6 @@ public abstract class BoardDrawingHelper
 			g.drawString(text,pm.getImageSize().width * (x + 1) + fontLeft, pm.getImageSize().height * (y + 2) + fontTop);
 	}
 
-	public static String numberToLetters(int number)
-	{
-		String s = "";
-		while(number != 0)
-		{
-			int rem = (number % 26) + 64;
-			number = number / 26;
-			char c = (char)rem;
-			s = c + s;
-		}
-		return s;
-	}
 
 
 	/**

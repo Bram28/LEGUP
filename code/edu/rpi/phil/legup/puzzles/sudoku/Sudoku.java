@@ -436,6 +436,11 @@ public class Sudoku extends PuzzleModule
 		return true;
     }
 
+	public void drawCell( Graphics2D g, int x, int y, int state ){
+		if( state > 0 && state < 10 )
+			drawText( g, x, y, String.valueOf(state) );
+	}
+
     /**
 	 * Draw the grid for the puzzle in the specified coords
 	 * @param g the Graphics to draw with

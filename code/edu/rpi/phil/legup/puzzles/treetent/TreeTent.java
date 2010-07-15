@@ -622,27 +622,40 @@ public class TreeTent extends PuzzleModule
     	return R*C;
     }
 
+	public String numberToLetters(int number)
+	{
+		String s = "";
+		while(number != 0)
+		{
+			int rem = (number % 26) + 64;
+			number = number / 26;
+			char c = (char)rem;
+			s = c + s;
+		}
+		return s;
+	}
+
     public void drawLeftLabel(Graphics2D g, int val, int x, int y)
 	{
-		BoardDrawingHelper.drawText(g,x, y, BoardDrawingHelper.numberToLetters(y + 1));
+		drawText(g,x, y, numberToLetters(y + 1));
 	}
 
 
     public void drawRightLabel(Graphics2D g, int val, int x, int y)
 	{
-		BoardDrawingHelper.drawText(g,x, y, String.valueOf(val - 10));
+		drawText(g,x, y, String.valueOf(val - 10));
 	}
 
 
     public void drawTopLabel(Graphics2D g, int val, int x, int y)
 	{
-		BoardDrawingHelper.drawText(g,x, y, String.valueOf(x + 1));
+		drawText(g,x, y, String.valueOf(x + 1));
 	}
 
 
     public void drawBottomLabel(Graphics2D g, int val, int x, int y)
 	{
-		BoardDrawingHelper.drawText(g,x, y, String.valueOf(val - 10));
+		drawText(g,x, y, String.valueOf(val - 10));
 	}
 
 }
