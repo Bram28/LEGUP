@@ -192,34 +192,6 @@ public abstract class BoardDrawingHelper
 			return null;
 		}
 		else return null;
-
-		/* Obsolete
-		if(selection.isState()) //State
-		{
-			if (!showOrange) return null;
-			int pval = val;
-			boolean parentEmpty = false;
-			//Loop through all the previous states, remember, this can be 0, 1, or more
-			for(BoardState parent : state.getTransitionsTo())
-			{
-				pval = parent.getCellContents(x, y);
-				if(pval == PuzzleModule.CELL_UNKNOWN && val != PuzzleModule.CELL_UNKNOWN)
-					parentEmpty = true; //We can't quite call this one as red yet, see below
-				else if(pval != val)
-					return redFilter; //If the value is differen't return immediately
-			}
-
-			//If a state has multiple parents, we aren't allowed to add new information so
-			//going from empty->value is red
-			if(parentEmpty)
-			{
-				if(state.getTransitionsTo().size() > 1)
-					return redFilter;
-				else
-					return greenFilter;
-			}
-		}
-		return null; */
 	}
 
 	public static void drawLabels(Graphics2D g, BoardState state)
@@ -230,16 +202,23 @@ public abstract class BoardDrawingHelper
 		int h = state.getHeight();
 		int w = state.getWidth();
 		//Draw background
+		// Why would we need to do this here? If the puzzle module wants a
+		// filled background, it should draw it itself.
+		/*
 		g.setColor(Color.GRAY);
 		g.fillRect(imageWidth, 0, imageWidth * w, imageHeight);
 		g.fillRect(imageWidth, imageHeight * (h + 1), imageWidth * w, imageHeight);
 		g.fillRect(0, imageHeight, imageWidth, imageHeight * h);
 		g.fillRect(imageWidth * (w + 1), imageHeight, imageWidth, imageHeight * h);
+		*/
 
 		//Draw the headers
+		// Also unneccessary
+		/*
 		Font old = g.getFont();
 		g.setColor(Color.BLACK);
 		g.setFont(labelFont);
+		*/
 
 
 		for (int x = 0; x < w; ++x)
@@ -260,6 +239,6 @@ public abstract class BoardDrawingHelper
 			pm.drawRightLabel(g, val, w, y);
 		}
 
-		g.setFont(old);
+		//g.setFont(old);
 	}
 }

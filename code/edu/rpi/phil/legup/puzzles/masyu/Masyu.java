@@ -1,11 +1,3 @@
-//
-//  TreeTent.java
-//  LEGUP
-//
-//  Created by Drew Housten on Wed Feb 16 2005.
-//  Copyright (c) 2005 __MyCompanyName__. All rights reserved.
-//
-
 package edu.rpi.phil.legup.puzzles.masyu;
 
 import java.awt.BasicStroke;

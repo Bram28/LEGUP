@@ -203,8 +203,8 @@ public class Sudoku extends PuzzleModule
 		// Difficulty is classified by move intensity:
 		// If the move is ForcedLocation/Deduction and reveals at least 6/3 squares or 1/3 / 1/5 of the remaining, it is easy
 		// If the move is ForcedDeduction or, ForcedLocation with less revelation, the move is Medium
-		//    However, for a puzzle to be medium, there cannot be a sequence of 4 moves or more with an average number of numbers per turn less than 1.5,
-		//    unless at the start of the sequence < 20 squares remain
+		//	However, for a puzzle to be medium, there cannot be a sequence of 4 moves or more with an average number of numbers per turn less than 1.5,
+		//	unless at the start of the sequence < 20 squares remain
 		// If the puzzle requires guessing, it is optimal
 		// If the puzzle does not require guessing, but is too hard for medium, it is hard.  A puzzle with no guessing but with advanced deduction is hard.
 
@@ -292,7 +292,7 @@ public class Sudoku extends PuzzleModule
 		}
 		else
 		{
-		    return "images/sudoku/unknown.gif";
+			return "images/sudoku/unknown.gif";
 		}
 	}
 
@@ -301,62 +301,62 @@ public class Sudoku extends PuzzleModule
 		// blank board is a fine initial board for sudoku
 	}
 
-    /**
-     * Get all the images (as strings to the image path) used by this puzzle in the center part
-     * @return an array of strings to image paths
-     */
-    public BoardImage[] getAllCenterImages()
-    {
-    	BoardImage[] s = new BoardImage[10];
+	/**
+	 * Get all the images (as strings to the image path) used by this puzzle in the center part
+	 * @return an array of strings to image paths
+	 */
+	public BoardImage[] getAllCenterImages()
+	{
+		BoardImage[] s = new BoardImage[10];
 
-    	s[0] = new BoardImage("images/sudoku/unknown.gif",0);
+		s[0] = new BoardImage("images/sudoku/unknown.gif",0);
 
-    	for (int x = 1; x < s.length; ++x)
-    	{
-    		s[x] = new BoardImage("images/sudoku/" + x + ".gif",x);
-    	}
+		for (int x = 1; x < s.length; ++x)
+		{
+			s[x] = new BoardImage("images/sudoku/" + x + ".gif",x);
+		}
 
-    	return s;
-    }
-
-    /**
-     * Get all the images (as strings to the image path) used by this puzzle in the border part
-     * @return an array of strings to image paths
-     */
-    public BoardImage[] getAllBorderImages()
-    {
-    	BoardImage[] s = new BoardImage[0];
-
-    	return s;
-    }
+		return s;
+	}
 
 	/**
-     * Get the next label value if we're at this one (like the numbers around the border)
-     * This is used when we're creating puzzles
-     *
-     * @param curValue the current value of the label
-     * @return the next value of the label
-     */
-    public int getNextLabelValue(int curValue)
-    {
-    	return 0;
-    }
+	 * Get all the images (as strings to the image path) used by this puzzle in the border part
+	 * @return an array of strings to image paths
+	 */
+	public BoardImage[] getAllBorderImages()
+	{
+		BoardImage[] s = new BoardImage[0];
+
+		return s;
+	}
+
+	/**
+	 * Get the next label value if we're at this one (like the numbers around the border)
+	 * This is used when we're creating puzzles
+	 *
+	 * @param curValue the current value of the label
+	 * @return the next value of the label
+	 */
+	public int getNextLabelValue(int curValue)
+	{
+		return 0;
+	}
 
 	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
-    {
-    	int contents = boardState.getCellContents(x,y);
-    	int rv = (contents + 1) % 10;
+	{
+		int contents = boardState.getCellContents(x,y);
+		int rv = (contents + 1) % 10;
 
 		return rv;
-    }
+	}
 
-    public int getNextCellValue(int x, int y, BoardState boardState)
-    {
-    	int contents = boardState.getCellContents(x,y);
-    	int rv = (contents + 1) % 10;
+	public int getNextCellValue(int x, int y, BoardState boardState)
+	{
+		int contents = boardState.getCellContents(x,y);
+		int rv = (contents + 1) % 10;
 
 		return rv;
-    }
+	}
 
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard)
 	{
@@ -376,17 +376,17 @@ public class Sudoku extends PuzzleModule
 	}
 
 	public Vector<Contradiction> getContradictions()
-    {
-    	return contraList;
-    }
+	{
+		return contraList;
+	}
 
-    public Vector<CaseRule> getCaseRules()
-    {
-    	return caseList;
-    }
+	public Vector<CaseRule> getCaseRules()
+	{
+		return caseList;
+	}
 
-    public boolean checkValidBoardState(BoardState boardState)
-    {
+	public boolean checkValidBoardState(BoardState boardState)
+	{
 		int height = boardState.getHeight();
 		int width = boardState.getWidth();
 
@@ -408,11 +408,11 @@ public class Sudoku extends PuzzleModule
 		}
 
 		return true;
-    }
+	}
 
 	// Static clone of local method, may need renaming
-    public static boolean s_checkValidBoardState(BoardState boardState)
-    {
+	public static boolean s_checkValidBoardState(BoardState boardState)
+	{
 		int height = boardState.getHeight();
 		int width = boardState.getWidth();
 
@@ -434,14 +434,14 @@ public class Sudoku extends PuzzleModule
 		}
 
 		return true;
-    }
+	}
 
 	public void drawCell( Graphics2D g, int x, int y, int state ){
 		if( state > 0 && state < 10 )
 			drawText( g, x, y, String.valueOf(state) );
 	}
 
-    /**
+	/**
 	 * Draw the grid for the puzzle in the specified coords
 	 * @param g the Graphics to draw with
 	 * @param bounds the bounds of the grid
@@ -486,20 +486,20 @@ public class Sudoku extends PuzzleModule
 		}
 
 	/**
-     * Get the forced dimension for this puzzle, or null if there isn't a forced dimension
-     * @return the size the puzzle must be, or null if the size is allowed to vary
-     */
-    public Dimension getForcedDimension()
-    {
-    	return new Dimension(9,9);
-    }
+	 * Get the forced dimension for this puzzle, or null if there isn't a forced dimension
+	 * @return the size the puzzle must be, or null if the size is allowed to vary
+	 */
+	public Dimension getForcedDimension()
+	{
+		return new Dimension(9,9);
+	}
 
-    /**
-     * Daniel Ploch 09/30/2008
-     * Locates squares with least # of possible solutions, and chooses one at random
-     */
-    public BoardState guess(BoardState B)
-    {
+	/**
+	 * Daniel Ploch 09/30/2008
+	 * Locates squares with least # of possible solutions, and chooses one at random
+	 */
+	public BoardState guess(BoardState B)
+	{
 		Vector<Point> bestGuesses = new Vector<Point>();
 		int bestGuess = 9;
 
@@ -543,5 +543,5 @@ public class Sudoku extends PuzzleModule
 		parent.setCaseSplitJustification(getCaseRules().get(0));
 
 		return B;
-    }
+	}
 }

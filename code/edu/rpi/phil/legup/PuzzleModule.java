@@ -426,9 +426,10 @@ public abstract class PuzzleModule
 			return "images/unknown.gif";
 	}
 
-	private Font font = new Font( "Arial", Font.BOLD, 20 );
+	protected Font font = new Font( "Arial", Font.BOLD, 20 );
+	protected Color fontColor = Color.black;
 	protected void drawText( Graphics2D g, int x, int y, String text ){
-		g.setColor( Color.black );
+		g.setColor( fontColor );
 		g.setFont( font );
 		FontMetrics fm = g.getFontMetrics();
 		int w = ( cellSize.width - fm.stringWidth(text) ) / 2;
@@ -501,31 +502,35 @@ public abstract class PuzzleModule
 
 	}
 
+	// Default behavior for borders should be to draw nothing, let individual
+	// puzzles implement this if they chose. Borders may be removed in the
+	// near future, in favor of including borders as part of the board.
+
 	public void drawLeftLabel(Graphics2D g, int val, int x, int y)
-	{
+	{/*
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);
+		BoardDrawingHelper.drawImage(g,x,y,i);*/
 	}
 
 	public void drawRightLabel(Graphics2D g, int val, int x, int y)
-	{
+	{/*
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);
+		BoardDrawingHelper.drawImage(g,x,y,i);*/
 	}
 
 	public void drawTopLabel(Graphics2D g, int val, int x, int y)
-	{
+	{/*
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);
+		BoardDrawingHelper.drawImage(g,x,y,i);*/
 	}
 
 	public void drawBottomLabel(Graphics2D g, int val, int x, int y)
-	{
+	{/*
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);
+		BoardDrawingHelper.drawImage(g,x,y,i);*/
 	}
 }
