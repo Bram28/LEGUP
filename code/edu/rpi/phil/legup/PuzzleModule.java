@@ -157,7 +157,7 @@ public abstract class PuzzleModule
 		int rv = 0;
 
 		if (boardState.getCellContents(x,y) == 0)
-		   rv = 1;
+			rv = 1;
 
 		return rv;
 	}
@@ -443,6 +443,12 @@ public abstract class PuzzleModule
 		g.drawImage( img,
 			cellSize.width * (x + 1), cellSize.height * (y + 1),
 			cellSize.width, cellSize.height, null );
+	}
+
+	protected Rectangle getCellBounds( int x, int y ){
+		return new Rectangle(
+			cellSize.width * (x + 1), cellSize.height * (y + 1),
+			cellSize.width, cellSize.height );
 	}
 
 	/**

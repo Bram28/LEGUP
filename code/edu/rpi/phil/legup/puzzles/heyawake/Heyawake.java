@@ -156,20 +156,14 @@ public class Heyawake extends PuzzleModule
 			}
 		}
 	}
-	
-	public String getImageLocation(int cellValue){
-		if (cellValue == 0){
-			return "images/heyawake/unknown.gif";
-		} else if (cellValue == 1){
-		    return "images/heyawake/white.gif";
-		} else if (cellValue == 2){
-		    return "images/heyawake/black.gif";
+
+	public void drawCell( Graphics2D g, int x, int y, int state ){
+		if( state != 0 ){
+			g.setColor( (state==1) ? Color.white : Color.black );
+			g.fill( getCellBounds(x,y) );
 		}
-		else{
-		    return "images/heyawake/unknown.gif";
-		}	
 	}
-	
+
 	public void initBoard(BoardState state)
 	{
 		int w  = state.getWidth();
@@ -191,51 +185,12 @@ public class Heyawake extends PuzzleModule
 			state.addExtraData(temp);
 		}
 	}
-    
-    /**
-     * Get all the images (as strings to the image path) used by this puzzle in the center part
-     * @return an array of strings to image paths
-     */
-    public BoardImage[] getAllCenterImages()
-    {
-    	BoardImage[] s = 
-    	{
-    			new BoardImage("images/heyawake/unknown.gif",0),
-    			new BoardImage("images/heyawake/white.gif",1),
-    			new BoardImage("images/heyawake/black.gif",2),
-    			
-    	};
-    	
-    	return s;
-    }
-    
-    /**
-     * Get all the images (as strings to the image path) used by this puzzle in the border part
-     * @return an array of strings to image paths
-     */
-    public BoardImage[] getAllBorderImages()
-    {
-    	BoardImage[] s = new BoardImage[0];
-    	return s;
-    }
-	
-	/**
-     * Get the next label value if we're at this one (like the numbers around the border)
-     * This is used when we're creating puzzles
-     * 
-     * @param curValue the current value of the label
-     * @return the next value of the label
-     */
-    public int getNextLabelValue(int curValue)
-    {
-    	return 0;
-    }
-	
+
 	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
-    {
-    	int contents = boardState.getCellContents(x,y);
-    	int rv = CELL_UNKNOWN;
-    	
+	{
+		int contents = boardState.getCellContents(x,y);
+		int rv = CELL_UNKNOWN;
+		
 		if (contents == CELL_UNKNOWN)
 		{
 			rv = CELL_WHITE;
@@ -250,12 +205,12 @@ public class Heyawake extends PuzzleModule
 		}
 		
 		return rv;
-    }
+	}
 	
-    public int getNextCellValue(int x, int y, BoardState boardState)
-    {
-    	int contents = boardState.getCellContents(x,y);
-    	
+	public int getNextCellValue(int x, int y, BoardState boardState)
+	{
+		int contents = boardState.getCellContents(x,y);
+		
 		if (contents == CELL_UNKNOWN)
 		{
 			return CELL_WHITE;
@@ -272,7 +227,7 @@ public class Heyawake extends PuzzleModule
 		{
 			return CELL_UNKNOWN;
 		}
-    }
+	}
 	
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
@@ -298,12 +253,12 @@ public class Heyawake extends PuzzleModule
 	}
 	
 	 /**
-     * Gets a list of Contradictions associated with this puzzle
-     *
-     * @return A Vector of Contradictions
-     */   
-    public Vector <Contradiction> getContradictions()
-    {
+	 * Gets a list of Contradictions associated with this puzzle
+	 *
+	 * @return A Vector of Contradictions
+	 */   
+	public Vector <Contradiction> getContradictions()
+	{
 		Vector <Contradiction> contradictionList = new Vector <Contradiction>();
 		//contradictionList.add(new Contradiction());
 		contradictionList.add(new ContradictionAdjacentBlacks());
@@ -313,20 +268,20 @@ public class Heyawake extends PuzzleModule
 		contradictionList.add(new ContradictionRoomTooEmpty());
 		
 		return contradictionList;
-    }
-    
-    public Vector <CaseRule> getCaseRules()
-    {
-    	Vector <CaseRule> caseRules = new Vector <CaseRule>();
-    	
-    	caseRules.add(new CaseBlackOrWhite());
-    	caseRules.add(new CaseZigZag());
-    	
-    	return caseRules;
-    }
+	}
+	
+	public Vector <CaseRule> getCaseRules()
+	{
+		Vector <CaseRule> caseRules = new Vector <CaseRule>();
+		
+		caseRules.add(new CaseBlackOrWhite());
+		caseRules.add(new CaseZigZag());
+		
+		return caseRules;
+	}
 
-    public boolean checkValidBoardState(BoardState boardState)
-    {
+	public boolean checkValidBoardState(BoardState boardState)
+	{
 		int height = boardState.getHeight();
 		int width = boardState.getWidth();
 	
@@ -337,304 +292,304 @@ public class Heyawake extends PuzzleModule
 		}
 		return checkWhiteConnected(boardState, width, height) && checkBlackAdjacent(boardState, width, height) && checkRoomTooEmpty(boardState) && checkWhiteLine(boardState, width, height);
 	}
-    
-    public boolean checkWhiteConnected(BoardState boardState, int width, int height)
-    {
-    	//false = not checked, true = checked
-    	boolean[][] neighbors = new boolean[height][width];
-    	int startx = -1;
-    	int starty = -1;
-    	for(int x = 0; x < width; ++x)
-    	{
-    		for(int y = 0; y < height; ++y)
-    		{
-    			neighbors[y][x] = false;
-    			if(boardState.getCellContents(x,y) != 2 && startx == -1)
-    			{
-    				startx = x;
-    				starty = y;
-    			}
-    			else if(boardState.getCellContents(x,y) == 2)
-    			{
-    				neighbors[y][x] = true;
-    			}
-    		}
-    	}
-    	if(startx > -1)
-    	{
-	    	loopConnected(neighbors, boardState, startx, starty, width, height);
-	    	for(int x = 0; x < width; ++x)
-	    	{
-	    		for(int y = 0; y < height; ++y)
-	    		{
-	    			if(!neighbors[y][x])
-	    				return false;
-	    		}
-	    	}
-    	}
-    	
-    	return true;
-    }
-    
-    private boolean[][] loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
-    {
-    	neighbors[y][x] = true;
-    	if(x+1 < width)
-    	{
-    		if(!neighbors[y][x+1])
-    			neighbors = loopConnected(neighbors, boardState, x+1, y, width, height);
-    	}
-    	if(x-1 >= 0)
-    	{
-    		if(!neighbors[y][x-1])
-    			neighbors = loopConnected(neighbors, boardState, x-1, y, width, height);
-    	}
-    	if(y+1 < height)
-    	{
-    		if(!neighbors[y+1][x])
-    			neighbors = loopConnected(neighbors, boardState, x, y+1, width, height);
-    	}
-    	if(y-1 >= 0)
-    	{
-    		if(!neighbors[y-1][x])
-    			neighbors = loopConnected(neighbors, boardState, x, y-1, width, height);
-    	}
-    	return neighbors;
-    }
-    
-    public boolean checkBlackAdjacent(BoardState boardState, int width, int height)
-    {
-    	for(int x = 0; x < width; ++x)
-    	{
-    		for(int y = 0; y < height; ++y)
-    		{
-    			if(boardState.getCellContents(x,y) == 2)
-    			{
-    				if(x+1 < width)
-    				{
-    					if(boardState.getCellContents(x+1,y) == 2)
-    						return false;
-    				}
-    				if(y+1 < height)
-    				{
-    					if(boardState.getCellContents(x,y+1) == 2)
-    						return false;
-    				}
-    			}
-    		}
-    	}
-    	return true;
-    }
-    
-    public boolean checkWhiteLine(BoardState boardState, int width, int height)
-    {
-    	int[][] arrayacross= new int[height][width];
-    	int[][] arraydown = new int[height][width];
-    	int[][]cellRegions = (int[][])boardState.getExtraData().get(2);
-    	for(int x = 0; x < width; ++x)
-    	{
-    		for(int y = 0; y < height; ++y)
-    		{
-    			arrayacross[y][x] = arraydown[y][x] = 0;
-    		}
-    	}
-    	
-    	for(int x = 0; x < width; ++x)
-    	{
-    		for(int y = 0; y < height; ++y)
-    		{
-    			if(boardState.getCellContents(x,y) == 1)
-    			{
-    				if(x+1 < width)
-    				{
-    					if(boardState.getCellContents(x+1,y) == 1)
-    					{
-    						if( cellRegions[y][x] != cellRegions[y][x+1])
-    							arrayacross[y][x+1] = arrayacross[y][x] + 1;
-    						else
-    							arrayacross[y][x+1] = arrayacross[y][x];
-    					}
-    				}
-    				if(y+1 < height)
-    				{
-    					if(boardState.getCellContents(x,y+1) == 1)
-    					{
-    						if( cellRegions[y][x] != cellRegions[y+1][x])
-    							arrayacross[y+1][x] = arrayacross[y][x] + 1;
-    						else
-    							arrayacross[y+1][x] = arrayacross[y][x];
-    					}
-    				}
-    			}
-    		}
-    	}
-    	
-    	for(int x = 0; x < width; ++x)
-    	{
-    		for(int y = 0; y < height; ++y)
-    		{
-    			if(arrayacross[y][x] > 1 || arraydown[y][x] > 1)
-    				return false;
-    		}
-    	}
-    	return true;
-    }
-    
-    public boolean checkRoomTooEmpty(BoardState boardState)
-    {
-    	int countwhite, countblack, countunknown, cellval;
-    	Vector<CellLocation> cells;
-    	CellLocation tempcell;
-    	Region[] regions = (Region[])boardState.getExtraData().get(0);
-    	int regionCount = ((Integer)(boardState.getExtraData().get(1))).intValue();
-    	for(int indx = 0; indx < regionCount; ++indx)
-    	{
-    		countwhite = countblack = countunknown = 0;
-    		cells = regions[indx].getCells();
-    		if(cells.size() > 0)
-    		{
-	    		for(int c = 0; c < cells.size(); ++c)
-	    		{
-	    			tempcell = cells.get(c);
-	    			cellval = boardState.getCellContents(tempcell.x, tempcell.y);
-	    			if(cellval == CELL_WHITE)
-	    			{
-	    				++countwhite;
-	    			}
-	    			else if(cellval == CELL_BLACK)
-	    			{
-	    				++countblack;
-	    			}
-	    			else
-	    			{
-	    				++countunknown;
-	    			}
-	    		}
-	    		if(countblack + countunknown < regions[indx].getValue() && regions[indx].getValue() > -1)
-	    		{
-	    			return false;
-	    		}
-    		}
-    		
-    	}
-    	
-    	return true;
-    }
-    
-    public boolean checkRoomTooFull(BoardState boardState)
-    {
-    	int countwhite, countblack, countunknown, cellval;
-    	Vector<CellLocation> cells;
-    	CellLocation tempcell;
-    	Region[] regions = (Region[])boardState.getExtraData().get(0);
-    	int regionCount = ((Integer)(boardState.getExtraData().get(1))).intValue();
-    	for(int indx = 0; indx < regionCount; ++indx)
-    	{
-    		countwhite = countblack = countunknown = 0;
-    		cells = regions[indx].getCells();
-    		if(cells.size() > 0)
-    		{
-	    		for(int c = 0; c < cells.size(); ++c)
-	    		{
-	    			tempcell = cells.get(c);
-	    			cellval = boardState.getCellContents(tempcell.x, tempcell.y);
-	    			if(cellval == CELL_WHITE)
-	    			{
-	    				++countwhite;
-	    			}
-	    			else if(cellval == CELL_BLACK)
-	    			{
-	    				++countblack;
-	    			}
-	    			else
-	    			{
-	    				++countunknown;
-	    			}
-	    		}
-	    		if(countblack > regions[indx].getValue() && regions[indx].getValue() > -1)
-	    		{
-	    			return false;
-	    		}
-    		}
-    		
-    	}
-    	
-    	return true;
-    }
-    
-    public boolean checkRoomCount(BoardState boardState)
-    {
-    	int countwhite, countblack, countunknown, cellval;
-    	Vector<CellLocation> cells;
-    	CellLocation tempcell;
-    	Region[] regions = (Region[])boardState.getExtraData().get(0);
-    	int regionCount = ((Integer)(boardState.getExtraData().get(1))).intValue();
-    	for(int indx = 0; indx < regionCount; ++indx)
-    	{
-    		countwhite = countblack = countunknown = 0;
-    		cells = regions[indx].getCells();
-    		if(cells.size() > 0)
-    		{
-	    		for(int c = 0; c < cells.size(); ++c)
-	    		{
-	    			tempcell = cells.get(c);
-	    			cellval = boardState.getCellContents(tempcell.x, tempcell.y);
-	    			if(cellval == CELL_WHITE)
-	    			{
-	    				++countwhite;
-	    			}
-	    			else if(cellval == CELL_BLACK)
-	    			{
-	    				++countblack;
-	    			}
-	    			else
-	    			{
-	    				++countunknown;
-	    			}
-	    		}
-	    		if(countblack + countunknown < regions[indx].getValue() && regions[indx].getValue() > -1)
-	    		{
-	    			return false;
-	    		}
-	    		if(countblack > regions[indx].getValue() && regions[indx].getValue() > -1)
-	    		{
-	    			return false;
-	    		}
-    		}
-    		
-    	}
-    	
-    	return true;
-    }
-    
-    public boolean editExtraData(BoardState boardState, edu.rpi.phil.legup.editor.PuzzleEditor peditor)
-    {
-    	if(boardEditor == null)
-    	{
-	    	boardEditor = new HeyawakeEditorBoardFrame(boardState, this, peditor);
-	    	peditor.setEditorVisible(false);
-	    	
-	    	//if trying modal use this:
-	    	//comment out line 503 HeyawakeEditorBoardFrame
-	    	//boardEditor.setModal(true);
-	    	//boardEditor.setVisible(true);
-	    	//JOptionPane.showMessageDialog(null, "Done."); //this should pop up only after the window has closed
-	    	//return false;
-	    	
-	    	//if non-modal use this:
-	    	//Also, the on window close needs to let the puzzle editor know that the extra data editor is finished
-	    	//uncomment line 503 HeyawakeEditorBoardFrame
-	    	boardEditor.setVisible(true);
-    	}
-    	if(!boardEditor.isVisible())
-    	{
-    		boardEditor.curState = boardState;
-    		boardEditor.setVisible(true);
-    	}
-    	return true;
-    }
-    public BoardState guess(BoardState Board) 
-    {
+	
+	public boolean checkWhiteConnected(BoardState boardState, int width, int height)
+	{
+		//false = not checked, true = checked
+		boolean[][] neighbors = new boolean[height][width];
+		int startx = -1;
+		int starty = -1;
+		for(int x = 0; x < width; ++x)
+		{
+			for(int y = 0; y < height; ++y)
+			{
+				neighbors[y][x] = false;
+				if(boardState.getCellContents(x,y) != 2 && startx == -1)
+				{
+					startx = x;
+					starty = y;
+				}
+				else if(boardState.getCellContents(x,y) == 2)
+				{
+					neighbors[y][x] = true;
+				}
+			}
+		}
+		if(startx > -1)
+		{
+			loopConnected(neighbors, boardState, startx, starty, width, height);
+			for(int x = 0; x < width; ++x)
+			{
+				for(int y = 0; y < height; ++y)
+				{
+					if(!neighbors[y][x])
+						return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean[][] loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
+	{
+		neighbors[y][x] = true;
+		if(x+1 < width)
+		{
+			if(!neighbors[y][x+1])
+				neighbors = loopConnected(neighbors, boardState, x+1, y, width, height);
+		}
+		if(x-1 >= 0)
+		{
+			if(!neighbors[y][x-1])
+				neighbors = loopConnected(neighbors, boardState, x-1, y, width, height);
+		}
+		if(y+1 < height)
+		{
+			if(!neighbors[y+1][x])
+				neighbors = loopConnected(neighbors, boardState, x, y+1, width, height);
+		}
+		if(y-1 >= 0)
+		{
+			if(!neighbors[y-1][x])
+				neighbors = loopConnected(neighbors, boardState, x, y-1, width, height);
+		}
+		return neighbors;
+	}
+	
+	public boolean checkBlackAdjacent(BoardState boardState, int width, int height)
+	{
+		for(int x = 0; x < width; ++x)
+		{
+			for(int y = 0; y < height; ++y)
+			{
+				if(boardState.getCellContents(x,y) == 2)
+				{
+					if(x+1 < width)
+					{
+						if(boardState.getCellContents(x+1,y) == 2)
+							return false;
+					}
+					if(y+1 < height)
+					{
+						if(boardState.getCellContents(x,y+1) == 2)
+							return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean checkWhiteLine(BoardState boardState, int width, int height)
+	{
+		int[][] arrayacross= new int[height][width];
+		int[][] arraydown = new int[height][width];
+		int[][]cellRegions = (int[][])boardState.getExtraData().get(2);
+		for(int x = 0; x < width; ++x)
+		{
+			for(int y = 0; y < height; ++y)
+			{
+				arrayacross[y][x] = arraydown[y][x] = 0;
+			}
+		}
+		
+		for(int x = 0; x < width; ++x)
+		{
+			for(int y = 0; y < height; ++y)
+			{
+				if(boardState.getCellContents(x,y) == 1)
+				{
+					if(x+1 < width)
+					{
+						if(boardState.getCellContents(x+1,y) == 1)
+						{
+							if( cellRegions[y][x] != cellRegions[y][x+1])
+								arrayacross[y][x+1] = arrayacross[y][x] + 1;
+							else
+								arrayacross[y][x+1] = arrayacross[y][x];
+						}
+					}
+					if(y+1 < height)
+					{
+						if(boardState.getCellContents(x,y+1) == 1)
+						{
+							if( cellRegions[y][x] != cellRegions[y+1][x])
+								arrayacross[y+1][x] = arrayacross[y][x] + 1;
+							else
+								arrayacross[y+1][x] = arrayacross[y][x];
+						}
+					}
+				}
+			}
+		}
+		
+		for(int x = 0; x < width; ++x)
+		{
+			for(int y = 0; y < height; ++y)
+			{
+				if(arrayacross[y][x] > 1 || arraydown[y][x] > 1)
+					return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean checkRoomTooEmpty(BoardState boardState)
+	{
+		int countwhite, countblack, countunknown, cellval;
+		Vector<CellLocation> cells;
+		CellLocation tempcell;
+		Region[] regions = (Region[])boardState.getExtraData().get(0);
+		int regionCount = ((Integer)(boardState.getExtraData().get(1))).intValue();
+		for(int indx = 0; indx < regionCount; ++indx)
+		{
+			countwhite = countblack = countunknown = 0;
+			cells = regions[indx].getCells();
+			if(cells.size() > 0)
+			{
+				for(int c = 0; c < cells.size(); ++c)
+				{
+					tempcell = cells.get(c);
+					cellval = boardState.getCellContents(tempcell.x, tempcell.y);
+					if(cellval == CELL_WHITE)
+					{
+						++countwhite;
+					}
+					else if(cellval == CELL_BLACK)
+					{
+						++countblack;
+					}
+					else
+					{
+						++countunknown;
+					}
+				}
+				if(countblack + countunknown < regions[indx].getValue() && regions[indx].getValue() > -1)
+				{
+					return false;
+				}
+			}
+			
+		}
+		
+		return true;
+	}
+	
+	public boolean checkRoomTooFull(BoardState boardState)
+	{
+		int countwhite, countblack, countunknown, cellval;
+		Vector<CellLocation> cells;
+		CellLocation tempcell;
+		Region[] regions = (Region[])boardState.getExtraData().get(0);
+		int regionCount = ((Integer)(boardState.getExtraData().get(1))).intValue();
+		for(int indx = 0; indx < regionCount; ++indx)
+		{
+			countwhite = countblack = countunknown = 0;
+			cells = regions[indx].getCells();
+			if(cells.size() > 0)
+			{
+				for(int c = 0; c < cells.size(); ++c)
+				{
+					tempcell = cells.get(c);
+					cellval = boardState.getCellContents(tempcell.x, tempcell.y);
+					if(cellval == CELL_WHITE)
+					{
+						++countwhite;
+					}
+					else if(cellval == CELL_BLACK)
+					{
+						++countblack;
+					}
+					else
+					{
+						++countunknown;
+					}
+				}
+				if(countblack > regions[indx].getValue() && regions[indx].getValue() > -1)
+				{
+					return false;
+				}
+			}
+			
+		}
+		
+		return true;
+	}
+	
+	public boolean checkRoomCount(BoardState boardState)
+	{
+		int countwhite, countblack, countunknown, cellval;
+		Vector<CellLocation> cells;
+		CellLocation tempcell;
+		Region[] regions = (Region[])boardState.getExtraData().get(0);
+		int regionCount = ((Integer)(boardState.getExtraData().get(1))).intValue();
+		for(int indx = 0; indx < regionCount; ++indx)
+		{
+			countwhite = countblack = countunknown = 0;
+			cells = regions[indx].getCells();
+			if(cells.size() > 0)
+			{
+				for(int c = 0; c < cells.size(); ++c)
+				{
+					tempcell = cells.get(c);
+					cellval = boardState.getCellContents(tempcell.x, tempcell.y);
+					if(cellval == CELL_WHITE)
+					{
+						++countwhite;
+					}
+					else if(cellval == CELL_BLACK)
+					{
+						++countblack;
+					}
+					else
+					{
+						++countunknown;
+					}
+				}
+				if(countblack + countunknown < regions[indx].getValue() && regions[indx].getValue() > -1)
+				{
+					return false;
+				}
+				if(countblack > regions[indx].getValue() && regions[indx].getValue() > -1)
+				{
+					return false;
+				}
+			}
+			
+		}
+		
+		return true;
+	}
+	
+	public boolean editExtraData(BoardState boardState, edu.rpi.phil.legup.editor.PuzzleEditor peditor)
+	{
+		if(boardEditor == null)
+		{
+			boardEditor = new HeyawakeEditorBoardFrame(boardState, this, peditor);
+			peditor.setEditorVisible(false);
+			
+			//if trying modal use this:
+			//comment out line 503 HeyawakeEditorBoardFrame
+			//boardEditor.setModal(true);
+			//boardEditor.setVisible(true);
+			//JOptionPane.showMessageDialog(null, "Done."); //this should pop up only after the window has closed
+			//return false;
+			
+			//if non-modal use this:
+			//Also, the on window close needs to let the puzzle editor know that the extra data editor is finished
+			//uncomment line 503 HeyawakeEditorBoardFrame
+			boardEditor.setVisible(true);
+		}
+		if(!boardEditor.isVisible())
+		{
+			boardEditor.curState = boardState;
+			boardEditor.setVisible(true);
+		}
+		return true;
+	}
+	public BoardState guess(BoardState Board) 
+	{
 		// out of forced moves, need to guess
 		Point guess = GenerateBestGuess(Board);
 		// guess, if we found one
@@ -654,7 +609,7 @@ public class Heyawake extends PuzzleModule
 		System.out.println("Statement: Your puzzle has been solved already. Why do you persist?");
 		return Board;
 	}
-    private Point GenerateBestGuess(BoardState Board) {
+	private Point GenerateBestGuess(BoardState Board) {
 		// this should more properly be some kind of ranking system whereby different
 		// conditions scored points and the highest scoring square was chosen.
 		// until there is more time to actually watch the AI, it scores based on closeness

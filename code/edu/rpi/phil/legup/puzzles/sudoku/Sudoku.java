@@ -280,68 +280,6 @@ public class Sudoku extends PuzzleModule
 		return tot;
 	}
 
-	public String getImageLocation(int cellValue)
-	{
-		if (cellValue == 0)
-		{
-			return "images/sudoku/unknown.gif";
-		}
-		else if (cellValue > 0 && cellValue < 10)
-		{
-			return "images/sudoku/" + cellValue + ".gif";
-		}
-		else
-		{
-			return "images/sudoku/unknown.gif";
-		}
-	}
-
-	public void initBoard(BoardState state)
-	{
-		// blank board is a fine initial board for sudoku
-	}
-
-	/**
-	 * Get all the images (as strings to the image path) used by this puzzle in the center part
-	 * @return an array of strings to image paths
-	 */
-	public BoardImage[] getAllCenterImages()
-	{
-		BoardImage[] s = new BoardImage[10];
-
-		s[0] = new BoardImage("images/sudoku/unknown.gif",0);
-
-		for (int x = 1; x < s.length; ++x)
-		{
-			s[x] = new BoardImage("images/sudoku/" + x + ".gif",x);
-		}
-
-		return s;
-	}
-
-	/**
-	 * Get all the images (as strings to the image path) used by this puzzle in the border part
-	 * @return an array of strings to image paths
-	 */
-	public BoardImage[] getAllBorderImages()
-	{
-		BoardImage[] s = new BoardImage[0];
-
-		return s;
-	}
-
-	/**
-	 * Get the next label value if we're at this one (like the numbers around the border)
-	 * This is used when we're creating puzzles
-	 *
-	 * @param curValue the current value of the label
-	 * @return the next value of the label
-	 */
-	public int getNextLabelValue(int curValue)
-	{
-		return 0;
-	}
-
 	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
 	{
 		int contents = boardState.getCellContents(x,y);

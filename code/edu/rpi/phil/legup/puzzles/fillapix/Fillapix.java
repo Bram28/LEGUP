@@ -47,12 +47,10 @@ public class Fillapix extends PuzzleModule
 
 	public void drawCell( Graphics2D g, int x, int y, BoardState state ){
 		int val = state.getCellContents( x, y );
-		int sx = cellSize.width * (x+1);
-		int sy = cellSize.height * (y+1);
 		// draw the background color
 		if( val != 0 ){
 			g.setColor( (val==1) ? Color.black : Color.white );
-			g.fillRect( sx, sy, cellSize.width, cellSize.height );
+			g.fill( getCellBounds(x,y) );
 		}
 		// find the number to display
 		int num = 10;  Point p = new Point(x, y);
