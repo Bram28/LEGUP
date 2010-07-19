@@ -510,27 +510,27 @@ public abstract class PuzzleModule
 	{/*
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);*/
+		drawImage(g,x,y,i);*/
 	}
 
 	public void drawRightLabel(Graphics2D g, int val, int x, int y)
 	{/*
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);*/
+		drawImage(g,x,y,i);*/
 	}
 
 	public void drawTopLabel(Graphics2D g, int val, int x, int y)
 	{/*
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);*/
+		drawImage(g,x,y,i);*/
 	}
 
 	public void drawBottomLabel(Graphics2D g, int val, int x, int y)
 	{/*
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
-		BoardDrawingHelper.drawImage(g,x,y,i);*/
+		drawImage(g,x,y,i);*/
 	}
 }

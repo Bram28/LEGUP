@@ -17,7 +17,6 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;

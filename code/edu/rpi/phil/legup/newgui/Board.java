@@ -60,8 +60,11 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 		return rv;
 	}
 
+	private int count = 0;
 	protected void draw( Graphics2D g )
 	{
+		count++;
+		System.out.println("Redrawing number " + count);
 		BoardDrawingHelper.draw(g);
 	}
 
@@ -125,8 +128,9 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 						if (state.isModifiableCell(p.x,p.y))
 						{
 							pm.mousePressedEvent(state,p);
-
-							repaint();
+							// This is unnecessary, board is repainted on
+							// boardstate change anyway
+							//repaint();
 						}
 						else
 							parent.showStatus("You are not allowed to change that cell.");
@@ -181,7 +185,9 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 					if (p.x < w && p.y < h)
 					{ // p.x and p.y hold the grid point now!
 						pz.mouseDraggedEvent(state,lastMousePoint,p);
-						repaint();
+						// This is unnecessary, board is repainted on
+						// boardstate change anyway
+						//repaint();
 					}
 				}
 			}

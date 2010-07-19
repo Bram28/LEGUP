@@ -222,22 +222,10 @@ public class Legup
 		Legup legup = Legup.getInstance();
 		
 		// TODO system look & feel
+		// Set System L&F
 		try {
-			// Set System L&F
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (UnsupportedLookAndFeelException e) {
-			// handle exception
-		}
-		catch (ClassNotFoundException e) {
-			// handle exception
-		}
-		catch (InstantiationException e) {
-			// handle exception
-		}
-		catch (IllegalAccessException e) {
-			// handle exception
-		}
+		} catch( Exception e ){}
 
 		legup.gui = new LEGUP_Gui(legup);
 		

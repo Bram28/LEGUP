@@ -658,7 +658,11 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 		if( prev != null || mouseOver != null )
 			repaint();
-		Legup.getInstance().refresh();
+		if( prev != null ^ mouseOver != null )
+			Legup.getInstance().refresh();
+		if( prev != null && mouseOver != null )
+			if( !prev.equals(mouseOver) )
+				Legup.getInstance().refresh();
 	}
 
 	public static Selection getMouseOver(){

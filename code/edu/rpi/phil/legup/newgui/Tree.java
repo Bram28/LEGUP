@@ -74,8 +74,6 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 	Tree( LEGUP_Gui gui ){
 		super("LEGUP");
 		
-		System.out.println( isEnabled() );
-		
 		this.gui = gui;
 		
 		JPanel main = new JPanel();
@@ -256,6 +254,7 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 		{
 			BoardState parent = state.getSingleParentState();
 			if(parent != null)
+
 			{
 				if(parent.getTransitionsFrom().size() > 1)
 				{
