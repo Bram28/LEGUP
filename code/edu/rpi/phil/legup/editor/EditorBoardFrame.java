@@ -3,9 +3,11 @@ package edu.rpi.phil.legup.editor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -97,6 +99,12 @@ public class EditorBoardFrame extends JFrame implements WindowListener
 			return rv;
 		}
 		
+		/*protected void paintComponent( Graphics g ){
+			super.paintComponent(g);
+			Graphics2D g2 = (Graphics2D) g;
+			edu.rpi.phil.legup.BoardDrawingHelper.draw(g2);
+		}*/
+		// Why reinvent the wheel?
 		protected void paintComponent( Graphics g ) 
 		{
 			super.paintComponent(g);
@@ -116,16 +124,26 @@ public class EditorBoardFrame extends JFrame implements WindowListener
 					int w  = state.getWidth();
 					int h = state.getHeight();
 					
+					// TODO
+					Graphics2D g2 = (Graphics2D) g;
+					g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
+						RenderingHints.VALUE_ANTIALIAS_ON );
+					g2.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING,
+						RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+					
 					for (int y = 0; y < h; ++y)
 					{
 						for (int x = 0; x < w; ++x)
 						{
 							int val = state.getCellContents(x, y);
+							pz.drawCell(g2, x, y, state);
+							/*
 							String imagePath = pz.getImageLocation(val);
 							
 							Image i = new ImageIcon(imagePath).getImage();
 							
 							g.drawImage(i,imW + x * imW, imH + y * imH, null);
+							*/
 						}
 					}
 					
