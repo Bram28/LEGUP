@@ -29,7 +29,7 @@
 	<!-- JAR has unresolved dependency issues -->
 	<target name="jar" depends="compile" description="Creates a distributable JAR file for the LEGUP program">
 		<delete file="run/LEGUP.jar"/>
-		<jar destfile="run/LEGUP.jar" basedir="run" includes="edu/**/*.class">
+		<jar destfile="run/LEGUP.jar" basedir="run" includes="**/*">
 			<manifest>
 				<attribute name="Main-Class" value="edu.rpi.phil.legup.Legup"/>
 			</manifest>

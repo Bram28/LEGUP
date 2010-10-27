@@ -12,6 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
@@ -304,9 +306,13 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	// contains all the code to setup the main content
 	private void setupContent(){
 		
+		JPanel consoleBox = new JPanel( new BorderLayout() );
+		JPanel treeBox = new JPanel( new BorderLayout() );
+		JPanel ruleBox = new JPanel( new BorderLayout() );
+		
 		// TODO Console
 		console = new Console();
-		add( console, BorderLayout.SOUTH );
+		consoleBox.add( console, BorderLayout.SOUTH );
 		
 		// TODO experimental floating toolbar
 		/**/
@@ -315,9 +321,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		/**/
 		
 		// TODO
-		
 		tree = new Tree( this );
-		add( tree, BorderLayout.EAST );
+		treeBox.add( tree, BorderLayout.EAST );
+		
+		justificationFrame = new JustificationFrame( this );
+		ruleBox.add( justificationFrame, BorderLayout.WEST );
 		
 		board = new Board( this );
 		board.setPreferredSize( new Dimension( 600, 400 ) );
@@ -327,28 +335,18 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		TitledBorder title = BorderFactory.createTitledBorder("Board");
 		title.setTitleJustification(TitledBorder.CENTER);
 		boardPanel.setBorder(title);
-		add( boardPanel );
+		
+		
+		ruleBox.add( boardPanel );
+		treeBox.add( ruleBox );
+		consoleBox.add( treeBox );
+		add( consoleBox );
+		
+		
 		//JLabel placeholder = new JLabel( "Nothing." );
 		//placeholder.setPreferredSize( new Dimension( 600, 400 ) );
 		//add( placeholder );
 		
-		justificationFrame = new JustificationFrame( this );
-		add( justificationFrame, BorderLayout.WEST );
-	}
-
-	private void selectNewPuzzle(){
-		pgd.setVisible(true);
-		if (pgd.okPressed){
-			legupMain.loadBoardFile(pgd.getPuzzle());
-			PuzzleModule pm = legupMain.getPuzzleModule();
-			if (pm != null){
-				justificationFrame.setJustifications(pm);
-				// AI setup
-				myAI.setBoard(pm);
-			}
-			// show them all
-			showAll();
-		}
 	}
 
 	private void openProof()
@@ -437,10 +435,21 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		JOptionPane.showMessageDialog(null,error);
 	}
 
-	public void promptPuzzle()
-	{
-		pgd = new PickGameDialog(this,legupMain,true);
-		selectNewPuzzle();
+	public void promptPuzzle(){
+		JFileChooser newPuzzle = new JFileChooser("boards");
+		FileNameExtensionFilter filetype = new FileNameExtensionFilter( "LEGUP Puzzles", "xml" );
+		newPuzzle.setFileFilter( filetype );
+		if( newPuzzle.showOpenDialog(this) == JFileChooser.APPROVE_OPTION ){
+			legupMain.loadBoardFile( newPuzzle.getSelectedFile().getAbsolutePath() );
+			PuzzleModule pm = legupMain.getPuzzleModule();
+			if( pm != null ){
+				justificationFrame.setJustifications(pm);
+				// AI setup
+				myAI.setBoard(pm);
+			}
+			// show them all
+			showAll();
+		}
 	}
 
 	public void reloadGui()
@@ -463,7 +472,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	{
 		if (e.getSource() == newPuzzle || e.getSource() == toolBarButtons[TOOLBAR_NEW])
 		{
-			selectNewPuzzle();
+			promptPuzzle();
 		}
 		else if (e.getSource() == openProof || e.getSource() == toolBarButtons[TOOLBAR_OPEN])
 		{
