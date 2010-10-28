@@ -2,138 +2,83 @@ package edu.rpi.phil.legup.puzzles.masyu;
 
 import javax.swing.ImageIcon;
 
-public class RuleOnlyOneChoice extends MasyuRule {
+import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.PuzzleRule;
+import java.util.ArrayList;
+import java.awt.Point;
+
+
+public class RuleOnlyOneChoice extends PuzzleRule{
 	
 	public RuleOnlyOneChoice() {
 		name = "Only Choice";
 		description = "Must go in the only direction available.";
 		image = new ImageIcon("images/masyu/Rules/RuleOnlyOneChoice.png");
 	}
-}
-
-class RuleOnlyOneChoiceAdder extends Adder
-{
-	
-}
-class RuleOnlyOneChoiceChecker implements Checker
-{
-	int dir1, dir2; //used for twopaths as temporary holders
-	public String twoPaths(BoardAccessor ba)
+	/**
+	 * Checks to see if the rule was correctly applied For this rule, for each
+	 * added there must be a line on the other side
+	 * 
+	 * @param state
+	 *			The board state
+	 * @return null if the contradiction was applied correctly, the error String
+	 *		 otherwise
+	 */
+	protected String checkRuleRaw(BoardState destBoardState)
 	{
-		dir1 = dir2 = -1;
-		int current = ba.getOrigCell(0, 0);
+		String error = null;
+		boolean changed = false;
+		BoardState origBoardState = destBoardState.getSingleParentState();
 		
-		if(ba.hasDir(current, BoardAccessor.SOUTH) || 
-				ba.validConnection(ba.getOrigCell(0, -1),BoardAccessor.NORTH))
-			dir1 = BoardAccessor.SOUTH;
-		
-		if(ba.hasDir(current, BoardAccessor.EAST) ||
-				ba.validConnection(ba.getOrigCell(1, 0), BoardAccessor.WEST))
-			if(dir1 == -1)
-				dir1 = BoardAccessor.EAST;
-			else
-				dir2 = BoardAccessor.EAST;
-		if(ba.hasDir(current, BoardAccessor.WEST) ||
-				ba.validConnection(ba.getOrigCell(-1, 0), BoardAccessor.EAST))
-			if(dir1 == -1)
-				dir1 = BoardAccessor.WEST;
-			else if(dir2 == -1)
-				dir2 = BoardAccessor.WEST;
-			else //both directions taken
-				return "Full on West";
-		
-		if(ba.hasDir(current, BoardAccessor.NORTH) ||
-				ba.validConnection(ba.getOrigCell(0, 1), BoardAccessor.SOUTH))
-			if(dir1 == -1) //can't finish
-				return "Only north";
-			else if(dir2 == -1)
-				dir2 = BoardAccessor.NORTH;
-			else
-				return "Full on North";
-		return null;
+		return error;
 	}
-	
-	public String check(BoardAccessor ba)
+
+
+	/**
+	 * Tries to apply the rule everywhere and returns true if it can do so.
+	 * 
+	 * @author Bryan
+	 * @param destBoardState
+	 *			the board to work with
+	 * @param pm
+	 *			the puzzle module
+	 * @see edu.rpi.phil.legup.PuzzleRule#doDefaultApplicationRaw(edu.rpi.phil.legup.BoardState,
+	 *	  edu.rpi.phil.legup.PuzzleModule)
+	 */
+	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
 	{
-		//3 cases: direct yes, bidir search
-		
-		//direct yes: 2 directions, one is North, other is pre existing
-		/*String s = twoPaths(ba);
-		if(s == null)
+		BoardState origBoardState = destBoardState.getSingleParentState();
+		boolean changed = false;
+		int width = destBoardState.getWidth();
+		int height = destBoardState.getHeight();
+		ArrayList<Object> destExtraData = destBoardState.getExtraData();
+		Point[][] destLineData =(Point[][]) destExtraData.get(0);
+		ArrayList<Object> origExtraData = origBoardState.getExtraData();
+		Point[][] origLineData =(Point[][]) origExtraData.get(0);
+		for (int y = 0; y < height;y++)
 		{
-			//don't need to check dir1 because of how twoDirs works
-			if(dir2 == BoardAccessor.NORTH && ba.hasDir(ba.getOrigCell(0, 0), dir1))
-				return null;
-			return "Almost made it: " + dir1 + " " + dir2 + " " + ba.getDir();
-		}*/
-		
-		String s = checkPrime(ba);
-		if(s == null)
-			return null;
-		//System.out.println(s + " " + ba.getDir());
-		
-		BoardAccessor ba2 = new BoardAccessor(ba);
-		ba2.move(BoardAccessor.NORTH);
-		ba2.setDir(ba2.getDir() + 2);
-		if(checkPrime(ba2) == null) 
-			return null;
-		
-		return s;
-		
-		//return "Something isn't right yet: " + s;
+			for (int x = 0; x < width; x++)
+			{
+				int possibleDirections = 0;
+				for(int dx = -1;dx<2;dx++)
+				{
+					for(int dy = -1; dy<2;dy++)
+					{
+						if(dx!=0 && dy!=0)
+							continue;
+						if(dx+x<0 || dx+x>=width)
+							continue;
+						if(dy+y<0 || dy+y>=height)
+							continue;
+						if(dx==0 && dy==0)
+							continue;
+						possibleDirections++;
+					}
+				}
+			}
+		}
+
+		return changed;
 	}
-	public String checkPrime(BoardAccessor ba) {
-
-		String s = twoPaths(ba);
-		if(s == null)
-		{
-			//don't need to check dir1 because of how twoDirs works
-			if(dir2 == BoardAccessor.NORTH && ba.hasDir(ba.getOrigCell(0, 0), dir1))
-				return null;
-			return "Almost made it: " + dir1 + " " + dir2 + " " + ba.getDir();
-		}
-		
-		/*int current = ba.getOrigCell(0, 0);
-		if(ba.hasDir(current,BoardAccessor.EAST))
-		{	
-
-			if(ba.hasDir(current, BoardAccessor.WEST) || ba.hasDir(current, BoardAccessor.SOUTH))
-				return "Can't do that";
-			if(ba.validConnection(ba.getOrigCell(0,-1), BoardAccessor.NORTH))
-				return "EN";
-			if(ba.validConnection(ba.getOrigCell(1, 0), BoardAccessor.WEST))
-				return "EE";
-	
-			return null;
-		}
-		if(ba.hasDir(current,BoardAccessor.WEST))
-		{	
-			if(ba.hasDir(current, BoardAccessor.SOUTH))
-				return "Can't do that";
-			if(ba.validConnection(ba.getOrigCell(0,-1), BoardAccessor.NORTH))
-			{
-				return "WN";
-			}
-			if(ba.validConnection(ba.getOrigCell(1, 0), BoardAccessor.EAST))
-			{
-				return "WE";
-			}
-			return null;
-		}
-		if(ba.hasDir(current,BoardAccessor.SOUTH))
-		{	
-			if(ba.validConnection(ba.getOrigCell(-1,0), BoardAccessor.EAST))
-				return "SE";
-			if(ba.validConnection(ba.getOrigCell(1, 0), BoardAccessor.WEST))
-				return "SW";
-			return null;
-		}
-		
-		 */
-		
-		//continue nearby
-
-		return "No";
-		
-	}	
 }
+

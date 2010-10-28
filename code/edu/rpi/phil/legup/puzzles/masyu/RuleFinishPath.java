@@ -39,7 +39,7 @@ public class RuleFinishPath extends PuzzleRule
 		}
 		else
 		{
-			
+			/*
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
 			{
 				for (int x = 0; x < origBoardState.getWidth(); ++x)
@@ -74,7 +74,7 @@ public class RuleFinishPath extends PuzzleRule
 					}
 				}
 			}
-			
+			*/
 			if (error == null && !changed)
 			{
 				error = "You must change something to use this rule!";
@@ -104,7 +104,7 @@ public class RuleFinishPath extends PuzzleRule
     	
     	if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
     	{
-    		for(int x = 0; x < width; x++)
+    		/*for(int x = 0; x < width; x++)
     		{
     			for(int y = 0; y < height; y++)
     			{
@@ -127,7 +127,7 @@ public class RuleFinishPath extends PuzzleRule
     					changed = true;
     				}
     			}
-    		}
+    		}*/
     	}
     	
     	if(!changed)
