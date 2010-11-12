@@ -73,7 +73,10 @@ public class TreeTent extends PuzzleModule
 			ArrayList<Object> extra = state.getExtraData();
 			ExtraTreeTentLink e = new ExtraTreeTentLink(from,to);
 			boolean removed = false;
-
+			
+			if(((to.x-from.x)^2 + (to.y-from.y)^2) != 1 && ((from.x-to.x)^2 + (from.y-to.y)^2) != 1)
+				return;
+			
 			for (int x = 0; x < extra.size(); ++x)
 			{
 				if (extra.get(x).equals(e))
@@ -83,7 +86,7 @@ public class TreeTent extends PuzzleModule
 					break;
 				}
 			}
-
+			
 			if (removed == false) // if we aren't removing, we're inserting
 				state.addExtraData(e);
 		}
