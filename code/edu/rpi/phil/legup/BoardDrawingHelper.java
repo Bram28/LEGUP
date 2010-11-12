@@ -1,6 +1,7 @@
 package edu.rpi.phil.legup;
 import edu.rpi.phil.legup.newgui.TreePanel;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -76,13 +77,14 @@ public abstract class BoardDrawingHelper
 				Color filterColor =
 					determineTransitionColor(x, y, newState, origState, showOrange);
 				//Color it, if needed
+				g.setStroke( new BasicStroke(3f) );
 				if( filterColor != null ){
 					g.setColor(filterColor);
-					g.fillRect(
-						(x+1) * imageWidth,
-						(y+1) * imageHeight,
-						imageWidth,
-						imageHeight );
+					g.drawRect(
+						(x+1) * imageWidth + 2,
+						(y+1) * imageHeight + 2,
+						imageWidth - 4,
+						imageHeight - 4 );
 				}
 			}
 		}
@@ -91,13 +93,14 @@ public abstract class BoardDrawingHelper
 		if( newState.getHintCells() != null ){
 			g.setColor(purpleFilter);
 			for( Point p : state.getHintCells() ){
-				g.fillRect(
-					(p.x+1) * imageWidth,
-					(p.y+1) * imageHeight,
-					imageWidth,
-					imageHeight );
+				g.drawRect(
+					(p.x+1) * imageWidth + 2,
+					(p.y+1) * imageHeight + 2,
+					imageWidth - 4,
+					imageHeight - 4 );
 			}
 		}
+		g.setStroke( new BasicStroke(1f) );
 
 		// drawLabels
 		int h = height;
@@ -140,9 +143,9 @@ public abstract class BoardDrawingHelper
 		}
 	}
 
-	public static Color greenFilter = new Color(0,255,0,128);
-	public static Color redFilter = new Color(255,0,0,128);
-	public static Color purpleFilter = new Color(240,0,240,128);
+	public static Color greenFilter = new Color(0,255,0);//,128);
+	public static Color redFilter = new Color(255,0,0);//,128);
+	public static Color purpleFilter = new Color(240,0,240);//,128);
 	//public static Color blueFilter = new Color(000,255,255,64);
 	//public static Color orangeFilter = new Color(255,165,0,128);
 	private static Color orangeSquare = ((!ANIMATE_SPLIT_CASE) ? new Color(225,182,100,255) : new Color(255,182,100,128));
