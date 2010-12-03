@@ -55,7 +55,8 @@ public class Fillapix extends PuzzleModule
 		// find the number to display
 		int num = 10;  Point p = new Point(x, y);
 		for (ExtraCellNumber ecn : getECNs(state))
-			if( ecn.getPoint().equals(p) ){
+			if( ecn.getPoint().equals(p) )
+                        {
 				num = ecn.getVal();
 				break;
 			}
@@ -322,6 +323,7 @@ public class Fillapix extends PuzzleModule
    	 	if (ecn.getVal() == 9) removeExtra(ecn, state);
 			else ecn.setVal(ecn.getVal()+1);
 		}
+                
 		else
 		{
 			ecn = new ExtraCellNumber();
@@ -330,6 +332,8 @@ public class Fillapix extends PuzzleModule
 
 			addExtra(ecn, state);
 		}
+          
+          
 	}
 	private ExtraCellNumber getECNAt(Point p, BoardState state)
 	{
@@ -337,11 +341,26 @@ public class Fillapix extends PuzzleModule
 		return null;
 	}
 
+        public void mousePressedEvent(BoardState state, Point where)
+	{
+            	BoardState state2 = state.getSingleParentState();
+                int next2=state2.getCellContents(where.x, where.y);
+                //only alter the cell if it has not been altered in a previous state
+                if (next2==0)
+                {
+                    int next = getNextCellValue(where.x,where.y,state);
+                    state.setCellContents(where.x,where.y,next);
+                }
+             else
+                {}
+
+		
+	}
+        
 	public int getNextCellValue(int x, int y, BoardState boardState)
 	{
 		int contents = boardState.getCellContents(x,y);
 		int rv = (contents + 1) % 3;
-
 		return rv;
 	}
 

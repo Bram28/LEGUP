@@ -259,11 +259,13 @@ public class Masyu extends PuzzleModule
         {
             //error
         }
-        state.setExtraData(extraData);
+       state.addExtraData(extraData);
+
     }
 
     public void drawExtraData(Graphics gr, ArrayList<Object> extraData, Rectangle bounds, int w, int h)
     {
+
         Graphics2D g = (Graphics2D) gr;
         Stroke preStroke = g.getStroke();
         Color preColor = g.getColor();
@@ -297,7 +299,7 @@ public class Masyu extends PuzzleModule
                     double x2 = bounds.x + ((x + 1) * dx) + halfX;
                     double y2 = bounds.y + (y * dx) + halfY;
 
-                    g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+                    g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
                 }
                 if ((lineData[x][y].x == 3) || (lineData[x][y].y == 3))
                 {
@@ -307,7 +309,7 @@ public class Masyu extends PuzzleModule
                     double x2 = bounds.x + (x * dx) + halfX;
                     double y2 = bounds.y + ((y + 1) * dx) + halfY;
 
-                    g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+                    g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
                 }
                 if ((lineData[x][y].x == 4) || (lineData[x][y].y == 4))
                 {
@@ -317,7 +319,7 @@ public class Masyu extends PuzzleModule
                     double x2 = bounds.x + ((x - 1) * dx) + halfX;
                     double y2 = bounds.y + (y * dx) + halfY;
 
-                    g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+                    g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
                 }
             }
         }
