@@ -530,15 +530,23 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			// TODO console
 			console.println("Tutor: " + myAI.findRuleApplication(Legup.getInstance().getSelections().getFirstSelection().getState()) );
 		}
-		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMIN])
-		{
+		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMIN]){
 			// TODO - kueblc
-			// DEBUG - Not actual actions!
+			/*/ DEBUG - Not actual actions!
 			((BasicToolBarUI) justificationFrame.getUI()).setFloatingLocation(500,500);
-			((BasicToolBarUI) justificationFrame.getUI()).setFloating(true, new Point(500,500));
+			((BasicToolBarUI) justificationFrame.getUI()).setFloating(true, new Point(500,500));*/
+			board.zoomIn();
+		}
+		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMOUT]){
+			board.zoomOut();
+		}
+		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMRESET]){
+			board.zoomTo(1.0);
+		}
+		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMFIT]){
+			board.zoomFit();
 		}
 		else if (e.getSource() == allowDefault)
-
 		{
 			//Change default applications on, nothing, checks menu checked state everywhere
 		}
