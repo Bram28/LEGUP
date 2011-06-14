@@ -46,221 +46,68 @@ public class Masyu extends PuzzleModule
     {
     }
 
-    /**
-     * Take an action when a left mouse drag (or click) event occurs.
-     *
-     * @param to the to
-     * @param state the state
-     * @param from the from
-     */
-    private void initExtraData(BoardState state, ArrayList<Object> extraData)
-    {
-        extraData = new ArrayList<Object>();
-        extraData.add((Object) new Point[state.getWidth()][state.getHeight()]);
-        for (int x = 0; x < state.getWidth(); x++)
-        {
-            for (int y = 0; y < state.getHeight(); y++)
-            {
-                ((Point[][]) extraData.get(0))[x][y] = new Point(0, 0);
-            }
-        }
-        state.setExtraData(extraData);
-    }
-
     public void mouseDraggedEvent(BoardState state, Point from, Point to)
     {
-        int toVal = state.getCellContents(to.x, to.y);
-        int fromVal = state.getCellContents(from.x, from.y);
-        ArrayList<Object> extraData = state.getExtraData();
-        if (extraData.size() == 0)
-        {
-            initExtraData(state, extraData);
-        }
-        extraData = state.getExtraData();
-        Point[][] lineData = (Point[][]) extraData.get(0);
         if (from.equals(to))
         {
             return;
         }
-        if (from.x == to.x)
-        {
-            if (to.y > from.y)
-            {
-                for (int temp = from.y; temp < to.y; temp++)
-                {
-                    if (lineData[from.x][temp].x == 3 || lineData[from.x][temp].y == 3)
-                    {
-                        if (lineData[from.x][temp].x == 3)
-                        {
-                            lineData[from.x][temp].x = 0;
-                        } else
-                        {
-                            lineData[from.x][temp].y = 0;
-                        }
-
-                        if (lineData[to.x][temp + 1].x == 1)
-                        {
-                            lineData[to.x][temp + 1].x = 0;
-                        } else
-                        {
-                            lineData[to.x][temp + 1].y = 0;
-                        }
-                    } else
-                    {
-                        //add the link
-                        if (lineData[from.x][temp].x == 0)
-                        {
-                            lineData[from.x][temp].x = 3;
-                        } else
-                        {
-                            lineData[from.x][temp].y = 3;
-                        }
-
-                        if (lineData[to.x][temp + 1].x == 0)
-                        {
-                            lineData[to.x][temp + 1].x = 1;
-                        } else
-                        {
-                            lineData[to.x][temp + 1].y = 1;
-                        }
-                    }
-                }
-            } else
-            {
-                for (int temp = to.y; temp < from.y; temp++)
-                {
-                    //dest is above
-                    if (lineData[from.x][from.y].x == 1 || lineData[from.x][from.y].y == 1)
-                    {
-                        if (lineData[from.x][temp + 1].x == 1)
-                        {
-                            lineData[from.x][temp + 1].x = 0;
-                        } else
-                        {
-                            lineData[from.x][temp + 1].y = 0;
-                        }
-
-                        if (lineData[to.x][temp].x == 3)
-                        {
-                            lineData[to.x][temp].x = 0;
-                        } else
-                        {
-                            lineData[to.x][temp].y = 0;
-                        }
-                    } else
-                    {
-                        //add the link
-                        if (lineData[from.x][temp + 1].x == 0)
-                        {
-                            lineData[from.x][temp + 1].x = 1;
-                        } else
-                        {
-                            lineData[from.x][temp + 1].y = 1;
-                        }
-
-                        if (lineData[to.x][temp].x == 0)
-                        {
-                            lineData[to.x][temp].x = 3;
-                        } else
-                        {
-                            lineData[to.x][temp].y = 3;
-                        }
-                    }
-                }
-            }
-        } else if (from.y == to.y)
-        {
-            if (to.x > from.x)
-            {
-                for (int temp = from.x; temp < to.x; temp++)
-                {
-                    //dest is to the right
-                    if (lineData[temp][from.y].x == 2 || lineData[temp][from.y].y == 2)
-                    {
-                        if (lineData[temp][from.y].x == 2)
-                        {
-                            lineData[temp][from.y].x = 0;
-                        } else
-                        {
-                            lineData[temp][from.y].y = 0;
-                        }
-
-                        if (lineData[temp + 1][to.y].x == 4)
-                        {
-                            lineData[temp + 1][to.y].x = 0;
-                        } else
-                        {
-                            lineData[temp + 1][to.y].y = 0;
-                        }
-                    } else
-                    {
-                        //add the link
-                        if (lineData[temp][from.y].x == 0)
-                        {
-                            lineData[temp][from.y].x = 2;
-                        } else
-                        {
-                            lineData[temp][from.y].y = 2;
-                        }
-
-                        if (lineData[temp + 1][to.y].x == 0)
-                        {
-                            lineData[temp + 1][to.y].x = 4;
-                        } else
-                        {
-                            lineData[temp + 1][to.y].y = 4;
-                        }
-                    }
-                }
-            } else
-            {
-                for (int temp = to.x; temp < from.x; temp++)
-                {
-                    //dest is to the left
-                    if (lineData[temp + 1][from.y].x == 4 || lineData[temp + 1][from.y].y == 4)
-                    {
-                        if (lineData[temp + 1][from.y].x == 4)
-                        {
-                            lineData[temp + 1][from.y].x = 0;
-                        } else
-                        {
-                            lineData[temp + 1][from.y].y = 0;
-                        }
-
-                        if (lineData[temp][to.y].x == 4)
-                        {
-                            lineData[temp][to.y].x = 0;
-                        } else
-                        {
-                            lineData[temp][to.y].y = 0;
-                        }
-                    } else
-                    {
-                        //add the link
-                        if (lineData[temp + 1][from.y].x == 0)
-                        {
-                            lineData[temp + 1][from.y].x = 4;
-                        } else
-                        {
-                            lineData[temp + 1][from.y].y = 4;
-                        }
-
-                        if (lineData[temp][to.y].x == 0)
-                        {
-                            lineData[temp][to.y].x = 2;
-                        } else
-                        {
-                            lineData[temp][to.y].y = 2;
-                        }
-                    }
-                }
-            }
-        } else
-        {
-            //error
+        
+        if (from.x == to.x) {
+        	if (from.y < to.y) {
+        		for (int temp = from.y; temp < to.y; temp++) {
+        			Point pos1 = new Point(from.x, temp);
+        			Point pos2 = new Point(from.x, temp + 1);
+        			addExtraData(state, pos1, pos2);
+        		}
+        		
+        	} else {
+        		for (int temp = from.y; temp > to.y; temp--) {
+        			Point pos1 = new Point(from.x, temp);
+        			Point pos2 = new Point(from.x, temp - 1);
+        			addExtraData(state, pos1, pos2);
+        		}
+        	}
+        	
+        } else if (from.y == to.y) {
+        	if (from.x < to.x) {
+        		for (int temp = from.x; temp < to.x; temp++) {
+        			Point pos1 = new Point(temp, from.y);
+        			Point pos2 = new Point(temp + 1, from.y);
+        			addExtraData(state, pos1, pos2);
+        		}
+        		
+        	} else {
+        		for (int temp = from.x; temp > to.x; temp--) {
+        			Point pos1 = new Point(temp, from.y);
+        			Point pos2 = new Point(temp - 1, from.y);
+        			addExtraData(state, pos1, pos2);
+        		}
+        		
+        	}
         }
-       state.addExtraData(extraData);
 
+    }
+    
+    public void addExtraData(BoardState state, Point from, Point to) {
+
+    	ArrayList<Object> extra = state.getExtraData();
+		ExtraLine e = new ExtraLine(from,to);
+		boolean removed = false;
+					
+		for (int x = 0; x < extra.size(); ++x)
+		{
+			if (extra.get(x).equals(e))
+			{
+				extra.remove(x);
+				removed = true;
+				state.boardDataChanged();
+				break;
+			}
+		}
+		
+		if (removed == false) // if we aren't removing, we're inserting
+			state.addExtraData(e);
     }
 
     public void drawExtraData(Graphics gr, ArrayList<Object> extraData, Rectangle bounds, int w, int h)
@@ -272,60 +119,26 @@ public class Masyu extends PuzzleModule
         g.setColor(Color.blue);
         g.setStroke(new BasicStroke(2));
 
-        double dx = bounds.width / (double) w;
-        double dy = bounds.height / (double) h;
-        double halfX = dx / 2;
-        double halfY = dy / 2;
-        Point[][] lineData = (Point[][]) extraData.get(0);
-        for (int x = 0; x < w; x++)
-        {
-            for (int y = 0; y < h; y++)
-            {
-                if ((lineData[x][y].x == 1) || (lineData[x][y].y == 1))
-                {
-                    double x1 = bounds.x + (x * dx) + halfX;
-                    double y1 = bounds.y + (y * dx) + halfY;
+		double dx = bounds.width / (double)w;
+		double dy = bounds.height / (double)h;
+		double halfX = dx/2;
+		double halfY = dy/2;
 
-                    double x2 = bounds.x + (x * dx) + halfX;
-                    double y2 = bounds.y + ((y - 1) * dx) + halfY;
+		for (int x = 0; x < extraData.size(); ++x)
+		{
+			ExtraLine e = (ExtraLine)extraData.get(x);
 
-                    g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-                }
-                if ((lineData[x][y].x == 2) || (lineData[x][y].y == 2))
-                {
-                    double x1 = bounds.x + (x * dx) + halfX;
-                    double y1 = bounds.y + (y * dx) + halfY;
+			double x1 = bounds.x + e.pos1.x * dx + halfX;
+			double y1 = bounds.y + e.pos1.y * dx + halfY;
 
-                    double x2 = bounds.x + ((x + 1) * dx) + halfX;
-                    double y2 = bounds.y + (y * dx) + halfY;
+			double x2 = bounds.x + e.pos2.x * dx + halfX;
+			double y2 = bounds.y + e.pos2.y * dx + halfY;
 
-                    g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
-                }
-                if ((lineData[x][y].x == 3) || (lineData[x][y].y == 3))
-                {
-                    double x1 = bounds.x + (x * dx) + halfX;
-                    double y1 = bounds.y + (y * dx) + halfY;
+			g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
+		}
 
-                    double x2 = bounds.x + (x * dx) + halfX;
-                    double y2 = bounds.y + ((y + 1) * dx) + halfY;
-
-                    g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
-                }
-                if ((lineData[x][y].x == 4) || (lineData[x][y].y == 4))
-                {
-                    double x1 = bounds.x + (x * dx) + halfX;
-                    double y1 = bounds.y + (y * dx) + halfY;
-
-                    double x2 = bounds.x + ((x - 1) * dx) + halfX;
-                    double y2 = bounds.y + (y * dx) + halfY;
-
-                    g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
-                }
-            }
-        }
-
-        g.setColor(preColor);
-        g.setStroke(preStroke);
+		g.setColor(preColor);
+		g.setStroke(preStroke);
     }
 
     /**
@@ -498,6 +311,16 @@ public class Masyu extends PuzzleModule
 
         return (height + width) > 0;
     }
+    
+    public final static boolean isBlank(int val) {
+    	return val < 16;
+    }
+    public final static boolean isWhite(int val) {
+    	return (val & 0x10) != 0;
+    }
+    public final static boolean isBlack(int val) {
+    	return (val & 0x20) != 0;
+    }
 
     public void drawCell(Graphics2D g, int x, int y, int state)
     {
@@ -507,7 +330,7 @@ public class Masyu extends PuzzleModule
         // draw pearls
         if (BLANK != state)
         {
-            g.setColor((BLACK == state) ? Color.black : Color.white);
+            g.setColor((isBlack(state)) ? Color.black : Color.white);
             g.fillOval(sx + 1, sy + 1, cellSize.width - 2, cellSize.height - 2);
             g.setColor(Color.black);
             g.drawOval(sx + 1, sy + 1, cellSize.width - 2, cellSize.height - 2);
