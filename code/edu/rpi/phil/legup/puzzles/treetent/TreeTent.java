@@ -77,12 +77,18 @@ public class TreeTent extends PuzzleModule
 			if(((to.x-from.x)^2 + (to.y-from.y)^2) != 1 && ((from.x-to.x)^2 + (from.y-to.y)^2) != 1)
 				return;
 			
+			//check if exactly one point is a tree
+			if (!((state.getCellContents(from.x, from.y) == CELL_TREE && state.getCellContents(to.x, to.y) != CELL_TREE) ||
+			(state.getCellContents(from.x, from.y) != CELL_TREE && state.getCellContents(to.x, to.y) == CELL_TREE)))
+				return;
+			
 			for (int x = 0; x < extra.size(); ++x)
 			{
 				if (extra.get(x).equals(e))
 				{
 					extra.remove(x);
 					removed = true;
+					state.boardDataChanged();
 					break;
 				}
 			}
