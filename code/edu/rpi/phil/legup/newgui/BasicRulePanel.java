@@ -113,11 +113,28 @@ public class BasicRulePanel extends JustificationPanel
 	}
 
 	@Override
+	protected void addJustification(int button)
+	{
+		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState cur = selection.getState();
+		
+		if (cur.isModifiable()) {
+			cur.setJustification(rules.get(button));
+		} else {
+			//add new transition
+			BoardState next = cur.addTransitionFrom();
+			next.setJustification(rules.get(button));
+			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+		}
+		
+	}
+
+	@Override
 	protected void checkJustification(int button)
 	{
 		checkRule(rules.get(button));
 	}
-
+	
 	@Override
 	protected void doDefaultApplication(int index, BoardState state)
 	{

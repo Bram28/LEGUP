@@ -44,6 +44,7 @@ public class BoardState
 	private int width;
 	private int[][] boardCells;
 	private boolean[][] modifiableCells;
+	private boolean[][] editedCells;
 	private int[] topLabels;
 	private int[] bottomLabels;
 	private int[] leftLabels;
@@ -83,6 +84,8 @@ public class BoardState
 	private BoardState mergeOverlord;
 
 	private boolean virtualBoard = false;
+	
+	private boolean modifiableState = false;
 
 	/**
 	 * Constructor
@@ -104,6 +107,7 @@ public class BoardState
 		leftLabels = new int[height];
 		rightLabels = new int[height];
 		modifiableCells = new boolean[height][width];
+		editedCells = new boolean[height][width];
 
 		// Initialize the arrays
 		for (int i=0;i<height;i++)
@@ -115,6 +119,7 @@ public class BoardState
 			{
 				modifiableCells[i][j] = true;
 				boardCells[i][j] = 0;
+				editedCells[i][j] = false;
 
 				if (i==0)
 				{
@@ -143,6 +148,7 @@ public class BoardState
 		{
 			boardCells[y][x] = copy.boardCells[y][x];
 			modifiableCells[y][x] = copy.modifiableCells[y][x];
+			editedCells[y][x] = copy.editedCells[y][x];
 		}
 		for (int x = 0; x < width; x++) { topLabels[x] = copy.topLabels[x]; bottomLabels[x] = copy.bottomLabels[x]; }
 		for (int y = 0; y < height; y++) { leftLabels[y] = copy.leftLabels[y]; rightLabels[y] = copy.rightLabels[y]; }
@@ -152,6 +158,14 @@ public class BoardState
 	public void setVirtual(boolean virtual)
 	{
 		virtualBoard = virtual;
+	}
+	
+	public boolean isModifiable() {
+		return modifiableState;
+	}
+	
+	public void setModifiableState(boolean mod) {
+		modifiableState = mod;
 	}
 
 	/**
@@ -340,8 +354,48 @@ public class BoardState
 				boardDataChanged();
 			}
 		}*/
+		
+		
   		boardCells[y][x] = value;
-  		if (!virtualBoard) boardDataChanged();
+  		
+  		//update editedCells if necessary
+		BoardState parent = getSingleParentState();
+		if (parent != null) {
+			if (boardCells[y][x] != parent.getCellContents(x, y)) {
+				editedCells[y][x] = true;
+			} else {
+				editedCells[y][x] = false;
+			}
+		}
+		
+		for (BoardState child : transitionsFrom) {
+			child.propagateChange(x, y, value);
+		}
+		
+		if (!virtualBoard) boardDataChanged();
+		
+	}
+	
+	/**
+	 * Propagates changes down the tree, overwriting boardCells, editedCells and
+	 * modifiableCells to match the condition. It then calls propagateChange() for
+	 * each of its children.
+	 * @param x Column of the cell
+	 * @param y Row of the cell
+	 * @param value Value to set
+	 */
+	public void propagateChange(int x, int y, int value) {
+		boardCells[y][x] = value;
+		setModifiableCell(x, y, value == PuzzleModule.CELL_UNKNOWN);
+		editedCells[y][x] = false;
+		
+		Legup.getInstance().getPuzzleModule().updateState(this);
+		
+		for (BoardState child : transitionsFrom) {
+			child.propagateChange(x, y, value);
+		}
+		
+		if (!virtualBoard) boardDataChanged();
 	}
 
 	 /**
@@ -351,6 +405,20 @@ public class BoardState
 	 {
 		modifiableCells[y][x] = value;
 	 }
+	 
+	/**
+	 * Moves editedCells into modifiableCells. Called during endTranstion().
+	 */
+	public void editedToModifiable() {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (editedCells[i][j]) {
+					setModifiableCell(j, i, false);
+					editedCells[i][j] = false;
+				}
+			}
+		}
+	}
 
 	/**
 	 * Add a cell change listener that will listen to any and all cell changes
@@ -476,6 +544,22 @@ public class BoardState
 	 */
 	public Vector<BoardState> getTransitionsFrom(){
 	return transitionsFrom;
+	}
+	
+	/**
+	 * Sets the transitions to this BoardState
+	 * @param to Vector<BoardState> containing new transitionsTo
+	 */
+	public void setTransitionsTo(Vector<BoardState> to) {
+		transitionsTo = to;
+	}
+	
+	/**
+	 * Sets the transitions from this BoardState
+	 * @param from Vector<BoardState> containing new transitionsFrom
+	 */
+	public void setTransitionsFrom(Vector<BoardState> from) {
+		transitionsFrom = from;
 	}
 
 	public void evalDelayStatus()
@@ -803,10 +887,11 @@ public class BoardState
 	public BoardState addTransitionFrom(PuzzleRule rule)
 	{
 		BoardState b = copy();
+		b.setModifiableState(!modifiableState);
 
-		 addTransitionFrom(b, rule);
+		addTransitionFrom(b, rule);
 
-		 return b;
+		return b;
 	}
 
 	/**
@@ -878,6 +963,24 @@ public class BoardState
 		transitionsChanged();
 		_transitionsChanged();
 	}
+	
+	/**
+	 * Finishes the changes made by the current transition state
+	 * @return child BoardState created by this operation or already existing child BoardState
+	 */ 
+	public BoardState endTransition() {
+		
+		//
+		if (!modifiableState)
+			return null;
+		else if (transitionsFrom.size() > 0)
+			return transitionsFrom.get(0);
+		
+		BoardState child = addTransitionFrom();
+		child.editedToModifiable();
+		
+		return child;
+	}
 
 	/**
 	 * Arranges children to be next to each other
@@ -925,6 +1028,7 @@ public class BoardState
 	try{
 		newBoardState = new BoardState(this.height,this.width);
 		newBoardState.virtualBoard = virtualBoard;
+		newBoardState.modifiableState = modifiableState;
 	} catch (Exception e){
 		return newBoardState;
 	}
@@ -939,6 +1043,7 @@ public class BoardState
 		{
 			newBoardState.boardCells[i][j] = boardCells[i][j];
 			newBoardState.modifiableCells[i][j] = modifiableCells[i][j];
+			newBoardState.editedCells[i][j] = editedCells[i][j];
 
 			if (i==0)
 			{
@@ -1292,7 +1397,12 @@ public class BoardState
 	private void removeLeaf(BoardState B)
 	{
 		boolean onlyRegChild = true;
-		for (BoardState BS : transitionsFrom) if (BS != B && BS.transitionsTo.size() == 1) { onlyRegChild = false; break; }
+		for (BoardState BS : transitionsFrom) {
+			if (BS != B && BS.transitionsTo.size() == 1) {
+				onlyRegChild = false;
+				break;
+			}
+		}
 
 		if (!onlyRegChild) contractXSpace(B);
 		transitionsFrom.remove(B);
@@ -1349,14 +1459,24 @@ public class BoardState
 	{
 		for(BoardState child : oldParent.getTransitionsFrom())
 		{
+			child.transitionsTo.clear();
 			newParent.transitionsFrom.add(child);
 			child.transitionsTo.add(newParent);
+			newParent.expandXSpace(child);
 		}
+		
+		while (oldParent.getTransitionsFrom().size() > 0)
+			oldParent.removeLeaf(oldParent.getTransitionsFrom().get(0));
+		
+		if (!oldParent.virtualBoard)
+			oldParent.transitionsChanged();
+		if (!newParent.virtualBoard)
+			newParent.transitionsChanged();
 	}
 
 	public Point getLocation()
 	{
-		return location;
+		return new Point(location.y, location.x);
 	}
 
 	public void setLocation(Point location)
@@ -1379,11 +1499,13 @@ public class BoardState
 	{
 		if (this.getTransitionsTo().size() == 1)
 		{
-			Point p = this.getSingleParentState().getLocation();
+			BoardState parentState = this.getSingleParentState();
+			Point p = new Point(parentState.getLocation().y, parentState.getLocation().x);
 			this.location.x = p.x + offset.x;
 
 			//If this and its parent are collapsed, their locations are ontop of each other
-			if(this.isCollapsed() && this.getSingleParentState().isCollapsed())
+			//Places this over where the previous actual state is if it functions as a transition (isModifiable)
+			if ((this.isCollapsed() && this.getSingleParentState().isCollapsed()) || !this.isModifiable())
 				this.location.y = p.y;
 			else
 				this.location.y = p.y + offset.y;

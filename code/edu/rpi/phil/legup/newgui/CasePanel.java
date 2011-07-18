@@ -114,6 +114,12 @@ public class CasePanel extends JustificationPanel
 	}
 
 	@Override
+	protected void addJustification(int button)
+	{
+		checkCaseRule(caseRules.get(button));
+	}
+
+	@Override
 	protected void checkJustification(int button)
 	{
 		checkCaseRule(caseRules.get(button));

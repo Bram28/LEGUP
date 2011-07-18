@@ -312,7 +312,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		
 		// TODO Console
 		console = new Console();
-		consoleBox.add( console, BorderLayout.SOUTH );
+		//consoleBox.add( console, BorderLayout.SOUTH );
 		
 		// TODO experimental floating toolbar
 		/**/
@@ -322,10 +322,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		
 		// TODO
 		tree = new Tree( this );
-		treeBox.add( tree, BorderLayout.EAST );
+		treeBox.add( tree, BorderLayout.SOUTH );
 		
 		justificationFrame = new JustificationFrame( this );
-		ruleBox.add( justificationFrame, BorderLayout.NORTH );
+		ruleBox.add( justificationFrame, BorderLayout.WEST );
 		
 		board = new Board( this );
 		board.setPreferredSize( new Dimension( 600, 400 ) );

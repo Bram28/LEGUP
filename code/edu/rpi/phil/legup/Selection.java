@@ -39,7 +39,7 @@ public class Selection
 	 */
 	public boolean isState()
 	{
-		return !transition;
+		return true;//!transition;
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class Selection
 	 */
 	public boolean isTransition()
 	{
-		return transition;
+		return false;//transition;
 	}
 
 	public boolean equals(Object otherObj)

@@ -59,7 +59,8 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 			} else if( e.getSource() == merge ){
 				mergeStates();
 			} else if( e.getSource() == collapse ){
-				collapseStates();
+				delCurrentState();
+				//collapseStates();
 			}
 		}
 
@@ -172,6 +173,14 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 	public void delChildAtCurrentState()
 	{
 		treePanel.delChildAtCurrentState();
+	}
+	
+	/**
+	 * Delete the current state and reposition the children
+	 */
+	public void delCurrentState()
+	{
+		treePanel.delCurrentState();
 	}
 
 	public void justificationApplied(BoardState state, Object j)

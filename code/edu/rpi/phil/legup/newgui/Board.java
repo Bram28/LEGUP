@@ -108,11 +108,11 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 				pm.defaultApplication.doDefaultApplication(state,pm,p);
 				pm.defaultApplication = null;
 			}
-			else if (parentStates.size() == 0)
+			/*else if (parentStates.size() == 0)
 			{
 				// can't add to the root state, print an error
-				parent.showStatus("You can not change the initial state.");
-			}
+				//parent.showStatus("You can not change the initial state.");
+			}*/
 			else if (state.getTransitionsFrom().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
 			{
 				parent.showStatus("You cannot modify internal nodes in this proof mode");
@@ -127,7 +127,15 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 
 						if (state.isModifiableCell(p.x,p.y))
 						{
-							pm.mousePressedEvent(state,p);
+							
+							if (!state.isModifiable()) {
+								BoardState next = state.addTransitionFrom();
+								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
+								pm.mousePressedEvent(next, p);
+							} else {
+								pm.mousePressedEvent(state, p);
+							}
+							
 							// This is unnecessary, board is repainted on
 							// boardstate change anyway
 							//repaint();
@@ -136,7 +144,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 							parent.showStatus("You are not allowed to change that cell.");
 					}
 				}
-
+				
 				if (p.x == -1 && p.y >= 0 && p.y < h)
 					pm.labelPressedEvent(state, p.y, BoardState.LABEL_LEFT);
 				else if (p.y == -1 && p.x >= 0 && p.y < w)
@@ -145,6 +153,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 					pm.labelPressedEvent(state, p.y, BoardState.LABEL_RIGHT);
 				else if (p.y == h && p.x >= 0 && p.x < w)
 					pm.labelPressedEvent(state, p.x, BoardState.LABEL_BOTTOM);
+
 			}
 		}
 	}
@@ -158,7 +167,10 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 		if (e.getButton() == MouseEvent.BUTTON3)
 		{
 			BoardState cur = selection.getState();
-			Legup.getInstance().getSelections().setSelection(new Selection(cur.addTransitionFrom(),false));
+			
+			if (cur.isModifiable())
+				Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+				
 		}
 		else if (e.getButton() == MouseEvent.BUTTON1)
 		{

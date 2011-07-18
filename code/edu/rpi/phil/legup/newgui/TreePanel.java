@@ -74,8 +74,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		BoardState.addTransitionChangeListener(this);
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 
-		setDefaultPosition(-100,-40);
-		setPreferredSize(new Dimension(100,300));
+		setDefaultPosition(-60,-60);
+		setPreferredSize(new Dimension(640,120));
 	}
 
 	/**
@@ -220,8 +220,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 				g2D.setStroke(thin);
 			}
-
-			drawTree(g, b);
+			
+			if (b.getTransitionsFrom().size() > 0)
+				drawTree(g, b.getTransitionsFrom().get(0));
 		}
 
 		Selection theSelection = new Selection(state,false);
@@ -437,6 +438,11 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 					allStates = false;
 					break;
 				}
+				else if (selected.get(x).getState().isModifiable())
+				{
+					allStates = false;
+					break;
+				}
 			}
 
 			if (allStates)
@@ -456,22 +462,34 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	}
 
 	/**
-	 * add a child at the current state
+	 * Inserts a child between the current state and the next state
 	 * @return the new child we created
 	 */
 	public BoardState addChildAtCurrentState()
 	{
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
-		BoardState rv = null;
+		BoardState firstState = null;
+		BoardState currentState = s.getState();
 
-		if (s.isState())
-		{
-			BoardState state = s.getState();
-
-			rv = state.addTransitionFrom();
+		// firstState selects the state before the transition (if any)
+		if (currentState.isModifiable()) {
+			firstState = currentState.getTransitionsTo().get(0);
+		} else {
+			firstState = currentState;
 		}
-
-		return rv;
+		
+		// create the middle two states
+		BoardState midState = firstState.copy();
+		midState.setModifiableState(true);
+		BoardState lastState = midState.endTransition();
+		
+		// reposition any related states in the tree
+		BoardState.reparentChildren(firstState, lastState);
+		firstState.addTransitionFrom(midState, null);
+		
+		Legup.getInstance().getSelections().setSelection(new Selection(midState, false));
+		
+		return midState;
 	}
 
 	/**
@@ -491,21 +509,76 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	}
 
 	/**
+	 * Delete the current state and associated transition then fix the children
+	 */
+	public void delCurrentState()
+	{
+		Selection s = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState currentState = s.getState();
+		
+		// make sure we don't delete the initial board state
+		if (currentState.getTransitionsTo().size() == 0)
+			return;
+		
+		// choose the previous state and move the children from after state
+		BoardState parentState = null;
+		BoardState childState = null;
+		
+		if (currentState.isModifiable()) {
+			parentState = currentState.getSingleParentState();
+			childState = currentState.endTransition();
+			parentState.getTransitionsFrom().remove(currentState);
+		} else {
+			parentState = currentState.getSingleParentState().getSingleParentState();
+			childState = currentState;
+			parentState.getTransitionsFrom().remove(currentState.getSingleParentState());
+		}
+		
+		BoardState.reparentChildren(childState, parentState);
+		
+		// delete the current state
+		if (currentState.isModifiable()) {
+			BoardState.deleteState(currentState);
+		} else {
+			BoardState.deleteState(currentState.getSingleParentState());
+		}
+		
+		Legup.getInstance().getSelections().setSelection(new Selection(parentState, false));
+	}
+
+	/**
 	 * Delete the child and child's subtree starting at the current state
 	 */
 	public void delChildAtCurrentState()
 	{
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
-
-		// make sure we don't delete the initial board state
+		BoardState state = s.getState();
+		
+		
 		if (s.isState())
 		{ // state
-			if(s.getState() != Legup.getInstance().getInitialBoardState())
-				BoardState.deleteState(s.getState());
+		
+			// make sure we don't delete the initial board state
+			Vector<BoardState> parentStates = state.getTransitionsTo();
+			if (parentStates.size() == 0)
+				return;
+				
+			// use to select the previous state
+			BoardState parent = parentStates.get(0);
+			
+			BoardState.deleteState(state);
+			
+			Legup.getInstance().getSelections().setSelection(new Selection(parent, false));
+			
 		}
 		else
 		{ //  transition, delete all the things we're trasitioning from
-			Vector <BoardState> children = s.getState().getTransitionsFrom();
+			
+			// select current state
+			Legup.getInstance().getSelections().setSelection(new Selection(state, false));
+
+			// delete children states
+			Vector <BoardState> children = state.getTransitionsFrom();
 
 			while (children.size() > 0)
 			{
@@ -515,10 +588,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 				children.remove(0);
 			}
+
 		}
 
-		// select the root state
-		Legup.getInstance().getSelections().setSelection(new Selection(Legup.getInstance().getInitialBoardState(), false));
+		
 	}
 
 	/**
@@ -562,17 +635,19 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			{
 				BoardState b = transitionsFrom.get(c);
 				Point childCenter = b.getLocation();
-
+				
 				Line2D.Float transitionLine = new Line2D.Float(childCenter,loc);
 
 				if (transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)
 				{
-					rv = new Selection(state,true);
+					rv = new Selection(b,true);
 				}
-
+				
+				Selection s = null;
 				// note that we may select a state after we've found select transition,
 				// which is desired
-				Selection s = getSelectionAtPoint(b, where);
+				if (b.getTransitionsFrom().size() > 0)
+					s = getSelectionAtPoint(b.getTransitionsFrom().get(0), where);
 
 				if (s != null)
 					rv = s;
@@ -627,8 +702,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		// right click
 		} else if( e.getButton() == MouseEvent.BUTTON3 ){
 			// create a new child node and select it
-			Selection s = new Selection( addChildAtCurrentState(), false );
-			Legup.getInstance().getSelections().setSelection( s );
+			//Selection s = new Selection( addChildAtCurrentState(), false );
+			//Legup.getInstance().getSelections().setSelection( s );
 		}
 		// TODO focus
 		//grabFocus();

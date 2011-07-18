@@ -46,9 +46,10 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 		if( defaultApplication )
 			startDefaultApplication(button);
 		else
-			checkJustification(button);
+			addJustification(button);
 	}
 	
+	protected abstract void addJustification(int button);
 	protected abstract void checkJustification(int button);
 	protected abstract void doDefaultApplication(int button, BoardState state);
 	
@@ -109,8 +110,8 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 		Object source = e.getSource();
 		long time = e.getWhen();
 
-		if (source == lastSource && (time - lastTime < 500 ))
-			useDefault = true;
+		//if (source == lastSource && (time - lastTime < 500 ))
+		//	useDefault = true;
 		
 		lastSource = source;
 		lastTime = e.getWhen();

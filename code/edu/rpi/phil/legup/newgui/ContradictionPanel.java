@@ -104,6 +104,22 @@ public class ContradictionPanel extends JustificationPanel
 	}
 
 	@Override
+	protected void addJustification(int button)
+	{
+		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState cur = selection.getState();
+		
+		if (cur.isModifiable()) {
+			cur.setJustification(contradictions.get(button));
+		} else {
+			//add new transition
+			BoardState next = cur.addTransitionFrom();
+			next.setJustification(contradictions.get(button));
+			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+		}
+	}
+
+	@Override
 	protected void checkJustification(int button)
 	{
 		checkContradiction(contradictions.get(button));
