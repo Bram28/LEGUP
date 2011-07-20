@@ -269,7 +269,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	{
 		Graphics2D g2d = (Graphics2D)g;
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
-		Selection theSelection = new Selection(parent,true);
+		Selection theSelection = new Selection(parent.getTransitionsFrom().get(0), false);
 		int nodeRadius = collapsedChild ? SMALL_NODE_RADIUS : NODE_RADIUS;
 
 		if (sel.contains(theSelection))
@@ -401,10 +401,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 	private void drawMouseOver(Graphics2D g)
 	{
-		if (!mouseOver.isState())
+		if (mouseOver.getState().isModifiable())
 		{
 			BoardState B = mouseOver.getState();
-			if (B.getTransitionsFrom().size() > 1)
+			if (B.getTransitionsTo().size() > 1)
 			{
 				CaseRule CR = B.getCaseSplitJustification();
 				if(CR != null)
@@ -412,7 +412,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			}
 			else // if (B.transitionsFrom.size() == 1)
 			{
-				Justification J = (Justification)B.getTransitionsFrom().get(0).getJustification();
+				Justification J = (Justification)B.getJustification();
 				if (J != null)
 					g.drawImage(J.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
 			}
@@ -640,7 +640,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 				if (transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)
 				{
-					rv = new Selection(b,true);
+					rv = new Selection(b, false);
 				}
 				
 				Selection s = null;
