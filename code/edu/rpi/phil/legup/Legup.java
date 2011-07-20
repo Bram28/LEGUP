@@ -39,7 +39,10 @@ public class Legup
 
 		return instance;
 	}
-
+	public LEGUP_Gui getGui()
+	{
+		return this.gui;
+	}
 	private Config config = new Config("config.xml");
 
 	/**

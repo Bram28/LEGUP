@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
@@ -51,7 +53,7 @@ import javax.swing.BorderFactory;
 //import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionListener, ILegupGui
+public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionListener, ILegupGui, WindowListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 
@@ -262,6 +264,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		bar.add(help);
 
 		setJMenuBar(bar);
+		this.addWindowListener(this);
+		System.out.println("listner intialized");
 	}
 
 	// toolbar related fields
@@ -343,7 +347,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		consoleBox.add( treeBox );
 		add( consoleBox );
 		
-		
 		//JLabel placeholder = new JLabel( "Nothing." );
 		//placeholder.setPreferredSize( new Dimension( 600, 400 ) );
 		//add( placeholder );
@@ -367,7 +370,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	}
 
-	private void saveProof()
+	public void saveProof()
 	{
 		BoardState root = legupMain.getInitialBoardState();
 		fileChooser.setMode(FileDialog.SAVE);
@@ -606,6 +609,53 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		AI.setEnabled(profFlag(ALLOW_FULLAI));
 
 		justificationFrame.setStatus(true, "Proof mode "+PROFILES[index]+" has been activated");
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		LEGUP_Gui cheese = Legup.getInstance().getGui();
+		System.out.println("Attempting to save good sirs...");
+		Object[] options = {"Save and Quit", "Quit Without Saving"};
+		int n = JOptionPane.showOptionDialog(bar, "Would you like to save before exiting?", "Save before exiting?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+		cheese.saveProof();
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1707,7 +1707,7 @@ public class BoardState
 		bs.rightLabels = ps.rightLabels;
 		bs.puzzleName = ps.puzzleName;
 		//bs.collapsed = ps.collapsed;
-		bs.collapsed = true;
+		bs.collapsed = false;
 		//bs.hintCells = ps.hintCells;
 		//bs.offset = ps.offset;
 		bs.offset = new Point(0,0);

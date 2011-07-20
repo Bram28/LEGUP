@@ -281,7 +281,7 @@ public class SaveableProof
 		{
 			//SAVE HINTCELLS
 		}
-		saveme.out.print("\nextraData:\n");
+		//saveme.out.print("\nextraData:\n");
 		for (Object extra : saveme.states[0].extraData)
 		{
 			//SAVE EXTRADATA, ie
