@@ -33,7 +33,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 {
 	private static final long serialVersionUID = 3124502814357135662L;
 	private static final Color nodeColor = new Color(255,255,155);
-	public static final int NODE_RADIUS = 15;
+	public static final int NODE_RADIUS = 10;
 	private static final int SMALL_NODE_RADIUS = 7;
 	private static final int COLLAPSED_DRAW_DELTA_Y = 20;
 
@@ -74,8 +74,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		BoardState.addTransitionChangeListener(this);
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 
-		setDefaultPosition(-60,-60);
-		setPreferredSize(new Dimension(640,120));
+		setDefaultPosition(-60,-80);
+		setPreferredSize(new Dimension(640,160));
 	}
 
 	/**

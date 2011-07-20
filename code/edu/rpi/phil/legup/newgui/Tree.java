@@ -41,13 +41,14 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 
 		TreeToolbar()
 		{
-			add(addChild);
+			this.setLayout(new BorderLayout());
+			add(addChild, BorderLayout.NORTH);
 			addChild.addActionListener(this);
-			add(delChild);
+			add(delChild, BorderLayout.WEST);
 			delChild.addActionListener(this);
-			add(merge);
+			add(merge, BorderLayout.EAST);
 			merge.addActionListener(this);
-			add(collapse);
+			add(collapse, BorderLayout.SOUTH);
 			collapse.addActionListener(this);
 		}
 
@@ -81,7 +82,7 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 		
 		main.setLayout( new BorderLayout() );
 		
-		main.add(toolbar,BorderLayout.NORTH);
+		main.add(toolbar,BorderLayout.WEST);
 		main.add(treePanel,BorderLayout.CENTER);
 		
 		//status.setPreferredSize(new Dimension(150,20));
