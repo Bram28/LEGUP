@@ -150,6 +150,7 @@ public class Legup
 	 */
 	public PuzzleModule getPuzzleModule()
 	{
+		//if(puzzleModule == null){System.out.println("bad");}
 		return this.puzzleModule;
 	}
 

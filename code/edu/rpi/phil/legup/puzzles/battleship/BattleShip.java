@@ -49,8 +49,8 @@ public class BattleShip extends PuzzleModule
 	 public void mousePressedEvent(BoardState state, Point where)
 	 {
 	 	super.mousePressedEvent(state, where);
-		if (!state.isModifiableCell(where.x, where.y) && state.getCellContents(where.x, where.y) == CELL_FIXED_UNKNOWN)
-		{
+		if (!state.isModifiableCell(where.x, where.y) && Math.abs(state.getCellContents(where.x, where.y)) == CELL_FIXED_UNKNOWN)
+	 	{
 			state.setModifiableCell(where.x, where.y, true);
 			state.setCellContents(where.x, where.y, FIXED_LEFT_CAP);
 		}
@@ -60,7 +60,7 @@ public class BattleShip extends PuzzleModule
 	 {
 	 	ArrayList<Point> points = new ArrayList<Point>();
 	 	BoardState state2 = state.getSingleParentState();
-		if (side == BoardState.LABEL_LEFT || side == BoardState.LABEL_RIGHT)
+		if (side == Math.abs(BoardState.LABEL_LEFT) || side == Math.abs(BoardState.LABEL_RIGHT))
 		{
 			side = BoardState.LABEL_RIGHT;
 			for (int i = 0; i < state.getWidth(); i++) points.add(new Point(i, index));
@@ -75,7 +75,7 @@ public class BattleShip extends PuzzleModule
 
 		for (Point p : points)
 		{
-			int val = state2.getCellContents(p.x, p.y);
+			int val = Math.abs(state2.getCellContents(p.x, p.y));
 			if (isShipPart(val)) numShips++;
 			else if (val == CELL_WATER) numWater++;
 			else numUnknown++;
@@ -83,12 +83,12 @@ public class BattleShip extends PuzzleModule
 
 		if (numShips == state2.getLabel(side, index)-40)
 		{
-			for (Point p : points) if (state2.getCellContents(p.x, p.y) == CELL_UNKNOWN)
+			for (Point p : points) if (Math.abs(state2.getCellContents(p.x, p.y)) == CELL_UNKNOWN)
 				state.setCellContents(p.x, p.y, CELL_WATER);
 		}
 		else if (numShips+numUnknown == state2.getLabel(side, index)-40)
 		{
-			for (Point p : points) if (state2.getCellContents(p.x, p.y) == CELL_UNKNOWN)
+			for (Point p : points) if (Math.abs(state2.getCellContents(p.x, p.y)) == CELL_UNKNOWN)
 				state.setCellContents(p.x, p.y, CELL_SHIP);
 		}
 	 }
@@ -154,7 +154,7 @@ public class BattleShip extends PuzzleModule
 	public int getNextCellValue(int x, int y, BoardState boardState)
 			throws IndexOutOfBoundsException
 	{
-		int val = boardState.getCellContents(x,y);
+		int val = Math.abs(boardState.getCellContents(x,y));
 
 		if ((val >= 0 && val < 2) || (val >= 10 && val < 15) || (val >= 20 && val < 26)) return val + 1;
 		else if (val == 2) return 10;

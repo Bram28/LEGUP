@@ -9,7 +9,9 @@ public class SaveableProofState
     public int height;
     public int width;
     public int[][] boardCells;
+    //===========deprecated==============
     public boolean[][] modifiableCells;
+    //====================================
     public int[] topLabels;
     public int[] bottomLabels;
     public int[] leftLabels;

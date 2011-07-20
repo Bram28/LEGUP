@@ -45,6 +45,7 @@ import javax.swing.plaf.ToolBarUI;
 import javax.swing.plaf.basic.BasicToolBarUI;
 import java.awt.Color;
 import java.awt.Point;
+import java.io.IOException;
 
 import javax.swing.BorderFactory; 
 //import javax.swing.border.Border;
@@ -381,7 +382,12 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			if (!filename.toLowerCase().endsWith(".proof"))
 				filename = filename + ".proof";
 
-			SaveableProof.saveProof(root, filename);
+			try {
+				SaveableProof.saveProof(root, filename);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}

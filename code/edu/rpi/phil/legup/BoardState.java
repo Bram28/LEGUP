@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
+import java.lang.Math;
 
 import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
@@ -241,6 +242,7 @@ public class BoardState
 	public boolean isModifiableCell(int x, int y)
 	{
 		return modifiableCells[y][x];
+		//return Math.abs(boardCells[y][x]) == boardCells[y][x];
 	}
 
 	/**
@@ -1698,18 +1700,21 @@ public class BoardState
 
 		BoardState bs = new BoardState(ps.height, ps.width);
 		bs.boardCells = ps.boardCells;
-		bs.modifiableCells = ps.modifiableCells;
+		//bs.modifiableCells = ps.modifiableCells;
 		bs.topLabels = ps.topLabels;
 		bs.bottomLabels = ps.bottomLabels;
 		bs.leftLabels = ps.leftLabels;
 		bs.rightLabels = ps.rightLabels;
 		bs.puzzleName = ps.puzzleName;
-		bs.collapsed = ps.collapsed;
-		bs.hintCells = ps.hintCells;
-		bs.offset = ps.offset;
-		bs.setExtraData(ps.extraData);
+		//bs.collapsed = ps.collapsed;
+		bs.collapsed = true;
+		//bs.hintCells = ps.hintCells;
+		//bs.offset = ps.offset;
+		bs.offset = new Point(0,0);
+		//bs.setExtraData(ps.extraData);
 
 		Legup.getInstance().loadPuzzleModule(bs.puzzleName);
+		//Legup.getInstance().loadPuzzleModule("Battleships");
 
 		return bs;
 	}
@@ -1776,7 +1781,7 @@ public class BoardState
 				transitions.add(new SaveableProofTransition(this.id, child.id, ((Contradiction)child.justification).getName(), false));
 			child.makeSaveableProof(states, transitions);
 		}
-		else if(this.transitionsFrom.size() != 0)
+		else if(this.transitionsFrom.size() > 1)
 		{
 			for(BoardState b : this.transitionsFrom)
 			{

@@ -2,9 +2,21 @@ package edu.rpi.phil.legup.saveable;
 
 public class SaveableProofTransition
 {
+	//transition from
 	public int id1 = -1;
+	//transition to
 	public int id2 = -1;
+	//x coord of changed cell
+	public int x;
+	//y coord of changed cell
+	public int y;
+	//value before transition
+	public int prev;
+	//value after transition
+	public int newv;
+	//reason why
 	public String justification = null;
+	//case rule?
 	public boolean isCaseRule;
 	
 	public SaveableProofTransition(){}
@@ -15,6 +27,10 @@ public class SaveableProofTransition
 		this.id2 = id2;
 		this.justification = justification;
 		this.isCaseRule = isCase;
+		this.x = 0;
+		this.y = 0;
+		this.prev = 0;
+		this.newv = 0;
 	}
 
 	public int getId1()
