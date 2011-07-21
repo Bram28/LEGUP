@@ -330,7 +330,7 @@ public class BoardState
 		//TODO: Settings
 		boolean playmode = false;
 
-		if(value == boardCells[y][x])
+		if (value == boardCells[y][x] || justification instanceof Contradiction)
 			return;
 
 		// Obsolete with new proof mode system
@@ -1107,9 +1107,17 @@ public class BoardState
 	 */
 	public void setJustification(Object j)
 	{
-		// don't set justifications for the root state
-		if (this != Legup.getInstance().getInitialBoardState())
-			justification = j;
+		// don't change justification to a contradiction if there are changes
+		if (j instanceof Contradiction) {
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					if (editedCells[y][x])
+						return;
+				}
+			}
+		}
+			
+		justification = j;
 		modifyStatus();
 		delayStatus = STATUS_UNJUSTIFIED;
 	}
