@@ -267,7 +267,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		setJMenuBar(bar);
 		this.addWindowListener(this);
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		System.out.println("listner intialized");
+		System.out.println("listener initialized");
 	}
 
 	// toolbar related fields
