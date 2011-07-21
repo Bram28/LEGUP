@@ -12,7 +12,7 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
 /**
- * Provides a user interface for users to provide contradiction justifications
+ * Provides a user interface for contradiction justifications
  *
  */
 public class ContradictionPanel extends JustificationPanel

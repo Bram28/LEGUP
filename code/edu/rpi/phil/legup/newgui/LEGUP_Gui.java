@@ -24,6 +24,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
 import javax.swing.SwingConstants;
@@ -164,7 +165,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	public void repaintBoard()
 	{
-		if (board != null) board.boardDataChanged(null);
+		if (((Board)test.getRightComponent()) != null) ((Board)test.getRightComponent()).boardDataChanged(null);
 	}
 
 	public LEGUP_Gui(Legup legupMain)
@@ -308,6 +309,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private Tree tree;
 	private Console console;
 	private Board board;
+	private JSplitPane test, test2;
 	// contains all the code to setup the main content
 	private void setupContent(){
 		
@@ -327,16 +329,24 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		
 		// TODO
 		tree = new Tree( this );
-		treeBox.add( tree, BorderLayout.SOUTH );
+		//treeBox.add( tree, BorderLayout.SOUTH );
 		
 		justificationFrame = new JustificationFrame( this );
-		ruleBox.add( justificationFrame, BorderLayout.WEST );
+		//ruleBox.add( justificationFrame, BorderLayout.WEST );
 		
 		board = new Board( this );
 		board.setPreferredSize( new Dimension( 600, 400 ) );
 		
 		JPanel boardPanel = new JPanel( new BorderLayout() );
-		boardPanel.add( board );
+		//boardPanel.add( board );
+		//split pane fun :)
+		test = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, justificationFrame, board);
+		test2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, test, tree);
+		test.setPreferredSize(new Dimension(600, 400));
+		test2.setPreferredSize(new Dimension(600, 600));
+		//boardPanel.add(test);
+		boardPanel.add(test2);
+		//no more fun :(
 		TitledBorder title = BorderFactory.createTitledBorder("Board");
 		title.setTitleJustification(TitledBorder.CENTER);
 		boardPanel.setBorder(title);
@@ -411,7 +421,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 
 	private void showAll() {
-		board.initSize();
+		((Board)test.getRightComponent()).initSize();
 		// TODO disable buttons
 		toolBarButtons[TOOLBAR_SAVE].setEnabled(true);
 		toolBarButtons[TOOLBAR_UNDO].setEnabled(true);
@@ -423,8 +433,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 
 	private void repaintAll(){
-		board.repaint();
-		justificationFrame.repaint();
+		((Board)test.getRightComponent()).repaint();
+		((JustificationFrame)test.getLeftComponent()).repaint();
 		tree.repaint();
 	}
 
@@ -436,7 +446,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	public void showStatus(String status)
 	{
-		justificationFrame.setStatus(false,status);
+		((JustificationFrame)test.getLeftComponent()).setStatus(false,status);
 		// TODO console
 		console.println( "Status: " + status );
 	}
@@ -455,7 +465,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			legupMain.loadBoardFile( newPuzzle.getSelectedFile().getAbsolutePath() );
 			PuzzleModule pm = legupMain.getPuzzleModule();
 			if( pm != null ){
-				justificationFrame.setJustifications(pm);
+				((JustificationFrame)test.getLeftComponent()).setJustifications(pm);
 				// AI setup
 				myAI.setBoard(pm);
 			}
@@ -466,7 +476,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	public void reloadGui()
 	{
-		justificationFrame.setJustifications(Legup.getInstance().getPuzzleModule());
+		((JustificationFrame)test.getLeftComponent()).setJustifications(Legup.getInstance().getPuzzleModule());
 
 		// AI setup
 		myAI.setBoard(Legup.getInstance().getPuzzleModule());
@@ -528,7 +538,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				BoardState puzzle = PuzzleGeneration.makePuzzle(pgd.puzzleChosen(), pgd.difficultyChosen(), this);
 				legupMain.initializeGeneratedPuzzle(module, puzzle);
 
-				justificationFrame.setJustifications(module);
+				((JustificationFrame)test.getLeftComponent()).setJustifications(module);
 
 				// AI setup
 				myAI.setBoard(module);
@@ -570,16 +580,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			/*/ DEBUG - Not actual actions!
 			((BasicToolBarUI) justificationFrame.getUI()).setFloatingLocation(500,500);
 			((BasicToolBarUI) justificationFrame.getUI()).setFloating(true, new Point(500,500));*/
-			board.zoomIn();
+			((Board)test.getRightComponent()).zoomIn();
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMOUT]){
-			board.zoomOut();
+			((Board)test.getRightComponent()).zoomOut();
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMRESET]){
-			board.zoomTo(1.0);
+			((Board)test.getRightComponent()).zoomTo(1.0);
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMFIT]){
-			board.zoomFit();
+			((Board)test.getRightComponent()).zoomFit();
 		}
 		else if (e.getSource() == allowDefault)
 		{
@@ -634,7 +644,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 		AI.setEnabled(profFlag(ALLOW_FULLAI));
 
-		justificationFrame.setStatus(true, "Proof mode "+PROFILES[index]+" has been activated");
+		((JustificationFrame)test.getLeftComponent()).setStatus(true, "Proof mode "+PROFILES[index]+" has been activated");
 	}
 
 	@Override

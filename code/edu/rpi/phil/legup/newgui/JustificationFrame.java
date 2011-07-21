@@ -59,12 +59,12 @@ public class JustificationFrame extends JToolBar implements TreeSelectionListene
 		tabs.addTab(basicRulePanel.name, basicRulePanel.icon, new JScrollPane(basicRulePanel), basicRulePanel.toolTip);
 
 		casePanel = new CasePanel(this);
-		tabs.addTab(casePanel.name, casePanel.icon, new JScrollPane(casePanel), casePanel.toolTip);
+		//tabs.addTab(casePanel.name, casePanel.icon, new JScrollPane(casePanel), casePanel.toolTip);
 
 		contradictionPanel = new ContradictionPanel(this);
-		tabs.addTab(contradictionPanel.name, contradictionPanel.icon, new JScrollPane(contradictionPanel), contradictionPanel.toolTip);
+		//tabs.addTab(contradictionPanel.name, contradictionPanel.icon, new JScrollPane(contradictionPanel), contradictionPanel.toolTip);
 
-		//JScrollPane scroller = new JScrollPane(tabs);
+		JScrollPane scroller = new JScrollPane(tabs);
 
 		//JPanel main = new JPanel();
 		setLayout(new BorderLayout());
