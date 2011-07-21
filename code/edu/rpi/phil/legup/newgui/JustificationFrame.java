@@ -63,7 +63,7 @@ public class JustificationFrame extends JToolBar implements TreeSelectionListene
 
 		contradictionPanel = new ContradictionPanel(this);
 		//tabs.addTab(contradictionPanel.name, contradictionPanel.icon, new JScrollPane(contradictionPanel), contradictionPanel.toolTip);
-
+		
 		JScrollPane scroller = new JScrollPane(tabs);
 
 		//JPanel main = new JPanel();
@@ -133,6 +133,9 @@ public class JustificationFrame extends JToolBar implements TreeSelectionListene
 		basicRulePanel.setRules(pm.getRules());
 		contradictionPanel.setContradictions(pm.getContradictions());
 		casePanel.setCaseRules(pm.getCaseRules());
+		//there can be only one
+		basicRulePanel.add(casePanel);
+		basicRulePanel.add(contradictionPanel);
 	}
 
 	//TreeSelectionListener methods
