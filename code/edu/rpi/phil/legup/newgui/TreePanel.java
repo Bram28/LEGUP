@@ -39,6 +39,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 	private ArrayList <Rectangle> currentStateBoxes = new ArrayList <Rectangle>();
 	private Point selectionOffset = null;
+	private Point lastMovePoint = null;
 
 	private static final float floater[] = new float[] {(float)(5.0), (float)(10.0)}; // dashed setup
 	private static final float floater2[] = new float[] {(float)(2.0), (float)(3.0)}; // dotted setup
@@ -693,6 +694,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	protected void mousePressedAt( Point p, MouseEvent e ){
 		// left click
 		if( e.getButton() == MouseEvent.BUTTON1 ){
+			
+			lastMovePoint = new Point(p);
+			
 			// add to selection
 			if ( e.isControlDown() )
 				toggleSelection( Legup.getInstance().getInitialBoardState(), p );
@@ -712,12 +716,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	protected void mouseReleasedAt(Point p, MouseEvent e)
 	{
 		selectionOffset = null;
+		lastMovePoint = null;
 	}
 
 	protected void mouseExitedAt(Point realPoint, MouseEvent e)
 	{
 		selectionOffset = null;
-		
+
 		repaint();
 
 		Legup.getInstance().refresh();
@@ -738,6 +743,16 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		if( prev != null && mouseOver != null )
 			if( !prev.equals(mouseOver) )
 				Legup.getInstance().refresh();
+	}
+	
+	protected void mouseDraggedAt(Point p, MouseEvent e) {
+		if (lastMovePoint == null)
+			lastMovePoint = new Point(p);
+			
+		moveX += p.x - lastMovePoint.x;
+		moveY += p.y - lastMovePoint.y;
+		
+		repaint();
 	}
 
 	public static Selection getMouseOver(){
