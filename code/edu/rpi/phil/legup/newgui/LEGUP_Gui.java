@@ -355,6 +355,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	private void openProof()
 	{
+		if(Legup.getInstance().getInitialBoardState() != null){noquit("opening a new proof?");}
 		fileChooser.setMode(FileDialog.LOAD);
 		fileChooser.setTitle("Select Proof");
 		fileChooser.setVisible(true);
@@ -373,6 +374,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	public void saveProof()
 	{
 		BoardState root = legupMain.getInitialBoardState();
+		if (root == null){return;}
 		fileChooser.setMode(FileDialog.SAVE);
 		fileChooser.setTitle("Select Proof");
 		fileChooser.setVisible(true);
@@ -445,6 +447,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 
 	public void promptPuzzle(){
+		if(Legup.getInstance().getInitialBoardState() != null){noquit("opening a new puzzle?");}
 		JFileChooser newPuzzle = new JFileChooser("boards");
 		FileNameExtensionFilter filetype = new FileNameExtensionFilter( "LEGUP Puzzles", "xml" );
 		newPuzzle.setFileFilter( filetype );
@@ -477,6 +480,29 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 * Events
 	 */
 
+	//ask to save current proof
+	public void noquit(String instr)
+	{
+		String quest = "Would you like to save your proof before ";
+		quest += instr;
+		LEGUP_Gui curgui = Legup.getInstance().getGui();
+		System.out.println("Attempting to save good sirs...");
+		Object[] options = {"Save Proof", "Do Not Save Proof"};
+		int n = JOptionPane.showOptionDialog(bar, quest, "Save", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+		switch(n)
+		{
+		case JOptionPane.YES_OPTION:
+				curgui.saveProof();
+				return;
+		case JOptionPane.NO_OPTION:
+				return;
+		case JOptionPane.CLOSED_OPTION:
+				//pick an option!
+				noquit(instr);
+				return;
+		}
+	}
+	
 	public void actionPerformed(ActionEvent e)
 	{
 		if (e.getSource() == newPuzzle || e.getSource() == toolBarButtons[TOOLBAR_NEW])
@@ -626,14 +652,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// TODO Auto-generated method stub
-		LEGUP_Gui cheese = Legup.getInstance().getGui();
-		System.out.println("Attempting to save good sirs...");
-		Object[] options = {"Save and Quit", "Quit Without Saving"};
-		int n = JOptionPane.showOptionDialog(bar, "Would you like to save before exiting?", "Save before exiting?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-		cheese.saveProof();
+		noquit("exiting LEGUP?");
 		
 	}
-
 	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
