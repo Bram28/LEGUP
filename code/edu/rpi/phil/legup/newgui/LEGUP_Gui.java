@@ -670,10 +670,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		if(Legup.getInstance().getInitialBoardState() != null)
 		{
 			if(noquit("exiting LEGUP?"))
-				this.dispose();
+				this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		}
 		else
-			this.dispose();
+			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 	}
 	@Override
