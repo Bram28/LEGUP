@@ -163,8 +163,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				if (b.isCollapsed())
 					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
 
-				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x, childPoint.y), g
-						,state, b.isCollapsed());
+				drawTransition(g, state, b, b.isCollapsed());
 
 				g2D.setStroke(thin);
 			}
@@ -216,8 +215,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				if (b.isCollapsed())
 					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
 
-				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x, childPoint.y), g, state
-						,b.isCollapsed());
+				drawTransition(g, state, b, b.isCollapsed());
 
 				g2D.setStroke(thin);
 			}
@@ -265,13 +263,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	 * @param parent the parent board state of the transition we're drawing
 	 * @param collapsedChild is the child we're connecting to a collapsed state
 	 */
-	private void drawTransition(Line2D.Float trans, Graphics g,
-			BoardState parent, boolean collapsedChild)
+	private void drawTransition(Graphics g, BoardState parent, BoardState child, boolean collapsedChild)
 	{
 		Graphics2D g2d = (Graphics2D)g;
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
-		Selection theSelection = new Selection(parent.getTransitionsFrom().get(0), false);
 		int nodeRadius = collapsedChild ? SMALL_NODE_RADIUS : NODE_RADIUS;
+		
+		Selection theSelection = new Selection(child, false);
 
 		if (sel.contains(theSelection))
 		{
@@ -279,9 +277,12 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			g.setColor(Color.blue);
 		}
 
-		g2d.draw(trans);
+		//create the line
+		Point from = (Point)parent.getLocation().clone();
+		Point to = (Point)child.getLocation().clone();
+		Line2D.Float trans = new Line2D.Float(from.x, from.y, to.x, to.y);
 
-		// we also want to draw the arrowhead
+		// draw the arrowhead first in order to use the base of the head for the line
 		final int ARROW_SIZE = 8;
 
 		// find the tip of the arrow, the point NODE_RADIUS away from the destination endpoint
@@ -316,6 +317,12 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		arrowhead.addPoint((int)Math.round(px + dx), (int)Math.round(py + dy));
 
 		g2d.fill(arrowhead);
+		
+		//
+		Line2D.Float line = new Line2D.Float(from.x, from.y, px, py);
+		
+		g2d.draw(line);
+
 	}
 
 	/**
