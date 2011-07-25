@@ -529,10 +529,12 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			parentState = currentState.getSingleParentState();
 			childState = currentState.endTransition();
 			parentState.getTransitionsFrom().remove(currentState);
+			currentState.getTransitionsTo().remove(parentState);
 		} else {
 			parentState = currentState.getSingleParentState().getSingleParentState();
 			childState = currentState;
 			parentState.getTransitionsFrom().remove(currentState.getSingleParentState());
+			currentState.getSingleParentState().getTransitionsTo().remove(parentState);
 		}
 		
 		BoardState.reparentChildren(childState, parentState);
@@ -722,6 +724,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	protected void mouseExitedAt(Point realPoint, MouseEvent e)
 	{
 		selectionOffset = null;
+		mouseOver = null;
 
 		repaint();
 

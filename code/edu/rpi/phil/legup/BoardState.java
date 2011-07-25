@@ -1472,11 +1472,11 @@ public class BoardState
 			child.transitionsTo.clear();
 			newParent.transitionsFrom.add(child);
 			child.transitionsTo.add(newParent);
-			newParent.expandXSpace(child);
+			//newParent.expandXSpace(child);
 		}
 		
 		while (oldParent.getTransitionsFrom().size() > 0)
-			oldParent.removeLeaf(oldParent.getTransitionsFrom().get(0));
+			oldParent.getTransitionsFrom().remove(0);
 		
 		if (!oldParent.virtualBoard)
 			oldParent.transitionsChanged();
