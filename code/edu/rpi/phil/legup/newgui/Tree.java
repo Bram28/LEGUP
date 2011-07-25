@@ -5,6 +5,7 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionEvent;
@@ -41,14 +42,14 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 
 		TreeToolbar()
 		{
-			this.setLayout(new BorderLayout());
-			add(addChild, BorderLayout.NORTH);
+			this.setLayout(new GridLayout(2,2));
+			add(addChild);
 			addChild.addActionListener(this);
-			add(delChild, BorderLayout.WEST);
+			add(delChild);
 			delChild.addActionListener(this);
-			add(merge, BorderLayout.EAST);
+			add(merge);
 			merge.addActionListener(this);
-			add(collapse, BorderLayout.SOUTH);
+			add(collapse);
 			collapse.addActionListener(this);
 		}
 
