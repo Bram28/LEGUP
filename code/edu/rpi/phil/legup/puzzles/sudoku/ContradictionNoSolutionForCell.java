@@ -10,7 +10,7 @@ public class ContradictionNoSolutionForCell extends Contradiction
 
 	 ContradictionNoSolutionForCell()
 	 {
-		name = "No Solution For Cell";
+		setName("No Solution For Cell");
 		description = "Process of elimination yields no valid numbers for an empty cell";
 		image = new ImageIcon("images/sudoku/NoSolution.png");
 	 }

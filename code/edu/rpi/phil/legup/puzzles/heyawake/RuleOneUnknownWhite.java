@@ -10,7 +10,7 @@ public class RuleOneUnknownWhite extends PuzzleRule
 	
 	 RuleOneUnknownWhite()
 	 {
-		name = "White Escape";
+		setName("White Escape");
 		description = "If there is one unknown next to a white region the unknown should be white.";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
 	 }

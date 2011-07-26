@@ -15,7 +15,7 @@ public class CaseLightOrWhite extends CaseRule
 {
 	public CaseLightOrWhite()
 	{
-		name = "Light or White";
+		setName("Light or White");
 		description = "Each blank cell is either a light or white.";
 		image = new ImageIcon("images/lightup/cases/LightOrWhite.png");
 		

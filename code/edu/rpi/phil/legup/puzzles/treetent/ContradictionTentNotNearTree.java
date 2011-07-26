@@ -12,7 +12,7 @@ public class ContradictionTentNotNearTree extends Contradiction
 	
 	public ContradictionTentNotNearTree()
 	 {
-		name = "No Trees For Tent";
+		setName("No Trees For Tent");
 		description = "Unlinked tent not near an unlinked tree.";
 		image = new ImageIcon("images/treetent/contra_notree.png");
 	 }

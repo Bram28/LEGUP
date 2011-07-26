@@ -21,7 +21,7 @@ public class RuleAllTents extends PuzzleRule{
 	
 	public RuleAllTents()
     {
-		name = "Finish Tents";
+		setName("Finish Tents");
 		description = "Tents can be added to finish a row or column that has one open spot per required tent.";
 		image = new ImageIcon("images/treetent/finishTent.png");
     }

@@ -11,7 +11,7 @@ import java.awt.Point;
 public class RuleOnlyOneChoice extends PuzzleRule{
 	
 	public RuleOnlyOneChoice() {
-		name = "Only Choice";
+		setName("Only Choice");
 		description = "Must go in the only direction available.";
 		image = new ImageIcon("images/masyu/Rules/RuleOnlyOneChoice.png");
 	}

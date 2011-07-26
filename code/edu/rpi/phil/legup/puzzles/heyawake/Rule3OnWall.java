@@ -10,7 +10,7 @@ public class Rule3OnWall extends PuzzleRule
 {
 	Rule3OnWall()
 	{
-		name = "2X3 on Wall";
+		setName("2X3 on Wall");
 		description = "A 2X3 region on a wall with a value of 3 has one configuration";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
 	}

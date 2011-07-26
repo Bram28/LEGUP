@@ -26,7 +26,7 @@ public class RuleAdvancedDeduction extends PuzzleRule
 
 	RuleAdvancedDeduction()
     {
-		name = "Proved by Advanced Deduction";
+		setName("Proved by Advanced Deduction");
 		description = "Use of group logic deduces more answers by means of Forced by Location and Forced by Deduction";
 		image = new ImageIcon("images/sudoku/AdvancedDeduction.png");
 

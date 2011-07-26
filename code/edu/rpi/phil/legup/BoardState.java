@@ -44,6 +44,8 @@ public class BoardState
 	private int height;
 	private int width;
 	private int[][] boardCells;
+	//to keep track of what cells have changed
+	private Vector <Point> changedCells;
 	private boolean[][] modifiableCells;
 	private boolean[][] editedCells;
 	private int[] topLabels;
@@ -98,40 +100,41 @@ public class BoardState
 	public BoardState(int height, int width)
 	{
 		// Set the height and width
-		this.height = height;
-		this.width = width;
+		this.setHeight(height);
+		this.setWidth(width);
 
 		// Allocate the arrays
-		boardCells = new int[height][width];
-		topLabels = new int[width];
-		bottomLabels = new int[width];
-		leftLabels = new int[height];
-		rightLabels = new int[height];
+		setBoardCells(new int[height][width]);
+		setTopLabels(new int[width]);
+		setBottomLabels(new int[width]);
+		setLeftLabels(new int[height]);
+		setRightLabels(new int[height]);
 		modifiableCells = new boolean[height][width];
 		editedCells = new boolean[height][width];
+		changedCells = new Vector<Point>();
 
 		// Initialize the arrays
 		for (int i=0;i<height;i++)
 		{
-			leftLabels[i]=0;
-			rightLabels[i]=0;
+			getLeftLabels()[i]=0;
+			getRightLabels()[i]=0;
 
 			for (int j=0;j<width;j++)
 			{
 				modifiableCells[i][j] = true;
-				boardCells[i][j] = 0;
+				getBoardCells()[i][j] = 0;
 				editedCells[i][j] = false;
 
 				if (i==0)
 				{
-					topLabels[j] = 0;
-					bottomLabels[j] = 0;
+					getTopLabels()[j] = 0;
+					getBottomLabels()[j] = 0;
 				}
 			}
 		}
 
 		if(Legup.getInstance().getPuzzleModule() != null)
-			this.puzzleName = Legup.getInstance().getPuzzleModule().name;
+			this.setPuzzleName(Legup.getInstance().getPuzzleModule().name);
 	}
 
 	/**
@@ -141,19 +144,20 @@ public class BoardState
 	 */
 	public BoardState(BoardState copy)
 	{
-		this(copy.width, copy.height);
+		this(copy.getWidth(), copy.getHeight());
 		virtualBoard = copy.virtualBoard;
 
 		// Allocate the arrays
-		for (int x = 0; x < width; x++) for (int y = 0; y < height; y++)
+		for (int x = 0; x < getWidth(); x++) for (int y = 0; y < getHeight(); y++)
 		{
-			boardCells[y][x] = copy.boardCells[y][x];
+			getBoardCells()[y][x] = copy.getBoardCells()[y][x];
 			modifiableCells[y][x] = copy.modifiableCells[y][x];
 			editedCells[y][x] = copy.editedCells[y][x];
 		}
-		for (int x = 0; x < width; x++) { topLabels[x] = copy.topLabels[x]; bottomLabels[x] = copy.bottomLabels[x]; }
-		for (int y = 0; y < height; y++) { leftLabels[y] = copy.leftLabels[y]; rightLabels[y] = copy.rightLabels[y]; }
+		for (int x = 0; x < getWidth(); x++) { getTopLabels()[x] = copy.getTopLabels()[x]; getBottomLabels()[x] = copy.getBottomLabels()[x]; }
+		for (int y = 0; y < getHeight(); y++) { getLeftLabels()[y] = copy.getLeftLabels()[y]; getRightLabels()[y] = copy.getRightLabels()[y]; }
 		extraData = new ArrayList<Object>(copy.extraData);
+		changedCells = new Vector<Point>();
 	}
 
 	public void setVirtual(boolean virtual)
@@ -224,9 +228,9 @@ public class BoardState
 	{
 		String rv = "No rule selected!";
 
-		if (caseRuleJustification != null)
+		if (getCaseRuleJustification() != null)
 		{
-			rv = caseRuleJustification.checkCaseRuleRaw(this);
+			rv = getCaseRuleJustification().checkCaseRuleRaw(this);
 		}
 
 		return rv;
@@ -251,7 +255,7 @@ public class BoardState
 	 */
 	public CaseRule getCaseSplitJustification()
 	{
-		return caseRuleJustification;
+		return getCaseRuleJustification();
 	}
 
 	/**
@@ -261,7 +265,7 @@ public class BoardState
 	public void setCaseSplitJustification(CaseRule jusification)
 	{
 		delayStatus = STATUS_UNJUSTIFIED;
-		caseRuleJustification = jusification;
+		setCaseRuleJustification(jusification);
 		modifyStatus();
 	}
 
@@ -313,7 +317,7 @@ public class BoardState
 	 */
 	public int getCellContents(int x, int y)
 	{
-		return boardCells[y][x];
+		return getBoardCells()[y][x];
 	}
 
 
@@ -330,6 +334,8 @@ public class BoardState
 		//TODO: Settings
 		boolean playmode = false;
 
+		if(value == getBoardCells()[y][x])
+//=======
 		if (value == boardCells[y][x] || justification instanceof Contradiction)
 			return;
 
@@ -358,12 +364,12 @@ public class BoardState
 		}*/
 		
 		
-  		boardCells[y][x] = value;
+  		getBoardCells()[y][x] = value;
   		
   		//update editedCells if necessary
 		BoardState parent = getSingleParentState();
 		if (parent != null) {
-			if (boardCells[y][x] != parent.getCellContents(x, y)) {
+			if (getBoardCells()[y][x] != parent.getCellContents(x, y)) {
 				editedCells[y][x] = true;
 			} else {
 				editedCells[y][x] = false;
@@ -387,7 +393,7 @@ public class BoardState
 	 * @param value Value to set
 	 */
 	public void propagateChange(int x, int y, int value) {
-		boardCells[y][x] = value;
+		getBoardCells()[y][x] = value;
 		setModifiableCell(x, y, value == PuzzleModule.CELL_UNKNOWN);
 		editedCells[y][x] = false;
 		
@@ -412,8 +418,8 @@ public class BoardState
 	 * Moves editedCells into modifiableCells. Called during endTranstion().
 	 */
 	public void editedToModifiable() {
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
+		for (int i = 0; i < getHeight(); i++) {
+			for (int j = 0; j < getWidth(); j++) {
 				if (editedCells[i][j]) {
 					setModifiableCell(j, i, false);
 					editedCells[i][j] = false;
@@ -472,25 +478,25 @@ public class BoardState
 	public int getLabel(int labelLocation, int pos) throws IndexOutOfBoundsException{
 	switch(labelLocation){
 	case 0:
-		if (pos<0 || pos >= width){
+		if (pos<0 || pos >= getWidth()){
 		throw new IndexOutOfBoundsException("Invalid index");
 		}
-		return topLabels[pos];
+		return getTopLabels()[pos];
 	case 1:
-		if (pos<0 || pos >= width){
+		if (pos<0 || pos >= getWidth()){
 		throw new IndexOutOfBoundsException("Invalid index");
 		}
-		return bottomLabels[pos];
+		return getBottomLabels()[pos];
 	case 2:
-		if (pos<0 || pos >= height){
+		if (pos<0 || pos >= getHeight()){
 		throw new IndexOutOfBoundsException("Invalid index");
 		}
-		return leftLabels[pos];
+		return getLeftLabels()[pos];
 	case 3:
-		if (pos<0 || pos >= height){
+		if (pos<0 || pos >= getHeight()){
 		throw new IndexOutOfBoundsException("Invalid index");
 		}
-		return rightLabels[pos];
+		return getRightLabels()[pos];
 	default:
 		throw new IndexOutOfBoundsException("Invalid label"); // CHANGE THIS!!!! not index
 	}
@@ -509,19 +515,19 @@ public class BoardState
 	switch(labelLocation){
 	case 0:
 
-		topLabels[pos] = value;
+		getTopLabels()[pos] = value;
 		return;
 	case 1:
 
-		bottomLabels[pos] = value;
+		getBottomLabels()[pos] = value;
 		return;
 	case 2:
 
-		leftLabels[pos] = value;
+		getLeftLabels()[pos] = value;
 		return;
 	case 3:
 
-		rightLabels[pos] = value;
+		getRightLabels()[pos] = value;
 		return;
 	}
 
@@ -697,9 +703,9 @@ public class BoardState
 		{
 			BoardState parent = states.get(c);
 
-			for (int y = 0; y < child.height; ++y)
+			for (int y = 0; y < child.getHeight(); ++y)
 			{
-				for (int x = 0; x < child.width; ++x)
+				for (int x = 0; x < child.getWidth(); ++x)
 				{
 					int childCell = child.getCellContents(x,y);
 					int parentCell = parent.getCellContents(x,y);
@@ -955,7 +961,7 @@ public class BoardState
 		child.transitionsTo.add(this);
 		if(isCase)
 		{
-			this.caseRuleJustification = Legup.getInstance().getPuzzleModule().getCaseRuleByName(justification);
+			this.setCaseRuleJustification(Legup.getInstance().getPuzzleModule().getCaseRuleByName(justification));
 		}
 		else
 		{
@@ -1028,7 +1034,7 @@ public class BoardState
 	public BoardState copy(){
 	BoardState newBoardState = null;
 	try{
-		newBoardState = new BoardState(this.height,this.width);
+		newBoardState = new BoardState(this.getHeight(),this.getWidth());
 		newBoardState.virtualBoard = virtualBoard;
 		newBoardState.modifiableState = modifiableState;
 	} catch (Exception e){
@@ -1036,21 +1042,21 @@ public class BoardState
 	}
 
 	// Initialize the arrays
-	for (int i=0;i<height;i++)
+	for (int i=0;i<getHeight();i++)
 	{
-		newBoardState.leftLabels[i]=leftLabels[i];
-		newBoardState.rightLabels[i]=rightLabels[i];
+		newBoardState.getLeftLabels()[i]=getLeftLabels()[i];
+		newBoardState.getRightLabels()[i]=getRightLabels()[i];
 
-		for (int j=0;j<width;j++)
+		for (int j=0;j<getWidth();j++)
 		{
-			newBoardState.boardCells[i][j] = boardCells[i][j];
+			newBoardState.getBoardCells()[i][j] = getBoardCells()[i][j];
 			newBoardState.modifiableCells[i][j] = modifiableCells[i][j];
 			newBoardState.editedCells[i][j] = editedCells[i][j];
 
 			if (i==0)
 			{
-				newBoardState.topLabels[j] = topLabels[j];
-				newBoardState.bottomLabels[j] = bottomLabels[j];
+				newBoardState.getTopLabels()[j] = getTopLabels()[j];
+				newBoardState.getBottomLabels()[j] = getBottomLabels()[j];
 			}
 		}
 	}
@@ -1076,14 +1082,14 @@ public class BoardState
 	 * @return True if the board states match
 	 */
 	public boolean compareBoard(BoardState compareBoard){
-	if (this.height != compareBoard.height ||
-		this.width != compareBoard.width){
+	if (this.getHeight() != compareBoard.getHeight() ||
+		this.getWidth() != compareBoard.getWidth()){
 		return false;
 	}
 
-	for (int i=0;i<height;i++){
-		for (int j=0;j<width;j++){
-		if (this.boardCells[i][j] != compareBoard.boardCells[i][j]){
+	for (int i=0;i<getHeight();i++){
+		for (int j=0;j<getWidth();j++){
+		if (this.getBoardCells()[i][j] != compareBoard.getBoardCells()[i][j]){
 			return false;
 		}
 		}
@@ -1109,8 +1115,8 @@ public class BoardState
 	{
 		// don't change justification to a contradiction if there are changes
 		if (j instanceof Contradiction) {
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
+			for (int y = 0; y < getHeight(); y++) {
+				for (int x = 0; x < getWidth(); x++) {
 					if (editedCells[y][x])
 						return;
 				}
@@ -1223,13 +1229,13 @@ public class BoardState
 	{
 		SaveableBoardState s = new SaveableBoardState();
 
-		s.height = height;
-		s.width = width;
-		s.boardCells = boardCells;
-		s.bottomLabels = bottomLabels;
-		s.leftLabels = leftLabels;
-		s.rightLabels = rightLabels;
-		s.topLabels = topLabels;
+		s.height = getHeight();
+		s.width = getWidth();
+		s.boardCells = getBoardCells();
+		s.bottomLabels = getBottomLabels();
+		s.leftLabels = getLeftLabels();
+		s.rightLabels = getRightLabels();
+		s.topLabels = getTopLabels();
 		s.extraData = extraData;
 		s.location = location;
 
@@ -1249,20 +1255,20 @@ public class BoardState
 		{
 			rv = new BoardState(s.height,s.width);
 
-			rv.puzzleName = s.puzzleMod;
+			rv.setPuzzleName(s.puzzleMod);
 
-			rv.boardCells = s.boardCells;
-			rv.bottomLabels = s.bottomLabels;
-			rv.leftLabels = s.leftLabels;
-			rv.rightLabels = s.rightLabels;
-			rv.topLabels = s.topLabels;
+			rv.setBoardCells(s.boardCells);
+			rv.setBottomLabels(s.bottomLabels);
+			rv.setLeftLabels(s.leftLabels);
+			rv.setRightLabels(s.rightLabels);
+			rv.setTopLabels(s.topLabels);
 			rv.extraData = s.extraData;
 			rv.location = s.location;
 
 			// set modification properties such that any initial data is unmodifiable
-			for (int y = 0; y < rv.height; ++y) for (int x = 0; x < rv.width; ++x)
+			for (int y = 0; y < rv.getHeight(); ++y) for (int x = 0; x < rv.getWidth(); ++x)
 			{
-				if (rv.boardCells[y][x] != PuzzleModule.CELL_UNKNOWN)
+				if (rv.getBoardCells()[y][x] != PuzzleModule.CELL_UNKNOWN)
 				{
 					rv.modifiableCells[y][x] = false;
 				}
@@ -1707,13 +1713,13 @@ public class BoardState
 			return null;
 
 		BoardState bs = new BoardState(ps.height, ps.width);
-		bs.boardCells = ps.boardCells;
+		bs.setBoardCells(ps.boardCells);
 		//bs.modifiableCells = ps.modifiableCells;
-		bs.topLabels = ps.topLabels;
-		bs.bottomLabels = ps.bottomLabels;
-		bs.leftLabels = ps.leftLabels;
-		bs.rightLabels = ps.rightLabels;
-		bs.puzzleName = ps.puzzleName;
+		bs.setTopLabels(ps.topLabels);
+		bs.setBottomLabels(ps.bottomLabels);
+		bs.setLeftLabels(ps.leftLabels);
+		bs.setRightLabels(ps.rightLabels);
+		bs.setPuzzleName(ps.puzzleName);
 		//bs.collapsed = ps.collapsed;
 		bs.collapsed = false;
 		//bs.hintCells = ps.hintCells;
@@ -1721,7 +1727,7 @@ public class BoardState
 		bs.offset = new Point(0,0);
 		//bs.setExtraData(ps.extraData);
 
-		Legup.getInstance().loadPuzzleModule(bs.puzzleName);
+		Legup.getInstance().loadPuzzleModule(bs.getPuzzleName());
 		//Legup.getInstance().loadPuzzleModule("Battleships");
 
 		return bs;
@@ -1731,15 +1737,16 @@ public class BoardState
 	{
 		SaveableProofState s = new SaveableProofState();
 
-		s.height = this.height;
-		s.width = this.width;
+		s.height = this.getHeight();
+		s.width = this.getWidth();
+		s.boardCells = this.getBoardCells();
 		s.boardCells = this.boardCells;
 		s.modifiableCells = this.modifiableCells;
-		s.topLabels = this.topLabels;
-		s.bottomLabels = this.bottomLabels;
-		s.leftLabels = this.leftLabels;
-		s.rightLabels = this.rightLabels;
-		s.puzzleName = this.puzzleName;
+		s.topLabels = this.getTopLabels();
+		s.bottomLabels = this.getBottomLabels();
+		s.leftLabels = this.getLeftLabels();
+		s.rightLabels = this.getRightLabels();
+		s.puzzleName = this.getPuzzleName();
 		s.extraData = this.extraData;
 		s.collapsed = this.collapsed;
 		s.hintCells = this.hintCells;
@@ -1793,7 +1800,7 @@ public class BoardState
 		{
 			for(BoardState b : this.transitionsFrom)
 			{
-				transitions.add(new SaveableProofTransition(this.id, b.id, this.caseRuleJustification.getName(), true));
+				transitions.add(new SaveableProofTransition(this.id, b.id, this.getCaseRuleJustification().getName(), true));
 				b.makeSaveableProof(states, transitions);
 			}
 		}
@@ -1804,5 +1811,79 @@ public class BoardState
 	}
 	public int getHints() {
 		return hintsGiven;
+	}
+
+	public void setTopLabels(int[] topLabels) {
+		this.topLabels = topLabels;
+	}
+
+	public int[] getTopLabels() {
+		return topLabels;
+	}
+
+	public void setBottomLabels(int[] bottomLabels) {
+		this.bottomLabels = bottomLabels;
+	}
+
+	public int[] getBottomLabels() {
+		return bottomLabels;
+	}
+
+	public void setLeftLabels(int[] leftLabels) {
+		this.leftLabels = leftLabels;
+	}
+
+	public int[] getLeftLabels() {
+		return leftLabels;
+	}
+
+	public void setRightLabels(int[] rightLabels) {
+		this.rightLabels = rightLabels;
+	}
+
+	public int[] getRightLabels() {
+		return rightLabels;
+	}
+
+	public void setBoardCells(int[][] boardCells) {
+		this.boardCells = boardCells;
+	}
+
+	public int[][] getBoardCells() {
+		return boardCells;
+	}
+
+	public void setChangedCells(Vector <Point> changedCells) {
+		this.changedCells = changedCells;
+	}
+
+	public Vector <Point> getChangedCells() {
+		return changedCells;
+	}
+
+	public void setPuzzleName(String puzzleName) {
+		this.puzzleName = puzzleName;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setCaseRuleJustification(CaseRule caseRuleJustification) {
+		this.caseRuleJustification = caseRuleJustification;
+	}
+
+	public CaseRule getCaseRuleJustification() {
+		return caseRuleJustification;
+	}
+
+	public void setCaseRuleJustification(String str) {
+		// TODO Auto-generated method stub
+		if(this.caseRuleJustification != null)
+			this.caseRuleJustification.setName(str);
 	}
 }

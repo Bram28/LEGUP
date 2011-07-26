@@ -12,7 +12,7 @@ public class RuleBetweenRegions extends PuzzleRule
 	
 	 RuleBetweenRegions()
 	 {
-		name = "Black Between Regions";
+		setName("Black Between Regions");
 		description = "Any unknowns between two regions must be black.";
 		image = new ImageIcon("images/nurikabe/rules/BetweenRegions.png");
 	 }

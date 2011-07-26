@@ -12,7 +12,7 @@ public class RuleOneUnknownRegion extends PuzzleRule
 	
 	 RuleOneUnknownRegion()
 	 {
-		name = "Continue Region";
+		setName("Continue Region");
 		description = "If there is one unknown next to a region and the region needs more whites, the unknown must be white.";
 		image = new ImageIcon("images/nurikabe/rules/OneUnknownRegion.png");
 	 }

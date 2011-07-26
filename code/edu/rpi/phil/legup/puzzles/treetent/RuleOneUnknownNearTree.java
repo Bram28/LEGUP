@@ -23,7 +23,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule{
 	
 	public RuleOneUnknownNearTree()
     {
-		name = "Last Camping Spot";
+		setName("Last Camping Spot");
 		description = "If there is one unknown cell next to a tentless unlinked tree, it is a tent.";
 		image = new ImageIcon("images/treetent/oneTentPosition.png");
     }

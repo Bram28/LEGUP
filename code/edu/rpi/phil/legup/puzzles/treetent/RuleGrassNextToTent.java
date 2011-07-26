@@ -20,14 +20,14 @@ public class RuleGrassNextToTent extends PuzzleRule{
 	
     public RuleGrassNextToTent()
     {
-    	name = "Surround Tent";
+    	setName("Surround Tent");
     	description = "Cells next to a tent are grass.";
     	image = new ImageIcon("images/treetent/aroundTent.png");
     }
 
 
     public void print(){
-	System.out.print(name);
+	System.out.print(getName());
     }
 
     /**

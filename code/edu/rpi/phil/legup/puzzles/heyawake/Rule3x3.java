@@ -10,7 +10,7 @@ public class Rule3x3 extends PuzzleRule
 {
 	Rule3x3()
 	{
-		name = "3x3";
+		setName("3x3");
 		description = "One possible combination in a region 3x3 with a value of 5";
 		image = new ImageIcon("images/heyawake/rules/FillRoomBlack.png");
 	}

@@ -12,7 +12,7 @@ public class WaterRowRule extends PuzzleRule
 
 	public WaterRowRule()
 	{
-		name = "Row/Column Deduction Rule";
+		setName("Row/Column Deduction Rule");
 		description = "When all the ship/water cells have been accounted for, fill in the rest of the unknowns appropriately";
 		image = new ImageIcon("images/battleship/labelforce.png");
 	}

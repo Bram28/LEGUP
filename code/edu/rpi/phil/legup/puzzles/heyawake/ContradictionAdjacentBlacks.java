@@ -9,7 +9,7 @@ public class ContradictionAdjacentBlacks extends Contradiction
 {	 
 	 ContradictionAdjacentBlacks()
 	 {
-		name = "Adjacent Black Cells";
+		setName("Adjacent Black Cells");
 		description = "No two blacks can be adjacent.";
 		image = new ImageIcon("images/heyawake/contradictions/adjacentBlacks.png");
 	 }

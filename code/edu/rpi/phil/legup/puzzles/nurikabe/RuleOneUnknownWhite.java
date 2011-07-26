@@ -10,7 +10,7 @@ public class RuleOneUnknownWhite extends PuzzleRule
 	
 	 RuleOneUnknownWhite()
 	 {
-		name = "Continue Numberless Region";
+		setName("Continue Numberless Region");
 		description = "If there is one unknown next to a white region without a number, the unknown should be white.";
 		image = new ImageIcon("images/nurikabe/rules/OneUnknownWhite.png");
 	 }

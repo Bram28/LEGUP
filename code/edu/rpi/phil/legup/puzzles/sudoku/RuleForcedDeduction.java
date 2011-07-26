@@ -22,7 +22,7 @@ public class RuleForcedDeduction extends PuzzleRule
 
 	RuleForcedDeduction()
     {
-		name = "Forced by Deduction";
+		setName("Forced by Deduction");
 		description = "This is the only the number left that can validly fit in the row, column, and square";
 		image = new ImageIcon("images/sudoku/forcedByDeduction.png");
 

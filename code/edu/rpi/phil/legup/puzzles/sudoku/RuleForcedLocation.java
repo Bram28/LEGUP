@@ -15,7 +15,7 @@ public class RuleForcedLocation extends PuzzleRule
 
 	RuleForcedLocation()
     {
-		name = "Forced by Elimination";
+		setName("Forced by Elimination");
 		description = "This is the only spot left for a number to go in this row, column, or square";
 		image = new ImageIcon("images/sudoku/forcedByElimination.png");
 

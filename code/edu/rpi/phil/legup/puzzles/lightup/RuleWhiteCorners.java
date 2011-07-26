@@ -9,7 +9,7 @@ public class RuleWhiteCorners extends PuzzleRule
 {	 
 	 RuleWhiteCorners()
 	 {
-		name = "White Corners";
+		setName("White Corners");
 		description = "Cells on the corners of a number must be white if they would prevent the number from acheiving its lights.";
 		image = new ImageIcon("images/lightup/rules/WhiteCorners.png");
 	 }

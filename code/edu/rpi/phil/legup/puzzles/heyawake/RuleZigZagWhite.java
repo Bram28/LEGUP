@@ -12,7 +12,7 @@ public class RuleZigZagWhite extends PuzzleRule
 {
 	RuleZigZagWhite()
 	{
-		name = "White forced from zigzag";
+		setName("White forced from zigzag");
 		description = "Cells next to a forced zigzag are white.";
 		image = new ImageIcon("images/heyawake/rules/ZigZagWhite.png");
 	}

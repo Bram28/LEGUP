@@ -10,7 +10,7 @@ public class ContradictionTooManyBulbs extends Contradiction
 	
 	 ContradictionTooManyBulbs()
 	 {
-		name = "Too Many Bulbs";
+		setName("Too Many Bulbs");
 		description = "There cannot be more bulbs around a block than its number states.";
 		image = new ImageIcon("images/lightup/contradictions/TooManyBulbs.png");
 	 }

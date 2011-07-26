@@ -11,7 +11,7 @@ public class ContradictionRoomTooEmpty extends Contradiction
 {	 
 	 ContradictionRoomTooEmpty()
 	 {
-		name = "Room Too Empty";
+		setName("Room Too Empty");
 		description = "A room can't have less than its number of blacks.";
 		image = new ImageIcon("images/heyawake/contradictions/RoomTooEmpty.png");
 	 }

@@ -10,7 +10,7 @@ public class RuleNewTentLink extends RuleNewLink{
 	
     public RuleNewTentLink()
     {
-    	name = "New Link Tent";
+    	setName("New Link Tent");
     	description = "A tent must link to a tree if there are no unlinked trees near the tent.";
     	image = new ImageIcon("images/treetent/NewTentLink.png");
     }

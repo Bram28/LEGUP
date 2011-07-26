@@ -13,7 +13,7 @@ public class CaseTentOrGrass extends CaseRule
 	
 	public CaseTentOrGrass()
 	{
-		name = "Tree or Grass";
+		setName("Tree or Grass");
 		description = "Each blank cell is either a tent or grass.";
 		image = new ImageIcon("images/treetent/caseTentOrGrass.png");
 	}

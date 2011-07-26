@@ -10,7 +10,7 @@ public class ContradictionMultipleNumbers extends Contradiction
 	
 	 ContradictionMultipleNumbers()
 	 {
-		name = "Multiple Numbers";
+		setName("Multiple Numbers");
 		description = "All white regions cannot have more than one number.";
 		image = new ImageIcon("images/nurikabe/contradictions/MultipleNumbers.png");
 	 }

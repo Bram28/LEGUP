@@ -10,7 +10,7 @@ public class ContradictionNoNumber extends Contradiction
 	
 	 ContradictionNoNumber()
 	 {
-		name = "No Number";
+		setName("No Number");
 		description = "All enclosed white regions must have a number.";
 		image = new ImageIcon("images/nurikabe/contradictions/NoNumber.png");
 	 }

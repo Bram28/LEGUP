@@ -11,7 +11,7 @@ public class RuleBlackEdge extends PuzzleRule {
 	 * Rule to make a path continuous between different cells.
 	 */
 	RuleBlackEdge() {
-		name = "Black Turn";
+		setName("Black Turn");
 		description = "Black cells must turn.";
 		image = new ImageIcon("images/masyu/Rules/RuleBlackEdge.png");
 	}

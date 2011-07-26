@@ -9,7 +9,7 @@ public class RuleBottleNeck extends PuzzleRule
 {
 	RuleBottleNeck()
 	{
-		name = "Bottle Neck";
+		setName("Bottle Neck");
 		description = "Cells that are white bottlenecks must be white.";
 		image = new ImageIcon("images/nurikabe/rules/NoBlackSquare.png");
 	}

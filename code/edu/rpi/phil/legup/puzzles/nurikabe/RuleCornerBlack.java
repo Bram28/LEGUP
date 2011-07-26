@@ -11,7 +11,7 @@ public class RuleCornerBlack extends PuzzleRule
 	
 	RuleCornerBlack()
 	{
-		name = "Corner Black";
+		setName("Corner Black");
 		description = "If there is only one white square connected to unkowns and one more white is needed then the angles of that white square are black";
 		image = new ImageIcon("images/nurikabe/rules/OneUnknownBlack.png");
 	}

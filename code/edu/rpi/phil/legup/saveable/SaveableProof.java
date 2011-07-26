@@ -26,10 +26,10 @@ public class SaveableProof
 	{
 		states = new SaveableProofState[state.calcID()];
 		transitions = new Vector<SaveableProofTransition>();
-		state.makeSaveableProof(states, transitions);
+		//state.makeSaveableProof(states, transitions);
 	}
 	
-	private BoardState toBoardState()
+	/*private BoardState toBoardState()
 	{
 		BoardState[] bstates = new BoardState[states.length];
 		for(int i = 0; i < states.length; ++i)
@@ -45,7 +45,7 @@ public class SaveableProof
 		bstates[0].recalculateLocation();
 		
 		return bstates[0];
-	}
+	}*/
 	public SaveableProof(){}
 /*LOAD XML	
 	//XML functions
@@ -83,13 +83,11 @@ public class SaveableProof
 	public static BoardState loadProof(String filename) throws IOException
 	{
 		System.out.println("Loading...\n");
-		SaveableProof loadthis = new SaveableProof();
-		Vector<SaveableProofState> loadme = new Vector<SaveableProofState>();
-		loadme.add(new SaveableProofState());
+		BoardState state;
 		Scanner scan = new Scanner(new File(filename));
 		String str;
 		int in;
-		Vector<Integer> labels = new Vector<Integer>();
+		Vector <Integer> labels = new Vector<Integer>();
 		//iterate through file
 		//puzzle
 		str = scan.next();
@@ -97,34 +95,37 @@ public class SaveableProof
 		str = scan.next();
 		//str += scan.nextLine();
 		System.out.println(str);
-		loadme.get(0).puzzleName = str;
+		//state.setPuzzleName("Battleship");
 		//System.out.println("stupid loadme is working\n");
+		
 		//height
-		while (!scan.hasNextInt()){ scan.next();}
+		scan.next();
 		in = scan.nextInt();
-		//System.out.println(in);
-		loadme.get(0).height = in;
+		
 		//width
-		while (!scan.hasNextInt()){ scan.next();}
-		in = scan.nextInt();
-		//System.out.println(in);
-		loadme.get(0).width = in;
-		//make board array
-		loadme.get(0).boardCells = new int[loadme.get(0).height][loadme.get(0).width];
+		scan.next();
+		//initialize new board while grabbing width
+		state = new BoardState(in, scan.nextInt());
+		
+		//now that board exists, set name
+		state.setPuzzleName(str);
+		
 		//top labels
 		str = scan.next();
 		//System.out.println(str);
 		str = scan.next();
 		while (!str.equals("bottomLabels:"))
 		{
-			System.out.println(str);
+			//System.out.println(str);
+			//System.out.flush();
 			labels.add(Integer.parseInt(str));
 			str = scan.next();
 		}
-		loadme.get(0).topLabels = new int[labels.size()];
+		state.setTopLabels(new int[labels.size()]);
 		for (int x = 0; x < labels.size(); x++)
-			loadme.get(0).topLabels[x] = labels.get(x);
+			state.getTopLabels()[x] = labels.get(x);
 		labels.clear();
+		
 		//bottom labels
 		str = scan.next();
 		while (!str.equals("leftLabels:"))
@@ -132,10 +133,11 @@ public class SaveableProof
 			labels.add(Integer.parseInt(str));
 			str = scan.next();
 		}
-		loadme.get(0).bottomLabels = new int[labels.size()];
+		state.setBottomLabels(new int[labels.size()]);
 		for (int x = 0; x < labels.size(); x++)
-			loadme.get(0).bottomLabels[x] = labels.get(x);
+			state.getBottomLabels()[x] = labels.get(x);
 		labels.clear();
+		
 		//left labels
 		str = scan.next();
 		while (!str.equals("rightLabels:"))
@@ -143,10 +145,11 @@ public class SaveableProof
 			labels.add(Integer.parseInt(str));
 			str = scan.next();
 		}
-		loadme.get(0).leftLabels = new int[labels.size()];
+		state.setLeftLabels(new int[labels.size()]);
 		for (int x = 0; x < labels.size(); x++)
-			loadme.get(0).leftLabels[x] = labels.get(x);
+			state.getLeftLabels()[x] = labels.get(x);
 		labels.clear();
+		
 		//right labels
 		str = scan.next();
 		while (!str.equals("hintCells:"))
@@ -154,62 +157,84 @@ public class SaveableProof
 			labels.add(Integer.parseInt(str));
 			str = scan.next();
 		}
-		loadme.get(0).rightLabels = new int[labels.size()];
+		state.setRightLabels(new int[labels.size()]);
 		for (int x = 0; x < labels.size(); x++)
-			loadme.get(0).rightLabels[x] = labels.get(x);
+			state.getRightLabels()[x] = labels.get(x);
 		labels.clear();
+		
 		//hint cells;
 		str = scan.next();
+		
 		//extra data
 		//str = scan.next();
+		
 		//board
 		//scan.next();
-		for (int i = 0; i < loadme.get(0).height; i++)
+		for (int i = 0; i < state.getHeight(); i++)
 		{
-			for (int j = 0; j < loadme.get(0).width; j++)
+			for (int j = 0; j < state.getWidth(); j++)
 			{
-				loadme.get(0).boardCells[i][j] = scan.nextInt();
+				state.getBoardCells()[i][j] = scan.nextInt();
 				//System.out.println(loadme.get(0).boardCells[i][j]);
 			}
 		}
+		System.out.println("board cells loaded...");
+		System.out.flush();
+		
 		//transitions
 		str = scan.next();
-		loadthis.transitions = new Vector<SaveableProofTransition>();
-		while (scan.hasNextInt())
+		BoardState currentstate = state;
+		while (scan.hasNext())
 		{
-			loadthis.transitions.add(new SaveableProofTransition());
-			loadthis.transitions.lastElement().id1 = scan.nextInt();
-			loadthis.transitions.lastElement().id2 = scan.nextInt();
-			loadthis.transitions.lastElement().x = scan.nextInt();
-			loadthis.transitions.lastElement().y = scan.nextInt();
-			loadthis.transitions.lastElement().prev = scan.nextInt();
-			loadthis.transitions.lastElement().newv = scan.nextInt();
-			loadthis.transitions.lastElement().justification += scan.next();
 			str = scan.next();
-			while(!str.equals("correct:"))
+			if (str.equals("newState:"))
 			{
-				loadthis.transitions.lastElement().justification += " ";
-				loadthis.transitions.lastElement().justification += str;
-				str = scan.next();
+				//add new child to parent
+				currentstate.getTransitionsFrom().add(new BoardState(state));
+				
+				//add parent to child
+				currentstate.getTransitionsFrom().lastElement().getTransitionsTo().add(currentstate);
+
+				//step in to child
+				currentstate = currentstate.getTransitionsFrom().lastElement();
+				
+				//add justification to child
+				scan.nextLine();
+				currentstate.setJustification(scan.nextLine());
+				System.out.println("just");
+				
+				//add case rule to child
+				currentstate.setCaseRuleJustification(scan.nextLine());
+				System.out.println("case");
+				
+				//add point to child
+				currentstate.getChangedCells().add(new Point(scan.nextInt(), scan.nextInt()));
+				
+				//change board cell at point
+				currentstate.getBoardCells()[currentstate.getChangedCells().lastElement().y][currentstate.getChangedCells().lastElement().x] = scan.nextInt();
 			}
-			loadthis.transitions.lastElement().isCaseRule = scan.nextBoolean();
-			//make new states, will not be needed once transitions actually exist
-			loadme.add(loadme.lastElement());
-			if (loadthis.transitions.lastElement().id2 > loadme.size())
-				break;
-			else
-				loadme.lastElement().boardCells[loadthis.transitions.lastElement().y][loadthis.transitions.lastElement().x] = loadthis.transitions.lastElement().newv;
 			
+			else if (str.equals("endLeaf:"))
+			{
+				//step out to parent (if we have a parent)
+				if (!currentstate.getTransitionsTo().isEmpty())
+					currentstate = currentstate.getTransitionsTo().lastElement();
+			}
+			
+			//assume str is now the x of the modified cell
+			else
+			{
+				//add point to child
+				currentstate.getChangedCells().add(new Point(Integer.parseInt(str), scan.nextInt()));
+				//change board cell at point
+				currentstate.getBoardCells()[currentstate.getChangedCells().lastElement().y][currentstate.getChangedCells().lastElement().x] = scan.nextInt();
+			}
 		}
+		
 		scan.close();
 		System.out.println("File Closed...");
 		System.out.flush();
-		//convert to boardstate
-		loadthis.states = new SaveableProofState[loadme.size()];
-		for (int x = 0; x < loadme.size(); x++)
-			loadthis.states[x] = loadme.get(x);
-		BoardState state = loadthis.toBoardState();
-		SaveableProof.saveProof(state, "battleships_test_load.proof");
+		
 		if(state == null)
     		JOptionPane.showMessageDialog(null,"Board Load Failed");
 		System.out.println("...Done\n");
@@ -247,85 +272,82 @@ public class SaveableProof
 		int[] extradata;
 		//write "static" state data
 		saveme.out.print("Puzzle: ");
-		saveme.out.print(saveme.states[0].puzzleName);
+		saveme.out.print(state.getPuzzleName());
 		saveme.out.print("\nHeight: ");
-		saveme.out.print(saveme.states[0].height);
+		saveme.out.print(state.getHeight());
 		saveme.out.print("\nWidth: ");
-		saveme.out.print(saveme.states[0].width);
+		saveme.out.print(state.getWidth());
 		saveme.out.print("\ntopLabels:");
-		for (int savelabel : saveme.states[0].topLabels)
+		for (int savelabel : state.getTopLabels())
 		{
 			saveme.out.print(' ');
 			saveme.out.print(savelabel);
 		}
 		saveme.out.print("\nbottomLabels:");
-		for (int savelabel : saveme.states[0].bottomLabels)
+		for (int savelabel : state.getBottomLabels())
 		{
 			saveme.out.print(' ');
 			saveme.out.print(savelabel);
 		}
 		saveme.out.print("\nleftLabels:");
-		for (int savelabel : saveme.states[0].leftLabels)
+		for (int savelabel : state.getLeftLabels())
 		{
 			saveme.out.print(' ');
 			saveme.out.print(savelabel);
 		}
 		saveme.out.print("\nrightLabels:");
-		for (int savelabel : saveme.states[0].rightLabels)
+		for (int savelabel : state.getRightLabels())
 		{
 			saveme.out.print(' ');
 			saveme.out.print(savelabel);
 		}
 		saveme.out.print("\nhintCells:\n");
-		for (Point savehints : saveme.states[0].hintCells)
+		for (Point savehints : state.getHintCells())
 		{
 			//SAVE HINTCELLS
 		}
 		//saveme.out.print("\nextraData:\n");
-		for (Object extra : saveme.states[0].extraData)
+		for (Object extra : state.getExtraData())
 		{
 			//SAVE EXTRADATA, ie
 			//extradata = new extra.tosavedata();
 		}
 		saveme.out.print("\nBoard:\n");
-		for (int i = 0; i < saveme.states[0].height; i++)
+		for (int i = 0; i < state.getHeight(); i++)
 		{
-			for (int j = 0; j < saveme.states[0].width; j++)
+			for (int j = 0; j < state.getWidth(); j++)
 			{
-				saveme.out.print(saveme.states[0].boardCells[i][j]);
+				saveme.out.print(state.getBoardCells()[i][j]);
 				saveme.out.print(' ');
 			}
 			saveme.out.print('\n');
 		}
 		//save transitions
 		saveme.out.print("Transitions:\n");
-		for (SaveableProofTransition transistme : saveme.transitions)
-		{
-			saveme.out.print(transistme.id1);
-			saveme.out.print(' ');
-			saveme.out.print(transistme.id2);
-			saveme.out.print(' ');
-			saveme.out.print(transistme.x);
-			saveme.out.print(' ');
-			saveme.out.print(transistme.y);
-			saveme.out.print(' ');
-			saveme.out.print(transistme.prev);
-			saveme.out.print(' ');
-			saveme.out.print(transistme.newv);
-			saveme.out.print(' ');
-			saveme.out.print(transistme.justification);
-			saveme.out.print(' ');
-			//java can't type cast to/from bools...
-			extradata = new int[1];
-			if (transistme.isCaseRule)
-				extradata[0] = 1;
-			else
-				extradata[0] = 0;
-			saveme.out.print(extradata[0]);
-			saveme.out.print('\n');
-		}
+		saveme.printTransitions(state);
 		saveme.out.close();
 		return true;
+	}
+	public void printTransitions(BoardState state)
+	{
+		for (int x = 0; x < state.getTransitionsFrom().size(); x++)
+		{
+			out.print("newState:\n");
+			out.println(state.getJustification());
+			out.println(state.getCaseRuleJustification());
+			
+			for(Point cell : state.getChangedCells())
+			{
+				out.print(cell.x);
+				out.print(' ');
+				out.print(cell.y);
+				out.print(' ');
+				out.print(state.getBoardCells()[cell.y][cell.x]);
+				out.print('\n');
+			}
+			printTransitions(state.getTransitionsFrom().get(x));
+		}
+		out.print("endLeaf:\n");
 	}
 	public SaveableProofState[] getStates()
 	{

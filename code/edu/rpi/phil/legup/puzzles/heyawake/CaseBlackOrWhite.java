@@ -12,7 +12,7 @@ public class CaseBlackOrWhite extends CaseRule
 {	
 	public CaseBlackOrWhite()
 	{
-		name = "Cell black or white";
+		setName("Cell black or white");
 		description = "Each blank cell is either black or white.";
 		image = new ImageIcon("images/heyawake/cases/BlackOrWhite.png");
 	}

@@ -19,14 +19,14 @@ public class RuleWhiteAroundBlack extends PuzzleRule
 {
     RuleWhiteAroundBlack()
     {
-    	name = "White Around Black";
+    	setName("White Around Black");
     	description = "Cells next to a black cell are white.";
     	image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
     }
     
 
     public void print(){
-	System.out.print(name);
+	System.out.print(getName());
     }
 
     /**

@@ -10,7 +10,7 @@ public class RuleOneRow extends PuzzleRule
 {
 	RuleOneRow()
 	{
-		name = "One Row";
+		setName("One Row");
 		description = "One possible combination in a region 1x(n+1)";
 		image = new ImageIcon("images/heyawake/rules/FillRoomBlack.png");
 	}

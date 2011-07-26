@@ -19,7 +19,7 @@ public class Rule1 extends PuzzleRule
 	
     public Rule1()
     {
-    	name = "BattleShip Rule1";
+    	setName("BattleShip Rule1");
     	description = "Cells in a row or column that has enough ship segments";
     }
 	

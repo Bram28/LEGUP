@@ -16,7 +16,7 @@ public class Rule3 extends PuzzleRule{
 
     public Rule3()
     {
-    	name = "BattleShip Rule3";
+    	setName("BattleShip Rule3");
         description = "Cells surrounding adjacent completed ships are water";
     }
 	

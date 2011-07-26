@@ -15,7 +15,7 @@ public class CaseWhiteOrBlack extends CaseRule
 
 	public CaseWhiteOrBlack()
 	{
-		name = "White or Black";
+		setName("White or Black");
 		description = "An unknown cell can only be white or black";
 		image = new ImageIcon("images/fillapix/whiteorblack.png");
 

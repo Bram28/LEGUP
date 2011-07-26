@@ -10,7 +10,7 @@ public class ContradictionBoardStateViolated extends Contradiction
 
 	 ContradictionBoardStateViolated()
 	 {
-		name = "Board State Violated";
+		setName("Board State Violated");
 		description = "Two identical numbers are placed in the same group, which is illegal";
 		image = new ImageIcon("images/sudoku/BoardStateViolated.png");
 	 }

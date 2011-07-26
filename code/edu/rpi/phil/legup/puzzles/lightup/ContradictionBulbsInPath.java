@@ -9,7 +9,7 @@ public class ContradictionBulbsInPath extends Contradiction
 {	 
 	 ContradictionBulbsInPath()
 	 {
-		name = "Bulbs Light Each Other";
+		setName("Bulbs Light Each Other");
 		description = "A bulb cannot be placed in another's light path.";
 		image = new ImageIcon("images/lightup/contradictions/BulbsInPath.png");
 	 }

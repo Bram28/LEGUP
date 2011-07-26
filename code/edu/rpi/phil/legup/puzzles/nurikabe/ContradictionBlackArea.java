@@ -10,7 +10,7 @@ public class ContradictionBlackArea extends Contradiction
 	
 	 ContradictionBlackArea()
 	 {
-		 name = "Black Must Connect";
+		 setName("Black Must Connect");
 		description = "All black cells must be connected.";
 		image = new ImageIcon("images/nurikabe/contradictions/BlackArea.png");
 	 }

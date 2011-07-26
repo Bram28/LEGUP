@@ -12,7 +12,7 @@ public class RuleWhiteInLight extends PuzzleRule
 {	 
 	 RuleWhiteInLight()
 	 {
-		name = "White In Light";
+		setName("White In Light");
 		description = "Cells in light must be white.";
 		image = new ImageIcon("images/lightup/rules/WhiteInLight.png");
 	 }

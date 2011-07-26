@@ -21,7 +21,7 @@ public class RuleAllGrass extends PuzzleRule{
 	
     public RuleAllGrass()
     {
-    	name = "Finish Grass";
+    	setName("Finish Grass");
     	description = "Grass can be added to finish a row or column that has reached its tent limit.";
     	image = new ImageIcon("images/treetent/finishGrass.png");
     }

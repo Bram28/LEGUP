@@ -13,7 +13,7 @@ public class ContradictionNoTents extends Contradiction
 	
 	public ContradictionNoTents()
 	 {
-		name = "No Tents For Tree";
+		setName("No Tents For Tree");
 		description = "Each tree must have a tent";
 		image = new ImageIcon("images/treetent/contra_noNeighbors.png");
 	 }

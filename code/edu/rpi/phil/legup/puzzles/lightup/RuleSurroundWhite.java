@@ -9,7 +9,7 @@ public class RuleSurroundWhite extends PuzzleRule
 {	 
 	 RuleSurroundWhite()
 	 {
-		name = "Finish White";
+		setName("Finish White");
 		description = "The remaining unknowns around a block must be white if the number is satisfied.";
 		image = new ImageIcon("images/lightup/rules/SurroundWhite.png");
 	 }

@@ -7,7 +7,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 public class RuleNearWhite extends PuzzleRule {
 
 	public RuleNearWhite() {
-		name = "Near White";
+		setName("Near White");
 		description = "At least one cell near a white cell must turn.";
 		image = new ImageIcon("images/masyu/Rules/RuleNearWhite.png");
 

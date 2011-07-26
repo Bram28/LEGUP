@@ -15,7 +15,7 @@ public class CaseSatisfyNumber extends CaseRule
 {
 	public CaseSatisfyNumber()
 	{
-		name = "Satisfy Number";
+		setName("Satisfy Number");
 		description = "The different ways a blocks number can be satisfied.";
 		image = new ImageIcon("images/lightup/cases/SatisfyNumber.png");
 	}

@@ -9,14 +9,14 @@ public class RulePreventWhiteLine extends PuzzleRule
 {
 	RulePreventWhiteLine()
 	{
-		name = "Prevent White Line";
+		setName("Prevent White Line");
 		description = "Cells that will cause a white line across three regions must be black.";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
 	}
 	
 	public void print()
 	{
-		System.out.print(name);
+		System.out.print(getName());
 	}
 	protected String checkRuleRaw(BoardState destBoardState)
 	{

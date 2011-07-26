@@ -10,7 +10,7 @@ public class ContradictionBoardStateViolated extends Contradiction
 
 	 ContradictionBoardStateViolated()
 	 {
-		name = "Board State Violated";
+		setName("Board State Violated");
 		description = "There exists a pixel number that cannot be satisfied";
 		image = new ImageIcon("images/fillapix/BoardStateViolated.png");
 	 }

@@ -22,7 +22,7 @@ public class RuleNoTreesAround extends PuzzleRule{
 	
 	public RuleNoTreesAround()
     {
-		name = "Empty Field";
+		setName("Empty Field");
 		description = "Any cell not next to a tree can be marked grass.";
 		image = new ImageIcon("images/treetent/noTreesAround.png");
     }

@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
  */
 public abstract class Justification
 {
-	protected String name = "Default Justification";
+	private String name = "Default Justification";
 	protected String description = "A blank justification";
 	protected ImageIcon image = null;
 	
@@ -42,7 +42,7 @@ public abstract class Justification
 	
 	public String toString()
 	{
-		return name;
+		return getName();
 	}
 	
 	public boolean equals(Object other)
@@ -50,9 +50,13 @@ public abstract class Justification
 		if (other instanceof Justification)
 		{
 			if(this.getClass() == other.getClass())
-				return ((Justification)other).name == name;
+				return ((Justification)other).getName() == getName();
 		}
 		
 		return false;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

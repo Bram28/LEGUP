@@ -14,7 +14,7 @@ public class RuleFinishPath extends PuzzleRule
 	 */
 	 RuleFinishPath()
 	 {
-		name = "Continue Path";
+		setName("Continue Path");
 		description = "Connected cells - there exists only one path.";
 		image = new ImageIcon("images/masyu/Rules/RuleFinishPath.png");
 	 }

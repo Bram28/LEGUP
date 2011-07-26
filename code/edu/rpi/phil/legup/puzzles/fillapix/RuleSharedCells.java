@@ -17,7 +17,7 @@ public class RuleSharedCells extends PuzzleRule
 
 	public RuleSharedCells()
 	{
-		name = "Deduce shared cells";
+		setName("Deduce shared cells");
 		description = "Two neighboring numbers dictate the state of their shared adjacency cells";
 		image = new ImageIcon("images/fillapix/rulesharedcells.png");
 	}

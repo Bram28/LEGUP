@@ -12,7 +12,7 @@ public class RuleSurroundRegion extends PuzzleRule
 	
 	 RuleSurroundRegion()
 	 {
-		name = "Surround Black";
+		setName("Surround Black");
 		description = "All completed regions must be surrounded by black.";
 		image = new ImageIcon("images/nurikabe/rules/SurroundBlack.png");
 	 }

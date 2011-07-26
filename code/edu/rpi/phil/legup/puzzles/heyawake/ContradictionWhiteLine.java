@@ -9,7 +9,7 @@ public class ContradictionWhiteLine extends Contradiction
 {	 
 	 ContradictionWhiteLine()
 	 {
-		name = "White Line Too Long";
+		setName("White Line Too Long");
 		description = "Line of white cells cannot exceed 2 rooms.";
 		image = new ImageIcon("images/heyawake/contradictions/WhiteLine.png");
 	 }

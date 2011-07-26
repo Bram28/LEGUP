@@ -11,7 +11,7 @@ public class CaseZigZag extends CaseRule
 {	
 	public CaseZigZag()
 	{
-		name = "Region Zigzag";
+		setName("Region Zigzag");
 		description = "A region with 2x(n) has only two configurations";
 		image = new ImageIcon("images/heyawake/cases/BlackOrWhite.png");
 	}

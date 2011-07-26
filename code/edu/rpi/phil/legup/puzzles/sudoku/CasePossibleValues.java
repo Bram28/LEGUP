@@ -19,7 +19,7 @@ public class CasePossibleValues extends CaseRule
 {
 	public CasePossibleValues()
 	{
-		name = "Possible Values";
+		setName("Possible Values");
 		description = "A blank cell has a limited set of solutions, based on elimination";
 		image = new ImageIcon("images/sudoku/PossibleValues.png");
 

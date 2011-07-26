@@ -333,7 +333,7 @@ public class AI implements Runnable {
 		Vector<Contradiction> contras = ourPM.getContradictions();
 		for (int i = 0; i < contras.size(); i++) {
 			String error = contras.get(i).checkContradiction(Board);
-			System.out.println("Checking "+ contras.get(i).name + ": " +
+			System.out.println("Checking "+ contras.get(i).getName() + ": " +
 			 error);
 			Contradiction = (error == null);
 			if (Contradiction) {

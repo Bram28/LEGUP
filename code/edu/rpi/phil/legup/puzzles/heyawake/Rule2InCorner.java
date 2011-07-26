@@ -10,7 +10,7 @@ public class Rule2InCorner extends PuzzleRule
 {
 	Rule2InCorner()
 	{
-		name = "2X2 In Corner";
+		setName("2X2 In Corner");
 		description = "A 2X2 region in a corner with a value of 2 has one configuration";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
 	}

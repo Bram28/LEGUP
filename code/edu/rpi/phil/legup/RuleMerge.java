@@ -17,7 +17,7 @@ public final class RuleMerge extends PuzzleRule
 {    
     private RuleMerge()
     {
-    	name = "Merge Rule";
+    	setName("Merge Rule");
     	description = "Merge two or more states' common information.";
     	image = new ImageIcon("images/MergeRule.png");
     }

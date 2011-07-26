@@ -12,7 +12,7 @@ public class RuleOnlySelfLit extends PuzzleRule
 {
 	RuleOnlySelfLit()
 	{
-		name = "Must Light";
+		setName("Must Light");
 		description = "A cell must be a light if it is the only cell to be able to light another.";
 		image = new ImageIcon("images/lightup/rules/NoLight.png");
 	}

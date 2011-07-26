@@ -10,7 +10,7 @@ public class ContradictionBlackSquare extends Contradiction
 	
 	 ContradictionBlackSquare()
 	 {
-		name = "Black Square";
+		setName("Black Square");
 		description = "There cannot be a 2x2 square of black.";
 		image = new ImageIcon("images/nurikabe/contradictions/BlackSquare.png");
 	 }

@@ -18,7 +18,7 @@ public class Rule2 extends PuzzleRule{
 
     public Rule2()
     {
-    	name = "Battleship Rule2";
+    	setName("Battleship Rule2");
     	description = "Unknown cells equal number of Ship Segments";
     }
     

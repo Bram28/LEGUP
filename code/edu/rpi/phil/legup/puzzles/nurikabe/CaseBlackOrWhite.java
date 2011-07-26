@@ -13,7 +13,7 @@ public class CaseBlackOrWhite extends CaseRule
 	
 	public CaseBlackOrWhite()
 	{
-		name = "Black or White Edge";
+		setName("Black or White Edge");
 		description = "Each blank cell is either black or white.";
 		image = new ImageIcon("images/nurikabe/cases/BlackOrWhite.png");
 	}

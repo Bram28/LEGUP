@@ -15,7 +15,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 	 RuleSurroundBulbs()
 	 {
 		 super();
-		 name = "Finish Bulbs";
+		 setName("Finish Bulbs");
 		 description = "The remaining unknowns around a block must be bulbs to satisfy the number.";
 		 image = new ImageIcon("images/lightup/rules/SurroundBulbs.png");
 	 }

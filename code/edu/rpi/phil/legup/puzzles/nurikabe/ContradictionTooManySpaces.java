@@ -11,7 +11,7 @@ public class ContradictionTooManySpaces extends Contradiction
 	
 	 ContradictionTooManySpaces()
 	 {
-		name = "Too Big";
+		setName("Too Big");
 		description = "A region cannot contain more spaces than its number.";
 		image = new ImageIcon("images/nurikabe/contradictions/TooManySpaces.png");
 	 }

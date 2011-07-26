@@ -10,7 +10,7 @@ public class ContradictionMiscount extends Contradiction
 	
 	public ContradictionMiscount()
 	 {
-		name = "Clue Miscount";
+		setName("Clue Miscount");
 		description = "Rows and columns must have exactly their clue in tents.";
 		image = new ImageIcon("images/treetent/contra_miscount.png");
 	 }

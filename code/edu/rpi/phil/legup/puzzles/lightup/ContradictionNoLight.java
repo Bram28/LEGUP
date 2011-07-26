@@ -12,7 +12,7 @@ public class ContradictionNoLight extends Contradiction
 {	 
 	 ContradictionNoLight()
 	 {
-		name = "Can't Light A Cell";
+		setName("Can't Light A Cell");
 		description = "All cells must be able to be lit.";
 		image = new ImageIcon("images/lightup/contradictions/NoLight.png");
 	 }

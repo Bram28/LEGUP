@@ -21,14 +21,14 @@ public class RuleFillRoomWhite extends PuzzleRule{
 
     RuleFillRoomWhite()
     {
-    	name = "Finish Room White";
+    	setName("Finish Room White");
     	description = "Remaining cells are white if number of black cells equals the clue.";
     	image = new ImageIcon("images/heyawake/rules/FillRoomWhite.png");
     }
 
 
     public void print(){
-	System.out.print(name);
+	System.out.print(getName());
     }
 
     /**

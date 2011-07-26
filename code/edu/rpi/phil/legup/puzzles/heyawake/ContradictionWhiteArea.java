@@ -9,7 +9,7 @@ public class ContradictionWhiteArea extends Contradiction
 {	 
 	 ContradictionWhiteArea()
 	 {
-		name = "White Area Connected";
+		setName("White Area Connected");
 		description = "All whites must be connected together.";
 		image = new ImageIcon("images/heyawake/contradictions/WhiteArea.png");
 	 }

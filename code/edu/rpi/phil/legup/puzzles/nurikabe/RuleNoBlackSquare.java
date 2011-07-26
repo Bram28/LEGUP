@@ -10,7 +10,7 @@ public class RuleNoBlackSquare extends PuzzleRule
 	
 	 RuleNoBlackSquare()
 	 {
-		name = "Prevent Black Square";
+		setName("Prevent Black Square");
 		description = "There cannot be a 2x2 square of black. (3 blacks = fill in last corner white)";
 		image = new ImageIcon("images/nurikabe/rules/NoBlackSquare.png");
 	 }

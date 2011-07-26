@@ -19,7 +19,7 @@ public class CaseTentsInRow extends CaseRule
 	
 	public CaseTentsInRow()
 	{
-		name = "Fill In row";
+		setName("Fill In row");
 		description = "A row must have the number of tents of its clue.";
 		image = new ImageIcon("images/treetent/case_rowcount.png");
 	}

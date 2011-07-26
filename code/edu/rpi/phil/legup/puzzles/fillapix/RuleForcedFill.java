@@ -16,7 +16,7 @@ public class RuleForcedFill extends PuzzleRule
 
 	public RuleForcedFill()
 	{
-		name = "Forced Black or White";
+		setName("Forced Black or White");
 		description = "Numbers in the grid force square(s) to be black or white";
 		image = new ImageIcon("images/fillapix/ruleforcedfill.png");
 	}
