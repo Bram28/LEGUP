@@ -1882,7 +1882,7 @@ public class BoardState
 	}
 
 	public void setCaseRuleJustification(String str) {
-		// TODO Auto-generated method stub
+		// TODO create a new instance of caseRuleJustification when null
 		if(this.caseRuleJustification != null)
 			this.caseRuleJustification.setName(str);
 	}
