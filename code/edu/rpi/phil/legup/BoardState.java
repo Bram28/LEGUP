@@ -245,8 +245,8 @@ public class BoardState
 	 */
 	public boolean isModifiableCell(int x, int y)
 	{
-		return modifiableCells[y][x];
-		//return Math.abs(boardCells[y][x]) == boardCells[y][x];
+		//return modifiableCells[y][x];
+		return Math.abs(boardCells[y][x]) == boardCells[y][x];
 	}
 
 	/**
@@ -317,7 +317,7 @@ public class BoardState
 	 */
 	public int getCellContents(int x, int y)
 	{
-		return getBoardCells()[y][x];
+		return Math.abs(getBoardCells()[y][x]);
 	}
 
 
@@ -411,7 +411,14 @@ public class BoardState
 	  */
 	 public void setModifiableCell(int x, int y, boolean value)
 	 {
-		modifiableCells[y][x] = value;
+		//modifiableCells[y][x] = value;
+		 if (value)
+			 boardCells[y][x] = Math.abs(boardCells[y][x]);
+		 else
+			 boardCells[y][x] = Math.abs(boardCells[y][x])*-1;
+		 
+		 if (boardCells[y][x] == 0)
+			 System.out.println("Oh no! tried to make 0 value negative");
 	 }
 	 
 	/**
@@ -1849,6 +1856,11 @@ public class BoardState
 		this.boardCells = boardCells;
 	}
 
+	/**
+	 *  Returns the array of board cells
+	 * @param none
+	 * @return array of board cells
+	 */
 	public int[][] getBoardCells() {
 		return boardCells;
 	}
