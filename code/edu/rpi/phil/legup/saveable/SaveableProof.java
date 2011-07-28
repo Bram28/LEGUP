@@ -207,11 +207,17 @@ public class SaveableProof
 				currentstate.setCaseRuleJustification(scan.nextLine());
 				System.out.println("case");
 				
-				//add point to child
-				currentstate.getChangedCells().add(new Point(scan.nextInt(), scan.nextInt()));
+				//add offset to child
+				state.setOffset(new Point(scan.nextInt(), scan.nextInt()));
 				
-				//change board cell at point
-				currentstate.getBoardCells()[currentstate.getChangedCells().lastElement().y][currentstate.getChangedCells().lastElement().x] = scan.nextInt();
+				//add point changes to child (if they exist)
+				if(scan.hasNextInt())
+				{
+					currentstate.getChangedCells().add(new Point(scan.nextInt(), scan.nextInt()));
+					
+					//change board cell at point
+					currentstate.getBoardCells()[currentstate.getChangedCells().lastElement().y][currentstate.getChangedCells().lastElement().x] = scan.nextInt();
+				}
 			}
 			
 			else if (str.equals("endLeaf:"))
@@ -233,10 +239,11 @@ public class SaveableProof
 		
 		scan.close();
 		System.out.println("File Closed...");
-		System.out.flush();
 		
-		if(state == null)
-    		JOptionPane.showMessageDialog(null,"Board Load Failed");
+		//set first state as unmodifiable
+		for(int i = 0; i < state.getHeight(); i++)
+			for(int j = 0; j < state.getWidth(); j++)
+				state.setModifiableCell(j, i, false);
 		System.out.println("...Done\n");
 		return state;
 	}
@@ -335,6 +342,11 @@ public class SaveableProof
 			out.print("newState:\n");
 			out.println(state.getJustification());
 			out.println(state.getCaseRuleJustification());
+			//print offset
+			out.print(state.getOffset().x);
+			out.print(' ');
+			out.print(state.getOffset().y);
+			out.print('\n');
 			
 			for(Point cell : state.getChangedCells())
 			{

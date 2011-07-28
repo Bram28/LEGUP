@@ -157,7 +157,7 @@ public class BoardState
 		for (int x = 0; x < getWidth(); x++) { getTopLabels()[x] = copy.getTopLabels()[x]; getBottomLabels()[x] = copy.getBottomLabels()[x]; }
 		for (int y = 0; y < getHeight(); y++) { getLeftLabels()[y] = copy.getLeftLabels()[y]; getRightLabels()[y] = copy.getRightLabels()[y]; }
 		extraData = new ArrayList<Object>(copy.extraData);
-		changedCells = new Vector<Point>();
+		changedCells = copy.getChangedCells();
 	}
 
 	public void setVirtual(boolean virtual)
@@ -362,15 +362,19 @@ public class BoardState
 		}*/
 		
 		
-  		getBoardCells()[y][x] = value;
+  		boardCells[y][x] = value;
   		
   		//update editedCells if necessary
 		BoardState parent = getSingleParentState();
 		if (parent != null) {
 			if (getBoardCells()[y][x] != parent.getCellContents(x, y)) {
-				editedCells[y][x] = true;
+				//editedCells[y][x] = true;
+				if(!changedCells.contains(new Point(x, y)))
+						changedCells.add(new Point(x,y));
 			} else {
-				editedCells[y][x] = false;
+				//editedCells[y][x] = false;
+				if(changedCells.contains(new Point(x,y)))
+					changedCells.removeElement(new Point(x,y));
 			}
 		}
 		
