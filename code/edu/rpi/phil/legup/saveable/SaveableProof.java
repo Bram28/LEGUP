@@ -107,8 +107,10 @@ public class SaveableProof
 		//initialize new board while grabbing width
 		state = new BoardState(in, scan.nextInt());
 		
-		//now that board exists, set name
+		//now that board exists, set name and offset
 		state.setPuzzleName(str);
+		state.setOffset(new Point(0,0));
+		state.setLocation(new Point(0,0));
 		
 		//top labels
 		str = scan.next();
@@ -208,7 +210,10 @@ public class SaveableProof
 				System.out.println("case");
 				
 				//add offset to child
-				state.setOffset(new Point(scan.nextInt(), scan.nextInt()));
+				currentstate.setOffset(new Point(scan.nextInt(), scan.nextInt()));
+				
+				//is this a transition?
+				currentstate.setModifiableState(scan.nextBoolean());
 				
 				//add point changes to child (if they exist)
 				if(scan.hasNextInt())
@@ -276,7 +281,7 @@ public class SaveableProof
 		SaveableProof saveme = new SaveableProof(state);
 		saveme.file = new File(filename);
 		saveme.out = new PrintWriter(new FileWriter(filename));
-		int[] extradata;
+		//int[] extradata;
 		//write "static" state data
 		saveme.out.print("Puzzle: ");
 		saveme.out.print(state.getPuzzleName());
@@ -331,34 +336,37 @@ public class SaveableProof
 		}
 		//save transitions
 		saveme.out.print("Transitions:\n");
-		saveme.printTransitions(state);
+		for (BoardState transist_state : state.getTransitionsFrom())
+			saveme.printTransitions(transist_state);
 		saveme.out.close();
 		return true;
 	}
 	public void printTransitions(BoardState state)
 	{
-		for (int x = 0; x < state.getTransitionsFrom().size(); x++)
+		out.print("newState:\n");
+		out.println(state.getJustification());
+		out.println(state.getCaseRuleJustification());
+		//print offset
+		out.print(state.getOffset().x);
+		out.print(' ');
+		out.print(state.getOffset().y);
+		out.print('\n');
+		out.print(state.isModifiable());
+		out.print('\n');
+		
+		for(Point cell : state.getChangedCells())
 		{
-			out.print("newState:\n");
-			out.println(state.getJustification());
-			out.println(state.getCaseRuleJustification());
-			//print offset
-			out.print(state.getOffset().x);
+			out.print(cell.x);
 			out.print(' ');
-			out.print(state.getOffset().y);
+			out.print(cell.y);
+			out.print(' ');
+			out.print(state.getBoardCells()[cell.y][cell.x]);
 			out.print('\n');
-			
-			for(Point cell : state.getChangedCells())
-			{
-				out.print(cell.x);
-				out.print(' ');
-				out.print(cell.y);
-				out.print(' ');
-				out.print(state.getBoardCells()[cell.y][cell.x]);
-				out.print('\n');
-			}
-			printTransitions(state.getTransitionsFrom().get(x));
 		}
+		//recurse through children
+		for (BoardState transition_state : state.getTransitionsFrom())
+			printTransitions(transition_state);
+				
 		out.print("endLeaf:\n");
 	}
 	public SaveableProofState[] getStates()

@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
@@ -65,13 +66,17 @@ public class JustificationFrame extends JToolBar implements TreeSelectionListene
 		//tabs.addTab(contradictionPanel.name, contradictionPanel.icon, new JScrollPane(contradictionPanel), contradictionPanel.toolTip);
 		
 		JScrollPane scroller = new JScrollPane(tabs);
-
+		//set scrollbar options
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
 		//JPanel main = new JPanel();
 		setLayout(new BorderLayout());
 		//setPreferredSize(new Dimension(128,256));
 
 		//status.setPreferredSize(new Dimension(128,20));
 		/*main.*/add(tabs);
+		//add(scroller);
 		/*main.*/add(status,BorderLayout.SOUTH);
 		
 		//add(main);

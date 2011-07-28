@@ -4,6 +4,7 @@
 
 package edu.rpi.phil.legup;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -150,7 +151,7 @@ public class BoardState
 		// Allocate the arrays
 		for (int x = 0; x < getWidth(); x++) for (int y = 0; y < getHeight(); y++)
 		{
-			getBoardCells()[y][x] = copy.getBoardCells()[y][x];
+			boardCells[y][x] = copy.getBoardCells()[y][x];
 			modifiableCells[y][x] = copy.modifiableCells[y][x];
 			editedCells[y][x] = copy.editedCells[y][x];
 		}
@@ -1132,7 +1133,7 @@ public class BoardState
 			}
 		}
 			
-		justification = j;
+		//TODO this crap (Justification) justification.setName((string) j);
 		modifyStatus();
 		delayStatus = STATUS_UNJUSTIFIED;
 	}
@@ -1524,16 +1525,15 @@ public class BoardState
 	{
 		if (this.getTransitionsTo().size() == 1)
 		{
-			BoardState parentState = this.getSingleParentState();
-			Point p = new Point(parentState.getLocation().y, parentState.getLocation().x);
-			this.location.x = p.x + offset.x;
+			//this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
+			this.location.y = this.transitionsTo.lastElement().getLocation().y + this.offset.y;
 
 			//If this and its parent are collapsed, their locations are ontop of each other
 			//Places this over where the previous actual state is if it functions as a transition (isModifiable)
-			if ((this.isCollapsed() && this.getSingleParentState().isCollapsed()) || !this.isModifiable())
+			/*if ((this.isCollapsed() && this.getSingleParentState().isCollapsed()) || !this.isModifiable())
 				this.location.y = p.y;
 			else
-				this.location.y = p.y + offset.y;
+				this.location.y = p.y + offset.y;*/
 		}
 		else if(this.getTransitionsTo().size() == 0)
 		{
@@ -1898,6 +1898,6 @@ public class BoardState
 	public void setCaseRuleJustification(String str) {
 		// TODO create a new instance of caseRuleJustification when null
 		if(this.caseRuleJustification != null)
-			this.caseRuleJustification.setName(str);
+			this.caseRuleJustification.name = str;
 	}
 }

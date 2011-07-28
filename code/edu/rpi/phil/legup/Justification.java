@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
  */
 public abstract class Justification
 {
-	private String name = "Default Justification";
+	String name = "Default Justification";
 	protected String description = "A blank justification";
 	protected ImageIcon image = null;
 	
