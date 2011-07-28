@@ -334,8 +334,6 @@ public class BoardState
 		//TODO: Settings
 		boolean playmode = false;
 
-		if(value == getBoardCells()[y][x])
-//=======
 		if (value == boardCells[y][x] || justification instanceof Contradiction)
 			return;
 
