@@ -30,7 +30,7 @@ import javax.swing.border.TitledBorder;
  * Frame for holding tabbed contradiction panels for user justification.
  *
  */
-public class JustificationFrame extends JToolBar implements TreeSelectionListener, BoardDataChangeListener
+public class JustificationFrame extends JPanel implements TreeSelectionListener, BoardDataChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 
@@ -54,7 +54,7 @@ public class JustificationFrame extends JToolBar implements TreeSelectionListene
 
 	JustificationFrame( LEGUP_Gui parent )
 	{
-		super("Rules");
+//		super("Rules");
 
 		basicRulePanel = new BasicRulePanel(this);
 		tabs.addTab(basicRulePanel.name, basicRulePanel.icon, new JScrollPane(basicRulePanel), basicRulePanel.toolTip);

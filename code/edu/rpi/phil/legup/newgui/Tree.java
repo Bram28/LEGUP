@@ -28,7 +28,7 @@ import javax.swing.BorderFactory;
 //import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class Tree extends JToolBar implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener
+public class Tree extends JPanel implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 
@@ -75,7 +75,7 @@ public class Tree extends JToolBar implements JustificationAppliedListener, Tree
 	private JLabel status = new JLabel();
 
 	Tree( LEGUP_Gui gui ){
-		super("LEGUP");
+//		super("LEGUP");
 		
 		this.gui = gui;
 		

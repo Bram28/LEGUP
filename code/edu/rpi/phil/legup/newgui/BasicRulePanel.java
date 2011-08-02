@@ -119,8 +119,14 @@ public class BasicRulePanel extends JustificationPanel
 		BoardState cur = selection.getState();
 		
 		if (cur.isModifiable()) {
+			if (cur.getSingleParentState().getCaseRuleJustification() != null)
+				return;
+			
 			cur.setJustification(rules.get(button));
 		} else {
+			if (cur.getCaseRuleJustification() != null)
+				return;
+			
 			//add new transition
 			BoardState next = cur.addTransitionFrom();
 			next.setJustification(rules.get(button));

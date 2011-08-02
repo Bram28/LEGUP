@@ -350,7 +350,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		//no more fun :(
 		TitledBorder title = BorderFactory.createTitledBorder("Board");
 		title.setTitleJustification(TitledBorder.CENTER);
-		boardPanel.setBorder(title);
+		board.setBorder(title);
 		
 		
 		ruleBox.add( boardPanel );
