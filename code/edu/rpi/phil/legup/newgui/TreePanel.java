@@ -412,18 +412,20 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		if (mouseOver.getState().isModifiable())
 		{
 			BoardState B = mouseOver.getState();
-			if (B.getTransitionsTo().size() > 1)
-			{
-				CaseRule CR = B.getCaseSplitJustification();
-				if(CR != null)
+			BoardState parent = B.getSingleParentState();
+
+			if (parent != null) {
+				CaseRule CR = parent.getCaseSplitJustification();
+				if (CR != null) {
 					g.drawImage(CR.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
+					return;
+				}
 			}
-			else // if (B.transitionsFrom.size() == 1)
-			{
-				Justification J = (Justification)B.getJustification();
-				if (J != null)
-					g.drawImage(J.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
-			}
+			
+			Justification J = (Justification)B.getJustification();
+			if (J != null)
+				g.drawImage(J.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
+
 		}
 	}
 
@@ -460,7 +462,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				for (int x = 0; x < selected.size(); ++x)
 					parents.add(selected.get(x).getState());
 
-				BoardState.merge(parents);
+				BoardState.merge(parents, false);
 			}
 			else
 				System.out.println("not all states");

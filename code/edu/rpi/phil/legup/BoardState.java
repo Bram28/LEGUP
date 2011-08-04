@@ -335,7 +335,7 @@ public class BoardState
 		//TODO: Settings
 		boolean playmode = false;
 
-		if (value == boardCells[y][x] || justification instanceof Contradiction)
+		if (value == boardCells[y][x] || justification instanceof Contradiction || isMergeTransition())
 			return;
 
 		// Obsolete with new proof mode system
@@ -369,11 +369,11 @@ public class BoardState
 		BoardState parent = getSingleParentState();
 		if (parent != null) {
 			if (getBoardCells()[y][x] != parent.getCellContents(x, y)) {
-				//editedCells[y][x] = true;
-				if(!changedCells.contains(new Point(x, y)))
-						changedCells.add(new Point(x,y));
+				editedCells[y][x] = true;
+				if(!changedCells.contains(new Point(x,y)))
+					changedCells.add(new Point(x,y));
 			} else {
-				//editedCells[y][x] = false;
+				editedCells[y][x] = false;
 				if(changedCells.contains(new Point(x,y)))
 					changedCells.removeElement(new Point(x,y));
 			}
@@ -705,8 +705,25 @@ public class BoardState
 	 * Merge some board states
 	 * @param states the states to merge
 	 */
-	public static void merge(ArrayList <BoardState> states)
+	public static void merge(ArrayList <BoardState> states, boolean union)
 	{
+		/*/ make sure that no state is a direct ancestor of another state
+		for (BoardState s1 : states) {
+			for (BoardState s2 : states) {
+				if (s1 == s2)
+					continue;
+				if (s1.parents(s2))
+					return;
+			}
+		}*/
+		
+		// make sure that all states are leaves (very general and removes needing to check for ancestors)
+		for (BoardState s1 : states) {
+			if (s1.getTransitionsFrom().size() > 0)
+				return;
+		}
+		
+		
 		BoardState child = states.get(0).copy();
 
 		for (int c = 1; c < states.size(); ++c)
@@ -720,10 +737,16 @@ public class BoardState
 					int childCell = child.getCellContents(x,y);
 					int parentCell = parent.getCellContents(x,y);
 
-					// clear all differences
-					if (childCell != PuzzleModule.CELL_UNKNOWN && childCell != parentCell)
+					if (union)
 					{
-						child.setCellContents(x, y, PuzzleModule.CELL_UNKNOWN);
+						// criteria for a union merge here
+						
+					} else {
+						// clear all differences
+						if (childCell != PuzzleModule.CELL_UNKNOWN && childCell != parentCell)
+						{
+							child.setCellContents(x, y, PuzzleModule.CELL_UNKNOWN);
+						}
 					}
 				}
 			}
@@ -738,15 +761,27 @@ public class BoardState
 		}
 
 		child.justification = RuleMerge.getInstance();
-
+		
 		child.mergeOverlord = lcp(states);
 		child.mergeOverlord.mergeChildren.add(child);
 		child.mergeOverlord.evalMergeY();
 		child.mergeOverlord.evalMerge(1);
+		
+		child.setModifiableState(true);
+		BoardState grandchild = child.addTransitionFrom(null);
 
-		Legup.getInstance().getSelections().setSelection(new Selection(child, false));
+		Legup.getInstance().getSelections().setSelection(new Selection(grandchild, false));
 
 		_transitionsChanged();
+	}
+	
+	/**
+	 * Identifies whether a state is the product of a merge. Used to make sure
+	 * the state cannot be edited.
+	 * @return the state has multiple parents
+	 */
+	public boolean isMergeTransition() {
+		return transitionsTo.size() > 1;
 	}
 
 	// The methods contained from this comment....
@@ -1134,6 +1169,7 @@ public class BoardState
 		}
 			
 		//TODO this crap (Justification) justification.setName((string) j);
+		justification = j;
 		modifyStatus();
 		delayStatus = STATUS_UNJUSTIFIED;
 	}
@@ -1483,6 +1519,13 @@ public class BoardState
 
 	public static void reparentChildren(BoardState oldParent, BoardState newParent)
 	{
+		
+		if (oldParent.getCaseRuleJustification() != null) {
+			if (newParent.getCaseRuleJustification() != oldParent.getCaseRuleJustification() && newParent.getTransitionsFrom().size() == 0)
+				newParent.setCaseRuleJustification(oldParent.getCaseRuleJustification());
+			oldParent.setCaseRuleJustification((CaseRule)null);
+		}
+		
 		for(BoardState child : oldParent.getTransitionsFrom())
 		{
 			child.transitionsTo.clear();
@@ -1525,15 +1568,19 @@ public class BoardState
 	{
 		if (this.getTransitionsTo().size() == 1)
 		{
+			BoardState parentState = this.getSingleParentState();
+			Point p = new Point(parentState.getLocation().y, parentState.getLocation().x);
+			this.location.x = p.x + offset.x;
+			
 			//this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
 			this.location.y = this.transitionsTo.lastElement().getLocation().y + this.offset.y;
 
 			//If this and its parent are collapsed, their locations are ontop of each other
 			//Places this over where the previous actual state is if it functions as a transition (isModifiable)
-			/*if ((this.isCollapsed() && this.getSingleParentState().isCollapsed()) || !this.isModifiable())
+			if ((this.isCollapsed() && this.getSingleParentState().isCollapsed()) || !this.isModifiable())
 				this.location.y = p.y;
 			else
-				this.location.y = p.y + offset.y;*/
+				this.location.y = p.y + offset.y;
 		}
 		else if(this.getTransitionsTo().size() == 0)
 		{

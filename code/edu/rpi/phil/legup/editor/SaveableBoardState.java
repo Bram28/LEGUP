@@ -66,9 +66,17 @@ public class SaveableBoardState
     	
     	BoardState state = BoardState.loadFromSaveableBoardState(rv); 
     	
-    	if(state == null)
-    		JOptionPane.showMessageDialog(null,"Board Load Failed");
-    		
+    	if (state == null) {
+       		JOptionPane.showMessageDialog(null,"Board Load Failed");
+       		return null;
+       	}
+    	
+    	for (int y = 0; y < state.getHeight(); y++) {
+    		for (int x = 0; x < state.getWidth(); x++) {
+    			state.getBoardCells()[y][x] *= -1;
+    		}
+    	}
+    	
     	return state;
     }
     

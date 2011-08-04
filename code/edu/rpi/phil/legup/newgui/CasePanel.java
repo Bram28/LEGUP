@@ -116,7 +116,22 @@ public class CasePanel extends JustificationPanel
 	@Override
 	protected void addJustification(int button)
 	{
-		checkCaseRule(caseRules.get(button));
+		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState cur = selection.getState();
+		
+		if (cur.isModifiable() || cur.getTransitionsFrom().size() > 0)
+			return;
+			
+		if (cur.getCaseRuleJustification() != null)
+			return;
+
+		CaseRule r = caseRules.get(button);
+		for (int i = 0; i < 2; i++) { // < r.getRequiredCases(); i++) {
+			cur.addTransitionFrom(null);
+		}
+		cur.setCaseSplitJustification(caseRules.get(button));
+		Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0), false));
+
 	}
 
 	@Override
