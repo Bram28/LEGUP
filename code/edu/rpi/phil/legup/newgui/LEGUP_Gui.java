@@ -227,6 +227,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			file.addSeparator();
 			file.add(exit);
 				exit.addActionListener(this);
+				exit.setAccelerator(KeyStroke.getKeyStroke('Q',2));
 
 		bar.add(edit);
 			edit.add(undo);
