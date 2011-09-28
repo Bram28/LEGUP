@@ -1,6 +1,5 @@
 package edu.rpi.phil.legup.newgui;
 
-import java.awt.FlowLayout;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -31,7 +30,7 @@ public class BasicRulePanel extends JustificationPanel
 	BasicRulePanel(JustificationFrame jf)
 	{
 		this.parentFrame = jf;
-		setLayout(new FlowLayout());
+		setLayout(new WrapLayout());
 	}
 
 	/**

@@ -57,6 +57,11 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 //		super("Rules");
 
 		basicRulePanel = new BasicRulePanel(this);
+		
+		//set scrollbar options
+		//scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		//scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
 		tabs.addTab(basicRulePanel.name, basicRulePanel.icon, new JScrollPane(basicRulePanel), basicRulePanel.toolTip);
 
 		casePanel = new CasePanel(this);
@@ -65,10 +70,8 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 		contradictionPanel = new ContradictionPanel(this);
 		//tabs.addTab(contradictionPanel.name, contradictionPanel.icon, new JScrollPane(contradictionPanel), contradictionPanel.toolTip);
 		
-		JScrollPane scroller = new JScrollPane(tabs);
-		//set scrollbar options
-		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		
 		
 		//JPanel main = new JPanel();
 		setLayout(new BorderLayout());
