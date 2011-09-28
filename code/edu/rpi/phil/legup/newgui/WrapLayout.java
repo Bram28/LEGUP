@@ -17,7 +17,7 @@ public class WrapLayout extends FlowLayout
 	*/
 	public WrapLayout()
 	{
-		super();
+		super(LEFT);
 	}
 
 	/**
