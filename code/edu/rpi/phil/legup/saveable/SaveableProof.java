@@ -203,11 +203,11 @@ public class SaveableProof
 				//add justification to child
 				scan.nextLine();
 				currentstate.setJustification(scan.nextLine());
-				System.out.println("just");
+				System.out.println("justification loaded...");
 				
 				//add case rule to child
 				currentstate.setCaseRuleJustification(scan.nextLine());
-				System.out.println("case");
+				System.out.println("case rule loaded...");
 				
 				//add offset to child
 				currentstate.setOffset(new Point(scan.nextInt(), scan.nextInt()));
