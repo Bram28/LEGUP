@@ -527,6 +527,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == openProof || e.getSource() == toolBarButtons[TOOLBAR_OPEN])
 		{
 			openProof();
+			int x = 0; //breakpoint
+			x = x + 1; //suppresses warnings of x not being used
 		}
 		else if (e.getSource() == saveProof || e.getSource() == toolBarButtons[TOOLBAR_SAVE])
 		{

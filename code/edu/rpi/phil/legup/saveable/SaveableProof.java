@@ -15,6 +15,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.newgui.TreePanel;
 
 public class SaveableProof
 {
@@ -207,13 +208,16 @@ public class SaveableProof
 				
 				//add case rule to child
 				currentstate.setCaseRuleJustification(scan.nextLine());
-				System.out.println("case rule loaded...");
-				
-				//add offset to child
-				currentstate.setOffset(new Point(scan.nextInt(), scan.nextInt()));
+				System.out.println("case rule loaded...");								
 				
 				//is this a transition?
 				currentstate.setModifiableState(scan.nextBoolean());
+				
+				//add offset to child
+				if(currentstate.isModifiable())
+					currentstate.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+				else
+					currentstate.setOffset(new Point(0, 0));
 				
 				//add point changes to child (if they exist)
 				if(scan.hasNextInt())

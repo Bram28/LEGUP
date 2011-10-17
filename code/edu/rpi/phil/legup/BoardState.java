@@ -172,6 +172,10 @@ public class BoardState
 	
 	public void setModifiableState(boolean mod) {
 		modifiableState = mod;
+		if(mod)
+			this.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+		else
+			this.setOffset(new Point(0, 0));
 	}
 
 	/**
@@ -1082,6 +1086,10 @@ public class BoardState
 		newBoardState = new BoardState(this.getHeight(),this.getWidth());
 		newBoardState.virtualBoard = virtualBoard;
 		newBoardState.modifiableState = modifiableState;
+		if(modifiableState)
+			newBoardState.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+		else
+			newBoardState.setOffset(new Point(0, 0));
 	} catch (Exception e){
 		return newBoardState;
 	}
@@ -1570,17 +1578,17 @@ public class BoardState
 		{
 			BoardState parentState = this.getSingleParentState();
 			Point p = new Point(parentState.getLocation().y, parentState.getLocation().x);
-			this.location.x = p.x + offset.x;
+			this.location.y = p.y + offset.y;
 			
 			//this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
-			this.location.y = this.transitionsTo.lastElement().getLocation().y + this.offset.y;
+			this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
 
 			//If this and its parent are collapsed, their locations are ontop of each other
 			//Places this over where the previous actual state is if it functions as a transition (isModifiable)
 			if ((this.isCollapsed() && this.getSingleParentState().isCollapsed()) || !this.isModifiable())
-				this.location.y = p.y;
+				this.location.x = p.x;
 			else
-				this.location.y = p.y + offset.y;
+				this.location.x = p.x + offset.x;
 		}
 		else if(this.getTransitionsTo().size() == 0)
 		{
