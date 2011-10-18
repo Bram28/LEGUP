@@ -43,6 +43,11 @@ public class Legup
 	{
 		return this.gui;
 	}
+
+	public java.net.URL getResource(String file){
+		return getClass().getResource('/'+file);
+	}
+
 	private Config config = new Config("config.xml");
 
 	/**
