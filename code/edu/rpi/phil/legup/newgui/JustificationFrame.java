@@ -78,8 +78,8 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 		//setPreferredSize(new Dimension(128,256));
 
 		//status.setPreferredSize(new Dimension(128,20));
-		///*main.*/add(tabs);
-		add(scroller);
+		/*main.*/add(tabs);
+		//add(scroller);
 		/*main.*/add(status,BorderLayout.SOUTH);
 		
 		//add(main);
