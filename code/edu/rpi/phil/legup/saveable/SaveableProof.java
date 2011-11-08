@@ -246,6 +246,8 @@ public class SaveableProof
 			}
 		}
 		
+		int the_hash = scan.nextInt();
+		
 		scan.close();
 		System.out.println("File Closed...");
 		
@@ -287,37 +289,38 @@ public class SaveableProof
 		saveme.out = new PrintWriter(new FileWriter(filename));
 		//int[] extradata;
 		//write "static" state data
-		saveme.out.print("Puzzle: ");
-		saveme.out.print(state.getPuzzleName());
-		saveme.out.print("\nHeight: ");
-		saveme.out.print(state.getHeight());
-		saveme.out.print("\nWidth: ");
-		saveme.out.print(state.getWidth());
-		saveme.out.print("\ntopLabels:");
+		String encrypt_me = "";
+		encrypt_me += "Puzzle: ";
+		encrypt_me += state.getPuzzleName();
+		encrypt_me += "\nHeight: ";
+		encrypt_me += state.getHeight();
+		encrypt_me += "\nWidth: ";
+		encrypt_me += state.getWidth();
+		encrypt_me += "\ntopLabels:";
 		for (int savelabel : state.getTopLabels())
 		{
-			saveme.out.print(' ');
-			saveme.out.print(savelabel);
+			encrypt_me += ' ';
+			encrypt_me += savelabel;
 		}
-		saveme.out.print("\nbottomLabels:");
+		encrypt_me += "\nbottomLabels:";
 		for (int savelabel : state.getBottomLabels())
 		{
-			saveme.out.print(' ');
-			saveme.out.print(savelabel);
+			encrypt_me += ' ';
+			encrypt_me += savelabel;
 		}
-		saveme.out.print("\nleftLabels:");
+		encrypt_me += "\nleftLabels:";
 		for (int savelabel : state.getLeftLabels())
 		{
-			saveme.out.print(' ');
-			saveme.out.print(savelabel);
+			encrypt_me += ' ';
+			encrypt_me += savelabel;
 		}
-		saveme.out.print("\nrightLabels:");
+		encrypt_me += "\nrightLabels:";
 		for (int savelabel : state.getRightLabels())
 		{
-			saveme.out.print(' ');
-			saveme.out.print(savelabel);
+			encrypt_me += ' ';
+			encrypt_me += savelabel;
 		}
-		saveme.out.print("\nhintCells:\n");
+		encrypt_me += "\nhintCells:\n";
 		for (Point savehints : state.getHintCells())
 		{
 			//SAVE HINTCELLS
@@ -328,50 +331,59 @@ public class SaveableProof
 			//SAVE EXTRADATA, ie
 			//extradata = new extra.tosavedata();
 		}
-		saveme.out.print("\nBoard:\n");
+		encrypt_me += "\nBoard:\n";
 		for (int i = 0; i < state.getHeight(); i++)
 		{
 			for (int j = 0; j < state.getWidth(); j++)
 			{
-				saveme.out.print(state.getBoardCells()[i][j]);
-				saveme.out.print(' ');
+				encrypt_me += state.getBoardCells()[i][j];
+				encrypt_me += ' ';
 			}
-			saveme.out.print('\n');
+			encrypt_me += '\n';
 		}
 		//save transitions
-		saveme.out.print("Transitions:\n");
+		encrypt_me += "Transitions:\n";
 		for (BoardState transist_state : state.getTransitionsFrom())
-			saveme.printTransitions(transist_state);
+			encrypt_me += saveme.printTransitions(transist_state);
+		saveme.out.print(encrypt_me);
+		saveme.out.print(encrypt_me.hashCode());
 		saveme.out.close();
 		return true;
 	}
-	public void printTransitions(BoardState state)
+	public String printTransitions(BoardState state)
 	{
-		out.print("newState:\n");
-		out.println(state.getJustification());
-		out.println(state.getCaseRuleJustification());
+		String encrypt_me = "";
+		encrypt_me += "newState:\n";
+		encrypt_me += state.getJustification();
+		encrypt_me += '\n';
+		encrypt_me += state.getCaseRuleJustification();
+		encrypt_me += '\n';
+		/*
 		//print offset
-		out.print(state.getOffset().x);
-		out.print(' ');
-		out.print(state.getOffset().y);
-		out.print('\n');
-		out.print(state.isModifiable());
-		out.print('\n');
+		encrypt_me += state.getOffset().x;
+		encrypt_me += ' ';
+		encrypt_me += state.getOffset().y;
+		encrypt_me += '\n';
+		*/
+		encrypt_me += state.isModifiable();
+		encrypt_me += '\n';
 		
 		for(Point cell : state.getChangedCells())
 		{
-			out.print(cell.x);
-			out.print(' ');
-			out.print(cell.y);
-			out.print(' ');
-			out.print(state.getBoardCells()[cell.y][cell.x]);
-			out.print('\n');
+			encrypt_me += cell.x;
+			encrypt_me += ' ';
+			encrypt_me += cell.y;
+			encrypt_me += ' ';
+			encrypt_me += state.getBoardCells()[cell.y][cell.x];
+			encrypt_me += '\n';
 		}
 		//recurse through children
 		for (BoardState transition_state : state.getTransitionsFrom())
-			printTransitions(transition_state);
+			encrypt_me += printTransitions(transition_state);
 				
-		out.print("endLeaf:\n");
+		encrypt_me += "endLeaf:\n";
+		
+		return encrypt_me;
 	}
 	public SaveableProofState[] getStates()
 	{
