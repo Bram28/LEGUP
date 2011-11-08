@@ -30,7 +30,7 @@ public class BasicRulePanel extends JustificationPanel
 	BasicRulePanel(JustificationFrame jf)
 	{
 		this.parentFrame = jf;
-		//setLayout(new WrapLayout());
+		setLayout(new WrapLayout());
 	}
 
 	/**
