@@ -90,6 +90,8 @@ public class SaveableProof
 		int in;
 		Vector <Integer> labels = new Vector<Integer>();
 		//iterate through file
+		//name
+		scan.next(); scan.nextLine();
 		//puzzle
 		str = scan.next();
 		//System.out.println(str);
@@ -100,10 +102,12 @@ public class SaveableProof
 		//System.out.println("stupid loadme is working\n");
 		
 		//height
+		System.out.println("Height\n");
 		scan.next();
 		in = scan.nextInt();
 		
 		//width
+		System.out.println("Width\n");
 		scan.next();
 		//initialize new board while grabbing width
 		state = new BoardState(in, scan.nextInt());
@@ -114,6 +118,7 @@ public class SaveableProof
 		state.setLocation(new Point(0,0));
 		
 		//top labels
+		System.out.println("Top Labels\n");
 		str = scan.next();
 		//System.out.println(str);
 		str = scan.next();
@@ -130,6 +135,7 @@ public class SaveableProof
 		labels.clear();
 		
 		//bottom labels
+		System.out.println("Bottom Labels\n");
 		str = scan.next();
 		while (!str.equals("leftLabels:"))
 		{
@@ -187,15 +193,17 @@ public class SaveableProof
 		//transitions
 		str = scan.next();
 		BoardState currentstate = state;
-		while (scan.hasNext())
+		while (scan.hasNext() != scan.hasNextInt())
 		{
 			str = scan.next();
 			if (str.equals("newState:"))
 			{
 				//add new child to parent
+				System.out.println("add child\n");
 				currentstate.getTransitionsFrom().add(new BoardState(state));
 				
 				//add parent to child
+				System.out.println("add parent\n");
 				currentstate.getTransitionsFrom().lastElement().getTransitionsTo().add(currentstate);
 
 				//step in to child
@@ -245,7 +253,6 @@ public class SaveableProof
 				currentstate.getBoardCells()[currentstate.getChangedCells().lastElement().y][currentstate.getChangedCells().lastElement().x] = scan.nextInt();
 			}
 		}
-		
 		int the_hash = scan.nextInt();
 		
 		scan.close();
@@ -287,10 +294,11 @@ public class SaveableProof
 		SaveableProof saveme = new SaveableProof(state);
 		saveme.file = new File(filename);
 		saveme.out = new PrintWriter(new FileWriter(filename));
-		//int[] extradata;
 		//write "static" state data
 		String encrypt_me = "";
-		encrypt_me += "Puzzle: ";
+		encrypt_me += "Name: ";
+		encrypt_me += "Bullwinkle Moose";
+		encrypt_me += "\nPuzzle: ";
 		encrypt_me += state.getPuzzleName();
 		encrypt_me += "\nHeight: ";
 		encrypt_me += state.getHeight();

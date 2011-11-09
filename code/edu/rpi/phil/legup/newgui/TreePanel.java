@@ -498,7 +498,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		firstState.addTransitionFrom(midState, null);
 		
 		Legup.getInstance().getSelections().setSelection(new Selection(midState, false));
-		
+		midState.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+		lastState.setOffset(new Point(0, 0));
 		return midState;
 	}
 
