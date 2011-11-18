@@ -15,6 +15,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.newgui.TreePanel;
 
 public class SaveableProof
@@ -211,11 +212,11 @@ public class SaveableProof
 				
 				//add justification to child
 				scan.nextLine();
-				currentstate.setJustification(scan.nextLine());
+				currentstate.setJustification(Legup.getInstance().getPuzzleModule().getRuleByName(scan.nextLine()));
 				System.out.println("justification loaded...");
 				
 				//add case rule to child
-				currentstate.setCaseRuleJustification(scan.nextLine());
+				currentstate.setCaseRuleJustification(Legup.getInstance().getPuzzleModule().getCaseRuleByName(scan.nextLine()));
 				System.out.println("case rule loaded...");								
 				
 				//is this a transition?
