@@ -65,18 +65,18 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 		tabs.addTab(basicRulePanel.name, basicRulePanel.icon, new JScrollPane(basicRulePanel), basicRulePanel.toolTip);
 
 		casePanel = new CasePanel(this);
-		//tabs.addTab(casePanel.name, casePanel.icon, new JScrollPane(casePanel), casePanel.toolTip);
+		tabs.addTab(casePanel.name, casePanel.icon, new JScrollPane(casePanel), casePanel.toolTip);
 
 		contradictionPanel = new ContradictionPanel(this);
-		//tabs.addTab(contradictionPanel.name, contradictionPanel.icon, new JScrollPane(contradictionPanel), contradictionPanel.toolTip);
+		tabs.addTab(contradictionPanel.name, contradictionPanel.icon, new JScrollPane(contradictionPanel), contradictionPanel.toolTip);
 		
 		
 		
 		
 		//JPanel main = new JPanel();
 		setLayout(new BorderLayout());
-		//setPreferredSize(new Dimension(128,256));
-
+		setMinimumSize(new Dimension(250,256));
+		
 		//status.setPreferredSize(new Dimension(128,20));
 		/*main.*/add(tabs);
 		//add(scroller);
@@ -141,9 +141,11 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 		basicRulePanel.setRules(pm.getRules());
 		contradictionPanel.setContradictions(pm.getContradictions());
 		casePanel.setCaseRules(pm.getCaseRules());
+		/*
 		//there can be only one
-		basicRulePanel.add(casePanel);
-		basicRulePanel.add(contradictionPanel);
+		//basicRulePanel.add(casePanel);
+		//basicRulePanel.add(contradictionPanel);
+		*/
 	}
 
 	//TreeSelectionListener methods

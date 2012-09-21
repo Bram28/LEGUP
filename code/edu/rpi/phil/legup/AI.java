@@ -100,7 +100,7 @@ public class AI implements Runnable {
 	 *
 	 */
 	public void test(PuzzleModule PM) {
-		Vector boards = ourLegup.getConfig().getBoardsForPuzzle("Sudoku");
+		Vector<String> boards = ourLegup.getConfig().getBoardsForPuzzle("Sudoku");
 		this.setBoard(PM);
 		for (int i = 0; i < boards.size(); i++) {
 			lastRule = start;

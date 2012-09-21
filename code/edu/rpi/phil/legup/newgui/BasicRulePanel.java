@@ -50,7 +50,7 @@ public class BasicRulePanel extends JustificationPanel
 			buttons[x] = new JToggleButton(pr.getImageIcon());
 			this.parentFrame.getButtonGroup().add(buttons[x]);
 
-			buttons[x].setToolTipText(pr.toString());
+			buttons[x].setToolTipText(pr.getName() + ": " + pr.getDescription());
 			buttons[x].addActionListener(this);
 			add(buttons[x]);
 		}

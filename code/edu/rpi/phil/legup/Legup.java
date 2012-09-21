@@ -238,16 +238,14 @@ public class Legup
 
 		legup.gui = new LEGUP_Gui(legup);
 		
+		//Not prompting puzzle on startup
 		legup.gui.promptPuzzle();
 
 		// This is for the animation - Daniel P
-		if (BoardDrawingHelper.ANIMATE_SPLIT_CASE)
-		{
-			legup.selections.addTreeSelectionListener(new TreeSelectionListener()
-			{
+		if (BoardDrawingHelper.ANIMATE_SPLIT_CASE) {
+			legup.selections.addTreeSelectionListener(new TreeSelectionListener() {
 				private Thread myThread = null;
-				public void treeSelectionChanged(ArrayList<Selection> newSelections)
-				{
+				public void treeSelectionChanged(ArrayList<Selection> newSelections) {
 					/*if (myThread != null)
 					{
 						myThread.stop();

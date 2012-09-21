@@ -31,7 +31,7 @@ public class ContradictionPanel extends JustificationPanel
 	ContradictionPanel(JustificationFrame jf)
 	{
 		this.parentFrame = jf;
-		setLayout(new FlowLayout());
+		setLayout(new WrapLayout());
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class ContradictionPanel extends JustificationPanel
 			buttons[x] = new JToggleButton(c.getImageIcon());
 			this.parentFrame.getButtonGroup().add(buttons[x]);
 
-			buttons[x].setToolTipText(c.toString());
+			buttons[x].setToolTipText(c.getName() + ": " + c.getDescription());
 			buttons[x].addActionListener(this);
 			add(buttons[x]);
 		}

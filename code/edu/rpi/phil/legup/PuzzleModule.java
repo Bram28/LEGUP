@@ -189,7 +189,7 @@ public abstract class PuzzleModule
 	 * @return True if the goal has been reached
 	 */
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
-	return currentBoard.compareBoard(goalBoard);
+		return currentBoard.compareBoard(goalBoard);
 	}
 
 	/**
@@ -238,7 +238,7 @@ public abstract class PuzzleModule
 	 * @return True if the board state is valid
 	 */
 	public boolean checkValidBoardState(BoardState boardState){
-	return true;
+		return true;
 	}
 
 	/**
@@ -252,7 +252,7 @@ public abstract class PuzzleModule
 
 	/**
 	 * Call the extra data editor for this puzzle
-	 * @return whether or not the initialization was sucessful
+	 * @return whether or not the initialization was successful
 	 */
 	public boolean editExtraData(BoardState boardState, edu.rpi.phil.legup.editor.PuzzleEditor peditor)
 	{
@@ -262,6 +262,7 @@ public abstract class PuzzleModule
 
 	public BoardState importPuzzle(String filename)
 	{
+		System.out.println(filename);
 		try
 		{
 			int width = 0;

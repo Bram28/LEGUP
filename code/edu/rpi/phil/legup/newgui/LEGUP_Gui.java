@@ -121,10 +121,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private static final int TOOLBAR_HINT = 6;
 	private static final int TOOLBAR_CHECK = 7;
 	/* --- */
-	private static final int TOOLBAR_ZOOMIN = 8;
-	private static final int TOOLBAR_ZOOMOUT = 9;
-	private static final int TOOLBAR_ZOOMRESET = 10;
-	private static final int TOOLBAR_ZOOMFIT = 11;
+	private static final int TOOLBAR_DIRECTIONS = 8;
+	private static final int TOOLBAR_ZOOMIN = 9;
+	private static final int TOOLBAR_ZOOMOUT = 10;
+	private static final int TOOLBAR_ZOOMRESET = 11;
+	private static final int TOOLBAR_ZOOMFIT = 12;
 
 	final static String[] toolBarNames =
 	{
@@ -136,6 +137,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		"Console",
 		"Hint",
 		"Check",
+		"Directions",
 		"Zoom In",
 		"Zoom Out",
 		"Normal Zoom",
@@ -151,16 +153,17 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		new JButton(toolBarNames[4], new ImageIcon("images/" + toolBarNames[4] + ".png")),
 		new JButton(toolBarNames[5], new ImageIcon("images/" + toolBarNames[5] + ".png")),
 		new JButton(toolBarNames[6], new ImageIcon("images/" + toolBarNames[6] + ".png")),
-		new JButton(toolBarNames[7], new ImageIcon("images/" + toolBarNames[7] + ".png")),
-		new JButton(/*toolBarNames[8],*/ new ImageIcon("images/" + toolBarNames[8] + ".png")),
+		new JButton(toolBarNames[7], new ImageIcon("images/" + toolBarNames[7] + ".png")), //Check
+		new JButton(toolBarNames[8], new ImageIcon("images/" + toolBarNames[8] + ".png")), //Directions
 		new JButton(/*toolBarNames[9],*/ new ImageIcon("images/" + toolBarNames[9] + ".png")),
 		new JButton(/*toolBarNames[10],*/ new ImageIcon("images/" + toolBarNames[10] + ".png")),
-		new JButton(/*toolBarNames[11],*/ new ImageIcon("images/" + toolBarNames[11] + ".png"))
+		new JButton(/*toolBarNames[11],*/ new ImageIcon("images/" + toolBarNames[11] + ".png")),
+		new JButton(/*toolBarNames[12],*/ new ImageIcon("images/" + toolBarNames[12] + ".png"))
 	};
 
 	final static int[] toolbarSeperatorBefore =
 	{
-		3, 5, 8
+		3, 5, 8, 9
 	};
 
 	public void repaintBoard()
@@ -301,6 +304,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
 		toolBarButtons[TOOLBAR_HINT].setEnabled(false);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(false);
+		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(false);
 
 		add( toolBar, BorderLayout.NORTH );
 	}
@@ -430,6 +434,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_REDO].setEnabled(true);
 		toolBarButtons[TOOLBAR_HINT].setEnabled(true);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(true);
+		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(true);
 		///
 		this.pack();
 	}
@@ -459,7 +464,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 
 	public void promptPuzzle(){
-		if(Legup.getInstance().getInitialBoardState() != null){if(!noquit("opening a new puzzle?"))return;}
+		if(Legup.getInstance().getInitialBoardState() != null){
+			if(!noquit("opening a new puzzle?")) return;
+		}
 		JFileChooser newPuzzle = new JFileChooser("boards");
 		FileNameExtensionFilter filetype = new FileNameExtensionFilter( "LEGUP Puzzles", "xml" );
 		newPuzzle.setFileFilter( filetype );
@@ -473,6 +480,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			}
 			// show them all
 			showAll();
+		} else {
+			System.out.println("Cancel Pressed");
 		}
 	}
 
