@@ -11,6 +11,14 @@ import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
+import javax.swing.*;
+import java.awt.*;
+import javax.swing.TransferHandler;
+import java.awt.datatransfer.*;
+import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JToggleButton;
+
 /**
  * Provides a user interface for contradiction justifications
  *
@@ -22,7 +30,7 @@ public class ContradictionPanel extends JustificationPanel
 	protected final ImageIcon icon = new ImageIcon("images/Contradictions.gif");
 	protected final String name = "Contradictions";
 	protected final String toolTip = "Contradictions";
-
+	MouseListener listener = new DragMouseAdapter();
 	private Vector<Contradiction> contradictions = null;
 
 	/**
@@ -53,6 +61,8 @@ public class ContradictionPanel extends JustificationPanel
 
 			buttons[x].setToolTipText(c.getName() + ": " + c.getDescription());
 			buttons[x].addActionListener(this);
+			buttons[x].addMouseListener(listener);
+			buttons[x].setTransferHandler(new TransferHandler("icon"));
 			add(buttons[x]);
 		}
 

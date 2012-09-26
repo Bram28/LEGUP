@@ -11,6 +11,13 @@ import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
+import javax.swing.*;
+import java.awt.*;
+import javax.swing.TransferHandler;
+import java.awt.datatransfer.*;
+import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JToggleButton;
 /**
  * Provides a user interface for users to provide case rule justifications
  *
@@ -22,7 +29,7 @@ public class CasePanel extends JustificationPanel
 	protected final ImageIcon icon = new ImageIcon("images/Case Rules.gif");
 	protected final String name = "Case Rules";
 	protected final String toolTip = "Case Rules";
-
+	MouseListener listener = new DragMouseAdapter();
 	private Vector<CaseRule> caseRules = null;
 
 	private CaseRule defaultApplication; //NEEDED! Not yet reimplmented!
@@ -55,6 +62,8 @@ public class CasePanel extends JustificationPanel
 
 			buttons[x].setToolTipText(c.getName() + ": " + c.getDescription());
 			buttons[x].addActionListener(this);
+			buttons[x].addMouseListener(listener);
+			buttons[x].setTransferHandler(new TransferHandler("icon"));
 			add(buttons[x]);
 		}
 
