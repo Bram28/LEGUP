@@ -1,7 +1,26 @@
 package edu.rpi.phil.legup.newgui;
 
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+
 import java.util.Vector;
 
+import javax.swing.*;
+import java.awt.*;
+
+import javax.swing.TransferHandler;
+import java.awt.datatransfer.*;
+import java.awt.event.*;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
@@ -21,7 +40,8 @@ public class BasicRulePanel extends JustificationPanel
 	protected final ImageIcon icon = new ImageIcon("images/Basic Rules.gif");
 	protected final String name = "Basic Rules";
 	protected final String toolTip = "Basic Rules";
-
+	MouseListener listener = new DragMouseAdapter();
+	
 	private Vector<PuzzleRule> rules = null;
 
 	/**
@@ -52,6 +72,8 @@ public class BasicRulePanel extends JustificationPanel
 
 			buttons[x].setToolTipText(pr.getName() + ": " + pr.getDescription());
 			buttons[x].addActionListener(this);
+			buttons[x].addMouseListener(listener);
+			buttons[x].setTransferHandler(new TransferHandler("icon"));
 			add(buttons[x]);
 		}
 
@@ -153,4 +175,14 @@ public class BasicRulePanel extends JustificationPanel
 		else
 			parentFrame.setStatus(true, "The rule is applied correctly!");
 	}
+	
+	//Grabs transferable data on mouse click
+	 class DragMouseAdapter extends MouseAdapter {
+	        public void mousePressed(MouseEvent e) {
+	            JComponent c = (JComponent) e.getSource();
+	            TransferHandler handler = c.getTransferHandler();
+	            handler.exportAsDrag(c, e, TransferHandler.COPY);
+	        }
+	 }
+	        
 }
