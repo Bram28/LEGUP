@@ -334,7 +334,7 @@ public abstract class PuzzleModule
 		return B;
 	}
 
-	public Object getRuleByName(String name)
+	public Justification getRuleByName(String name)
 	{
 		if(name == null)
 			return null;

@@ -17,6 +17,7 @@ import javax.swing.ScrollPaneConstants;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
@@ -127,7 +128,7 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 		justificationListeners.add(j);
 	}
 
-	public static void justificationApplied(BoardState s, Object j)
+	public static void justificationApplied(BoardState s, Justification j)
 	{
 		for (int x = 0; x < justificationListeners.size(); ++x)
 		{
@@ -163,7 +164,7 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 
 		if(newSelection.isState()) //Contradiction and basic rule
 		{
-			Object j = newState.getJustification();
+			Justification j = newState.getJustification();
 
 			if (j == null)
 			{

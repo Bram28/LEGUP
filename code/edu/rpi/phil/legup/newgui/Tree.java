@@ -1,6 +1,7 @@
 package edu.rpi.phil.legup.newgui;
 
 import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
@@ -45,12 +46,17 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			this.setLayout(new GridLayout(2,2));
 			add(addChild);
 			addChild.addActionListener(this);
+			addChild.setEnabled(false);
+			addChild.setToolTipText("Add node (select justification first)");
 			add(delChild);
 			delChild.addActionListener(this);
+			delChild.setToolTipText("Remove currently selected node");
 			add(merge);
 			merge.addActionListener(this);
+			merge.setToolTipText("Merge nodes");
 			add(collapse);
 			collapse.addActionListener(this);
+			collapse.setToolTipText("Collapse nodes");
 		}
 
 		public void actionPerformed(ActionEvent e){
@@ -73,7 +79,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	private LEGUP_Gui gui;
 	
 	private JLabel status = new JLabel();
-
+	
 	Tree( LEGUP_Gui gui ){
 //		super("LEGUP");
 		
@@ -88,7 +94,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		
 		//status.setPreferredSize(new Dimension(150,20));
 		main.add(status,BorderLayout.SOUTH);
-		
+				
 		TitledBorder title = BorderFactory.createTitledBorder("Tree");
 		title.setTitleJustification(TitledBorder.CENTER);
 		main.setBorder(title);
@@ -149,7 +155,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	 */
 	public void addChildAtCurrentState()
 	{
-		treePanel.addChildAtCurrentState();
+		treePanel.addChildAtCurrentState(currentJustificationApplied);
 	}
 	
 	/**
@@ -185,10 +191,24 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		treePanel.delCurrentState();
 	}
 
-	public void justificationApplied(BoardState state, Object j)
+	public void justificationApplied(BoardState state, Justification j)
 	{
+		System.out.println(j);
+		if (j == null){
+			toolbar.addChild.setEnabled(false);
+			toolbar.addChild.setToolTipText("Add node (select justification first)");
+		} else {
+			toolbar.addChild.setEnabled(true);
+			toolbar.addChild.setToolTipText("Add node");
+		}
+		currentJustificationApplied = j;
 		repaint();
 	}
+	
+	public Justification getCurrentJustificationApplied(){
+		return currentJustificationApplied;
+	}
+	private Justification currentJustificationApplied = null;
 	
 	public void treeSelectionChanged(ArrayList <Selection> newSelectionList)
 	{

@@ -23,6 +23,7 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.Legup;
+import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Selection;
 
 /**
@@ -475,19 +476,35 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	 * Inserts a child between the current state and the next state
 	 * @return the new child we created
 	 */
-	public BoardState addChildAtCurrentState()
+	/*
+	 * Makes a new node from the changes made to the board state
+	 * The transition is the justification made for the new node
+	 * The node currently selected remains unchanged
+	 * The new node becomes selected
+	 */
+	public BoardState addChildAtCurrentState(Object justification)
 	{
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
-		BoardState firstState = null;
-		BoardState currentState = s.getState();
-
-		// firstState selects the state before the transition (if any)
+		//BoardState firstState = null;
+		BoardState nextState = new BoardState(s.getState());
+		BoardState originalState = s.getState();
+		originalState.revertToOriginalState();
+		
+		
+		/*// firstState selects the state before the transition (if any)
 		if (currentState.isModifiable()) {
 			firstState = currentState.getTransitionsTo().get(0);
 		} else {
 			firstState = currentState;
-		}
+		}*/
 		
+		nextState.addTransitionFrom(originalState,((PuzzleRule)justification));
+		nextState.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+		originalState.setOffset(new Point(0, 0));
+		Legup.getInstance().getSelections().setSelection(new Selection(nextState, false));
+		return nextState;
+		
+		/*
 		// create the middle two states
 		BoardState midState = firstState.copy();
 		midState.setModifiableState(true);
@@ -501,6 +518,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		midState.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
 		lastState.setOffset(new Point(0, 0));
 		return midState;
+		*/
 	}
 
 	/**

@@ -41,6 +41,9 @@ public class BoardState
 	static final public int STATUS_RULE_INCORRECT = 2;
 	static final public int STATUS_CONTRADICTION_CORRECT = 3;
 	static final public int STATUS_CONTRADICTION_INCORRECT = 4;
+	
+	// BoardState when initially created (set in constructor)
+	private BoardState originalState = null;
 
 	private int height;
 	private int width;
@@ -67,9 +70,9 @@ public class BoardState
 
 	// children
 	private Vector<BoardState> transitionsFrom = new Vector<BoardState>();
-
+	
 	// a PuzzleRule or Contradiction
-	private Object justification = null;
+	private Justification justification = null;
 
 	// the justification case rule for this parent state
 	private CaseRule caseRuleJustification = null;
@@ -100,10 +103,12 @@ public class BoardState
 	 */
 	public BoardState(int height, int width)
 	{
+		this(height,width,true);		
+	}
+	private BoardState(int height, int width, boolean makeOriginalState){
 		// Set the height and width
 		this.setHeight(height);
 		this.setWidth(width);
-
 		// Allocate the arrays
 		setBoardCells(new int[height][width]);
 		setTopLabels(new int[width]);
@@ -113,19 +118,16 @@ public class BoardState
 		modifiableCells = new boolean[height][width];
 		editedCells = new boolean[height][width];
 		changedCells = new Vector<Point>();
-
 		// Initialize the arrays
 		for (int i=0;i<height;i++)
 		{
 			getLeftLabels()[i]=0;
 			getRightLabels()[i]=0;
-
 			for (int j=0;j<width;j++)
 			{
 				modifiableCells[i][j] = true;
 				getBoardCells()[i][j] = 0;
 				editedCells[i][j] = false;
-
 				if (i==0)
 				{
 					getTopLabels()[j] = 0;
@@ -133,9 +135,11 @@ public class BoardState
 				}
 			}
 		}
-
 		if(Legup.getInstance().getPuzzleModule() != null)
 			this.setPuzzleName(Legup.getInstance().getPuzzleModule().name);
+		if (makeOriginalState){
+			originalState = new BoardState(this,false);
+		}
 	}
 
 	/**
@@ -145,7 +149,15 @@ public class BoardState
 	 */
 	public BoardState(BoardState copy)
 	{
-		this(copy.getWidth(), copy.getHeight());
+		this(copy,true);
+	}
+	
+	private BoardState(BoardState copy, boolean makeOriginalState){
+		this(copy.getWidth(), copy.getHeight(),false);
+		setFromBoardState(copy,makeOriginalState);
+	}
+	
+	private void setFromBoardState(BoardState copy, boolean makeOriginalState){
 		virtualBoard = copy.virtualBoard;
 
 		// Allocate the arrays
@@ -159,8 +171,32 @@ public class BoardState
 		for (int y = 0; y < getHeight(); y++) { getLeftLabels()[y] = copy.getLeftLabels()[y]; getRightLabels()[y] = copy.getRightLabels()[y]; }
 		extraData = new ArrayList<Object>(copy.extraData);
 		changedCells = copy.getChangedCells();
+		
+		transitionsTo.clear();
+		for (int i=0;i<copy.transitionsTo.size();i++){
+			transitionsTo.add(copy.transitionsTo.get(i));
+		}
+		transitionsFrom.clear();
+		for (int i=0;i<copy.transitionsFrom.size();i++){
+			transitionsFrom.add(copy.transitionsFrom.get(i));
+		}
+		
+		if (makeOriginalState){
+			originalState = new BoardState(this,false);
+		} else {
+			originalState = null;
+		}
 	}
-
+	
+	public BoardState getOriginalState(){
+		return originalState;
+	}
+	
+	public void revertToOriginalState(){
+		if (originalState == null) return;
+		setFromBoardState(originalState,true);
+	}
+	
 	public void setVirtual(boolean virtual)
 	{
 		virtualBoard = virtual;
@@ -1156,7 +1192,7 @@ public class BoardState
 	 *
 	 * @return a PuzzleRule, Contradiction, or null
 	 */
-	public Object getJustification()
+	public Justification getJustification()
 	{
 		return justification;
 	}
@@ -1164,7 +1200,7 @@ public class BoardState
 	/**
 	 * Sets the Justification for this board state
 	 */
-	public void setJustification(Object j)
+	public void setJustification(Justification j)
 	{
 		// don't change justification to a contradiction if there are changes
 		if (j instanceof Contradiction) {

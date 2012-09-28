@@ -59,7 +59,7 @@ public class Selections
 	
     /**
      * Sets the currently selected board state, or transition
-     *
+     * 
      * @param s the new Selection
      */    
     public void setSelection(Selection s)
