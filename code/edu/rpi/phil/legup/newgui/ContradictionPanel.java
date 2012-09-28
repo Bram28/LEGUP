@@ -30,7 +30,7 @@ public class ContradictionPanel extends JustificationPanel
 	protected final ImageIcon icon = new ImageIcon("images/Contradictions.gif");
 	protected final String name = "Contradictions";
 	protected final String toolTip = "Contradictions";
-	MouseListener listener = new DragMouseAdapter();
+	//MouseListener listener = new DragMouseAdapter();
 	private Vector<Contradiction> contradictions = null;
 
 	/**
@@ -61,8 +61,9 @@ public class ContradictionPanel extends JustificationPanel
 
 			buttons[x].setToolTipText(c.getName() + ": " + c.getDescription());
 			buttons[x].addActionListener(this);
-			buttons[x].addMouseListener(listener);
-			buttons[x].setTransferHandler(new TransferHandler("icon"));
+			//removed due to drag-drop being de-prioritized
+			//buttons[x].addMouseListener(listener);
+			//buttons[x].setTransferHandler(new TransferHandler("icon"));
 			add(buttons[x]);
 		}
 

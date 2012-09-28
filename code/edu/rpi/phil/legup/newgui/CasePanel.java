@@ -29,7 +29,7 @@ public class CasePanel extends JustificationPanel
 	protected final ImageIcon icon = new ImageIcon("images/Case Rules.gif");
 	protected final String name = "Case Rules";
 	protected final String toolTip = "Case Rules";
-	MouseListener listener = new DragMouseAdapter();
+	//MouseListener listener = new DragMouseAdapter();
 	private Vector<CaseRule> caseRules = null;
 
 	private CaseRule defaultApplication; //NEEDED! Not yet reimplmented!
@@ -62,8 +62,9 @@ public class CasePanel extends JustificationPanel
 
 			buttons[x].setToolTipText(c.getName() + ": " + c.getDescription());
 			buttons[x].addActionListener(this);
-			buttons[x].addMouseListener(listener);
-			buttons[x].setTransferHandler(new TransferHandler("icon"));
+			//removed due to drag-drop being de-prioritized
+			//buttons[x].addMouseListener(listener);
+			//buttons[x].setTransferHandler(new TransferHandler("icon"));
 			add(buttons[x]);
 		}
 

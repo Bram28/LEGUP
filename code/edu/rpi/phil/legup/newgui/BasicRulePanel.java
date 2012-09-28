@@ -40,7 +40,7 @@ public class BasicRulePanel extends JustificationPanel
 	protected final ImageIcon icon = new ImageIcon("images/Basic Rules.gif");
 	protected final String name = "Basic Rules";
 	protected final String toolTip = "Basic Rules";
-	MouseListener listener = new DragMouseAdapter();
+	//MouseListener listener = new DragMouseAdapter();
 	
 	private Vector<PuzzleRule> rules = null;
 
@@ -72,8 +72,9 @@ public class BasicRulePanel extends JustificationPanel
 
 			buttons[x].setToolTipText(pr.getName() + ": " + pr.getDescription());
 			buttons[x].addActionListener(this);
-			buttons[x].addMouseListener(listener);
-			buttons[x].setTransferHandler(new TransferHandler("icon"));
+			//removed due to drag-drop being de-prioritized
+			//buttons[x].addMouseListener(listener);
+			//buttons[x].setTransferHandler(new TransferHandler("icon"));
 			add(buttons[x]);
 		}
 

@@ -155,11 +155,12 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 		return true;
 	}
 	//Grabs transferable data on mouse click
-		 class DragMouseAdapter extends MouseAdapter {
-		        public void mousePressed(MouseEvent e) {
-		            JComponent c = (JComponent) e.getSource();
-		            TransferHandler handler = c.getTransferHandler();
-		            handler.exportAsDrag(c, e, TransferHandler.COPY);
-		        }
-		 }
+	//removed due to drag-drop being de-prioritized
+	//	 class DragMouseAdapter extends MouseAdapter {
+	//	        public void mousePressed(MouseEvent e) {
+	//	            JComponent c = (JComponent) e.getSource();
+	//	            TransferHandler handler = c.getTransferHandler();
+	//	            handler.exportAsDrag(c, e, TransferHandler.COPY);
+	//	        }
+	//	 }
 }
