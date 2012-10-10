@@ -374,7 +374,7 @@ public class BoardState
 	{
 		//TODO: Settings
 		boolean playmode = false;
-
+		//System.out.println("DEBUG: setCellContents("+x+","+y+","+value+")");
 		if (value == boardCells[y][x] || justification instanceof Contradiction || isMergeTransition())
 			return;
 
