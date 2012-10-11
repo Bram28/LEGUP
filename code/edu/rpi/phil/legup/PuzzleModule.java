@@ -188,6 +188,13 @@ public abstract class PuzzleModule
 		else if(state == 1)return "true";
 		else return null;
 	}
+	//inverse function needed because one of the puzzles has negative numbers for the states
+	public int getStateNumber(String state)
+	{
+		if(state == "false")return 0;
+		else if(state == "true")return 1;
+		else return CELL_UNKNOWN;
+	}
 
 	/**
 	 * Checks if the current board is the goal board
