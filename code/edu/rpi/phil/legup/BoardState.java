@@ -999,7 +999,7 @@ public class BoardState
 		 b.justification = rule;
 
 		b.offset.x = 0;
-		b.offset.y = TreePanel.NODE_RADIUS * 4;
+		b.offset.y = TreePanel.NODE_RADIUS * 5;
 
 		ArrayList<BoardState> valid = new ArrayList<BoardState>();
 		for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1) valid.add(B);
