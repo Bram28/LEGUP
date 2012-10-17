@@ -87,7 +87,65 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 
 		if(pm == null)
 			return; //This doesn't make sense but it was already here
+		if (e.getButton() == MouseEvent.BUTTON3)
+		{
+			//copied from MouseEvent.BUTTON1 code below
+			Dimension d = pm.getImageSize();
+			int imW = d.width;
+			int imH = d.height;
+			int w  = state.getWidth();
+			int h = state.getHeight();
+			p.x -= imW;
+			p.y -= imH;
+			p.x = (int)(Math.floor((double)p.x/imW));
+			p.y = (int)(Math.floor((double)p.y/imH));
+			if(pm.defaultApplication != null)
+			{
+				JustificationFrame.justificationApplied(state,pm.defaultApplication);
+				pm.defaultApplication.doDefaultApplication(state,pm,p);
+				pm.defaultApplication = null;
+			}
+			else if (state.getTransitionsFrom().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
+			{
+				parent.showStatus("You cannot modify internal nodes in this proof mode");
+			}
+			else
+			{
+				if (p.x >= 0 && p.y >= 0)
+				{
+					if (p.x < w && p.y < h)
+					{ // p.x and p.y hold the grid point now!
 
+						if (state.isModifiableCell(p.x,p.y))
+						{
+							String menuoptions[pm.numAcceptableStates];
+							for(int c1=0;c1<pm.numAcceptableStates;c1++)
+							{
+								menuoptions[c1] = pm.getStateName(c1);
+							}
+							//reminder: implement menu here
+							
+							
+							if (!state.isModifiable()) {
+								BoardState next = state.addTransitionFrom();
+								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
+								//pm.mousePressedEvent(next, p);
+								next.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[0]));
+							} else {
+								//pm.mousePressedEvent(state, p);
+								state.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[0]));
+							}
+							
+							// This is unnecessary, board is repainted on
+							// boardstate change anyway
+							//repaint();
+						}
+						else
+							parent.showStatus("You are not allowed to change that cell.");
+					}
+				}
+			}	
+		}
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
 			Dimension d = pm.getImageSize();
@@ -158,6 +216,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 			}
 		}
 	}
+	
 
 	protected void mouseReleasedAt(Point p, MouseEvent e)
 	{
@@ -167,11 +226,13 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 
 		if (e.getButton() == MouseEvent.BUTTON3)
 		{
-			BoardState cur = selection.getState();
+			/* old rightclick stuff, adding changes. I'm replacing this with rightclick menu stuff - Avi
+			  BoardState cur = selection.getState();
 			
 			if (cur.isModifiable())
 				Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
-				
+			*/
+			//putting the code for rightclick menu in the above mousePressedAt() function
 		}
 		else if (e.getButton() == MouseEvent.BUTTON1)
 		{
