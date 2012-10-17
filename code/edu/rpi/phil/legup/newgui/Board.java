@@ -119,6 +119,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 						if (state.isModifiableCell(p.x,p.y))
 						{
 							String menuoptions[pm.numAcceptableStates];
+							int optionchosen = 0;
 							for(int c1=0;c1<pm.numAcceptableStates;c1++)
 							{
 								menuoptions[c1] = pm.getStateName(c1);
@@ -130,10 +131,10 @@ public class Board extends DynamicViewer implements BoardDataChangeListener
 								BoardState next = state.addTransitionFrom();
 								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
 								//pm.mousePressedEvent(next, p);
-								next.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[0]));
+								next.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[optionchosen]));
 							} else {
 								//pm.mousePressedEvent(state, p);
-								state.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[0]));
+								state.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[optionchosen]));
 							}
 							
 							// This is unnecessary, board is repainted on
