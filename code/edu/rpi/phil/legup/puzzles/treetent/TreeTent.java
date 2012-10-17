@@ -309,6 +309,13 @@ public class TreeTent extends PuzzleModule
 		else if(state == CELL_GRASS)return "grass";
 		else return null;
 	}
+	public int getStateNumber(String state)
+	{
+		if(state == "blank")return CELL_UNKNOWN;
+		else if(state == "tent")return CELL_TENT;
+		else if(state == "grass")return CELL_GRASS;
+		else return CELL_UNKNOWN;
+	}
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}
