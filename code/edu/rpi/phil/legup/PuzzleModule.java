@@ -50,7 +50,6 @@ public abstract class PuzzleModule
 	public void mousePressedEvent(BoardState state, Point where)
 	{
 		int next = getNextCellValue(where.x,where.y,state);
-		System.out.println("DEBUG: rv in getNextCellValue("+x+","+y+")");
 		state.setCellContents(where.x,where.y,next);
 	}
 
