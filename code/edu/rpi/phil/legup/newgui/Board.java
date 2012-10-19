@@ -26,6 +26,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 	private LEGUP_Gui parent = null;
 	private Point lastMousePoint = null; // the last left click mouse location
 	public JPopupMenu pop = new JPopupMenu();
+	private boolean is_pop_initialized = false;
 	public void actionPerformed(ActionEvent e) {}
 	
 	class PopupListener extends MouseAdapter {
@@ -57,6 +58,10 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 		BoardState.addCellChangeListener(this);
 		
 		setBackground( new Color(0xE0E0E0) );
+		
+		
+		MouseListener popListener = new PopupListener(pop);
+		parent.addMouseListener(popListener);
 	}
 
 	public void initSize()
@@ -149,23 +154,29 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 						if (state.isModifiableCell(p.x,p.y))
 						{
-							String[] menuoptions = new String[pm.numAcceptableStates];
+							String[] menuoptions = new String[pm.numAcceptableStates()];
 							int optionchosen = 0;
-							for(int c1=0;c1<pm.numAcceptableStates;c1++)
+							for(int c1=0;c1<pm.numAcceptableStates();c1++)
 							{
 								menuoptions[c1] = pm.getStateName(c1);
+								System.out.println("numAcceptableStates: "+ pm.numAcceptableStates());
+								System.out.println("menuoptions["+c1+"]: "+ menuoptions[c1]);
 							}
 							//reminder: implement menu here
 							//JPopupMenu pop = new JPopupMenu();
 							//parent.add(pop);
-							for(int a = 0; a < pm.numAcceptableStates; a++)
+							if(!is_pop_initialized)
 							{
-								JMenuItem item = new JMenuItem(menuoptions[a]);
-								item.addActionListener(this);
-								pop.add(item);
+								for(int a = 0; a < pm.numAcceptableStates(); a++)
+								{
+									if(menuoptions[a] == null)continue;
+									JMenuItem item = new JMenuItem(menuoptions[a]);
+									//item.addActionListener(this);
+									pop.add(item);
+								}
+								is_pop_initialized = true;
 							}
-							MouseListener popListener = new PopupListener(pop);
-							parent.addMouseListener(popListener);
+							pop.show(e.getComponent(),e.getX(), e.getY());
 							
 							if (!state.isModifiable()) {
 								BoardState next = state.addTransitionFrom();

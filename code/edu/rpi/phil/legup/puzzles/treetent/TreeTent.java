@@ -34,7 +34,7 @@ public class TreeTent extends PuzzleModule
 	public static int CELL_TENT = 2;
 	public static int CELL_GRASS = 3;
 	public static int CELL_UNKNOWN = 0;
-	public static int numAcceptableStates = 4;
+	public int numAcceptableStates(){return 4;}
 	
 	private static Stroke med = new BasicStroke(2);
 
