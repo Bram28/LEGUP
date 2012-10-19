@@ -52,6 +52,8 @@ public class BoardState
 	private Vector <Point> changedCells;
 	private boolean[][] modifiableCells;
 	private boolean[][] editedCells;
+	
+	//labels surrounding the grid? [hints, coordinates, etc.]
 	private int[] topLabels;
 	private int[] bottomLabels;
 	private int[] leftLabels;
@@ -66,7 +68,8 @@ public class BoardState
 	private Point location = new Point(0,0);
 
 	// parents
-	private Vector<BoardState> transitionsTo = new Vector<BoardState>();
+	private Vector<BoardState> 
+o = new Vector<BoardState>();
 
 	// children
 	private Vector<BoardState> transitionsFrom = new Vector<BoardState>();
@@ -94,22 +97,20 @@ public class BoardState
 	
 	private boolean modifiableState = false;
 
-	/**
-	 * Constructor
-	 *
-	 * @param height Height of the board state
-	 * @param width Width of the board state
-	 * @throws Exception if the extents are invalid
-	 */
+
+	//@throws Exception if the extents are invalid
 	public BoardState(int height, int width)
 	{
 		this(height,width,true);		
 	}
-	private BoardState(int height, int width, boolean makeOriginalState){
-		// Set the height and width
+	
+	//used by all constructors
+	private BoardState(int height, int width, boolean makeOriginalState)
+	{
 		this.setHeight(height);
 		this.setWidth(width);
-		// Allocate the arrays
+		
+		// Allocate arrays
 		setBoardCells(new int[height][width]);
 		setTopLabels(new int[width]);
 		setBottomLabels(new int[width]);
@@ -118,7 +119,8 @@ public class BoardState
 		modifiableCells = new boolean[height][width];
 		editedCells = new boolean[height][width];
 		changedCells = new Vector<Point>();
-		// Initialize the arrays
+		
+		// Initialize arrays
 		for (int i=0;i<height;i++)
 		{
 			getLeftLabels()[i]=0;
@@ -135,29 +137,35 @@ public class BoardState
 				}
 			}
 		}
+		
+		//assign name of board
 		if(Legup.getInstance().getPuzzleModule() != null)
+		{
 			this.setPuzzleName(Legup.getInstance().getPuzzleModule().name);
-		if (makeOriginalState){
+		}
+		
+		if (makeOriginalState)
+		{
 			originalState = new BoardState(this,false);
 		}
 	}
 
-	/**
-	 *	Constructor
-	 *
-	 *	@param state The BoardState to be replicated.  Connections will not be copied.
-	 */
+	//Copy constructor. Connections will not be copied.
 	public BoardState(BoardState copy)
 	{
 		this(copy,true);
 	}
 	
-	private BoardState(BoardState copy, boolean makeOriginalState){
+	//used for copy constructor
+	private BoardState(BoardState copy, boolean makeOriginalState)
+	{
 		this(copy.getWidth(), copy.getHeight(),false);
 		setFromBoardState(copy,makeOriginalState);
 	}
 	
-	private void setFromBoardState(BoardState copy, boolean makeOriginalState){
+	//used for copy constructors
+	private void setFromBoardState(BoardState copy, boolean makeOriginalState)
+	{
 		virtualBoard = copy.virtualBoard;
 
 		// Allocate the arrays
@@ -167,33 +175,49 @@ public class BoardState
 			modifiableCells[y][x] = copy.modifiableCells[y][x];
 			editedCells[y][x] = copy.editedCells[y][x];
 		}
-		for (int x = 0; x < getWidth(); x++) { getTopLabels()[x] = copy.getTopLabels()[x]; getBottomLabels()[x] = copy.getBottomLabels()[x]; }
-		for (int y = 0; y < getHeight(); y++) { getLeftLabels()[y] = copy.getLeftLabels()[y]; getRightLabels()[y] = copy.getRightLabels()[y]; }
+		for (int x = 0; x < getWidth(); x++)
+		{
+			getTopLabels()[x] = copy.getTopLabels()[x];
+			getBottomLabels()[x] = copy.getBottomLabels()[x];
+		}
+		for (int y = 0; y < getHeight(); y++)
+		{
+			getLeftLabels()[y] = copy.getLeftLabels()[y];
+			getRightLabels()[y] = copy.getRightLabels()[y];
+		}
 		extraData = new ArrayList<Object>(copy.extraData);
 		changedCells = copy.getChangedCells();
 		
 		transitionsTo.clear();
-		for (int i=0;i<copy.transitionsTo.size();i++){
+		for (int i=0;i<copy.transitionsTo.size();i++)
+		{
 			transitionsTo.add(copy.transitionsTo.get(i));
 		}
 		transitionsFrom.clear();
-		for (int i=0;i<copy.transitionsFrom.size();i++){
+		for (int i=0;i<copy.transitionsFrom.size();i++)
+		{
 			transitionsFrom.add(copy.transitionsFrom.get(i));
 		}
 		
-		if (makeOriginalState){
+		if (makeOriginalState)
+		{
 			originalState = new BoardState(this,false);
-		} else {
+		}
+		else
+		{
 			originalState = null;
 		}
 	}
 	
-	public BoardState getOriginalState(){
+	public BoardState getOriginalState()
+	{
 		return originalState;
 	}
 	
-	public void revertToOriginalState(){
-		if (originalState == null) return;
+	public void revertToOriginalState()
+	{
+		if (originalState == null)
+			return;
 		setFromBoardState(originalState,true);
 	}
 	
@@ -202,11 +226,13 @@ public class BoardState
 		virtualBoard = virtual;
 	}
 	
-	public boolean isModifiable() {
+	public boolean isModifiable()
+	{
 		return modifiableState;
 	}
 	
-	public void setModifiableState(boolean mod) {
+	public void setModifiableState(boolean mod)
+	{
 		modifiableState = mod;
 		if(mod)
 			this.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
@@ -214,11 +240,9 @@ public class BoardState
 			this.setOffset(new Point(0, 0));
 	}
 
-	/**
-	 * Toggle whether this state and all its (single) children are collapsed
-	 * <not> called recursively to do the work
-	 * @see toggleCollapseRecursive
-	 */
+
+	//Toggle whether this state and all its (single) children are collapsed
+	//presumably this collapses the tree
 	public void toggleCollapse()
 	{
 		// if we can collapse it legally
@@ -241,8 +265,8 @@ public class BoardState
 
 	/**
 	 * Recursively toggle the collapse value of this state and all it's children
-	 * @param x the x coordinate of the collapsed but selectable (grand)parent
-	 * @param y the y coordinate of the collapsed but selectable (grand)parent
+	 * @param x: the x coordinate of the collapsed but selectable (grand)parent
+	 * @param y: the y coordinate of the collapsed but selectable (grand)parent
 	 */
 	public void toggleCollapseRecursive(int x, int y)
 	{
@@ -278,10 +302,7 @@ public class BoardState
 	}
 
 	/**
-	 * Is the user allowed to modify this cell? This is used to prevent the user from
-	 * modifying initial data for sudoku, for example
-	 * @param x the x cell 0 = leftmost
-	 * @param y the y cell 0 = topmost
+	 * input x y coordinates, where (0, 0) is the top left corner
 	 * @return true iff the user is allowed to modify the cell during the proof
 	 */
 	public boolean isModifiableCell(int x, int y)
@@ -299,10 +320,7 @@ public class BoardState
 		return getCaseRuleJustification();
 	}
 
-	/**
-	 * Set the justification in the parent state of the split
-	 * @param jusification
-	 */
+	//Set the justification in the parent state of the split
 	public void setCaseSplitJustification(CaseRule jusification)
 	{
 		delayStatus = STATUS_UNJUSTIFIED;
@@ -310,19 +328,13 @@ public class BoardState
 		modifyStatus();
 	}
 
-	/**
-	 * Get an array of all the defined extra data for this puzzle
-	 * @return
-	 */
+	//Get an array of all the defined extra data for this puzzle
 	public ArrayList<Object> getExtraData()
 	{
 		return extraData;
 	}
 
-	/**
-	 * Add an object to this state's extra data
-	 * @param o the extra data we're adding
-	 */
+	//Add object o to this state's extra data
 	public void addExtraData(Object o)
 	{
 		extraData.add(o);
@@ -330,9 +342,7 @@ public class BoardState
 		boardDataChanged();
 	}
 
-	/**
-	 * the board data was changed, tell the listeners
-	 */
+	//tell listeners when board data changed
 	public void boardDataChanged()
 	{
 		delayStatus = STATUS_UNJUSTIFIED;
@@ -407,12 +417,16 @@ public class BoardState
   		
   		//update editedCells if necessary
 		BoardState parent = getSingleParentState();
-		if (parent != null) {
-			if (getBoardCells()[y][x] != parent.getCellContents(x, y)) {
+		if (parent != null)
+		{
+			if (getBoardCells()[y][x] != parent.getCellContents(x, y))
+			{
 				editedCells[y][x] = true;
 				if(!changedCells.contains(new Point(x,y)))
 					changedCells.add(new Point(x,y));
-			} else {
+			}
+			else
+			{
 				editedCells[y][x] = false;
 				if(changedCells.contains(new Point(x,y)))
 					changedCells.removeElement(new Point(x,y));
@@ -435,23 +449,24 @@ public class BoardState
 	 * @param y Row of the cell
 	 * @param value Value to set
 	 */
-	public void propagateChange(int x, int y, int value) {
+	public void propagateChange(int x, int y, int value)
+	{
 		getBoardCells()[y][x] = value;
 		setModifiableCell(x, y, value == PuzzleModule.CELL_UNKNOWN);
 		editedCells[y][x] = false;
 		
 		Legup.getInstance().getPuzzleModule().updateState(this);
 		
-		for (BoardState child : transitionsFrom) {
+		for (BoardState child : transitionsFrom)
+		{
 			child.propagateChange(x, y, value);
 		}
 		
-		if (!virtualBoard) boardDataChanged();
+		if (!virtualBoard)
+			boardDataChanged();
 	}
 
-	 /**
-	  * Used for puzzle generation.
-	  */
+	 //Used for puzzle generation.
 	 public void setModifiableCell(int x, int y, boolean value)
 	 {
 		//modifiableCells[y][x] = value;
@@ -461,16 +476,19 @@ public class BoardState
 			 boardCells[y][x] = Math.abs(boardCells[y][x])*-1;
 		 
 		 if (boardCells[y][x] == 0)
-			 System.out.println("Oh no! tried to make 0 value negative");
+			 System.out.println("WARNING: tried to make 0 value negative");
 	 }
 	 
-	/**
-	 * Moves editedCells into modifiableCells. Called during endTranstion().
-	 */
-	public void editedToModifiable() {
-		for (int i = 0; i < getHeight(); i++) {
-			for (int j = 0; j < getWidth(); j++) {
-				if (editedCells[i][j]) {
+	
+	//Moves editedCells into modifiableCells. Called during endTranstion().
+	public void editedToModifiable()
+	{
+		for (int i = 0; i < getHeight(); i++)
+		{
+			for (int j = 0; j < getWidth(); j++)
+			{
+				if (editedCells[i][j])
+				{
 					setModifiableCell(j, i, false);
 					editedCells[i][j] = false;
 				}
@@ -497,8 +515,6 @@ public class BoardState
 	}
 
 	/**
-	 * Gets the height of the Board
-	 *
 	 * @return The height of the board
 	 */
 	public int getHeight(){
@@ -506,8 +522,6 @@ public class BoardState
 	}
 
 	/**
-	 * Gets the width of the Board
-	 *
 	 * @return The width of the board
 	 */
 	public int getWidth(){
@@ -561,28 +575,24 @@ public class BoardState
 	 * @param pos The position of the particular label value
 	 * @param value The new label value
 	 */
-	public void setLabel(int labelLocation, int pos, int value) {
-	switch(labelLocation){
-	case 0:
-
-		getTopLabels()[pos] = value;
-		return;
-	case 1:
-
-		getBottomLabels()[pos] = value;
-		return;
-	case 2:
-
-		getLeftLabels()[pos] = value;
-		return;
-	case 3:
-
-		getRightLabels()[pos] = value;
-		return;
-	}
-
-	System.err.println("error: invalid label in BoardState::setLabel -> " + labelLocation);
-
+	public void setLabel(int labelLocation, int pos, int value)
+	{
+		switch(labelLocation)
+		{
+		case 0:
+			getTopLabels()[pos] = value;
+			return;
+		case 1:
+			getBottomLabels()[pos] = value;
+			return;
+		case 2:
+			getLeftLabels()[pos] = value;
+			return;
+		case 3:
+			getRightLabels()[pos] = value;
+			return;
+		}
+		System.err.println("error: invalid label in BoardState::setLabel -> " + labelLocation);
 	}
 
 	/**
@@ -601,7 +611,7 @@ public class BoardState
 	 * @return A Vector of the Transitions from this board state which are BoardStates
 	 */
 	public Vector<BoardState> getTransitionsFrom(){
-	return transitionsFrom;
+		return transitionsFrom;
 	}
 	
 	/**
@@ -641,7 +651,6 @@ public class BoardState
 
 	/**
 	 * Fire a transitions changed event
-	 *
 	 */
 	private void transitionsChanged()
 	{
@@ -654,12 +663,14 @@ public class BoardState
 
 	private static void _transitionsChanged()
 	{
-		for (int x = 0; x < transitionChangeListeners.size(); ++x) transitionChangeListeners.get(x).transitionChanged();
+		for (int x = 0; x < transitionChangeListeners.size(); ++x) 
+		{
+			transitionChangeListeners.get(x).transitionChanged();
+		}
 	}
 
 	/**
 	 * Adds a transition from this board state.
-	 *
 	 */
 	public BoardState addTransitionFrom()
 	{
@@ -758,7 +769,9 @@ public class BoardState
 		}*/
 		
 		// make sure that all states are leaves (very general and removes needing to check for ancestors)
-		for (BoardState s1 : states) {
+		// WHAT IS A LEAF?
+		for (BoardState s1 : states)
+		{
 			if (s1.getTransitionsFrom().size() > 0)
 				return;
 		}
@@ -781,7 +794,9 @@ public class BoardState
 					{
 						// criteria for a union merge here
 						
-					} else {
+					}
+					else
+					{
 						// clear all differences
 						if (childCell != PuzzleModule.CELL_UNKNOWN && childCell != parentCell)
 						{
@@ -820,11 +835,12 @@ public class BoardState
 	 * the state cannot be edited.
 	 * @return the state has multiple parents
 	 */
-	public boolean isMergeTransition() {
+	public boolean isMergeTransition()
+	{
 		return transitionsTo.size() > 1;
 	}
 
-	// The methods contained from this comment....
+	//Expand collapsed nodes?
 	private void expandXSpace(BoardState child)
 	{
 		if (transitionsFrom.size() > 1 && child != null)
@@ -849,6 +865,7 @@ public class BoardState
 			recalculateLocation();
 	}
 
+	//collapse nodes
 	private void contractXSpace(BoardState child)
 	{
 		if (transitionsFrom.size() > 1 && child != null)
@@ -873,10 +890,16 @@ public class BoardState
 			recalculateLocation();
 	}
 
+	//what does this do?
 	private void evalMerge(int change)
 	{
-		int mergeTot = 0, directTot = numDirectBranches(); // GAH!?!
-		for (BoardState B : mergeChildren) mergeTot += B.numBranches();
+		int mergeTot = 0;
+		int directTot = numDirectBranches();
+		
+		for (BoardState B : mergeChildren)
+		{
+			mergeTot += B.numBranches();
+		}
 
 		if (change == 1 && mergeTot == directTot+1)
 			expandXSpace(null);
@@ -886,13 +909,17 @@ public class BoardState
 			recalculateLocation();
 	}
 
+	//returns total number of children
 	private int numDirectBranches()
 	{
 		ArrayList<BoardState> valid = new ArrayList<BoardState>();
 		for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1) valid.add(B);
 
-		if (valid.size() == 0) return 1;
-		int tot = 0; for (BoardState B : valid) tot += B.numDirectBranches(); return tot;
+		if (valid.size() == 0)
+			return 1;
+		int tot = 0;
+		for (BoardState B : valid) tot += B.numDirectBranches();
+		return tot;
 	}
 
 	private void evalMergeY()
