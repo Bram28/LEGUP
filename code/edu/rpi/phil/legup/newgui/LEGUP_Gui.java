@@ -201,7 +201,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private JMenu edit = new JMenu("Edit");
 		private JMenuItem undo = new JMenuItem("Undo");
 		private JMenuItem redo = new JMenuItem("Redo");
-	private JMenu view = new JMenu("View");
+	// no entries yet
+	/* private JMenu view = new JMenu("View"); */
 	private JMenu proof = new JMenu("Proof");
 		private JCheckBoxMenuItem allowDefault = new JCheckBoxMenuItem("Allow Default Rule Applications",false);
 		private JMenu proofMode = new JMenu("Proof Mode");
@@ -240,7 +241,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				redo.addActionListener(this);
 				redo.setAccelerator(KeyStroke.getKeyStroke('Y',2));
 
-		bar.add(view);
+		// no entries yet
+		/* bar.add(view); */
 
 		bar.add(proof);
 			proof.add(allowDefault);
@@ -344,6 +346,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		board.setPreferredSize( new Dimension( 600, 400 ) );
 		
 		JPanel boardPanel = new JPanel( new BorderLayout() );
+		boardPanel.add(board.pop);
 		//boardPanel.add( board );
 		//split pane fun :)
 		test = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, justificationFrame, board);
@@ -356,7 +359,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		TitledBorder title = BorderFactory.createTitledBorder("Board");
 		title.setTitleJustification(TitledBorder.CENTER);
 		board.setBorder(title);
-		
 		
 		ruleBox.add( boardPanel );
 		treeBox.add( ruleBox );

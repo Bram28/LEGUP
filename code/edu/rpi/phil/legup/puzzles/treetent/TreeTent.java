@@ -34,7 +34,8 @@ public class TreeTent extends PuzzleModule
 	public static int CELL_TENT = 2;
 	public static int CELL_GRASS = 3;
 	public static int CELL_UNKNOWN = 0;
-
+	public static int numAcceptableStates = 4;
+	
 	private static Stroke med = new BasicStroke(2);
 
 	public TreeTent(){
@@ -298,7 +299,23 @@ public class TreeTent extends PuzzleModule
 			return contents;
 		}
 	}
-
+	public String getStateName(int state)
+	{
+		if(state == CELL_UNKNOWN)return "blank";
+		//commented out to skip over & return null, since the user shouldn't be able to make trees
+		//included for readability/potential future extension
+		//else if(state == CELL_TREE)return "tree";
+		else if(state == CELL_TENT)return "tent";
+		else if(state == CELL_GRASS)return "grass";
+		else return null;
+	}
+	public int getStateNumber(String state)
+	{
+		if(state == "blank")return CELL_UNKNOWN;
+		else if(state == "tent")return CELL_TENT;
+		else if(state == "grass")return CELL_GRASS;
+		else return CELL_UNKNOWN;
+	}
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}
