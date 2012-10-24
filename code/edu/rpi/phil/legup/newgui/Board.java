@@ -25,8 +25,6 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 	private LEGUP_Gui parent = null;
 	private Point lastMousePoint = null; // the last left click mouse location
-	//public JPopupMenu pop = new JPopupMenu();
-	private boolean is_pop_initialized = false;
 	public void actionPerformed(ActionEvent e) {}
 	
 	class PopupListener extends MouseAdapter {
@@ -59,9 +57,6 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 		
 		setBackground( new Color(0xE0E0E0) );
 		
-		
-		//MouseListener popListener = new PopupListener(pop);
-		//parent.addMouseListener(popListener);
 	}
 
 	public void initSize()
@@ -163,27 +158,12 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 								System.out.println("numAcceptableStates: "+ pm.numAcceptableStates());
 								System.out.println("menuoptions["+c1+"]: "+ menuoptions[c1]);
 							}
-							//reminder: implement menu here
-							//JPopupMenu pop = new JPopupMenu();
-							//parent.add(pop);
-							if(is_pop_initialized)
+							for(int a = 0; a < pm.numAcceptableStates(); a++)
 							{
-								for(int a = 0; a < pm.numAcceptableStates(); a++)
-								{
-									//pop.remove(a);
-									
-								}
-							}
-							if(!is_pop_initialized)
-							{
-								for(int a = 0; a < pm.numAcceptableStates(); a++)
-								{
-									if(menuoptions[a] == null)continue;
-									JMenuItem item = new JMenuItem(menuoptions[a]);
-									//item.addActionListener(this);
-									pop.add(item);
-								}
-								//is_pop_initialized = true;
+								if(menuoptions[a] == null)continue;
+								JMenuItem item = new JMenuItem(menuoptions[a]);
+								//item.addActionListener(this);
+								pop.add(item);
 							}
 							pop.show(this,e.getX(), e.getY());
 							
