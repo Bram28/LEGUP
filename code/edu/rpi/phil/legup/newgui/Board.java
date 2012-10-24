@@ -25,7 +25,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 	private LEGUP_Gui parent = null;
 	private Point lastMousePoint = null; // the last left click mouse location
-	public JPopupMenu pop = new JPopupMenu();
+	//public JPopupMenu pop = new JPopupMenu();
 	private boolean is_pop_initialized = false;
 	public void actionPerformed(ActionEvent e) {}
 	
@@ -60,8 +60,8 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 		setBackground( new Color(0xE0E0E0) );
 		
 		
-		MouseListener popListener = new PopupListener(pop);
-		parent.addMouseListener(popListener);
+		//MouseListener popListener = new PopupListener(pop);
+		//parent.addMouseListener(popListener);
 	}
 
 	public void initSize()
@@ -154,6 +154,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 						if (state.isModifiableCell(p.x,p.y))
 						{
+							JPopupMenu pop = new JPopupMenu();
 							String[] menuoptions = new String[pm.numAcceptableStates()];
 							int optionchosen = 0;
 							for(int c1=0;c1<pm.numAcceptableStates();c1++)
@@ -165,6 +166,14 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 							//reminder: implement menu here
 							//JPopupMenu pop = new JPopupMenu();
 							//parent.add(pop);
+							if(is_pop_initialized)
+							{
+								for(int a = 0; a < pm.numAcceptableStates(); a++)
+								{
+									//pop.remove(a);
+									
+								}
+							}
 							if(!is_pop_initialized)
 							{
 								for(int a = 0; a < pm.numAcceptableStates(); a++)
@@ -174,9 +183,9 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 									//item.addActionListener(this);
 									pop.add(item);
 								}
-								is_pop_initialized = true;
+								//is_pop_initialized = true;
 							}
-							pop.show(e.getComponent(),e.getX(), e.getY());
+							pop.show(this,e.getX(), e.getY());
 							
 							if (!state.isModifiable()) {
 								BoardState next = state.addTransitionFrom();
