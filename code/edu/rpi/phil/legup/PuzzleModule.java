@@ -36,6 +36,7 @@ import javax.swing.JOptionPane;
 public abstract class PuzzleModule
 {
 	public static int CELL_UNKNOWN = 0;
+	public int numAcceptableStates() {return 2;} //defined to be consistent with getNextCellValue()
 	protected static final Dimension cellSize = new Dimension(32,32);
 	static final Color clear = new Color(0,0,0,0);
 	public String name;
@@ -70,7 +71,7 @@ public abstract class PuzzleModule
 			endstate.setAsSolution();
 		return rv;
 	}
-
+	
 	public boolean checkBoardComplete(BoardState finalstate)
 	{
 		boolean ret = true;
@@ -173,13 +174,26 @@ public abstract class PuzzleModule
 	public int getNextCellValue(int x, int y, BoardState boardState)
 	{
 		int rv = 0;
-
+		
 		if (boardState.getCellContents(x,y) == 0)
 		   rv = 1;
-
 		return rv;
 	}
-
+	//Helper function for popup menu
+	//defined in the abstract class to be consistent with getNextCellValue()
+	public String getStateName(int state)
+	{
+		if(state == 0)return "false";
+		else if(state == 1)return "true";
+		else return null;
+	}
+	//inverse function needed because one of the puzzles has negative numbers for the states
+	public int getStateNumber(String state)
+	{
+		if(state == "false")return 0;
+		else if(state == "true")return 1;
+		else return CELL_UNKNOWN;
+	}
 
 	/**
 	 * Checks if the current board is the goal board
