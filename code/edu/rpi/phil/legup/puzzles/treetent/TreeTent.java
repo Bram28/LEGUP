@@ -23,6 +23,8 @@ import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.Legup;
+import edu.rpi.phil.legup.Selection;
 
 /**
  * @TODO add link rule from the tree's perspective:
@@ -34,7 +36,7 @@ public class TreeTent extends PuzzleModule
 	public static int CELL_TENT = 2;
 	public static int CELL_GRASS = 3;
 	public static int CELL_UNKNOWN = 0;
-	public int numAcceptableStates(){return 4;}
+	public int numAcceptableStates(){return 3;}
 	
 	private static Stroke med = new BasicStroke(2);
 
@@ -50,6 +52,50 @@ public class TreeTent extends PuzzleModule
 	public void mousePressedEvent(BoardState state, Point where)
 	{
 
+	}
+	public void mouseDraggedEvent(BoardState state, Point where)
+	{
+        state.setCellContents(where.x,where.y,CELL_GRASS);
+	}
+	public void labelPressedEvent(BoardState state, int index, int side)
+	{
+		System.out.println(index);
+		System.out.println(side);
+		if(side == 0 || side == 1)
+		{
+			for(int i = 0; i < state.getHeight(); i++)
+			{
+				if (state.isModifiableCell(index,i))
+				{
+					if (!state.isModifiable()) {
+						BoardState next = state.addTransitionFrom();
+						state = next;
+						state.setCellContents(index,i,CELL_GRASS);
+						Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
+					} else {
+						state.setCellContents(index,i,CELL_GRASS);
+
+					}
+				}
+			}
+		}
+		if(side == 2 || side == 3)
+		{
+			for(int i = 0; i < state.getWidth(); i++)
+			{
+				if (state.isModifiableCell(i,index))
+				{
+					if (!state.isModifiable()) {
+						BoardState next = state.addTransitionFrom();
+						state = next;
+						state.setCellContents(i,index,CELL_GRASS);
+						Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
+					} else {
+						state.setCellContents(i,index,CELL_GRASS);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -301,20 +347,13 @@ public class TreeTent extends PuzzleModule
 	}
 	public String getStateName(int state)
 	{
-		if(state == CELL_UNKNOWN)return "blank";
+		if(state == 0)return "blank";
 		//commented out to skip over & return null, since the user shouldn't be able to make trees
 		//included for readability/potential future extension
 		//else if(state == CELL_TREE)return "tree";
-		else if(state == CELL_TREE)return "tent";
-		else if(state == CELL_TENT)return "grass";
+		else if(state == 1)return "tent";
+		else if(state == 2)return "grass";
 		else return null;
-		
-		 /*public static int CELL_TREE = 1;
-	public static int CELL_TENT = 2;
-	public static int CELL_GRASS = 3;
-	public static int CELL_UNKNOWN = 0;
-	
-		 */
 	}
 	public int getStateNumber(String state)
 	{

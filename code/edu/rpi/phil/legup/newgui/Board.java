@@ -25,6 +25,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 	public int optionchosen;
 	private LEGUP_Gui parent = null;
 	private Point lastMousePoint = null; // the last left click mouse location
+
 	private Point lastRightMousePoint = null;
 	JPopupMenu storedMenu = new JPopupMenu();
 	
@@ -139,7 +140,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 			int imH = d.height;
 			int w  = state.getWidth();
 			int h = state.getHeight();
-			Point temp = new Point(p);
+
 			p.x -= imW;
 			p.y -= imH;
 			p.x = (int)(Math.floor((double)p.x/imW));
@@ -160,14 +161,16 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 				{
 					if (p.x < w && p.y < h)
 					{ // p.x and p.y hold the grid point now!
-						
+
 						if (state.isModifiableCell(p.x,p.y))
 						{
 							JPopupMenu pop = new JPopupMenu();
 							String[] menuoptions = new String[pm.numAcceptableStates()];
+
 							//int optionchosen = 0;
 							optionchosen = optionchosen% pm.numAcceptableStates();
 							//System.out.println(optionchosen);
+
 							for(int c1=0;c1<pm.numAcceptableStates();c1++)
 							{
 								menuoptions[c1] = pm.getStateName(c1);
@@ -178,6 +181,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 							{
 								if(menuoptions[a] == null)continue;
 								JMenuItem item = new JMenuItem(menuoptions[a]);
+
 								item.addActionListener(this);
 								pop.add(item);
 							}
@@ -185,7 +189,12 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 							//pop.show(this,temp.x, temp.y);
 							storedMenu = pop;
 							
+							System.out.println("1) " + optionchosen);
+							System.out.println("2) " + menuoptions[optionchosen]);
+							System.out.println("3) " + pm.getStateNumber(menuoptions[optionchosen]));
+							
 							if (!state.isModifiable()) {
+								
 								BoardState next = state.addTransitionFrom();
 								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
 								next.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[optionchosen]));
