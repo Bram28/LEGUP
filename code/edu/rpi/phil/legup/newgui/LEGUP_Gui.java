@@ -346,7 +346,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		board.setPreferredSize( new Dimension( 600, 400 ) );
 		
 		JPanel boardPanel = new JPanel( new BorderLayout() );
-		boardPanel.add(board.pop);
+		//boardPanel.add(board.pop);
 		//boardPanel.add( board );
 		//split pane fun :)
 		test = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, justificationFrame, board);

@@ -32,7 +32,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 public class Sudoku extends PuzzleModule
 {
 	public static int CELL_UNKNOWN = 0;
-
+	public int numAcceptableStates(){return 10;}
 	Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 	Vector <Contradiction> contraList = new Vector <Contradiction>();
 	Vector <CaseRule> caseList = new Vector <CaseRule>();
@@ -295,7 +295,34 @@ public class Sudoku extends PuzzleModule
 
 		return rv;
 	}
-
+	public String getStateName(int state)
+	{
+		if(state == CELL_UNKNOWN)return "";
+		else if(state == 1)return "1";
+		else if(state == 2)return "2";
+		else if(state == 3)return "3";
+		else if(state == 4)return "4";
+		else if(state == 5)return "5";
+		else if(state == 6)return "6";
+		else if(state == 7)return "7";
+		else if(state == 8)return "8";
+		else if(state == 9)return "9";
+		else return null;
+	}
+	public int getStateNumber(String state)
+	{
+		if(state == "")return CELL_UNKNOWN;
+		else if(state == "1")return 1;
+		else if(state == "2")return 2;
+		else if(state == "3")return 3;
+		else if(state == "4")return 4;
+		else if(state == "5")return 5;
+		else if(state == "6")return 6;
+		else if(state == "7")return 7;
+		else if(state == "8")return 8;
+		else if(state == "9")return 9;
+		else return CELL_UNKNOWN;
+	}
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard)
 	{
 		return currentBoard.compareBoard(goalBoard);
