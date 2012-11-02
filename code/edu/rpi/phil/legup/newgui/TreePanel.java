@@ -240,7 +240,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				yRad += 2 * COLLAPSED_DRAW_DELTA_Y;
 			}
 
-			currentStateBoxes.add(new Rectangle(draw.x - 18, draw.y - 18 + deltaY,36,yRad));
+			//currentStateBoxes.add(new Rectangle(draw.x - 18, draw.y - 18 + deltaY,36,yRad));
 		}
 
 		if (!isCollapsed)
@@ -329,12 +329,15 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		final int diam = NODE_RADIUS + NODE_RADIUS;
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
-
+		
+		Selection theSelection = new Selection(state,false);
+		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		g.setColor(nodeColor);
 		g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-		g.setColor(Color.black);
+		g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+		g2D.setStroke((sel.contains(theSelection)? medium : thin));
 		g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-
+		
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
 		// extra drawing instructions
@@ -477,7 +480,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	public BoardState addChildAtCurrentState(Object justification)
 	{
 		// Code taken from revision 250 to add child
-		Selection s = Legup.getInstance().getSelections().getFirstSelection();
+		/*Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState rv = null;
 
 		if (s.isState())
@@ -488,8 +491,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		Legup.getInstance().getSelections().setSelection(new Selection(rv, false));
 
-		return rv;
-		
+		return rv;*/
+		//this was what was in the rightclick before the menu - Avi
+		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState cur = selection.getState();
+		if (cur.isModifiable())
+			Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+		return cur;
 		/*
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		//BoardState firstState = null;
