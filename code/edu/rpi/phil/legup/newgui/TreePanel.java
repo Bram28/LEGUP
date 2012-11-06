@@ -215,9 +215,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 				if (b.isCollapsed())
 					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
-
+				
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
-
+				
 				g2D.setStroke(thin);
 			}
 			
@@ -246,7 +246,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		if (!isCollapsed)
 		{
 			drawNode(g,draw.x, draw.y,state);
-		
 		}
 		else
 			drawCollapsedNode(g,draw.x,draw.y);
@@ -495,8 +494,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		//this was what was in the rightclick before the menu - Avi
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
-		if (cur.isModifiable())
+		if (cur.isModifiable() && selection.isState())
+		{
 			Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+		}
 		return cur;
 		/*
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();

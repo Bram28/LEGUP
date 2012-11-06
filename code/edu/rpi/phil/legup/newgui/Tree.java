@@ -47,7 +47,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			add(addChild);
 			addChild.addActionListener(this);
 			addChild.setEnabled(true);
-			addChild.setToolTipText("Add node (same functionality as old rightclick");
+			addChild.setToolTipText("Add node");
 			//addChild.setEnabled(false);
 			//addChild.setToolTipText("Add node (select justification first)");
 			add(delChild);
@@ -200,11 +200,12 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		/*if (j == null){
 			toolbar.addChild.setEnabled(false);
 			toolbar.addChild.setToolTipText("Add node (select justification first)");
-		} else {*/
+		} else {
 			toolbar.addChild.setEnabled(true);
-			toolbar.addChild.setToolTipText("Add node (same functionality as old rightclick");
-		//}
+			toolbar.addChild.setToolTipText("Add node");
+		}*/
 		currentJustificationApplied = j;
+		j = null;
 		repaint();
 	}
 	
