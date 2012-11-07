@@ -328,14 +328,29 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		final int diam = NODE_RADIUS + NODE_RADIUS;
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
-		
+		Polygon triangle = new Polygon();
+		for(double c1 = 0;c1 < 360;c1+=120)
+		{
+			triangle.addPoint((int)(x+1.5*NODE_RADIUS*Math.cos(Math.toRadians(c1))),(int)(y+1.5*NODE_RADIUS*Math.sin(Math.toRadians(c1))));
+		}
 		Selection theSelection = new Selection(state,false);
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
-		g.setColor(nodeColor);
-		g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-		g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-		g2D.setStroke((sel.contains(theSelection)? medium : thin));
-		g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+		g.setColor(((!state.isModifiable()) ? nodeColor : Color.red));
+		if(!state.isModifiable())
+		{
+			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+			g2D.setStroke((sel.contains(theSelection)? medium : thin));
+			g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+		}
+		else
+		{
+			g2D.fill(triangle);
+			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+			g2D.setStroke((sel.contains(theSelection)? medium : thin));
+			g.drawPolygon(triangle);
+		}
+		
 		
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
@@ -496,6 +511,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		BoardState cur = selection.getState();
 		if (cur.isModifiable() && selection.isState())
 		{
+			//cur.setModifiableState(false);
 			Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
 		}
 		return cur;
