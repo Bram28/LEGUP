@@ -46,8 +46,10 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			this.setLayout(new GridLayout(2,2));
 			add(addChild);
 			addChild.addActionListener(this);
-			addChild.setEnabled(false);
-			addChild.setToolTipText("Add node (select justification first)");
+			addChild.setEnabled(true);
+			addChild.setToolTipText("Add node");
+			//addChild.setEnabled(false);
+			//addChild.setToolTipText("Add node (select justification first)");
 			add(delChild);
 			delChild.addActionListener(this);
 			delChild.setToolTipText("Remove currently selected node");
@@ -194,14 +196,16 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	public void justificationApplied(BoardState state, Justification j)
 	{
 		System.out.println(j);
-		if (j == null){
+		//comments to remove graying of addnode button, due to glitches caused - Avi
+		/*if (j == null){
 			toolbar.addChild.setEnabled(false);
 			toolbar.addChild.setToolTipText("Add node (select justification first)");
 		} else {
 			toolbar.addChild.setEnabled(true);
 			toolbar.addChild.setToolTipText("Add node");
-		}
+		}*/
 		currentJustificationApplied = j;
+		j = null;
 		repaint();
 	}
 	

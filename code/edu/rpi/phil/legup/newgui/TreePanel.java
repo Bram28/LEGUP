@@ -215,9 +215,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 				if (b.isCollapsed())
 					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
-
+				
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
-
+				
 				g2D.setStroke(thin);
 			}
 			
@@ -240,13 +240,12 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				yRad += 2 * COLLAPSED_DRAW_DELTA_Y;
 			}
 
-			currentStateBoxes.add(new Rectangle(draw.x - 18, draw.y - 18 + deltaY,36,yRad));
+			//currentStateBoxes.add(new Rectangle(draw.x - 18, draw.y - 18 + deltaY,36,yRad));
 		}
 
 		if (!isCollapsed)
 		{
 			drawNode(g,draw.x, draw.y,state);
-		
 		}
 		else
 			drawCollapsedNode(g,draw.x,draw.y);
@@ -329,12 +328,30 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		final int diam = NODE_RADIUS + NODE_RADIUS;
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
-
-		g.setColor(nodeColor);
-		g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-		g.setColor(Color.black);
-		g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-
+		Polygon triangle = new Polygon();
+		for(double c1 = 0;c1 < 360;c1+=120)
+		{
+			triangle.addPoint((int)(x+1.5*NODE_RADIUS*Math.cos(Math.toRadians(c1))),(int)(y+1.5*NODE_RADIUS*Math.sin(Math.toRadians(c1))));
+		}
+		Selection theSelection = new Selection(state,false);
+		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
+		g.setColor(((!state.isModifiable()) ? nodeColor : Color.red));
+		if(!state.isModifiable())
+		{
+			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+			g2D.setStroke((sel.contains(theSelection)? medium : thin));
+			g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+		}
+		else
+		{
+			g2D.fill(triangle);
+			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+			g2D.setStroke((sel.contains(theSelection)? medium : thin));
+			g.drawPolygon(triangle);
+		}
+		
+		
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
 		// extra drawing instructions
@@ -477,7 +494,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	public BoardState addChildAtCurrentState(Object justification)
 	{
 		// Code taken from revision 250 to add child
-		Selection s = Legup.getInstance().getSelections().getFirstSelection();
+		/*Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState rv = null;
 
 		if (s.isState())
@@ -488,8 +505,16 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		Legup.getInstance().getSelections().setSelection(new Selection(rv, false));
 
-		return rv;
-		
+		return rv;*/
+		//this was what was in the rightclick before the menu - Avi
+		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState cur = selection.getState();
+		if (cur.isModifiable() && selection.isState())
+		{
+			//cur.setModifiableState(false);
+			Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+		}
+		return cur;
 		/*
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		//BoardState firstState = null;

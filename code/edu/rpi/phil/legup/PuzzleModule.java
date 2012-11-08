@@ -181,14 +181,14 @@ public abstract class PuzzleModule
 	}
 	//Helper function for popup menu
 	//defined in the abstract class to be consistent with getNextCellValue()
-	public String getStateName(int state)
+	public /*abstract*/ String getStateName(int state)
 	{
 		if(state == 0)return "false";
 		else if(state == 1)return "true";
 		else return null;
 	}
 	//inverse function needed because one of the puzzles has negative numbers for the states
-	public int getStateNumber(String state)
+	public /*abstract*/ int getStateNumber(String state)
 	{
 		if(state == "false")return 0;
 		else if(state == "true")return 1;
