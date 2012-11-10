@@ -206,6 +206,17 @@ public class BoardState
 		return modifiableState;
 	}
 	
+	/*public void finalize_cells()
+	{
+		for(int y=0;y<height;++y)
+		{
+			for(int x=0;x<width;++x)
+			{
+				boardCells[y][x] = -Math.abs(boardCells[y][x]);
+			}
+		}
+	}*/
+	
 	public void setModifiableState(boolean mod) {
 		modifiableState = mod;
 		if(mod)

@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
@@ -128,10 +129,15 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> transitionsFrom = null;
-		Point draw = (Point)state.getLocation().clone();
-
+		Point draw;
+		if(mouseOver != null)
+		{
+			draw = mousePoint;//(Point)mouseOver.getState().getLocation().clone();
+			g.setColor(Color.gray);
+			g2D.drawRect(draw.x+30,draw.y-30,100,100);
+		}
 		g.setColor(Color.black);
-
+		draw = (Point)state.getLocation().clone();
 		if (!isCollapsed)
 			transitionsFrom = state.getTransitionsFrom();
 		else
@@ -335,7 +341,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		Selection theSelection = new Selection(state,false);
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
-		g.setColor(((!state.isModifiable()) ? nodeColor : Color.red));
+		//g.setColor(((!state.isModifiable()) ? nodeColor : Color.green));
+		g.setColor(nodeColor);
 		if(!state.isModifiable())
 		{
 			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
@@ -512,6 +519,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		if (cur.isModifiable() && selection.isState())
 		{
 			//cur.setModifiableState(false);
+			//cur.finalize_cells();
 			Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
 		}
 		return cur;
@@ -673,9 +681,25 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Point draw = new Point(loc.x - radius, loc.y - radius);
 		// distance from a transition which is considered clicking on it, squared
 		final int MAX_CLICK_DISTANCE_SQ = 5*5;
-
-		Ellipse2D.Float myBounds = new Ellipse2D.Float(draw.x,draw.y,2 * radius,2 * radius);
-
+		Shape myBounds;
+		if(state.isModifiable())
+		{
+			draw.x += 128;
+			int[] points_x = new int[3];
+			int[] points_y = new int[3];
+			for(int c1 = 0;c1 < 3;c1+=1)
+			{
+				points_x[c1] = (int)(draw.x+3*radius*Math.cos(Math.toRadians(c1*120)));
+				points_y[c1] = (int)(draw.y+3*radius*Math.sin(Math.toRadians(c1*120)));
+			}
+			myBounds = new Polygon(points_x,points_y,3);
+			System.out.println("helloworld");
+		}
+		else
+		{
+			myBounds = new Ellipse2D.Float(draw.x,draw.y,2 * radius,2 * radius);
+		}
+		
 		boolean stateSelected = myBounds.contains(where);
 
 		if (stateSelected && isCollapsed)

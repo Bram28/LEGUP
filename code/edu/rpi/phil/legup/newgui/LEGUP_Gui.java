@@ -315,6 +315,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	// TODO
 	private JustificationFrame justificationFrame;
 	private Tree tree;
+	public Tree getTree() {return tree;}
 	private Console console;
 	private Board board;
 	private JSplitPane test, test2;

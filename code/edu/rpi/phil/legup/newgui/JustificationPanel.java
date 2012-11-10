@@ -56,6 +56,8 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 			startDefaultApplication(button);
 		else
 			addJustification(button);
+		
+		Legup.getInstance().getGui().getTree().addChildAtCurrentState();
 	}
 	
 	protected abstract void addJustification(int button);
