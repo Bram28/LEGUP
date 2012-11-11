@@ -130,7 +130,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
-		if(mouseOver != null)
+		if(mouseOver != null)if(mouseOver.getState().getJustification() != null)
 		{
 			draw = mousePoint;//(Point)mouseOver.getState().getLocation().clone();
 			g.setColor(Color.gray);
@@ -682,18 +682,21 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		// distance from a transition which is considered clicking on it, squared
 		final int MAX_CLICK_DISTANCE_SQ = 5*5;
 		Shape myBounds;
+		//System.out.println("getSelectionAtPoint called for (" + where.x + "," + where.y + ") on node at point (" + state.getLocation().x + "," + state.getLocation().y + ")");
 		if(state.isModifiable())
 		{
-			draw.x += 128;
+			/*draw.x += 128;
 			int[] points_x = new int[3];
 			int[] points_y = new int[3];
 			for(int c1 = 0;c1 < 3;c1+=1)
 			{
-				points_x[c1] = (int)(draw.x+3*radius*Math.cos(Math.toRadians(c1*120)));
-				points_y[c1] = (int)(draw.y+3*radius*Math.sin(Math.toRadians(c1*120)));
+				points_x[c1] = (int)(draw.x+radius*Math.cos(Math.toRadians(c1*120)));
+				points_y[c1] = (int)(draw.y+radius*Math.sin(Math.toRadians(c1*120)));
 			}
-			myBounds = new Polygon(points_x,points_y,3);
-			System.out.println("helloworld");
+			myBounds = new Polygon(points_x,points_y,3);*/
+			draw.x -= radius/2;
+			draw.y -= radius/2;
+			myBounds = new Ellipse2D.Float(draw.x,draw.y,(int)(3*radius),(int)(3*radius));
 		}
 		else
 		{
@@ -716,8 +719,12 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		else
 		{
-			Vector<BoardState> transitionsFrom = state.getTransitionsFrom();
-
+			if (state.getTransitionsFrom().size() > 0)
+				rv = getSelectionAtPoint(state.getTransitionsFrom().get(0), where);
+			//the whole chunk of code below was deliberately skipping the transitions, which
+			//is no longer desireable
+			/*Vector<BoardState> transitionsFrom = state.getTransitionsFrom();
+			
 			for (int c = 0; c < transitionsFrom.size(); ++c)
 			{
 				BoardState b = transitionsFrom.get(c);
@@ -739,7 +746,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				if (s != null)
 					rv = s;
 
-			}
+			}*/
 			// note that we may select a state after we've found select transition,
 			// rv = new Selection(state,true);
 			// transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)
