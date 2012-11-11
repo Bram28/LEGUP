@@ -3,6 +3,8 @@ package edu.rpi.phil.legup.newgui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -371,13 +373,24 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		//add( placeholder );
 		
 	}
-
+	class proofFilter implements FilenameFilter
+	{
+		public boolean accept(File dir, String name)
+		{
+			System.out.println("proofFilter " + ((name.contains(".proof")) ? "accepts" : "rejects") + " \"" + name + "\"");
+			if(name.contains(".proof"))return true;
+			return false;
+		}
+	}
 	private void openProof()
 	{
 		if(Legup.getInstance().getInitialBoardState() != null){if(!noquit("opening a new proof?"))return;}
+		JFileChooser proofchooser = new JFileChooser("boards");
 		fileChooser.setMode(FileDialog.LOAD);
 		fileChooser.setTitle("Select Proof");
 		fileChooser.setVisible(true);
+		//proofFilter filter = new proofFilter();
+		//fileChooser.setFilenameFilter(filter);
 		String filename = fileChooser.getFile();
 
 		if (filename != null) // user didn't press cancel
@@ -397,6 +410,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		fileChooser.setMode(FileDialog.SAVE);
 		fileChooser.setTitle("Select Proof");
 		fileChooser.setVisible(true);
+		//proofFilter filter = new proofFilter();
+		//fileChooser.setFilenameFilter(filter);
 		String filename = fileChooser.getFile();
 
 		if (filename != null) // user didn't pressed cancel

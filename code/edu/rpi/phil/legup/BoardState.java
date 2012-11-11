@@ -471,8 +471,8 @@ public class BoardState
 		 else
 			 boardCells[y][x] = Math.abs(boardCells[y][x])*-1;
 		 
-		 if (boardCells[y][x] == 0)
-			 System.out.println("Oh no! tried to make 0 value negative");
+		 /*if (boardCells[y][x] == 0)
+			 System.out.println("Oh no! tried to make 0 value negative");*/
 	 }
 	 
 	/**

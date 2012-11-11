@@ -47,7 +47,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			add(addChild);
 			addChild.addActionListener(this);
 			addChild.setEnabled(false);
-			addChild.setToolTipText("Add node");
+			addChild.setToolTipText("Add node (disabled, use justification instead)");
 			//addChild.setEnabled(false);
 			//addChild.setToolTipText("Add node (select justification first)");
 			add(delChild);

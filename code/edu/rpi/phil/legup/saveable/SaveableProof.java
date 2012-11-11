@@ -118,6 +118,17 @@ public class SaveableProof
 		state.setOffset(new Point(0,0));
 		state.setLocation(new Point(0,0));
 		
+		//putting these as two seperate statements rather than using OR to avoid
+		//a potential null dereference - Avi
+		if(Legup.getInstance().getPuzzleModule() == null)
+		{
+			Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
+		}
+		if(Legup.getInstance().getPuzzleModule().name != state.getPuzzleName())
+		{
+			Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
+		}
+		
 		//top labels
 		System.out.println("Top Labels\n");
 		str = scan.next();
