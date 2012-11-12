@@ -222,7 +222,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public void boardDataChanged(BoardState state)
 	{
-		System.out.println("board data changed");
+		//System.out.println("board data changed");
 		updateStatus();
 	}
 	

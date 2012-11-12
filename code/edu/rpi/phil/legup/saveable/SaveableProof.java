@@ -88,31 +88,34 @@ public class SaveableProof
 		BoardState state;
 		Scanner scan = new Scanner(new File(filename));
 		String str;
+		String tmp;
+		String name;
 		int in;
 		Vector <Integer> labels = new Vector<Integer>();
 		//iterate through file
 		//name
-		scan.next(); scan.nextLine();
+		tmp = scan.next();
+		if(!tmp.equals("Name:"))System.out.println("Potentially invalid input at Name.");
+		System.out.println("Name: " + (name = scan.nextLine()));
 		//puzzle
+		tmp = scan.next();
+		if(!tmp.equals("Puzzle:"))System.out.println("Potentially invalid input at Puzzle.");
 		str = scan.next();
-		//System.out.println(str);
-		str = scan.next();
-		//str += scan.nextLine();
-		System.out.println(str);
+		System.out.println("Puzzle: " + str);
 		//state.setPuzzleName("Battleship");
 		//System.out.println("stupid loadme is working\n");
 		
 		//height
-		System.out.println("Height\n");
-		scan.next();
+		tmp = scan.next();
+		if(!tmp.equals("Height:"))System.out.println("Potentially invalid input at Height.");
 		in = scan.nextInt();
-		
+		System.out.println("Height: " + in);
 		//width
-		System.out.println("Width\n");
-		scan.next();
+		tmp = scan.next();
+		if(!tmp.equals("Width:"))System.out.println("Potentially invalid input at Width.");
 		//initialize new board while grabbing width
 		state = new BoardState(in, scan.nextInt());
-		
+		System.out.println("Width: " + state.getWidth());
 		//now that board exists, set name and offset
 		state.setPuzzleName(str);
 		state.setOffset(new Point(0,0));
@@ -130,74 +133,91 @@ public class SaveableProof
 		}
 		
 		//top labels
-		System.out.println("Top Labels\n");
-		str = scan.next();
+		tmp = scan.next();
+		if(!tmp.equals("topLabels:"))System.out.println("Potentially invalid input at topLabels.");
+		System.out.println("topLabels:");
 		//System.out.println(str);
 		str = scan.next();
 		while (!str.equals("bottomLabels:"))
 		{
-			//System.out.println(str);
-			//System.out.flush();
-			labels.add(Integer.parseInt(str));
+			in = Integer.parseInt(str);
+			System.out.print(in + " ");
+			labels.add(in);
 			str = scan.next();
 		}
+		System.out.print("\n");
 		state.setTopLabels(new int[labels.size()]);
 		for (int x = 0; x < labels.size(); x++)
 			state.getTopLabels()[x] = labels.get(x);
 		labels.clear();
 		
 		//bottom labels
-		System.out.println("Bottom Labels\n");
+		System.out.println("bottomLabels:");
 		str = scan.next();
 		while (!str.equals("leftLabels:"))
 		{
-			labels.add(Integer.parseInt(str));
+			in = Integer.parseInt(str);
+			System.out.print(in + " ");
+			labels.add(in);
 			str = scan.next();
 		}
+		System.out.print("\n");
 		state.setBottomLabels(new int[labels.size()]);
 		for (int x = 0; x < labels.size(); x++)
 			state.getBottomLabels()[x] = labels.get(x);
 		labels.clear();
 		
 		//left labels
+		System.out.println("leftLabels:");
 		str = scan.next();
 		while (!str.equals("rightLabels:"))
 		{
-			labels.add(Integer.parseInt(str));
+			in = Integer.parseInt(str);
+			System.out.print(in + " ");
+			labels.add(in);
 			str = scan.next();
 		}
+		System.out.print("\n");
 		state.setLeftLabels(new int[labels.size()]);
 		for (int x = 0; x < labels.size(); x++)
 			state.getLeftLabels()[x] = labels.get(x);
 		labels.clear();
 		
 		//right labels
+		System.out.println("rightLabels:");
 		str = scan.next();
 		while (!str.equals("hintCells:"))
 		{
-			labels.add(Integer.parseInt(str));
+			in = Integer.parseInt(str);
+			System.out.print(in + " ");
+			labels.add(in);
 			str = scan.next();
 		}
+		System.out.print("\n");
 		state.setRightLabels(new int[labels.size()]);
 		for (int x = 0; x < labels.size(); x++)
 			state.getRightLabels()[x] = labels.get(x);
 		labels.clear();
 		
 		//hint cells;
-		str = scan.next();
+		System.out.println("hintCells:");
+		//processing of "hintCells" should go here, I don't know what those are, so I'm not
+		//yet removing this from the format - Avi
 		
 		//extra data
 		//str = scan.next();
 		
 		//board
-		//scan.next();
+		tmp = scan.next();
+		if(!tmp.equals("Board:"))System.out.println("Potentially invalid input at Board.");
 		for (int i = 0; i < state.getHeight(); i++)
 		{
 			for (int j = 0; j < state.getWidth(); j++)
 			{
 				state.getBoardCells()[i][j] = scan.nextInt();
-				//System.out.println(loadme.get(0).boardCells[i][j]);
+				System.out.print(state.getBoardCells()[i][j] + " ");
 			}
+			System.out.print("\n");
 		}
 		System.out.println("board cells loaded...");
 		System.out.flush();
@@ -208,49 +228,69 @@ public class SaveableProof
 		while (scan.hasNext() != scan.hasNextInt())
 		{
 			str = scan.next();
+			System.out.print("*");
+			System.out.println(str);
+			System.out.print("0");
+			scan.nextLine();
 			if (str.equals("newState:"))
 			{
 				//add new child to parent
-				System.out.println("add child\n");
+				System.out.print("1");
 				currentstate.getTransitionsFrom().add(new BoardState(state));
 				
 				//add parent to child
-				System.out.println("add parent\n");
+				System.out.print("2");
 				currentstate.getTransitionsFrom().lastElement().getTransitionsTo().add(currentstate);
 
 				//step in to child
+				System.out.print("3");
 				currentstate = currentstate.getTransitionsFrom().lastElement();
 				
 				//add justification to child
-				scan.nextLine();
-				currentstate.setJustification(Legup.getInstance().getPuzzleModule().getRuleByName(scan.nextLine()));
-				System.out.println("justification loaded...");
+				//System.out.println(scan.nextLine());
+				tmp = scan.nextLine();
+				System.out.print("4");
+				currentstate.setJustification(Legup.getInstance().getPuzzleModule().getRuleByName(tmp));
 				
 				//add case rule to child
-				currentstate.setCaseRuleJustification(Legup.getInstance().getPuzzleModule().getCaseRuleByName(scan.nextLine()));
-				System.out.println("case rule loaded...");								
+				tmp = scan.nextLine();
+				System.out.print("5");
+				currentstate.setCaseRuleJustification(Legup.getInstance().getPuzzleModule().getCaseRuleByName(tmp));
 				
 				//is this a transition?
+				System.out.print("6");
 				currentstate.setModifiableState(scan.nextBoolean());
 				
 				//add offset to child
-				if(currentstate.isModifiable())
+				/*if(currentstate.isModifiable())
 					currentstate.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
 				else
-					currentstate.setOffset(new Point(0, 0));
+					currentstate.setOffset(new Point(0, 0));*/
 				
 				//add point changes to child (if they exist)
-				if(scan.hasNextInt())
+				
+				//if was here before, while looks better, functionality-wise, but
+				//it gets a stack overflow (after outputting corrently the "Changing" lines for
+				//every cell in the current transition - Avi
+				/*while*/if(scan.hasNext() == scan.hasNextInt())
 				{
-					currentstate.getChangedCells().add(new Point(scan.nextInt(), scan.nextInt()));
+					int tmp_x = 0;
+					int tmp_y = 0;
+					int tmp_cell = 0;
+					if(scan.hasNext() == scan.hasNextInt())tmp_x = scan.nextInt();
+					if(scan.hasNext() == scan.hasNextInt())tmp_y = scan.nextInt();
+					if(scan.hasNext() == scan.hasNextInt())tmp_cell = scan.nextInt();
 					
 					//change board cell at point
-					currentstate.getBoardCells()[currentstate.getChangedCells().lastElement().y][currentstate.getChangedCells().lastElement().x] = scan.nextInt();
+					currentstate.getChangedCells().add(new Point(tmp_x,tmp_y));
+					currentstate.getBoardCells()[tmp_y][tmp_x] = tmp_cell;
+					System.out.println("Changing ("+ tmp_x + "," + tmp_y + ") to " + tmp_cell);
 				}
 			}
 			
 			else if (str.equals("endLeaf:"))
 			{
+				System.out.print("endLeaf:");
 				//step out to parent (if we have a parent)
 				if (!currentstate.getTransitionsTo().isEmpty())
 					currentstate = currentstate.getTransitionsTo().lastElement();
