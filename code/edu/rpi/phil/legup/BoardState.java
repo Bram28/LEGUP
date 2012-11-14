@@ -1616,7 +1616,7 @@ public class BoardState
 	public void setOffset(Point offset)
 	{
 		this.offset = offset;
-		this.recalculateLocation();
+		//this.recalculateLocation();
 	}
 
 	public void recalculateLocation()
@@ -1625,14 +1625,14 @@ public class BoardState
 		{
 			BoardState parentState = this.getSingleParentState();
 			Point p = new Point(parentState.getLocation().y, parentState.getLocation().x);
+			this.location.x = p.x + offset.x;
 			this.location.y = p.y + offset.y;
 			
 			//this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
-			this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
 
 			//If this and its parent are collapsed, their locations are ontop of each other
 			//Places this over where the previous actual state is if it functions as a transition (isModifiable)
-			if ((this.isCollapsed() && this.getSingleParentState().isCollapsed()) || !this.isModifiable())
+			if ((this.isCollapsed() && this.getSingleParentState().isCollapsed())/* || !this.isModifiable()*/)
 				this.location.x = p.x;
 			else
 				this.location.x = p.x + offset.x;

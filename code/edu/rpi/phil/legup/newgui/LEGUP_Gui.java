@@ -397,7 +397,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		{
 			filename = fileChooser.getDirectory() + filename;
 			if (!filename.toLowerCase().endsWith(".proof"))
-				filename += ".proof";
+			{
+				JOptionPane.showMessageDialog(null,"File selected does not have the suffix \".proof\".");
+				return;
+			}
 			Legup.getInstance().loadProofFile(filename);
 		}
 

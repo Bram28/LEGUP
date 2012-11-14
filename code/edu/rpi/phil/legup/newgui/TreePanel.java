@@ -516,11 +516,14 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		//this was what was in the rightclick before the menu - Avi
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
-		if (cur.isModifiable() && selection.isState())
+		if(cur.getChangedCells().size() > 0)
 		{
-			//cur.setModifiableState(false);
-			//cur.finalize_cells();
-			Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+			if (cur.isModifiable() && selection.isState())
+			{
+				//cur.setModifiableState(false);
+				//cur.finalize_cells();
+				Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+			}
 		}
 		return cur;
 		/*

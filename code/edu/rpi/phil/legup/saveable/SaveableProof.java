@@ -210,6 +210,7 @@ public class SaveableProof
 		//board
 		tmp = scan.next();
 		if(!tmp.equals("Board:"))System.out.println("Potentially invalid input at Board.");
+		System.out.println("Board:");
 		for (int i = 0; i < state.getHeight(); i++)
 		{
 			for (int j = 0; j < state.getWidth(); j++)
@@ -228,37 +229,30 @@ public class SaveableProof
 		while (scan.hasNext() != scan.hasNextInt())
 		{
 			str = scan.next();
-			System.out.print("*");
+			//JOptionPane.showMessageDialog(null,str);
 			System.out.println(str);
-			System.out.print("0");
 			scan.nextLine();
 			if (str.equals("newState:"))
 			{
 				//add new child to parent
-				System.out.print("1");
 				currentstate.getTransitionsFrom().add(new BoardState(state));
 				
 				//add parent to child
-				System.out.print("2");
 				currentstate.getTransitionsFrom().lastElement().getTransitionsTo().add(currentstate);
 
 				//step in to child
-				System.out.print("3");
 				currentstate = currentstate.getTransitionsFrom().lastElement();
 				
 				//add justification to child
 				//System.out.println(scan.nextLine());
 				tmp = scan.nextLine();
-				System.out.print("4");
 				currentstate.setJustification(Legup.getInstance().getPuzzleModule().getRuleByName(tmp));
 				
 				//add case rule to child
 				tmp = scan.nextLine();
-				System.out.print("5");
 				currentstate.setCaseRuleJustification(Legup.getInstance().getPuzzleModule().getCaseRuleByName(tmp));
 				
 				//is this a transition?
-				System.out.print("6");
 				currentstate.setModifiableState(scan.nextBoolean());
 				
 				//add offset to child
@@ -272,41 +266,50 @@ public class SaveableProof
 				//if was here before, while looks better, functionality-wise, but
 				//it gets a stack overflow (after outputting corrently the "Changing" lines for
 				//every cell in the current transition - Avi
-				/*while*/if(scan.hasNext() == scan.hasNextInt())
+				while(scan.hasNext() == scan.hasNextInt())
 				{
+					//nested if structure to partially deal with non-triplets
 					int tmp_x = 0;
 					int tmp_y = 0;
 					int tmp_cell = 0;
 					if(scan.hasNext() == scan.hasNextInt())tmp_x = scan.nextInt();
-					if(scan.hasNext() == scan.hasNextInt())tmp_y = scan.nextInt();
-					if(scan.hasNext() == scan.hasNextInt())tmp_cell = scan.nextInt();
-					
-					//change board cell at point
-					currentstate.getChangedCells().add(new Point(tmp_x,tmp_y));
-					currentstate.getBoardCells()[tmp_y][tmp_x] = tmp_cell;
-					System.out.println("Changing ("+ tmp_x + "," + tmp_y + ") to " + tmp_cell);
+					if(scan.hasNext() == scan.hasNextInt())
+					{
+						tmp_y = scan.nextInt();
+						if(scan.hasNext() == scan.hasNextInt())
+						{
+							tmp_cell = scan.nextInt();
+							//change board cell at point
+							currentstate.getChangedCells().add(new Point(tmp_x,tmp_y));
+							currentstate.getBoardCells()[tmp_y][tmp_x] = tmp_cell;
+							System.out.println("Changing ("+ tmp_x + "," + tmp_y + ") to " + tmp_cell);
+						}
+					}
 				}
 			}
 			
 			else if (str.equals("endLeaf:"))
 			{
-				System.out.print("endLeaf:");
 				//step out to parent (if we have a parent)
 				if (!currentstate.getTransitionsTo().isEmpty())
+				{
+					System.out.println("numChilds: "+currentstate.getTransitionsFrom().size());
+					System.out.println("numParents: "+currentstate.getTransitionsTo().size());
 					currentstate = currentstate.getTransitionsTo().lastElement();
+				}
 			}
 			
 			//assume str is now the x of the modified cell
-			else
+			/*else
 			{
 				//add point to child
 				currentstate.getChangedCells().add(new Point(Integer.parseInt(str), scan.nextInt()));
 				//change board cell at point
 				currentstate.getBoardCells()[currentstate.getChangedCells().lastElement().y][currentstate.getChangedCells().lastElement().x] = scan.nextInt();
-			}
+			}*/
 		}
 		int the_hash = scan.nextInt();
-		
+		JOptionPane.showMessageDialog(null,"Hash: \""+the_hash+"\"");
 		scan.close();
 		System.out.println("File Closed...");
 		
