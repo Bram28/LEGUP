@@ -121,16 +121,7 @@ public class SaveableProof
 		state.setOffset(new Point(0,0));
 		state.setLocation(new Point(0,0));
 		
-		//putting these as two seperate statements rather than using OR to avoid
-		//a potential null dereference - Avi
-		if(Legup.getInstance().getPuzzleModule() == null)
-		{
-			Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
-		}
-		if(Legup.getInstance().getPuzzleModule().name != state.getPuzzleName())
-		{
-			Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
-		}
+		Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
 		
 		//top labels
 		tmp = scan.next();
@@ -235,10 +226,10 @@ public class SaveableProof
 			if (str.equals("newState:"))
 			{
 				//add new child to parent
-				currentstate.getTransitionsFrom().add(new BoardState(state));
-				
+				//currentstate.getTransitionsFrom().add(new BoardState(state));
+				currentstate.addTransitionFrom();
 				//add parent to child
-				currentstate.getTransitionsFrom().lastElement().getTransitionsTo().add(currentstate);
+				//currentstate.getTransitionsFrom().lastElement().getTransitionsTo().add(currentstate);
 
 				//step in to child
 				currentstate = currentstate.getTransitionsFrom().lastElement();
@@ -256,10 +247,10 @@ public class SaveableProof
 				currentstate.setModifiableState(scan.nextBoolean());
 				
 				//add offset to child
-				/*if(currentstate.isModifiable())
+				//if(currentstate.isModifiable())
 					currentstate.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
-				else
-					currentstate.setOffset(new Point(0, 0));*/
+				//else
+				//	currentstate.setOffset(new Point(0, 0));
 				
 				//add point changes to child (if they exist)
 				
@@ -309,7 +300,7 @@ public class SaveableProof
 			}*/
 		}
 		int the_hash = scan.nextInt();
-		JOptionPane.showMessageDialog(null,"Hash: \""+the_hash+"\"");
+		System.out.println("Hash: \""+the_hash+"\"");
 		scan.close();
 		System.out.println("File Closed...");
 		
