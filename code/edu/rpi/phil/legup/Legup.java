@@ -95,9 +95,7 @@ public class Legup
 		try
 		{
 			initialBoardState = SaveableBoardState.loadState(filename);
-			BoardState b = initialBoardState;
-			while(b.getTransitionsFrom().size() > 0)b = b.getTransitionsFrom().lastElement();
-			selections.setSelection(new Selection(b,b.isModifiable()));
+			selections.setSelection(new Selection(initialBoardState,false));
 		}
 		catch (Exception e)
 		{
@@ -108,11 +106,11 @@ public class Legup
 
 		String puzzle = initialBoardState.getPuzzleName();
 		System.out.println("Loading puzzle module: " + puzzle);
-
-		/*if(loadPuzzleModule(puzzle))
+		
+		if(loadPuzzleModule(puzzle))
 		{
 			errorMessage("Error encountered loading PuzzleModule.");
-		}*/
+		}
 
 		gui.reloadGui();
 	}
@@ -128,7 +126,9 @@ public class Legup
 		{
 			initialBoardState = SaveableProof.loadProof(filename);
 			selections = new Selections();
-			//selections.setSelection(new Selection(initialBoardState,false));
+			BoardState b = initialBoardState;
+			if(b!=null)while(b.getTransitionsFrom().size() > 0)b = b.getTransitionsFrom().lastElement();
+			selections.setSelection(new Selection(b,b.isModifiable()));
 		}
 		catch (Exception e)
 		{
@@ -139,6 +139,7 @@ public class Legup
 
 		String puzzle = initialBoardState.getPuzzleName();
 		System.out.println("Loading puzzle module: " + puzzle);
+		if(puzzle == null)
 		if(loadPuzzleModule(puzzle))
 		{
 			errorMessage("Error encountered loading PuzzleModule.");
