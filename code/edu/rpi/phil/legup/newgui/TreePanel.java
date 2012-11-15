@@ -722,8 +722,11 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		else
 		{
-			if (state.getTransitionsFrom().size() > 0)
-				rv = getSelectionAtPoint(state.getTransitionsFrom().get(0), where);
+			for(BoardState b : state.getTransitionsFrom())
+			{
+				Selection s = getSelectionAtPoint(b,where);
+				if(s != null)rv = s;
+			}
 			//the whole chunk of code below was deliberately skipping the transitions, which
 			//is no longer desireable
 			/*Vector<BoardState> transitionsFrom = state.getTransitionsFrom();

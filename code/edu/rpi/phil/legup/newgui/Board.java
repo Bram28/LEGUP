@@ -254,7 +254,16 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 						{
 							
 							if (!state.isModifiable()) {
-								BoardState next = state.addTransitionFrom();
+								BoardState next;
+								if(state.getTransitionsFrom().size() == 0)
+								{
+									next = state.addTransitionFrom();
+								}
+								else if (state.getTransitionsFrom().size() == 1)
+								{
+									next = state.getTransitionsFrom().lastElement();
+								}
+								else return;
 								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
 								pm.mousePressedEvent(next, p);
 							} else {
