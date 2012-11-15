@@ -48,6 +48,7 @@ public class BoardState
 	private int height;
 	private int width;
 	private int[][] boardCells;
+	
 	//to keep track of what cells have changed
 	private Vector <Point> changedCells;
 	private boolean[][] modifiableCells;
@@ -68,8 +69,7 @@ public class BoardState
 	private Point location = new Point(0,0);
 
 	// parents
-	private Vector<BoardState> 
-o = new Vector<BoardState>();
+	private Vector<BoardState> transitionsTo = new Vector<BoardState>();
 
 	// children
 	private Vector<BoardState> transitionsFrom = new Vector<BoardState>();
@@ -242,7 +242,6 @@ o = new Vector<BoardState>();
 
 
 	//Toggle whether this state and all its (single) children are collapsed
-	//presumably this collapses the tree
 	public void toggleCollapse()
 	{
 		// if we can collapse it legally
@@ -769,7 +768,6 @@ o = new Vector<BoardState>();
 		}*/
 		
 		// make sure that all states are leaves (very general and removes needing to check for ancestors)
-		// WHAT IS A LEAF?
 		for (BoardState s1 : states)
 		{
 			if (s1.getTransitionsFrom().size() > 0)
@@ -1016,8 +1014,8 @@ o = new Vector<BoardState>();
 
 	/**
 	 * Adds a transition from this board state.
-	 * @param child the new child state
-	 * @param rule the rule we applied
+	 * @param b: the new child state
+	 * @param rule: the rule we applied
 	 */
 	public void addTransitionFrom(BoardState b, PuzzleRule rule)
 	{

@@ -69,8 +69,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			} else if( e.getSource() == merge ){
 				mergeStates();
 			} else if( e.getSource() == collapse ){
-				delCurrentState();
-				//collapseStates();
+				collapseStates();
 			}
 		}
 

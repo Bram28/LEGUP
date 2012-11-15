@@ -236,7 +236,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 			if (isCollapsed)
 			{
-				deltaY = -2 * COLLAPSED_DRAW_DELTA_Y; // times 2 cause draw.y is already adjusted
+				deltaY = -2 * COLLAPSED_DRAW_DELTA_Y; // times 2 because draw.y is already adjusted
 				yRad += 2 * COLLAPSED_DRAW_DELTA_Y;
 			}
 
