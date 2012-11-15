@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
+import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
@@ -136,7 +137,10 @@ public class CasePanel extends JustificationPanel
 			return;
 
 		CaseRule r = caseRules.get(button);
-		for (int i = 0; i < 2; i++) { // < r.getRequiredCases(); i++) {
+		int quantityofcases = Integer.valueOf(JOptionPane.showInputDialog(null,"How many branches?")).intValue();
+		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
+		if(quantityofcases < 2)quantityofcases = 2; //the user from creating 100 nodes or something
+		for (int i = 0; i < quantityofcases; i++) {
 			cur.addTransitionFrom(null);
 		}
 		cur.setCaseSplitJustification(caseRules.get(button));
