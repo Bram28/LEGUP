@@ -437,11 +437,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private void checkProof()
 	{
 		BoardState root = legupMain.getInitialBoardState();
-		root.evalDelayStatus();
+		boolean delayStatus = root.evalDelayStatus();
 		repaintAll();
 
 		PuzzleModule pm = legupMain.getPuzzleModule();
-		if (pm.checkProof(root))
+		if (pm.checkProof(root) && delayStatus)
 			JOptionPane.showMessageDialog(null, "Your proof is correct.");
 		else
 			JOptionPane.showMessageDialog(null, "Your proof is INCORRECT.");

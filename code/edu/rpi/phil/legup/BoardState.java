@@ -631,10 +631,14 @@ public class BoardState
 		transitionsFrom = from;
 	}
 
-	public void evalDelayStatus()
+	public boolean evalDelayStatus()
 	{
 		delayStatus = getStatus();
-		for (BoardState B : transitionsFrom) B.evalDelayStatus();
+		for (BoardState B : transitionsFrom) {
+			if (!B.evalDelayStatus())
+				return false;
+		}
+		return delayStatus == 0 || delayStatus == 1 || delayStatus == 3;
 	}
 
 	private void modifyStatus()
