@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
 import java.lang.Math;
-
+import java.awt.Color;
 import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 import edu.rpi.phil.legup.newgui.TransitionChangeListener;
@@ -41,10 +41,10 @@ public class BoardState
 	static final public int STATUS_RULE_INCORRECT = 2;
 	static final public int STATUS_CONTRADICTION_CORRECT = 3;
 	static final public int STATUS_CONTRADICTION_INCORRECT = 4;
-	
+	private Color current_color = TreePanel.nodeColor;
+	public Color getColor() { return current_color; }
 	// BoardState when initially created (set in constructor)
 	private BoardState originalState = null;
-
 	private int height;
 	private int width;
 	private int[][] boardCells;
@@ -634,11 +634,22 @@ public class BoardState
 	public boolean evalDelayStatus()
 	{
 		delayStatus = getStatus();
-		for (BoardState B : transitionsFrom) {
-			if (!B.evalDelayStatus())
-				return false;
+		if(delayStatus == STATUS_UNJUSTIFIED || delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT)
+		{
+			if(isModifiable())current_color = Color.green;
 		}
-		return delayStatus == 0 || delayStatus == 1 || delayStatus == 3;
+		else
+		{
+			if(isModifiable())current_color = Color.red;
+		}
+		for (BoardState B : transitionsFrom)
+		{
+			if(!B.evalDelayStatus())
+			{
+				return false;
+			}
+		}
+		return delayStatus == STATUS_UNJUSTIFIED || delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT;
 	}
 
 	private void modifyStatus()

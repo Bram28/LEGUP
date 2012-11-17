@@ -34,7 +34,7 @@ import edu.rpi.phil.legup.Selection;
 public class TreePanel extends ZoomablePanel implements TransitionChangeListener, TreeSelectionListener
 {
 	private static final long serialVersionUID = 3124502814357135662L;
-	private static final Color nodeColor = new Color(255,255,155);
+	public static final Color nodeColor = new Color(255,255,155);
 	public static final int NODE_RADIUS = 10;
 	private static final int SMALL_NODE_RADIUS = 7;
 	private static final int COLLAPSED_DRAW_DELTA_Y = 10;
@@ -277,13 +277,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		Selection theSelection = new Selection(parent,true);
 		int nodeRadius = collapsedChild ? SMALL_NODE_RADIUS : NODE_RADIUS;
-
-		if (sel.contains(theSelection))
-		{
-			g2d.setStroke(medium);
-			g.setColor(Color.blue);
-		}
-
+		
+		g2d.setStroke(medium);
+		g.setColor(((sel.contains(theSelection)) ? Color.blue : Color.gray));
+		
 		g2d.draw(trans);
 
 		// we also want to draw the arrowhead
@@ -342,23 +339,24 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Selection theSelection = new Selection(state,false);
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		//g.setColor(((!state.isModifiable()) ? nodeColor : Color.green));
-		g.setColor(nodeColor);
-		if(!state.isModifiable())
+		if(!state.leadsToContradiction())
 		{
-			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-			g2D.setStroke((sel.contains(theSelection)? medium : thin));
-			g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+			g.setColor(state.getColor());
+			if(!state.isModifiable())
+			{
+				g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+				g2D.setStroke((sel.contains(theSelection)? medium : thin));
+				g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+			}
+			else
+			{
+				g2D.fill(triangle);
+				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+				g2D.setStroke((sel.contains(theSelection)? medium : thin));
+				g.drawPolygon(triangle);
+			}
 		}
-		else
-		{
-			g2D.fill(triangle);
-			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-			g2D.setStroke((sel.contains(theSelection)? medium : thin));
-			g.drawPolygon(triangle);
-		}
-		
-		
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
 		// extra drawing instructions
@@ -369,8 +367,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		{
 			if (state.leadsToContradiction())
 				i = leadsToContradtionImage;
-			else if(state.leadsToSolution())
-				i = leadsToSolutionImage;
+			//commented out because the smily face was appearing
+			//in a way that didn't seem to make sense - Avi
+			//else if(state.leadsToSolution())
+			//	i = leadsToSolutionImage;
 		}
 
 

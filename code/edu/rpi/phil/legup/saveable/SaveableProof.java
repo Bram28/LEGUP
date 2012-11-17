@@ -270,6 +270,7 @@ public class SaveableProof
 						if(scan.hasNext() == scan.hasNextInt())
 						{
 							tmp_cell = scan.nextInt();
+							tmp_cell = ((currentstate.isModifiable()) ? Math.abs(tmp_cell) : -Math.abs(tmp_cell));
 							//change board cell at point
 							currentstate.getChangedCells().add(new Point(tmp_x,tmp_y));
 							currentstate.getBoardCells()[tmp_y][tmp_x] = tmp_cell;

@@ -444,7 +444,12 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		if (pm.checkProof(root) && delayStatus)
 			JOptionPane.showMessageDialog(null, "Your proof is correct.");
 		else
-			JOptionPane.showMessageDialog(null, "Your proof is INCORRECT.");
+		{
+			String message = "Your proof is incorrect.";
+			if(!delayStatus)message += "\nInvalid steps have been colored red.";
+			if(!pm.checkProof(root))message += "\nThe board must be completely filled.";
+			JOptionPane.showMessageDialog(null,message);
+		}
 	}
 
 	private void showAll() {
