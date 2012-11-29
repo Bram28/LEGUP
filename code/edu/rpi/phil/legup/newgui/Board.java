@@ -120,7 +120,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 		//The board concerned with receiving input for states
 		if (!selection.isState())
 		{
-			parent.showStatus("You can not modify transitions.");
+			parent.showStatus("You can not modify transitions.", true);
 			return;
 		}
 
@@ -153,7 +153,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 			}
 			else if (state.getTransitionsFrom().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
 			{
-				parent.showStatus("You cannot modify internal nodes in this proof mode");
+				parent.showStatus("You cannot modify internal nodes in this proof mode", true);
 			}
 			else
 			{
@@ -207,7 +207,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 							//repaint();
 						}
 						else
-							parent.showStatus("You are not allowed to change that cell.");
+							parent.showStatus("You are not allowed to change that cell.", true);
 					}
 				}
 			}	
@@ -236,11 +236,11 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 			/*else if (parentStates.size() == 0)
 			{
 				// can't add to the root state, print an error
-				//parent.showStatus("You can not change the initial state.");
+				//parent.showStatus("You can not change the initial state.", true);
 			}*/
 			else if (state.getTransitionsFrom().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
 			{
-				parent.showStatus("You cannot modify internal nodes in this proof mode");
+				parent.showStatus("You cannot modify internal nodes in this proof mode", true);
 			}
 			else
 			{
@@ -275,7 +275,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 							//repaint();
 						}
 						else
-							parent.showStatus("You are not allowed to change that cell.");
+							parent.showStatus("You are not allowed to change that cell.", true);
 					}
 				}
 				

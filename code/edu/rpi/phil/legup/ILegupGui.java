@@ -6,7 +6,7 @@ public interface ILegupGui
 	 * Displays a puzzle/gui status message to the user.
 	 * @param statusMessage Status message to display
 	 */
-	public void showStatus(String statusMessage);
+	public void showStatus(String statusMessage, boolean error);
 	
 	/**
 	 * Displays an error message and closes

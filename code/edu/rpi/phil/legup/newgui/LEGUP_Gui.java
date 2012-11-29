@@ -442,9 +442,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 		PuzzleModule pm = legupMain.getPuzzleModule();
 		if (pm.checkProof(root) && delayStatus)
-			JOptionPane.showMessageDialog(null, "Your proof is correct.");
+			showStatus("Your proof is correct.", false);
 		else
-			JOptionPane.showMessageDialog(null, "Your proof is INCORRECT.");
+			showStatus("Your proof is incorrect.", true);
 	}
 
 	private void showAll() {
@@ -472,9 +472,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 * @see edu.rpi.phil.legup.ILegupGui
 	 */
 
-	public void showStatus(String status)
+	public void showStatus(String status, boolean error)
 	{
-		((JustificationFrame)test.getLeftComponent()).setStatus(false,status);
+		((JustificationFrame)test.getLeftComponent()).setStatus(!error,status);
 		// TODO console
 		console.println( "Status: " + status );
 	}
