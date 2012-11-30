@@ -136,6 +136,7 @@ public class ContradictionPanel extends JustificationPanel
 			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
 			return contradictions.get(button);
 		}
+		return contradictions.get(button);
 	}
 
 	@Override

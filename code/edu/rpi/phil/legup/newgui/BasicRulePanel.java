@@ -165,7 +165,7 @@ public class BasicRulePanel extends JustificationPanel
 			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
 			return rules.get(button);
 		}
-		
+		return rules.get(button);
 	}
 
 	@Override
