@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
 import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
@@ -115,24 +116,25 @@ public class ContradictionPanel extends JustificationPanel
 	}
 
 	@Override
-	protected void addJustification(int button)
+	protected Justification addJustification(int button)
 	{
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
 		
 		if (cur.isModifiable()) {
 			if (cur.getSingleParentState().getCaseRuleJustification() != null)
-				return;
+				return null;
 			
 			cur.setJustification(contradictions.get(button));
 		} else {
 			if (cur.getCaseRuleJustification() != null)
-				return;
+				return null;
 			
 			//add new transition
 			BoardState next = cur.addTransitionFrom();
 			next.setJustification(contradictions.get(button));
 			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+			return contradictions.get(button);
 		}
 	}
 
@@ -143,10 +145,11 @@ public class ContradictionPanel extends JustificationPanel
 	}
 
 	@Override
-	protected void doDefaultApplication(int index, BoardState state)
+	protected Justification doDefaultApplication(int index, BoardState state)
 	{
 		//There currently are no default applications for contradictions
 		//Maybe if we implment justifying a contradiction location
+		return null;
 	}
 }
 

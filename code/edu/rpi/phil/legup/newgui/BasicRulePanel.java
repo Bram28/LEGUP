@@ -26,6 +26,7 @@ import javax.swing.JToggleButton;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Legup;
+import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Selection;
 
@@ -135,19 +136,19 @@ public class BasicRulePanel extends JustificationPanel
 	}
 
 	@Override
-	protected void addJustification(int button)
+	protected Justification addJustification(int button)
 	{
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
-		
+		if(cur.getSingleParentState().getTransitionsFrom().size() > 1)return null;
 		if (cur.isModifiable()) {
 			if (cur.getSingleParentState().getCaseRuleJustification() != null)
-				return;
+				return null;
 			
 			cur.setJustification(rules.get(button));
 		} else {
 			if (cur.getCaseRuleJustification() != null)
-				return;
+				return null;
 			
 			//add new transition (if the state has no children)
 			BoardState next;
@@ -159,9 +160,10 @@ public class BasicRulePanel extends JustificationPanel
 			{
 				next = cur.getTransitionsFrom().lastElement();
 			}
-			else return; //don't do anything if there's already a split (since this is a basic rule)
+			else return null; //don't do anything if there's already a split (since this is a basic rule)
 			next.setJustification(rules.get(button));
 			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+			return rules.get(button);
 		}
 		
 	}
@@ -173,7 +175,7 @@ public class BasicRulePanel extends JustificationPanel
 	}
 	
 	@Override
-	protected void doDefaultApplication(int index, BoardState state)
+	protected Justification doDefaultApplication(int index, BoardState state)
 	{
 		PuzzleRule r = rules.get(index);
 		state.setJustification(r);
@@ -181,9 +183,15 @@ public class BasicRulePanel extends JustificationPanel
 		boolean legal = r.doDefaultApplication(state);
 
 		if (!legal)
+		{
 			parentFrame.setStatus(false, "There is not legal default application that can be applied.");
+			return null;
+		}
 		else
+		{
 			parentFrame.setStatus(true, "The rule is applied correctly!");
+			return r;
+		}
 	}
 	
 	

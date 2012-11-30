@@ -225,7 +225,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public void treeSelectionChanged(ArrayList <Selection> newSelectionList)
 	{
-		System.out.println("tree select changed");
+		//System.out.println("tree select changed");
 		updateStatus();
 	}
 	

@@ -130,7 +130,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
-		if(mouseOver != null)if(mouseOver.getState().getJustification() != null)
+		if(mouseOver != null)
+		if(mouseOver.getState().getJustification() != null || mouseOver.getState().getCaseRuleJustification() != null)
 		{
 			draw = mousePoint;//(Point)mouseOver.getState().getLocation().clone();
 			g.setColor(Color.gray);
@@ -171,7 +172,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
 
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
-				System.out.format("%d, %d,   %d, %d\n", childPoint.x, childPoint.y, state.getLocation().x, state.getLocation().y);
+				//System.out.format("%d, %d,   %d, %d\n", childPoint.x, childPoint.y, state.getLocation().x, state.getLocation().y);
 				g2D.setStroke(thin);
 			}
 			else

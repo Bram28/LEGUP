@@ -15,6 +15,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuListener;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Selection;
@@ -109,7 +110,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 	protected void draw( Graphics2D g )
 	{
 		count++;
-		System.out.println("Redrawing number " + count);
+		//System.out.println("Redrawing number " + count);
 		BoardDrawingHelper.draw(g);
 	}
 
@@ -254,16 +255,22 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 						{
 							
 							if (!state.isModifiable()) {
-								BoardState next;
+								BoardState next = state;
 								if(state.getTransitionsFrom().size() == 0)
 								{
 									next = state.addTransitionFrom();
 								}
-								else if (state.getTransitionsFrom().size() == 1)
+								else if (state.getTransitionsFrom().size() >= 1)
 								{
-									next = state.getTransitionsFrom().lastElement();
+									next = state.getTransitionsFrom().firstElement();
+									System.out.println(next.getJustification());
+									System.out.println(next.getCaseRuleJustification());
+									if(next.getCaseRuleJustification() != null)
+									{
+										System.out.println("hi");
+										next = state.addTransitionFrom();
+									}
 								}
-								else return;
 								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
 								pm.mousePressedEvent(next, p);
 							} else {
