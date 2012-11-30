@@ -138,7 +138,7 @@ public class CasePanel extends JustificationPanel
 
 		CaseRule r = caseRules.get(button);
 		int quantityofcases = Integer.valueOf(JOptionPane.showInputDialog(null,"How many branches?")).intValue();
-		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
+		/*if(quantityofcases > 10)quantityofcases = 10;*/ //some sanity checks on the input, to prevent
 		if(quantityofcases < 2)quantityofcases = 2; //the user from creating 100 nodes or something
 		for (int i = 0; i < quantityofcases; i++) {
 			cur.addTransitionFrom(null);
