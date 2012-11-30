@@ -109,7 +109,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 	protected void draw( Graphics2D g )
 	{
 		count++;
-		System.out.println("Redrawing number " + count);
+		//System.out.println("Redrawing number " + count);
 		BoardDrawingHelper.draw(g);
 	}
 
