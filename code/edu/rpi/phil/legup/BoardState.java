@@ -63,6 +63,7 @@ public class BoardState implements java.io.Serializable
 
 	private String puzzleName = null;
 	
+	// Duplicate Legup.user so that it can be saved in the file
 	private String user = null;
 
 	// the location of this node within the proof
@@ -110,6 +111,7 @@ public class BoardState implements java.io.Serializable
 		this(height,width,true);		
 	}
 	private BoardState(int height, int width, boolean makeOriginalState){
+		this.user = Legup.getInstance().getUser();
 		// Set the height and width
 		this.setHeight(height);
 		this.setWidth(width);

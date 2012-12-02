@@ -1,27 +1,13 @@
 package edu.rpi.phil.legup.saveable;
 
-//import java.beans.XMLDecoder;
-//import java.beans.XMLEncoder;
-import java.awt.Point;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.util.Scanner;
-import java.util.Vector;
-//import java.util.zip.GZIPInputStream;
-//import java.util.zip.GZIPOutputStream;
-
-import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Legup;
-import edu.rpi.phil.legup.newgui.TreePanel;
 
 public class SaveableProof
 {
@@ -37,6 +23,8 @@ public class SaveableProof
 
 		// Read an object
 		Object obj = obj_in.readObject();
+		
+		obj_in.close();
 
 		if (obj instanceof BoardState)
 		{
@@ -60,6 +48,8 @@ public class SaveableProof
 
 		// Write object out to disk
 		obj_out.writeObject ( state );
+		
+		obj_out.close();
 		
 		return true;
 	}

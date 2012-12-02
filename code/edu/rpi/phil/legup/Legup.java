@@ -222,6 +222,17 @@ public class Legup
 	// The GUI used - modified by Daniel for explicitness
 	private LEGUP_Gui gui = null;
 	private Login login = null;
+	private String user = null;
+	
+	public String getUser()
+	{
+		return user;
+	}
+	
+	public void setUser(String user)
+	{
+		this.user = user;  
+	}
 
 	public void refresh()
 	{

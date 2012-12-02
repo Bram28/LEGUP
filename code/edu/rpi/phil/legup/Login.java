@@ -146,6 +146,7 @@ public class Login {
 	        int response = conn.getResponseCode();
 	        if (response == 302)
 	        {
+	        	legupMain.setUser(rcsid);
 		        frame.setVisible(false);
 		        legupMain.getGui().setVisible(true);
 	        }
