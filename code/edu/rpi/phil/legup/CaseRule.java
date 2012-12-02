@@ -7,8 +7,10 @@ import java.awt.Point;
  * @author Stan
  *
  */
-public abstract class CaseRule extends Justification
+public abstract class CaseRule extends Justification implements java.io.Serializable
 {	
+	static final long serialVersionUID = 9003L;
+
 	protected String defaultApplicationText;
 	
 	/**

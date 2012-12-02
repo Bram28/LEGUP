@@ -6,8 +6,10 @@ import javax.swing.ImageIcon;
  * An abstract class representing all types of Justifications
  *
  */
-public abstract class Justification
+public abstract class Justification implements java.io.Serializable
 {
+	static final long serialVersionUID = 9002L;
+
 	String name = "Default Justification";
 	protected String description = "A blank justification";
 	protected ImageIcon image = null;

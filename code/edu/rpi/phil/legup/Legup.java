@@ -221,6 +221,7 @@ public class Legup
 
 	// The GUI used - modified by Daniel for explicitness
 	private LEGUP_Gui gui = null;
+	private Login login = null;
 
 	public void refresh()
 	{
@@ -240,10 +241,11 @@ public class Legup
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch( Exception e ){}
 
+		legup.login = new Login(legup);
 		legup.gui = new LEGUP_Gui(legup);
 		
 		//Not prompting puzzle on startup
-		legup.gui.promptPuzzle();
+		//legup.gui.promptPuzzle();
 
 		// This is for the animation - Daniel P
 		if (BoardDrawingHelper.ANIMATE_SPLIT_CASE) {

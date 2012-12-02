@@ -26,8 +26,10 @@ import edu.rpi.phil.legup.saveable.SaveableProofTransition;
  *
  * @author Drew Housten & Stan Bak
  */
-public class BoardState
+public class BoardState implements java.io.Serializable
 {
+	static final long serialVersionUID = 9001L;
+	
 	private static ArrayList<BoardDataChangeListener> boardDataChangeListeners = new ArrayList<BoardDataChangeListener>();
 	private static ArrayList<TransitionChangeListener> transitionChangeListeners = new ArrayList<TransitionChangeListener>();
 
@@ -60,6 +62,8 @@ public class BoardState
 	private int hintsGiven = 0;
 
 	private String puzzleName = null;
+	
+	private String user = null;
 
 	// the location of this node within the proof
 	private Point offset = new Point(0,0);

@@ -3,6 +3,9 @@ package edu.rpi.phil.legup.newgui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.awt.event.ActionEvent;
@@ -20,13 +23,16 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import javax.swing.SwingConstants;
@@ -186,12 +192,14 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		setupToolBar();
 		setupContent();
 		pack();
-
-		setVisible(true);
+		
+		// Centers the window
+		setLocationRelativeTo( null );		
 
 		fileChooser = new FileDialog(this);
+	
 	}
-
+	
 	// menubar related fields
 	private JMenuBar bar = new JMenuBar();
 	private JMenu file = new JMenu("File");
