@@ -5,6 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
+
+import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Legup;
@@ -30,9 +33,19 @@ public class SaveableProof
 		{
 			// Cast object to a BoardState
 			BoardState state = (BoardState) obj;
-			Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
-			Legup.getInstance().getGui().repaint();
-			return state;
+			String user = Legup.getInstance().getUser();
+			String admins[] = Legup.getInstance().getAdmins();
+			if (!(state.getUser().equals(user)) && !(Arrays.asList(admins).contains(user)))
+			{
+				JOptionPane.showMessageDialog(null, "You do not have permission to open files owned by "+state.getUser()+".");
+				return null;
+			}
+			else
+			{
+				Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
+				Legup.getInstance().getGui().repaint();
+				return state;
+			}
 		}
 		return null;
 

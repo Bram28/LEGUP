@@ -231,6 +231,11 @@ public class BoardState implements java.io.Serializable
 			this.setOffset(new Point(0, 0));
 	}
 
+	public String getUser()
+	{
+		return this.user;
+	}
+	
 	/**
 	 * Toggle whether this state and all its (single) children are collapsed
 	 * <not> called recursively to do the work

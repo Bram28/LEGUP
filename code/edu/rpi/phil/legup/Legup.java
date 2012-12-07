@@ -130,6 +130,7 @@ public class Legup
 			if(b!=null)while(b.getTransitionsFrom().size() > 0)b = b.getTransitionsFrom().lastElement();
 			selections.setSelection(new Selection(b,b.isModifiable()));
 		}
+		catch (NullPointerException e1) {}
 		catch (Exception e)
 		{
 			initialBoardState = null;
@@ -223,6 +224,7 @@ public class Legup
 	private LEGUP_Gui gui = null;
 	private Login login = null;
 	private String user = null;
+	private String[] admins = {"heuveb"};
 	
 	public String getUser()
 	{
@@ -232,6 +234,11 @@ public class Legup
 	public void setUser(String user)
 	{
 		this.user = user;  
+	}
+	
+	public String[] getAdmins()
+	{
+		return this.admins;
 	}
 
 	public void refresh()

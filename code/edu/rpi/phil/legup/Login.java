@@ -115,7 +115,6 @@ public class Login {
 	        HttpURLConnection conn = (HttpURLConnection)url_session.openConnection();
 	        
 	        String session_html = new String();
-	        String result_html = new String();
 	        
 	        conn.setDoOutput(true);
 	        
