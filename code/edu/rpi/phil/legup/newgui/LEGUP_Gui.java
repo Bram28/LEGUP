@@ -3,6 +3,8 @@ package edu.rpi.phil.legup.newgui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -315,6 +317,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	// TODO
 	private JustificationFrame justificationFrame;
 	private Tree tree;
+	public Tree getTree() {return tree;}
 	private Console console;
 	private Board board;
 	private JSplitPane test, test2;
@@ -370,20 +373,34 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		//add( placeholder );
 		
 	}
-
+	class proofFilter implements FilenameFilter
+	{
+		public boolean accept(File dir, String name)
+		{
+			System.out.println("proofFilter " + ((name.contains(".proof")) ? "accepts" : "rejects") + " \"" + name + "\"");
+			if(name.contains(".proof"))return true;
+			return false;
+		}
+	}
 	private void openProof()
 	{
 		if(Legup.getInstance().getInitialBoardState() != null){if(!noquit("opening a new proof?"))return;}
+		JFileChooser proofchooser = new JFileChooser("boards");
 		fileChooser.setMode(FileDialog.LOAD);
 		fileChooser.setTitle("Select Proof");
 		fileChooser.setVisible(true);
+		//proofFilter filter = new proofFilter();
+		//fileChooser.setFilenameFilter(filter);
 		String filename = fileChooser.getFile();
 
 		if (filename != null) // user didn't press cancel
 		{
 			filename = fileChooser.getDirectory() + filename;
 			if (!filename.toLowerCase().endsWith(".proof"))
-				filename += ".proof";
+			{
+				JOptionPane.showMessageDialog(null,"File selected does not have the suffix \".proof\".");
+				return;
+			}
 			Legup.getInstance().loadProofFile(filename);
 		}
 
@@ -396,6 +413,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		fileChooser.setMode(FileDialog.SAVE);
 		fileChooser.setTitle("Select Proof");
 		fileChooser.setVisible(true);
+		//proofFilter filter = new proofFilter();
+		//fileChooser.setFilenameFilter(filter);
 		String filename = fileChooser.getFile();
 
 		if (filename != null) // user didn't pressed cancel
@@ -418,14 +437,19 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private void checkProof()
 	{
 		BoardState root = legupMain.getInitialBoardState();
-		root.evalDelayStatus();
+		boolean delayStatus = root.evalDelayStatus();
 		repaintAll();
 
 		PuzzleModule pm = legupMain.getPuzzleModule();
-		if (pm.checkProof(root))
-			JOptionPane.showMessageDialog(null, "Your proof is correct.");
+		if (pm.checkProof(root) && delayStatus)
+			showStatus("Your proof is correct.", false);
 		else
-			JOptionPane.showMessageDialog(null, "Your proof is INCORRECT.");
+		{
+			String message = "Your proof is incorrect.";
+			if(!delayStatus)message += "\nInvalid steps have been colored red.";
+			if(!pm.checkProof(root))message += "\nThe board must be completely filled.";
+			showStatus(message, true);
+		}
 	}
 
 	private void showAll() {
@@ -453,9 +477,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 * @see edu.rpi.phil.legup.ILegupGui
 	 */
 
-	public void showStatus(String status)
+	public void showStatus(String status, boolean error)
 	{
-		((JustificationFrame)test.getLeftComponent()).setStatus(false,status);
+		((JustificationFrame)test.getLeftComponent()).setStatus(!error,status);
 		// TODO console
 		console.println( "Status: " + status );
 	}

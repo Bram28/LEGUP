@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
@@ -33,7 +34,7 @@ import edu.rpi.phil.legup.Selection;
 public class TreePanel extends ZoomablePanel implements TransitionChangeListener, TreeSelectionListener
 {
 	private static final long serialVersionUID = 3124502814357135662L;
-	private static final Color nodeColor = new Color(255,255,155);
+	public static final Color nodeColor = new Color(255,255,155);
 	public static final int NODE_RADIUS = 10;
 	private static final int SMALL_NODE_RADIUS = 7;
 	private static final int COLLAPSED_DRAW_DELTA_Y = 10;
@@ -128,10 +129,15 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> transitionsFrom = null;
-		Point draw = (Point)state.getLocation().clone();
-
+		Point draw;
+		if(mouseOver != null)if(mouseOver.getState().getJustification() != null)
+		{
+			draw = mousePoint;//(Point)mouseOver.getState().getLocation().clone();
+			g.setColor(Color.gray);
+			g2D.drawRect(draw.x+30,draw.y-30,100,100);
+		}
 		g.setColor(Color.black);
-
+		draw = (Point)state.getLocation().clone();
 		if (!isCollapsed)
 			transitionsFrom = state.getTransitionsFrom();
 		else
@@ -165,7 +171,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
 
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
-				System.out.format("%d, %d,   %d, %d\n", childPoint.x, childPoint.y, state.getLocation().x, state.getLocation().y);
+				//System.out.format("%d, %d,   %d, %d\n", childPoint.x, childPoint.y, state.getLocation().x, state.getLocation().y);
 				g2D.setStroke(thin);
 			}
 			else
@@ -271,13 +277,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		Selection theSelection = new Selection(parent,true);
 		int nodeRadius = collapsedChild ? SMALL_NODE_RADIUS : NODE_RADIUS;
-
-		if (sel.contains(theSelection))
-		{
-			g2d.setStroke(medium);
-			g.setColor(Color.blue);
-		}
-
+		
+		g2d.setStroke(medium);
+		g.setColor(((sel.contains(theSelection)) ? Color.blue : Color.gray));
+		
 		g2d.draw(trans);
 
 		// we also want to draw the arrowhead
@@ -335,23 +338,25 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		Selection theSelection = new Selection(state,false);
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
-		g.setColor(((!state.isModifiable()) ? nodeColor : Color.red));
-		if(!state.isModifiable())
+		//g.setColor(((!state.isModifiable()) ? nodeColor : Color.green));
+		if(!state.leadsToContradiction())
 		{
-			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-			g2D.setStroke((sel.contains(theSelection)? medium : thin));
-			g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+			g.setColor(state.getColor());
+			if(!state.isModifiable())
+			{
+				g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+				g2D.setStroke((sel.contains(theSelection)? medium : thin));
+				g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+			}
+			else
+			{
+				g2D.fill(triangle);
+				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+				g2D.setStroke((sel.contains(theSelection)? medium : thin));
+				g.drawPolygon(triangle);
+			}
 		}
-		else
-		{
-			g2D.fill(triangle);
-			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-			g2D.setStroke((sel.contains(theSelection)? medium : thin));
-			g.drawPolygon(triangle);
-		}
-		
-		
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
 		// extra drawing instructions
@@ -362,8 +367,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		{
 			if (state.leadsToContradiction())
 				i = leadsToContradtionImage;
-			else if(state.leadsToSolution())
-				i = leadsToSolutionImage;
+			//commented out because the smily face was appearing
+			//in a way that didn't seem to make sense - Avi
+			//else if(state.leadsToSolution())
+			//	i = leadsToSolutionImage;
 		}
 
 
@@ -509,10 +516,14 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		//this was what was in the rightclick before the menu - Avi
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
-		if (cur.isModifiable() && selection.isState())
+		if(cur.getChangedCells().size() > 0)
 		{
-			//cur.setModifiableState(false);
-			Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+			if (cur.isModifiable() && selection.isState())
+			{
+				//cur.setModifiableState(false);
+				//cur.finalize_cells();
+				Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+			}
 		}
 		return cur;
 		/*
@@ -673,9 +684,28 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Point draw = new Point(loc.x - radius, loc.y - radius);
 		// distance from a transition which is considered clicking on it, squared
 		final int MAX_CLICK_DISTANCE_SQ = 5*5;
-
-		Ellipse2D.Float myBounds = new Ellipse2D.Float(draw.x,draw.y,2 * radius,2 * radius);
-
+		Shape myBounds;
+		//System.out.println("getSelectionAtPoint called for (" + where.x + "," + where.y + ") on node at point (" + state.getLocation().x + "," + state.getLocation().y + ")");
+		if(state.isModifiable())
+		{
+			/*draw.x += 128;
+			int[] points_x = new int[3];
+			int[] points_y = new int[3];
+			for(int c1 = 0;c1 < 3;c1+=1)
+			{
+				points_x[c1] = (int)(draw.x+radius*Math.cos(Math.toRadians(c1*120)));
+				points_y[c1] = (int)(draw.y+radius*Math.sin(Math.toRadians(c1*120)));
+			}
+			myBounds = new Polygon(points_x,points_y,3);*/
+			draw.x -= radius/2;
+			draw.y -= radius/2;
+			myBounds = new Ellipse2D.Float(draw.x,draw.y,(int)(3*radius),(int)(3*radius));
+		}
+		else
+		{
+			myBounds = new Ellipse2D.Float(draw.x,draw.y,2 * radius,2 * radius);
+		}
+		
 		boolean stateSelected = myBounds.contains(where);
 
 		if (stateSelected && isCollapsed)
@@ -692,8 +722,15 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		else
 		{
-			Vector<BoardState> transitionsFrom = state.getTransitionsFrom();
-
+			for(BoardState b : state.getTransitionsFrom())
+			{
+				Selection s = getSelectionAtPoint(b,where);
+				if(s != null)rv = s;
+			}
+			//the whole chunk of code below was deliberately skipping the transitions, which
+			//is no longer desireable
+			/*Vector<BoardState> transitionsFrom = state.getTransitionsFrom();
+			
 			for (int c = 0; c < transitionsFrom.size(); ++c)
 			{
 				BoardState b = transitionsFrom.get(c);
@@ -715,7 +752,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				if (s != null)
 					rv = s;
 
-			}
+			}*/
 			// note that we may select a state after we've found select transition,
 			// rv = new Selection(state,true);
 			// transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)

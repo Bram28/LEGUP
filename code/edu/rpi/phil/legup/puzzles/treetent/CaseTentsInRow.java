@@ -24,48 +24,191 @@ public class CaseTentsInRow extends CaseRule
 		image = new ImageIcon("images/treetent/case_rowcount.png");
 	}
 	
+	private int numTentsNeededInRow(BoardState state, int row){
+		int label = state.getLabel(BoardState.LABEL_RIGHT, row);
+		return TreeTent.translateNumTents(label);
+	}
+	private int numTentsNeededInColumn(BoardState state, int col){
+		int label = state.getLabel(BoardState.LABEL_BOTTOM, col);
+		return TreeTent.translateNumTents(label);
+	}
+	
+	private int numTentsInRow(BoardState boardState, int row)
+    {
+		int width = boardState.getWidth();
+		int numTents = 0;
+		
+		for (int i=0;i<width;i++)
+		{
+			if (boardState.getCellContents(i,row) == 2) // if this cell contains a tent
+			{
+			    numTents++;
+			}
+		}
+		return numTents;
+    }
+	private int numTentsInColumn(BoardState boardState, int col)
+    {
+		int height = boardState.getHeight();
+		int numTents = 0;
+		
+		for (int i=0;i<height;i++)
+		{
+			if (boardState.getCellContents(col,i) == 2) // if this cell contains a tent
+			{
+			    numTents++;
+			}
+		}
+		return numTents;
+    }
+	
+	private int numEmptySpacesInRow(BoardState boardState, int row)
+    {
+		int width = boardState.getWidth();
+		int numEmpty = 0;
+		
+		for (int i=0;i<width;i++)
+		{
+			if (boardState.getCellContents(i,row) == 0) // if this cell is unknown
+			{
+				numEmpty++;
+			}
+		}
+		return numEmpty;
+    }
+	private int numEmptySpacesInColumn(BoardState boardState, int col)
+    {
+		int height = boardState.getHeight();
+		int numEmpty = 0;
+		
+		for (int i=0;i<height;i++)
+		{
+			if (boardState.getCellContents(col,i) == 0) // if this cell is unknown
+			{
+				numEmpty++;
+			}
+		}
+		return numEmpty;
+    }
+	private static int choose(int x, int y) {
+	    if (y < 0 || y > x) return 0;
+	    if (y > x/2) {
+	        // choose(n,k) == choose(n,n-k), 
+	        // so this could save a little effort
+	        y = x - y;
+	    }
+
+	    int denominator = 1, numerator = 1;
+	    for (int i = 1; i <= y; i++) {
+	        denominator *= i;
+	        numerator *= (x + 1 - i);
+	    }
+	    return numerator / denominator;
+	}
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;
-
-		if (state.getTransitionsFrom().size() != 2)
+		int affectedRow = -1; // a value of -1 indicates that a column is being affected, not a row
+		int affectedColumn = -1;
+		int numChildStates = state.getTransitionsFrom().size();  // how many branches do we have?
+		if (numChildStates < 2)
 		{
-			rv = "This case rule can only be applied on a two-way split.";
+			return "This case rule can only be applied on a two-way or more split.";
 		}
-		else
-		{
-			BoardState one = state.getTransitionsFrom().get(0);
-			BoardState two = state.getTransitionsFrom().get(1);
-						
-			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
+		// we will first check one state to see which row/column we are working with 
+		// (we still will need to check the rest of the states to make sure they are also changing this row/col)
+		BoardState one = state.getTransitionsFrom().get(0);					
+		ArrayList<Point> pointsChangedInFirstNewState = BoardState.getDifferenceLocations(state,one);
+		if(pointsChangedInFirstNewState.size() < 2){
+			return "At least two squares must be affected by this split";
+		}
+		// we first check two points to see which row/col they share
+		Point firstPointChanged = pointsChangedInFirstNewState.get(0);
+		Point secondPointChanged = pointsChangedInFirstNewState.get(1);
+		if(firstPointChanged.x == secondPointChanged.x){
+			affectedColumn = firstPointChanged.x;
+		}
+		else{
+			if(firstPointChanged.y == secondPointChanged.y){
+				affectedRow = firstPointChanged.y;
+			}
+			else{
+				return "Changes must be made within one row or column";
+			}
+		}
+		// now we know which row or column has been affected.
+		// next we check how many permutations we will have in this row/column
+		int numTentsTotal;
+		int numTentsExisting;
+		int numEmptySpaces;
+		if(affectedRow != -1){ // if we are dealing with a row being changed
+			numTentsTotal = numTentsNeededInRow(state,affectedRow);
+			numTentsExisting = numTentsInRow(state,affectedRow);
+			numEmptySpaces = numEmptySpacesInRow(state,affectedRow);
+		}
+		else{ // if we are dealing with a column being changed
+			numTentsTotal = numTentsNeededInColumn(state,affectedColumn);
+			numTentsExisting = numTentsInColumn(state, affectedColumn);
+			numEmptySpaces = numEmptySpacesInColumn(state,affectedColumn);
+		}
+		int numTentsNeeded = numTentsTotal - numTentsExisting;
+		if(numTentsNeeded == 0){
+			return "No more tents are needed here";
+		}
+		if(numTentsNeeded == numEmptySpaces){
+			return "There is only one possible way to place these tents.  Use the 'finish tents' rule.";
+		}
+		if(numTentsNeeded > numEmptySpaces){
+			return "There is no way to place "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces.";
+		}
+		// now we do a combinatorial to figure out how many ways there are to place these tents in these empty spaces
+		// numEmptySpaces choose numTentsNeeded
+		
+		int numCombinations = choose(numEmptySpaces,numTentsNeeded);
+		if(numChildStates != numCombinations){
+			return "The number of branches must be equal to the number of possible configurations for "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces";
+		}
+		Vector<BoardState> allChildStates = state.getTransitionsFrom();
+		for(int i = 0; i < allChildStates.size(); i++){
+			BoardState currentChildState = allChildStates.get(i);
+			ArrayList<Point> pointsChanged = BoardState.getDifferenceLocations(state,currentChildState);
+			if(pointsChanged.size() != numEmptySpaces){
+				return "The number of changed cells in each child state must be equal to the number of unfilled states in the relevant row of the parent";
+			}
 			
-			if (dif.size() > 1)
-			{
-				rv = "Your two-way split is only allowed to change a single cell with this rule.";
+			// make sure that no child states are the same
+			for(int j = i+1; j < allChildStates.size(); j++){
+				ArrayList<Point> childDifferences = BoardState.getDifferenceLocations(allChildStates.get(j),currentChildState);
+				if(childDifferences.size() == 0){
+					return "No two child nodes may be the same";
+				}
 			}
-			else if (dif.size() == 0)
-			{
-				rv = "Your two-way split must change a single cell with this rule.";
-			}
-			else
-			{
-				Point p = dif.get(0);
+					
+			// make sure that all affected cells are in the affected row or column
+			for(int j = 0; j < pointsChanged.size(); j++){
+				if(affectedRow != -1){ 
+					if(pointsChanged.get(j).y != affectedRow){
+						return "Each changed cell in each child state must be in the same row or column";
+					}
+				}
+				else{ 
+					if(pointsChanged.get(j).x != affectedColumn){
+						return "Each changed cell in each child state must be in the same row or column";
+					}
+				}
 				
-				if (!((one.getCellContents(p.x,p.y) == TreeTent.CELL_TENT && 
-					two.getCellContents(p.x,p.y) == TreeTent.CELL_GRASS) ||
-					(two.getCellContents(p.x,p.y) == TreeTent.CELL_TENT && 
-						one.getCellContents(p.x,p.y) == TreeTent.CELL_GRASS)))
-				{
-					rv = "In this case rule, one state's cell must contain grass and the other a tent.";
-				}
-				else if (state.getCellContents(p.x,p.y) != TreeTent.CELL_UNKNOWN)
-				{
-					rv = "The parent cell that you're applying the case rule on must be a blank cell.";
+			}
+			// make sure that there are the correct amount of tents placed in the row or column
+			int numTentsPlaced = 0;
+			for(int j = 0; j < pointsChanged.size(); j++){
+				if(currentChildState.getCellContents(pointsChanged.get(j).x ,pointsChanged.get(j).y) == TreeTent.CELL_TENT){
+					numTentsPlaced++;
 				}
 			}
-			
+			if(numTentsPlaced != numTentsNeeded){
+				return "The number of tents placed in each child cell must be equal to the number needed to complete the changed row or column.";
+			}
 		}
-		rv = null;
 		return rv;
 	}
 	

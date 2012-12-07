@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JComponent;
 import javax.swing.event.PopupMenuListener;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
@@ -28,17 +29,31 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 	private Point lastRightMousePoint = null;
 	JPopupMenu storedMenu = new JPopupMenu();
+	String storedMenuOptions[];
 	
-	 public void actionPerformed(ActionEvent e)
-	 { 
-		 for(int a=0;a<Legup.getInstance().getPuzzleModule().numAcceptableStates();a++)
-		 {
-			 if(e.getSource() == storedMenu.getComponent(a))
-			 {
-				 optionchosen = a;
-			 }
-		 }
-	 }
+	public void actionPerformed(ActionEvent e)
+	{ 
+		for(int a=0;a<Legup.getInstance().getPuzzleModule().numAcceptableStates();a++)
+		{
+			if(e.getSource() == storedMenu.getComponent(a))
+			{
+				Selection selection = Legup.getInstance().getSelections().getFirstSelection();
+				BoardState state = selection.getState();
+				PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+
+				optionchosen = a;
+				
+				if (!state.isModifiable()) {
+					
+					BoardState next = state.addTransitionFrom();
+					Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
+					next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
+				} else {
+					state.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
+				}
+			}
+		}
+	}
 
 	
 	class PopupListener extends MouseAdapter {
@@ -109,7 +124,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 	protected void draw( Graphics2D g )
 	{
 		count++;
-		System.out.println("Redrawing number " + count);
+		//System.out.println("Redrawing number " + count);
 		BoardDrawingHelper.draw(g);
 	}
 
@@ -120,7 +135,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 		//The board concerned with receiving input for states
 		if (!selection.isState())
 		{
-			parent.showStatus("You can not modify transitions.");
+			parent.showStatus("You can not modify transitions.", true);
 			return;
 		}
 
@@ -145,6 +160,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 			p.y -= imH;
 			p.x = (int)(Math.floor((double)p.x/imW));
 			p.y = (int)(Math.floor((double)p.y/imH));
+			
 			if(pm.defaultApplication != null)
 			{
 				JustificationFrame.justificationApplied(state,pm.defaultApplication);
@@ -153,7 +169,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 			}
 			else if (state.getTransitionsFrom().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
 			{
-				parent.showStatus("You cannot modify internal nodes in this proof mode");
+				parent.showStatus("You cannot modify internal nodes in this proof mode", true);
 			}
 			else
 			{
@@ -166,10 +182,6 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 						{
 							JPopupMenu pop = new JPopupMenu();
 							String[] menuoptions = new String[pm.numAcceptableStates()];
-
-							//int optionchosen = 0;
-							optionchosen = optionchosen% pm.numAcceptableStates();
-							//System.out.println(optionchosen);
 
 							for(int c1=0;c1<pm.numAcceptableStates();c1++)
 							{
@@ -185,29 +197,18 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 								item.addActionListener(this);
 								pop.add(item);
 							}
-							pop.show(this,e.getX(), e.getY());
+							pop.show(this,e.getX()+ ((JComponent)e.getSource()).getX(), e.getY()+((JComponent)e.getSource()).getY());
 							//pop.show(this,temp.x, temp.y);
 							storedMenu = pop;
-							
-							System.out.println("1) " + optionchosen);
-							System.out.println("2) " + menuoptions[optionchosen]);
-							System.out.println("3) " + pm.getStateNumber(menuoptions[optionchosen]));
-							
-							if (!state.isModifiable()) {
-								
-								BoardState next = state.addTransitionFrom();
-								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
-								next.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[optionchosen]));
-							} else {
-								state.setCellContents(p.x,p.y,pm.getStateNumber(menuoptions[optionchosen]));
-							}
+							storedMenuOptions = menuoptions;
+							lastRightMousePoint = p;
 							
 							// This is unnecessary, board is repainted on
 							// boardstate change anyway
 							//repaint();
 						}
 						else
-							parent.showStatus("You are not allowed to change that cell.");
+							parent.showStatus("You are not allowed to change that cell.", true);
 					}
 				}
 			}	
@@ -236,11 +237,11 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 			/*else if (parentStates.size() == 0)
 			{
 				// can't add to the root state, print an error
-				//parent.showStatus("You can not change the initial state.");
+				//parent.showStatus("You can not change the initial state.", true);
 			}*/
 			else if (state.getTransitionsFrom().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
 			{
-				parent.showStatus("You cannot modify internal nodes in this proof mode");
+				parent.showStatus("You cannot modify internal nodes in this proof mode", true);
 			}
 			else
 			{
@@ -254,7 +255,16 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 						{
 							
 							if (!state.isModifiable()) {
-								BoardState next = state.addTransitionFrom();
+								BoardState next;
+								if(state.getTransitionsFrom().size() == 0)
+								{
+									next = state.addTransitionFrom();
+								}
+								else if (state.getTransitionsFrom().size() == 1)
+								{
+									next = state.getTransitionsFrom().lastElement();
+								}
+								else return;
 								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
 								pm.mousePressedEvent(next, p);
 							} else {
@@ -266,7 +276,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 							//repaint();
 						}
 						else
-							parent.showStatus("You are not allowed to change that cell.");
+							parent.showStatus("You are not allowed to change that cell.", true);
 					}
 				}
 				

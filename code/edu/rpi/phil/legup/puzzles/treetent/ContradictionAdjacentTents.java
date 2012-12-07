@@ -11,7 +11,7 @@ public class ContradictionAdjacentTents extends Contradiction
 	public ContradictionAdjacentTents()
 	 {
 		setName("Adjacent Tents");
-		description = "Tents cannot be adjacent or diagnol";
+		description = "Tents cannot be adjacent or diagonal.";
 		image = new ImageIcon("images/treetent/contra_adjacentTents.png");
 	 }
 	 

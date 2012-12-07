@@ -2,6 +2,7 @@ package edu.rpi.phil.legup.newgui;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Justification;
+import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
@@ -46,8 +47,8 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			this.setLayout(new GridLayout(2,2));
 			add(addChild);
 			addChild.addActionListener(this);
-			addChild.setEnabled(true);
-			addChild.setToolTipText("Add node");
+			addChild.setEnabled(false);
+			addChild.setToolTipText("Add node (disabled, use justification instead)");
 			//addChild.setEnabled(false);
 			//addChild.setToolTipText("Add node (select justification first)");
 			add(delChild);
@@ -156,7 +157,15 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	 */
 	public void addChildAtCurrentState()
 	{
+		if (currentJustificationApplied instanceof CaseRule){
+			toolbar.addChild.setEnabled(true);
+			toolbar.addChild.setToolTipText("Finalize CaseRule");
+		} else {
+			toolbar.addChild.setEnabled(false);
+			toolbar.addChild.setToolTipText("Add node (disabled, use justification instead)");
+		}
 		treePanel.addChildAtCurrentState(currentJustificationApplied);
+		currentJustificationApplied = null;
 	}
 	
 	/**
@@ -196,13 +205,13 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	{
 		System.out.println(j);
 		//comments to remove graying of addnode button, due to glitches caused - Avi
-		/*if (j == null){
-			toolbar.addChild.setEnabled(false);
-			toolbar.addChild.setToolTipText("Add node (select justification first)");
-		} else {
+		if (j instanceof CaseRule){
 			toolbar.addChild.setEnabled(true);
-			toolbar.addChild.setToolTipText("Add node");
-		}*/
+			toolbar.addChild.setToolTipText("Finalize CaseRule");
+		} else {
+			toolbar.addChild.setEnabled(false);
+			toolbar.addChild.setToolTipText("Add node (disabled, use justification instead)");
+		}
 		currentJustificationApplied = j;
 		j = null;
 		repaint();
@@ -221,7 +230,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public void boardDataChanged(BoardState state)
 	{
-		System.out.println("board data changed");
+		//System.out.println("board data changed");
 		updateStatus();
 	}
 	

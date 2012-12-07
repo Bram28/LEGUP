@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
 import java.lang.Math;
-
+import java.awt.Color;
 import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 import edu.rpi.phil.legup.newgui.TransitionChangeListener;
@@ -41,10 +41,10 @@ public class BoardState
 	static final public int STATUS_RULE_INCORRECT = 2;
 	static final public int STATUS_CONTRADICTION_CORRECT = 3;
 	static final public int STATUS_CONTRADICTION_INCORRECT = 4;
-	
+	private Color current_color = TreePanel.nodeColor;
+	public Color getColor() { return current_color; }
 	// BoardState when initially created (set in constructor)
 	private BoardState originalState = null;
-
 	private int height;
 	private int width;
 	private int[][] boardCells;
@@ -629,10 +629,25 @@ public class BoardState
 		transitionsFrom = from;
 	}
 
-	public void evalDelayStatus()
+	public boolean evalDelayStatus()
 	{
 		delayStatus = getStatus();
-		for (BoardState B : transitionsFrom) B.evalDelayStatus();
+		if(delayStatus == STATUS_UNJUSTIFIED || delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT)
+		{
+			if(isModifiable())current_color = Color.green;
+		}
+		else
+		{
+			if(isModifiable())current_color = Color.red;
+		}
+		for (BoardState B : transitionsFrom)
+		{
+			if(!B.evalDelayStatus())
+			{
+				return false;
+			}
+		}
+		return delayStatus == STATUS_UNJUSTIFIED || delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT;
 	}
 
 	private void modifyStatus()
@@ -1639,10 +1654,10 @@ public class BoardState
 		{
 			BoardState parentState = this.getSingleParentState();
 			Point p = new Point(parentState.getLocation().y, parentState.getLocation().x);
+			this.location.x = p.x + offset.x;
 			this.location.y = p.y + offset.y;
 			
 			//this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
-			this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
 
 			//If this and its parent are collapsed, their locations are ontop of each other
 			//Places this over where the previous actual state is if it functions as a transition (isModifiable)

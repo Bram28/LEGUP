@@ -7,6 +7,7 @@ package edu.rpi.phil.legup;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.newgui.TreeSelectionListener;
@@ -94,7 +95,7 @@ public class Legup
 		try
 		{
 			initialBoardState = SaveableBoardState.loadState(filename);
-			selections.setSelection(new Selection(initialBoardState, false));
+			selections.setSelection(new Selection(initialBoardState,false));
 		}
 		catch (Exception e)
 		{
@@ -105,7 +106,7 @@ public class Legup
 
 		String puzzle = initialBoardState.getPuzzleName();
 		System.out.println("Loading puzzle module: " + puzzle);
-
+		
 		if(loadPuzzleModule(puzzle))
 		{
 			errorMessage("Error encountered loading PuzzleModule.");
@@ -124,7 +125,10 @@ public class Legup
 		try
 		{
 			initialBoardState = SaveableProof.loadProof(filename);
-			selections.setSelection(new Selection(initialBoardState,false));
+			selections = new Selections();
+			BoardState b = initialBoardState;
+			if(b!=null)while(b.getTransitionsFrom().size() > 0)b = b.getTransitionsFrom().lastElement();
+			selections.setSelection(new Selection(b,b.isModifiable()));
 		}
 		catch (Exception e)
 		{
@@ -135,11 +139,11 @@ public class Legup
 
 		String puzzle = initialBoardState.getPuzzleName();
 		System.out.println("Loading puzzle module: " + puzzle);
+		if(puzzle == null)
 		if(loadPuzzleModule(puzzle))
 		{
 			errorMessage("Error encountered loading PuzzleModule.");
 		}
-
 		gui.reloadGui();
 	}
 
