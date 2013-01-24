@@ -131,7 +131,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
 		if(mouseOver != null)
-		if(mouseOver.getState().getJustification() != null || mouseOver.getState().getCaseRuleJustification() != null)
+		if((mouseOver.getState().getJustification() != null && !mouseOver.getState().isModifiable())
+		||(mouseOver.getState().getCaseRuleJustification() != null) && mouseOver.getState().isModifiable())
 		{
 			draw = mousePoint;//(Point)mouseOver.getState().getLocation().clone();
 			g.setColor(Color.gray);

@@ -48,7 +48,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			add(addChild);
 			addChild.addActionListener(this);
 			addChild.setEnabled(false);
-			addChild.setToolTipText("Add node (disabled, use justification instead)");
+			addChild.setToolTipText("Finalize CaseRule");
 			//addChild.setEnabled(false);
 			//addChild.setToolTipText("Add node (select justification first)");
 			add(delChild);
@@ -160,10 +160,8 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	{
 		if (currentJustificationApplied instanceof CaseRule){
 			toolbar.addChild.setEnabled(true);
-			toolbar.addChild.setToolTipText("Finalize CaseRule");
 		} else {
 			toolbar.addChild.setEnabled(false);
-			toolbar.addChild.setToolTipText("Add node (disabled, use justification instead)");
 		}
 		treePanel.addChildAtCurrentState(currentJustificationApplied);
 		currentJustificationApplied = null;
@@ -205,13 +203,10 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	public void justificationApplied(BoardState state, Justification j)
 	{
 		System.out.println(j);
-		//comments to remove graying of addnode button, due to glitches caused - Avi
 		if (j instanceof CaseRule){
 			toolbar.addChild.setEnabled(true);
-			toolbar.addChild.setToolTipText("Finalize CaseRule");
 		} else {
 			toolbar.addChild.setEnabled(false);
-			toolbar.addChild.setToolTipText("Add node (disabled, use justification instead)");
 		}
 		currentJustificationApplied = j;
 		j = null;
