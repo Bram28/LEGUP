@@ -267,7 +267,6 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 									System.out.println(next.getCaseRuleJustification());
 									if(next.getCaseRuleJustification() != null)
 									{
-										System.out.println("hi");
 										next = state.addTransitionFrom();
 									}
 								}

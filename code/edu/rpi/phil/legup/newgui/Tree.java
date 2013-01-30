@@ -62,14 +62,25 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			collapse.setToolTipText("Collapse nodes");
 		}
 
-		public void actionPerformed(ActionEvent e){
-			if( e.getSource() == addChild ){
+		public void actionPerformed(ActionEvent e)
+		{
+			if( e.getSource() == addChild )
+			{
+				BoardState cur = Legup.getInstance().getSelections().getFirstSelection().getState();
+				//cur.getSingleParentState().getTransitionsFrom().lastElement().getCaseRuleJustification();
+				cur.setCaseRuleJustification(cur.getSingleParentState().getFirstChild().getCaseRuleJustification());
 				addChildAtCurrentState();
-			} else if( e.getSource() == delChild ){
+			}
+			else if( e.getSource() == delChild )
+			{
 				delChildAtCurrentState();
-			} else if( e.getSource() == merge ){
+			}
+			else if( e.getSource() == merge )
+			{
 				mergeStates();
-			} else if( e.getSource() == collapse ){
+			}
+			else if( e.getSource() == collapse )
+			{
 				delCurrentState();
 				//collapseStates();
 			}
@@ -158,11 +169,11 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	 */
 	public void addChildAtCurrentState()
 	{
-		if (currentJustificationApplied instanceof CaseRule){
+		/*if (currentJustificationApplied instanceof CaseRule){
 			toolbar.addChild.setEnabled(true);
 		} else {
 			toolbar.addChild.setEnabled(false);
-		}
+		}*/
 		treePanel.addChildAtCurrentState(currentJustificationApplied);
 		currentJustificationApplied = null;
 	}
@@ -202,12 +213,11 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 
 	public void justificationApplied(BoardState state, Justification j)
 	{
-		System.out.println(j);
-		if (j instanceof CaseRule){
+		/*if (j instanceof CaseRule){
 			toolbar.addChild.setEnabled(true);
 		} else {
 			toolbar.addChild.setEnabled(false);
-		}
+		}*/
 		currentJustificationApplied = j;
 		j = null;
 		repaint();
@@ -221,6 +231,29 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	public void treeSelectionChanged(ArrayList <Selection> newSelectionList)
 	{
 		//System.out.println("tree select changed");
+		BoardState cur = Legup.getInstance().getSelections().getFirstSelection().getState();
+		if(cur.getSingleParentState() != null)
+		{
+			if(cur.getSingleParentState().getFirstChild() != null)
+			{
+				if(cur.getSingleParentState().getFirstChild().getCaseRuleJustification() != null)
+				{
+					toolbar.addChild.setEnabled(true);
+				}
+				else
+				{
+					toolbar.addChild.setEnabled(false);
+				}
+			}
+			else
+			{
+				toolbar.addChild.setEnabled(false);
+			}
+		}
+		else
+		{
+			toolbar.addChild.setEnabled(false);
+		}
 		updateStatus();
 	}
 	

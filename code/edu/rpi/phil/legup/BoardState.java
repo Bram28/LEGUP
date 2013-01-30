@@ -1136,7 +1136,11 @@ public class BoardState
 
 		return rv;
 	}
-
+	
+	public BoardState getFirstChild()
+	{
+		return getTransitionsFrom().firstElement();
+	}
 
 	/**
 	 * Makes a copy of the current board state.
