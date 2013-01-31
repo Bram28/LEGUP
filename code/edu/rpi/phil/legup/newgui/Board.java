@@ -149,7 +149,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 			return; //This doesn't make sense but it was already here
 		if (e.getButton() == MouseEvent.BUTTON3)
 		{
-			System.out.println("Right mouse clicked.");
+			//System.out.println("Right mouse clicked.");
 			//copied from MouseEvent.BUTTON1 code below
 			Dimension d = pm.getImageSize();
 			int imW = d.width;
@@ -187,8 +187,8 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 							for(int c1=0;c1<pm.numAcceptableStates();c1++)
 							{
 								menuoptions[c1] = pm.getStateName(c1);
-								System.out.println("numAcceptableStates: "+ pm.numAcceptableStates());
-								System.out.println("menuoptions["+c1+"]: "+ menuoptions[c1]);
+								//System.out.println("numAcceptableStates: "+ pm.numAcceptableStates());
+								//System.out.println("menuoptions["+c1+"]: "+ menuoptions[c1]);
 							}
 							for(int a = 0; a < pm.numAcceptableStates(); a++)
 							{
