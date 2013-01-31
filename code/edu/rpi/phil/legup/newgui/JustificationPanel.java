@@ -20,6 +20,8 @@ import javax.swing.JViewport;
 import javax.swing.Scrollable;
 
 import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 
@@ -55,14 +57,23 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 		if( defaultApplication )
 			startDefaultApplication(button);
 		else
-			addJustification(button);
-		
-		Legup.getInstance().getGui().getTree().addChildAtCurrentState();
+		{
+			Justification j = addJustification(button); 
+			if(j != null)
+			{
+				Legup.getInstance().getGui().getTree().addChildAtCurrentState();
+				if(j instanceof CaseRule)
+				for(int c1=0;c1<2;c1++)
+				{
+					Legup.getInstance().getSelections().setSelection(new Selection(Legup.getInstance().getSelections().getFirstSelection().getState().getSingleParentState(),Legup.getInstance().getSelections().getFirstSelection().getState().getSingleParentState().isModifiable()));
+				}
+			}
+		}
 	}
 	
-	protected abstract void addJustification(int button);
+	protected abstract Justification addJustification(int button);
 	protected abstract void checkJustification(int button);
-	protected abstract void doDefaultApplication(int button, BoardState state);
+	protected abstract Justification doDefaultApplication(int button, BoardState state);
 	
 	protected final void startDefaultApplication(int index)
 	{

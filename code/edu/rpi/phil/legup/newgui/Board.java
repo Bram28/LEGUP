@@ -16,6 +16,7 @@ import javax.swing.JComponent;
 import javax.swing.event.PopupMenuListener;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Selection;
@@ -254,20 +255,35 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 						if (state.isModifiableCell(p.x,p.y))
 						{
 							
-							if (!state.isModifiable()) {
-								BoardState next;
+							if (!state.isModifiable())
+							{
+								BoardState next = state;
 								if(state.getTransitionsFrom().size() == 0)
 								{
 									next = state.addTransitionFrom();
 								}
-								else if (state.getTransitionsFrom().size() == 1)
+								else if (state.getTransitionsFrom().size() >= 1)
 								{
-									next = state.getTransitionsFrom().lastElement();
+									next = state.getTransitionsFrom().firstElement();
+									//System.out.println(next.getJustification());
+									//System.out.println(next.getCaseRuleJustification());
+									if(next.getCaseRuleJustification() != null)
+									{
+										next = state.addTransitionFrom();
+									}
+									else
+									{
+										next = null;
+									}
 								}
-								else return;
-								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
-								pm.mousePressedEvent(next, p);
-							} else {
+								if(next != null)
+								{
+									Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
+									pm.mousePressedEvent(next, p);
+								}
+							}
+							else
+							{
 								pm.mousePressedEvent(state, p);
 							}
 							

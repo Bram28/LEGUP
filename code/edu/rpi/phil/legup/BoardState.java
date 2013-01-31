@@ -17,6 +17,7 @@ import edu.rpi.phil.legup.newgui.TransitionChangeListener;
 import edu.rpi.phil.legup.newgui.TreePanel;
 import edu.rpi.phil.legup.saveable.SaveableProofState;
 import edu.rpi.phil.legup.saveable.SaveableProofTransition;
+import edu.rpi.phil.legup.newgui.JustificationFrame;
 
 
 /**
@@ -1149,7 +1150,11 @@ public class BoardState
 
 		return rv;
 	}
-
+	
+	public BoardState getFirstChild()
+	{
+		return getTransitionsFrom().firstElement();
+	}
 
 	/**
 	 * Makes a copy of the current board state.
@@ -1254,6 +1259,7 @@ public class BoardState
 			
 		//TODO this crap (Justification) justification.setName((string) j);
 		justification = j;
+		JustificationFrame.justificationApplied(this,j);
 		modifyStatus();
 		delayStatus = STATUS_UNJUSTIFIED;
 	}
@@ -2018,17 +2024,19 @@ public class BoardState
 		this.width = width;
 	}
 
-	public void setCaseRuleJustification(CaseRule caseRuleJustification) {
+	public void setCaseRuleJustification(CaseRule caseRuleJustification)
+	{
 		this.caseRuleJustification = caseRuleJustification;
+		JustificationFrame.justificationApplied(this,caseRuleJustification);
 	}
 
 	public CaseRule getCaseRuleJustification() {
 		return caseRuleJustification;
 	}
 
-	public void setCaseRuleJustification(String str) {
+	/*public void setCaseRuleJustification(String str) {
 		// TODO create a new instance of caseRuleJustification when null
 		if(this.caseRuleJustification != null)
 			this.caseRuleJustification.name = str;
-	}
+	}*/
 }

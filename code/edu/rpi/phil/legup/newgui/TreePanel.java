@@ -130,7 +130,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
-		if(mouseOver != null)if(mouseOver.getState().getJustification() != null)
+		if(mouseOver != null)
+		if((mouseOver.getState().getJustification() != null && !mouseOver.getState().isModifiable())
+		||(mouseOver.getState().getCaseRuleJustification() != null) && mouseOver.getState().isModifiable())
 		{
 			draw = mousePoint;//(Point)mouseOver.getState().getLocation().clone();
 			g.setColor(Color.gray);

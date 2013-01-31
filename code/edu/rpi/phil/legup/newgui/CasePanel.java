@@ -8,6 +8,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
@@ -125,27 +126,28 @@ public class CasePanel extends JustificationPanel
 	}
 
 	@Override
-	protected void addJustification(int button)
+	protected Justification addJustification(int button)
 	{
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
 		
-		if (cur.isModifiable() || cur.getTransitionsFrom().size() > 0)
-			return;
+		if (/*cur.isModifiable() || */cur.getTransitionsFrom().size() > 0)
+			return null;
 			
 		if (cur.getCaseRuleJustification() != null)
-			return;
+			return null;
 
 		CaseRule r = caseRules.get(button);
-		int quantityofcases = Integer.valueOf(JOptionPane.showInputDialog(null,"How many branches?")).intValue();
-		/*if(quantityofcases > 10)quantityofcases = 10;*/ //some sanity checks on the input, to prevent
+		
+		/*int quantityofcases = Integer.valueOf(JOptionPane.showInputDialog(null,"How many branches?")).intValue();
+		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
 		if(quantityofcases < 2)quantityofcases = 2; //the user from creating 100 nodes or something
 		for (int i = 0; i < quantityofcases; i++) {
 			cur.addTransitionFrom(null);
-		}
+		}*/
 		cur.setCaseSplitJustification(caseRules.get(button));
-		Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0), false));
-
+		//Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0), false));
+		return r;
 	}
 
 	@Override
@@ -155,19 +157,23 @@ public class CasePanel extends JustificationPanel
 	}
 
 	@Override
-	protected void doDefaultApplication(int index, BoardState state)
+	protected Justification doDefaultApplication(int index, BoardState state)
 	{
 		//We set the current default application so we know which to apply for later
 		CaseRule r = caseRules.get(index);
 		boolean legal = r.startDefaultApplication(state);
 
 		if (!legal)
+		{
 			parentFrame.setStatus(false, "There is not legal default application that can be applied.");
+			return null;
+		}
 		else
 		{
 			parentFrame.setStatus(true, r.getApplicationText());
 			Legup.getInstance().getPuzzleModule().defaultApplication = r;
 			this.defaultApplication = r;
+			return r;
 		}
 	}
 }
