@@ -254,7 +254,8 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 						if (state.isModifiableCell(p.x,p.y))
 						{
 							
-							if (!state.isModifiable()) {
+							if (!state.isModifiable())
+							{
 								BoardState next = state;
 								if(state.getTransitionsFrom().size() == 0)
 								{
@@ -263,16 +264,25 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 								else if (state.getTransitionsFrom().size() >= 1)
 								{
 									next = state.getTransitionsFrom().firstElement();
-									System.out.println(next.getJustification());
-									System.out.println(next.getCaseRuleJustification());
+									//System.out.println(next.getJustification());
+									//System.out.println(next.getCaseRuleJustification());
 									if(next.getCaseRuleJustification() != null)
 									{
 										next = state.addTransitionFrom();
 									}
+									else
+									{
+										next = null;
+									}
 								}
-								Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
-								pm.mousePressedEvent(next, p);
-							} else {
+								if(next != null)
+								{
+									Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
+									pm.mousePressedEvent(next, p);
+								}
+							}
+							else
+							{
 								pm.mousePressedEvent(state, p);
 							}
 							
