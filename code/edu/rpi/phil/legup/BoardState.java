@@ -465,7 +465,19 @@ public class BoardState
 		if (!virtualBoard)
 			boardDataChanged();
 	}
-
+	public void propagateContradiction(Contradiction j)
+	{
+		if(!(j instanceof Contradiction))return;
+		leadContradiction = true;
+		if(!isModifiable())current_color = Color.red; //red circles on the path to a contradiction
+		BoardState par = getSingleParentState();
+		if(par != null)
+		{
+			if(par.getCaseRuleJustification() != null)return;
+			if(!par.isModifiable())par.justification = j;
+			par.propagateContradiction(j);
+		}
+	}
 	 //Used for puzzle generation.
 	 public void setModifiableCell(int x, int y, boolean value)
 	 {
@@ -1458,7 +1470,8 @@ public class BoardState
 	 */
 	public boolean leadsToContradiction()
 	{
-		if (status != -1)
+		return leadContradiction;
+		/*if (status != -1)
 			return leadContradiction;
 
 		if (justification instanceof Contradiction && ((Contradiction)justification).checkContradiction(this) == null)
@@ -1501,7 +1514,7 @@ public class BoardState
 			}
 		}
 
-		return (leadContradiction = rv);
+		return (leadContradiction = rv);*/
 	}
 
 	private boolean leadSolution = false;

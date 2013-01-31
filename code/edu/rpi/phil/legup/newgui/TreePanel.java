@@ -341,40 +341,26 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Selection theSelection = new Selection(state,false);
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		//g.setColor(((!state.isModifiable()) ? nodeColor : Color.green));
-		if(!state.leadsToContradiction())
+		g.setColor(state.getColor());
+		if(!state.isModifiable())
 		{
-			g.setColor(state.getColor());
-			if(!state.isModifiable())
-			{
-				g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-				g2D.setStroke((sel.contains(theSelection)? medium : thin));
-				g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-			}
-			else
-			{
-				g2D.fill(triangle);
-				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-				g2D.setStroke((sel.contains(theSelection)? medium : thin));
-				g.drawPolygon(triangle);
-			}
+			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+			g2D.setStroke((sel.contains(theSelection)? medium : thin));
+			g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+		}
+		else
+		{
+			g2D.fill(triangle);
+			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+			g2D.setStroke((sel.contains(theSelection)? medium : thin));
+			g.drawPolygon(triangle);
 		}
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
 		// extra drawing instructions
 		int status = state.getStatus();
 		Image i = images[status];
-
-		if (i == null)
-		{
-			if (state.leadsToContradiction())
-				i = leadsToContradtionImage;
-			//commented out because the smily face was appearing
-			//in a way that didn't seem to make sense - Avi
-			//else if(state.leadsToSolution())
-			//	i = leadsToSolutionImage;
-		}
-
 
 		if (i != null)
 		{

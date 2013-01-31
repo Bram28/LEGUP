@@ -121,22 +121,19 @@ public class ContradictionPanel extends JustificationPanel
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
 		
-		if (cur.isModifiable()) {
-			if (cur.getSingleParentState().getCaseRuleJustification() != null)
-				return null;
-			
-			cur.setJustification(contradictions.get(button));
-		} else {
-			if (cur.getCaseRuleJustification() != null)
-				return null;
-			
-			//add new transition
-			BoardState next = cur.addTransitionFrom();
+		if (cur.isModifiable())
+		{
+			return null;
+		}
+		else
+		{
+			/*BoardState next = cur.addTransitionFrom();
 			next.setJustification(contradictions.get(button));
-			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+			Legup.getInstance().getSelections().setSelection(new Selection(next, false));*/
+			cur.setJustification(contradictions.get(button));
+			cur.propagateContradiction(contradictions.get(button));
 			return contradictions.get(button);
 		}
-		return contradictions.get(button);
 	}
 
 	@Override
