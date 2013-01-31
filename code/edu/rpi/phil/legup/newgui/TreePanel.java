@@ -414,23 +414,18 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 	private void drawMouseOver(Graphics2D g)
 	{
-		if (mouseOver.getState().isModifiable())
+		BoardState B = mouseOver.getState();
+		//J contains both basic rules and contradictions
+		Justification J = (Justification)B.getJustification();
+		if (J != null)
 		{
-			BoardState B = mouseOver.getState();
-			BoardState parent = B.getSingleParentState();
-
-			if (parent != null) {
-				CaseRule CR = parent.getCaseSplitJustification();
-				if (CR != null) {
-					g.drawImage(CR.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
-					return;
-				}
-			}
-			
-			Justification J = (Justification)B.getJustification();
-			if (J != null)
-				g.drawImage(J.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
-
+			g.drawImage(J.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
+		}
+		CaseRule CR = B.getCaseSplitJustification();
+		if (CR != null)
+		{
+			g.drawImage(CR.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
+			return;
 		}
 	}
 
