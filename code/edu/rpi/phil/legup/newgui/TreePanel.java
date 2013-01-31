@@ -359,13 +359,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
 		// extra drawing instructions
-		int status = state.getStatus();
+		/*int status = state.getStatus();
 		Image i = images[status];
 
 		if (i != null)
 		{
 			g.drawImage(i,x-i.getWidth(null)/2,y-i.getHeight(null)/2,null);
-		}
+		}*/
 	}
 
 	/**

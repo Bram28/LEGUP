@@ -174,14 +174,12 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 			else if (j instanceof PuzzleRule)
 			{
 				PuzzleRule pr = (PuzzleRule)j;
-				if(basicRulePanel.setRule(pr))
-					tabs.setSelectedComponent(basicRulePanel);
+				//if(basicRulePanel.setRule(pr))tabs.setSelectedComponent(basicRulePanel);
 			}
 			else if (j instanceof Contradiction)
 			{
 				Contradiction pr = (Contradiction)j;
-				if(contradictionPanel.setContradiction(pr))
-					tabs.setSelectedComponent(contradictionPanel);
+				//if(contradictionPanel.setContradiction(pr))tabs.setSelectedComponent(contradictionPanel);
 			}
 		}
 		else //Case Rule
@@ -192,10 +190,9 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 				resetJustificationButtons();
 			else
 			{
-				if(casePanel.setCaseRule(j))
-					tabs.setSelectedComponent(casePanel);
+				//if(casePanel.setCaseRule(j))tabs.setSelectedComponent(casePanel);
 			}
-			tabs.setSelectedComponent(casePanel);
+			//tabs.setSelectedComponent(casePanel);
 		}
 	}
 
