@@ -51,7 +51,7 @@ public class TreeTent extends PuzzleModule
 	 */
 	public void mousePressedEvent(BoardState state, Point where)
 	{
-
+		super.mousePressedEvent(state,where);
 	}
 	public void mouseDraggedEvent(BoardState state, Point where)
 	{
@@ -109,11 +109,12 @@ public class TreeTent extends PuzzleModule
 		if (from.equals(to))
 		{ // click
 			//Warning: Legup doesn't check whether or not a cell can be modified when a dragged event occurs
-			if(state.isModifiableCell(to.x, to.y))
+			//Already handled by PuzzleModule.mousePressedEvent()
+			/*if(state.isModifiableCell(to.x, to.y))
 			{
 				int next = getNextCellValue(from.x,from.y,state);
 				state.setCellContents(from.x,from.y,next);
-			}
+			}*/
 		}
 		else
 		{ // drag, create link, or remove it

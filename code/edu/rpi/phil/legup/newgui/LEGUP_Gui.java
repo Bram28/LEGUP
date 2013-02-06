@@ -533,7 +533,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		String quest = "Would you like to save your proof before ";
 		quest += instr;
 		LEGUP_Gui curgui = Legup.getInstance().getGui();
-		System.out.println("Attempting to save good sirs...");
+		//System.out.println("Attempting to save good sirs...");
 		Object[] options = {"Save Proof", "Do Not Save Proof", "Cancel"};
 		int n = JOptionPane.showOptionDialog(bar, quest, "Save", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 		switch(n)

@@ -145,8 +145,8 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 
-		if(pm == null)
-			return; //This doesn't make sense but it was already here
+		if(pm == null)return; //Don't respond to clicks on the board if no puzzle is loaded
+		
 		if (e.getButton() == MouseEvent.BUTTON3)
 		{
 			//System.out.println("Right mouse clicked.");
