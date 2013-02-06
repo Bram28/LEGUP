@@ -44,12 +44,35 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 				optionchosen = a;
 				
-				if (!state.isModifiable()) {
-					
-					BoardState next = state.addTransitionFrom();
-					Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
-					next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
-				} else {
+				if (!state.isModifiable())
+				{
+					BoardState next = state;
+					if(state.getTransitionsFrom().size() == 0)
+					{
+						next = state.addTransitionFrom();
+					}
+					else if (state.getTransitionsFrom().size() >= 1)
+					{
+						next = state.getTransitionsFrom().firstElement();
+						if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().autoGenCaseRules))
+						{
+							next = state.addTransitionFrom();
+						}
+						else
+						{
+							next = null;
+						}
+					}
+					if(next != null)
+					{
+						BoardState.removeColorsFromTransitions();
+						Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
+						next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
+					}
+				}
+				else
+				{
+					BoardState.removeColorsFromTransitions();
 					state.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
 				}
 			}
@@ -265,9 +288,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 								else if (state.getTransitionsFrom().size() >= 1)
 								{
 									next = state.getTransitionsFrom().firstElement();
-									//System.out.println(next.getJustification());
-									//System.out.println(next.getCaseRuleJustification());
-									if(next.getCaseRuleJustification() != null)
+									if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().autoGenCaseRules))
 									{
 										next = state.addTransitionFrom();
 									}

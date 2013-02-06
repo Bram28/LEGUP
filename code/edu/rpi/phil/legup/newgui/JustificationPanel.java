@@ -62,7 +62,7 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 			if(j != null)
 			{
 				Legup.getInstance().getGui().getTree().addChildAtCurrentState();
-				if(j instanceof CaseRule)
+				if((j instanceof CaseRule) && (!Legup.getInstance().getGui().autoGenCaseRules))
 				for(int c1=0;c1<2;c1++)
 				{
 					Legup.getInstance().getSelections().setSelection(new Selection(Legup.getInstance().getSelections().getFirstSelection().getState().getSingleParentState(),Legup.getInstance().getSelections().getFirstSelection().getState().getSingleParentState().isModifiable()));

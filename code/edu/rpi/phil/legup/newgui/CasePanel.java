@@ -131,9 +131,12 @@ public class CasePanel extends JustificationPanel
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
 		
-		if (/*cur.isModifiable() || */cur.getTransitionsFrom().size() > 0)
+		if (cur.getTransitionsFrom().size() > 0)
 			return null;
-			
+		if (cur.isModifiable() && Legup.getInstance().getGui().autoGenCaseRules)
+			return null;
+		if (!cur.isModifiable() && !Legup.getInstance().getGui().autoGenCaseRules)
+			return null;
 		if (cur.getCaseRuleJustification() != null)
 			return null;
 
@@ -142,10 +145,20 @@ public class CasePanel extends JustificationPanel
 		/*int quantityofcases = Integer.valueOf(JOptionPane.showInputDialog(null,"How many branches?")).intValue();
 		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
 		if(quantityofcases < 2)quantityofcases = 2; //the user from creating 100 nodes or something
-		for (int i = 0; i < quantityofcases; i++) {
-			cur.addTransitionFrom(null);
-		}*/
-		cur.setCaseSplitJustification(caseRules.get(button));
+		*/
+		if(Legup.getInstance().getGui().autoGenCaseRules)
+		{
+			int quantityofcases = Legup.getInstance().getPuzzleModule().numAcceptableStates()-1; 
+			for (int i = 0; i < quantityofcases; i++)
+			{
+				cur.addTransitionFrom().setCaseSplitJustification(caseRules.get(button));
+			}
+			Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0),false));
+		}
+		else
+		{
+			cur.setCaseSplitJustification(caseRules.get(button));
+		}
 		//Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0), false));
 		return r;
 	}
