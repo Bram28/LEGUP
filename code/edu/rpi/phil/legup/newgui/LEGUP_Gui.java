@@ -207,6 +207,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	/* private JMenu view = new JMenu("View"); */
 	private JMenu proof = new JMenu("Proof");
 		private JCheckBoxMenuItem allowDefault = new JCheckBoxMenuItem("Allow Default Rule Applications",false);
+		private JCheckBoxMenuItem caseRuleGen = new JCheckBoxMenuItem("Automatically generate cases for CaseRule",false);
+		public boolean autoGenCaseRules = false;
 		private JMenu proofMode = new JMenu("Proof Mode");
 			private JCheckBoxMenuItem[] proofModeItems = new JCheckBoxMenuItem[PROF_FLAGS.length];
 	private JMenu AI = new JMenu("AI");
@@ -249,6 +251,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		bar.add(proof);
 			proof.add(allowDefault);
 				allowDefault.addActionListener(this);
+			proof.add(caseRuleGen);
+				caseRuleGen.addActionListener(this);
 			proof.add(proofMode);
 				for (int i = 0; i < PROF_FLAGS.length; i++)
 				{
@@ -636,6 +640,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == allowDefault)
 		{
 			//Change default applications on, nothing, checks menu checked state everywhere
+		}
+		else if (e.getSource() == caseRuleGen)
+		{
+			autoGenCaseRules = caseRuleGen.getState();
 		}
 		else if (e.getSource() == Step)
 		{
