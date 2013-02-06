@@ -229,6 +229,19 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	}
 	private Justification currentJustificationApplied = null;
 	
+	public static void colorTransitions()
+	{
+		if(Legup.getInstance().getGui().imdFeedbackFlag)
+		{
+			Legup.getInstance().getInitialBoardState().evalDelayStatus();
+		}
+		else
+		{
+			BoardState.removeColorsFromTransitions();
+		}
+		Legup.getInstance().getGui().getTree().treePanel.repaint();
+	}
+	
 	public void treeSelectionChanged(ArrayList <Selection> newSelectionList)
 	{
 		//System.out.println("tree select changed");
@@ -256,12 +269,14 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			toolbar.addChild.setEnabled(false);
 		}
 		updateStatus();
+		colorTransitions();
 	}
 	
 	public void boardDataChanged(BoardState state)
 	{
 		//System.out.println("board data changed");
 		updateStatus();
+		colorTransitions();
 	}
 	
 	public void updateStatus()

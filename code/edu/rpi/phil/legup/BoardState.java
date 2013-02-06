@@ -488,8 +488,7 @@ public class BoardState
 		 else
 			 boardCells[y][x] = Math.abs(boardCells[y][x])*-1;
 		 
-		 if (boardCells[y][x] == 0)
-			 System.out.println("WARNING: tried to make 0 value negative");
+		 //if (boardCells[y][x] == 0)System.out.println("WARNING: tried to make 0 value negative");
 	 }
 	 
 	
@@ -646,11 +645,11 @@ public class BoardState
 	public boolean evalDelayStatus()
 	{
 		delayStatus = getStatus();
-		if(delayStatus == STATUS_UNJUSTIFIED || delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT)
+		if(delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT)
 		{
 			if(isModifiable())current_color = Color.green;
 		}
-		else
+		else if(delayStatus != STATUS_UNJUSTIFIED)
 		{
 			if(isModifiable())current_color = Color.red;
 		}
@@ -717,7 +716,6 @@ public class BoardState
 	{
 		//de-color all nodes colored by checkproof (so as not to mark as incorrect
 		//things that may be in the process of being fixed)
-		removeColorsFromTransitions();
 		return addTransitionFrom(null);
 	}
 

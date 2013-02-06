@@ -59,8 +59,8 @@ public class TreeTent extends PuzzleModule
 	}
 	public void labelPressedEvent(BoardState state, int index, int side)
 	{
-		System.out.println(index);
-		System.out.println(side);
+		//System.out.println(index);
+		//System.out.println(side);
 		if(side == 0 || side == 1)
 		{
 			for(int i = 0; i < state.getHeight(); i++)

@@ -65,14 +65,14 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 					}
 					if(next != null)
 					{
-						BoardState.removeColorsFromTransitions();
+						Tree.colorTransitions();
 						Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
 						next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
 					}
 				}
 				else
 				{
-					BoardState.removeColorsFromTransitions();
+					Tree.colorTransitions();
 					state.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
 				}
 			}
@@ -299,14 +299,14 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 								}
 								if(next != null)
 								{
-									BoardState.removeColorsFromTransitions();
+									Tree.colorTransitions();
 									Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
 									pm.mousePressedEvent(next, p);
 								}
 							}
 							else
 							{
-								BoardState.removeColorsFromTransitions();
+								Tree.colorTransitions();
 								pm.mousePressedEvent(state, p);
 							}
 							
