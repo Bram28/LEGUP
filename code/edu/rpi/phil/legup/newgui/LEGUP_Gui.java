@@ -451,7 +451,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			showStatus(message, true);
 		}
 	}
-
+	
 	private void showAll() {
 		((Board)test.getRightComponent()).initSize();
 		// TODO disable buttons

@@ -546,7 +546,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		return midState;
 		*/
 	}
-
+	
 	/**
 	 * Collapse / expand the view at the current state
 	 *
@@ -608,6 +608,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	 */
 	public void delChildAtCurrentState()
 	{
+		BoardState.removeColorsFromTransitions();
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState state = s.getState();
 		

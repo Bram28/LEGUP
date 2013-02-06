@@ -44,6 +44,7 @@ public class BoardState
 	static final public int STATUS_CONTRADICTION_INCORRECT = 4;
 	private Color current_color = TreePanel.nodeColor;
 	public Color getColor() { return current_color; }
+	public void setColor(Color c) { current_color = c; }
 	// BoardState when initially created (set in constructor)
 	private BoardState originalState = null;
 	private int height;
@@ -695,12 +696,28 @@ public class BoardState
 			transitionChangeListeners.get(x).transitionChanged();
 		}
 	}
-
+	
+	//removes colors set by checkproof
+	public static void removeColorsFromTransitions()
+	{
+		removeColorsFromTransitions(Legup.getInstance().getInitialBoardState());
+		Legup.getInstance().getGui().getTree().treePanel.repaint();
+	}
+	private static void removeColorsFromTransitions(BoardState state)
+	{
+		if(state.isModifiable())state.setColor(TreePanel.nodeColor);
+		for(BoardState b : state.transitionsFrom)removeColorsFromTransitions(b);
+	}
+	
 	/**
 	 * Adds a transition from this board state.
 	 */
+	
 	public BoardState addTransitionFrom()
 	{
+		//de-color all nodes colored by checkproof (so as not to mark as incorrect
+		//things that may be in the process of being fixed)
+		removeColorsFromTransitions();
 		return addTransitionFrom(null);
 	}
 

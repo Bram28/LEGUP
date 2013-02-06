@@ -90,7 +90,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	}
 
 	private TreeToolbar toolbar = new TreeToolbar();
-	TreePanel treePanel = new TreePanel();
+	public TreePanel treePanel = new TreePanel();
 	private LEGUP_Gui gui;
 	
 	private JLabel status = new JLabel();

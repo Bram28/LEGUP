@@ -278,12 +278,14 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 								}
 								if(next != null)
 								{
+									BoardState.removeColorsFromTransitions();
 									Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
 									pm.mousePressedEvent(next, p);
 								}
 							}
 							else
 							{
+								BoardState.removeColorsFromTransitions();
 								pm.mousePressedEvent(state, p);
 							}
 							
