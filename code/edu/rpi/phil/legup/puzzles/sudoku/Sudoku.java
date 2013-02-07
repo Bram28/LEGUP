@@ -33,6 +33,7 @@ public class Sudoku extends PuzzleModule
 {
 	public static int CELL_UNKNOWN = 0;
 	public int numAcceptableStates(){return 10;}
+	public boolean hasLabels(){return false;}
 	Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 	Vector <Contradiction> contraList = new Vector <Contradiction>();
 	Vector <CaseRule> caseList = new Vector <CaseRule>();

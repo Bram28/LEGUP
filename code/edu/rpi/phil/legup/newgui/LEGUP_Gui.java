@@ -329,6 +329,14 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private Console console;
 	private Board board;
 	private JSplitPane test, test2;
+	public JustificationFrame getJustificationFrame()
+	{
+		return ((JustificationFrame)test.getLeftComponent());
+	}
+	public Board getBoard()
+	{
+		return ((Board)test.getRightComponent());
+	}
 	// contains all the code to setup the main content
 	private void setupContent(){
 		
@@ -652,6 +660,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == imdFeedback)
 		{
 			imdFeedbackFlag = imdFeedback.getState();
+			Tree.colorTransitions();
 		}
 		else if (e.getSource() == Step)
 		{

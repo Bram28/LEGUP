@@ -1,6 +1,6 @@
 package edu.rpi.phil.legup;
 import edu.rpi.phil.legup.newgui.TreePanel;
-
+import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,7 +28,7 @@ public abstract class BoardDrawingHelper
 	 */
 	public static final boolean ANIMATE_SPLIT_CASE = true;
 
-	public static void draw( Graphics2D g )
+	public static void draw(Graphics2D g, Point crshPointSelected)
 	{
 		// initGraphics
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
@@ -69,16 +69,18 @@ public abstract class BoardDrawingHelper
 			newState = origState.getTransitionsFrom().get((int)((System.currentTimeMillis()/1000)%origState.getTransitionsFrom().size()));
 
 		// Draw each cell
-		for( int y = 0; y < height; ++y ){
-			for( int x = 0; x < width; ++x ){
+		for( int y = 0; y < height; ++y )
+		{
+			for( int x = 0; x < width; ++x )
+			{
 				pm.drawCell(g, x, y, newState);
 				//Determine if we need to add a different color based on
 				//transitions and changes made
-				Color filterColor =
-					determineTransitionColor(x, y, newState, origState, showOrange);
+				Color filterColor = determineTransitionColor(x, y, newState, origState, showOrange);
 				//Color it, if needed
 				g.setStroke( new BasicStroke(3f) );
-				if( filterColor != null ){
+				if( filterColor != null )
+				{
 					g.setColor(filterColor);
 					g.drawRect(
 						(x+1) * imageWidth + 2,
@@ -88,7 +90,25 @@ public abstract class BoardDrawingHelper
 				}
 			}
 		}
-
+		if((crshPointSelected != null))
+		{
+			for(int x = -1;x <= width;++x)
+			{
+				for(int y = -1;y <= height;++y)
+				{
+					if((crshPointSelected.x == x) && (crshPointSelected.y == y))
+					{
+						g.setStroke(new BasicStroke(3f));
+						g.setColor(cyanFilter);
+						g.drawRect(
+							(x+1) * imageWidth + 2,
+							(y+1) * imageHeight + 2,
+							imageWidth - 4,
+							imageHeight - 4 );
+					}
+				}
+			}
+		}
 		// Color hint cells
 		if( newState.getHintCells() != null ){
 			g.setColor(purpleFilter);
@@ -146,6 +166,7 @@ public abstract class BoardDrawingHelper
 	public static Color greenFilter = new Color(0,255,0);//,128);
 	public static Color redFilter = new Color(255,0,0);//,128);
 	public static Color purpleFilter = new Color(240,0,240);//,128);
+	public static Color cyanFilter = new Color(0,255,255);
 	//public static Color blueFilter = new Color(000,255,255,64);
 	//public static Color orangeFilter = new Color(255,165,0,128);
 	private static Color orangeSquare = ((!ANIMATE_SPLIT_CASE) ? new Color(225,182,100,255) : new Color(255,182,100,128));

@@ -37,6 +37,7 @@ public abstract class PuzzleModule
 {
 	public static int CELL_UNKNOWN = 0;
 	public int numAcceptableStates() {return 2;} //defined to be consistent with getNextCellValue()
+	public boolean hasLabels(){return false;}
 	protected static final Dimension cellSize = new Dimension(32,32);
 	static final Color clear = new Color(0,0,0,0);
 	public String name;

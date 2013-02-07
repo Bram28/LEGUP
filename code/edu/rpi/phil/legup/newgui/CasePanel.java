@@ -12,6 +12,8 @@ import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
+import edu.rpi.phil.legup.PuzzleModule;
 
 import javax.swing.*;
 import java.awt.*;
@@ -148,12 +150,33 @@ public class CasePanel extends JustificationPanel
 		*/
 		if(Legup.getInstance().getGui().autoGenCaseRules)
 		{
-			int quantityofcases = Legup.getInstance().getPuzzleModule().numAcceptableStates()-1; 
-			for (int i = 0; i < quantityofcases; i++)
+			Object[] msg = new Object[2];
+			CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
+			msg[0] = "Select where you would like to apply the CaseRule, and then select ok.";
+			msg[1] = crsh;
+			JOptionPane.showMessageDialog(null,msg);
+			if((crsh.pointSelected.x == -5) && (crsh.pointSelected.y == -5))
 			{
-				cur.addTransitionFrom().setCaseSplitJustification(caseRules.get(button));
+				System.out.println("Nothing selected.");
+				return null;
 			}
-			Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0),false));
+			else
+			{
+				System.out.println("Point ("+crsh.pointSelected.x+","+crsh.pointSelected.y+") selected.");
+				if(crsh.mode == CaseRuleSelectionHelper.MODE_TILE)
+				{
+					int quantityofcases = Legup.getInstance().getPuzzleModule().numAcceptableStates(); 
+					for (int i = 1; i < quantityofcases; i++)
+					{
+						BoardState tmp = cur.addTransitionFrom();
+						PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+						tmp.setCaseSplitJustification(caseRules.get(button));
+						tmp.setCellContents(crsh.pointSelected.x,crsh.pointSelected.y,pm.getStateNumber(pm.getStateName(i)));
+						tmp.endTransition();
+					}
+					Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0),false));
+				}
+			}
 		}
 		else
 		{

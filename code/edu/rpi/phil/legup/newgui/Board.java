@@ -27,7 +27,6 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 	public int optionchosen;
 	private LEGUP_Gui parent = null;
 	private Point lastMousePoint = null; // the last left click mouse location
-
 	private Point lastRightMousePoint = null;
 	JPopupMenu storedMenu = new JPopupMenu();
 	String storedMenuOptions[];
@@ -149,7 +148,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 	{
 		count++;
 		//System.out.println("Redrawing number " + count);
-		BoardDrawingHelper.draw(g);
+		BoardDrawingHelper.draw(g,null);
 	}
 
 	protected void mousePressedAt(Point p, MouseEvent e)
