@@ -157,12 +157,12 @@ public class CasePanel extends JustificationPanel
 			JOptionPane.showMessageDialog(null,msg);
 			if((crsh.pointSelected.x == -5) && (crsh.pointSelected.y == -5))
 			{
-				System.out.println("Nothing selected.");
+				//System.out.println("Nothing selected.");
 				return null;
 			}
 			else
 			{
-				System.out.println("Point ("+crsh.pointSelected.x+","+crsh.pointSelected.y+") selected.");
+				//System.out.println("Point ("+crsh.pointSelected.x+","+crsh.pointSelected.y+") selected.");
 				if(crsh.mode == CaseRuleSelectionHelper.MODE_TILE)
 				{
 					int quantityofcases = Legup.getInstance().getPuzzleModule().numAcceptableStates(); 

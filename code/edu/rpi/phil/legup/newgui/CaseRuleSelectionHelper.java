@@ -22,8 +22,7 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 	public int mode = MODE_TILE;
 	public static final int MODE_TILE = 0;
 	public static final int MODE_COL_ROW = 1;
-	public static final Point NO_POINT_SELECTED = new Point(-5,-5);
-	public Point pointSelected = NO_POINT_SELECTED;
+	public Point pointSelected = new Point(-5,-5);
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
 	private LEGUP_Gui parent = null;
 	
@@ -35,6 +34,8 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 		setSize(getProperSize());
 		zoomFit();
 		zoomTo(1.0);
+		pointSelected.x = -5;
+		pointSelected.y = -5;
 	}
 
 	private Dimension getProperSize()

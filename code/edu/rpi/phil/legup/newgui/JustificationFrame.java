@@ -109,7 +109,8 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 	 */
 	public void resetStatus()
 	{
-		status.setText("");
+		//status.setText("");
+		Legup.getInstance().getGui().getTree().getStatus().setText("");
 	}
 
 	/**
@@ -120,7 +121,8 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 	public void setStatus(boolean check, String text)
 	{
 		String box = (check ? checkBox : xBox);
-		status.setText(htmlHead + box + text + htmlTail);
+		//status.setText(htmlHead + box + text + htmlTail);
+		Legup.getInstance().getGui().getTree().getStatus().setText(htmlHead + box + text + htmlTail);
 	}
 
 	public static void addJustificationAppliedListener(JustificationAppliedListener j)

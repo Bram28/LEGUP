@@ -94,7 +94,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	private LEGUP_Gui gui;
 	
 	private JLabel status = new JLabel();
-	
+	public JLabel getStatus(){return status;}
 	Tree( LEGUP_Gui gui ){
 //		super("LEGUP");
 		
@@ -281,7 +281,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public void updateStatus()
 	{
-		ArrayList <Selection> newSelectionList = gui.legupMain.getSelections().getCurrentSelection();
+		/*ArrayList <Selection> newSelectionList = gui.legupMain.getSelections().getCurrentSelection();
 		
 		if (newSelectionList != null && newSelectionList.size() == 1 
 				&& newSelectionList.get(0).isState())
@@ -293,7 +293,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		else
 		{
 			this.status.setText("");
-		}
+		}*/
 	}
 	
 	
