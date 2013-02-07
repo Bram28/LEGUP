@@ -708,14 +708,35 @@ public class BoardState
 		for(BoardState b : state.transitionsFrom)removeColorsFromTransitions(b);
 	}
 	
+	public static BoardState addTransition()
+	{
+		BoardState s = Legup.getInstance().getSelections().getFirstSelection().getState();
+		BoardState next = s;
+		if(s.getTransitionsFrom().size() == 0)
+		{
+			next = s.addTransitionFrom();
+		}
+		else if(s.getTransitionsFrom().size() >= 1)
+		{
+			next = s.getTransitionsFrom().firstElement();
+			if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().autoGenCaseRules))
+			{
+				next = s.addTransitionFrom();
+			}
+			else
+			{
+				next = null;
+			}
+		}
+		return next;
+	}
+	
 	/**
 	 * Adds a transition from this board state.
 	 */
 	
 	public BoardState addTransitionFrom()
 	{
-		//de-color all nodes colored by checkproof (so as not to mark as incorrect
-		//things that may be in the process of being fixed)
 		return addTransitionFrom(null);
 	}
 

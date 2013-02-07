@@ -45,23 +45,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 				
 				if (!state.isModifiable())
 				{
-					BoardState next = state;
-					if(state.getTransitionsFrom().size() == 0)
-					{
-						next = state.addTransitionFrom();
-					}
-					else if (state.getTransitionsFrom().size() >= 1)
-					{
-						next = state.getTransitionsFrom().firstElement();
-						if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().autoGenCaseRules))
-						{
-							next = state.addTransitionFrom();
-						}
-						else
-						{
-							next = null;
-						}
-					}
+					BoardState next = BoardState.addTransition();
 					if(next != null)
 					{
 						Tree.colorTransitions();
@@ -279,23 +263,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 							
 							if (!state.isModifiable())
 							{
-								BoardState next = state;
-								if(state.getTransitionsFrom().size() == 0)
-								{
-									next = state.addTransitionFrom();
-								}
-								else if (state.getTransitionsFrom().size() >= 1)
-								{
-									next = state.getTransitionsFrom().firstElement();
-									if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().autoGenCaseRules))
-									{
-										next = state.addTransitionFrom();
-									}
-									else
-									{
-										next = null;
-									}
-								}
+								BoardState next = BoardState.addTransition();
 								if(next != null)
 								{
 									Tree.colorTransitions();
