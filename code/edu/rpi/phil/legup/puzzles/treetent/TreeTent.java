@@ -118,7 +118,6 @@ public class TreeTent extends PuzzleModule
 		}
 		else
 		{ // drag, create link, or remove it
-			ArrayList<Object> extra = state.getExtraData();
 			ExtraTreeTentLink e = new ExtraTreeTentLink(from,to);
 			boolean removed = false;
 			
@@ -129,20 +128,23 @@ public class TreeTent extends PuzzleModule
 			if (!((state.getCellContents(from.x, from.y) == CELL_TREE && state.getCellContents(to.x, to.y) != CELL_TREE) ||
 			(state.getCellContents(from.x, from.y) != CELL_TREE && state.getCellContents(to.x, to.y) == CELL_TREE)))
 				return;
-			
+			BoardState next = ((state.isModifiable())? state : BoardState.addTransition());
+			if(next == null)return;
+			Legup.getInstance().getSelections().setSelection(new Selection(next,false));
+			ArrayList<Object> extra = next.getExtraData();
 			for (int x = 0; x < extra.size(); ++x)
 			{
 				if (extra.get(x).equals(e))
 				{
 					extra.remove(x);
 					removed = true;
-					state.boardDataChanged();
+					next.boardDataChanged();
 					break;
 				}
 			}
 			
 			if (removed == false) // if we aren't removing, we're inserting
-				state.addExtraData(e);
+				next.addExtraData(e);
 		}
 	}
 

@@ -2060,7 +2060,19 @@ public class BoardState
 	public Vector <Point> getChangedCells() {
 		return changedCells;
 	}
-
+	
+	public boolean extraDataChanged()
+	{
+		if(getSingleParentState() == null)return false;
+		ArrayList <Object> prevExtraData = getSingleParentState().getExtraData();
+		if(extraData.size() != prevExtraData.size())return true;
+		for(int c1=0;c1<extraData.size();c1++)
+		{
+			if(!(extraData.get(c1).equals(prevExtraData.get(c1))))return true;
+		}
+		return false;
+	}
+	
 	public void setPuzzleName(String puzzleName) {
 		this.puzzleName = puzzleName;
 	}
