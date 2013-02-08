@@ -466,6 +466,18 @@ public class BoardState
 		if (!virtualBoard)
 			boardDataChanged();
 	}
+	
+	public void propagateExtraData(Object ex, boolean present)
+	{
+		if(ex == null)return;
+		if(!present)if(extraData.contains(ex))extraData.remove(ex);
+		if(present)if(!extraData.contains(ex))extraData.add(ex);
+		for(BoardState child : transitionsFrom)
+		{
+			child.propagateExtraData(ex,present);
+		}
+	}
+	
 	public void propagateContradiction(Contradiction j)
 	{
 		if(!(j instanceof Contradiction))return;
