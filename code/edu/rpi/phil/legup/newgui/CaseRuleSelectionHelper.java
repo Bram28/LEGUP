@@ -64,7 +64,7 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 	
 	protected void draw( Graphics2D g )
 	{
-		BoardDrawingHelper.draw(g,pointSelected);
+		BoardDrawingHelper.draw(g,pointSelected,mode);
 	}
 	
 	protected void mousePressedAt(Point p, MouseEvent e)
@@ -107,6 +107,16 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 			if((mode == MODE_TILE) && !((p.x == -5)&&(p.y == -5)))
 			{
 				if(!state.isModifiableCell(p.x,p.y))
+				{
+					p.x = -5;
+					p.y = -5;
+				}
+			}
+			if(p.x == w)p.x = -1;
+			if(p.y == h)p.y = -1;
+			if(mode == MODE_COL_ROW)
+			{
+				if((p.x != -1)&&(p.y != -1))
 				{
 					p.x = -5;
 					p.y = -5;

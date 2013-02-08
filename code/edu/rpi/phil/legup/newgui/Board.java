@@ -132,7 +132,7 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 	{
 		count++;
 		//System.out.println("Redrawing number " + count);
-		BoardDrawingHelper.draw(g,null);
+		BoardDrawingHelper.draw(g,null,0);
 	}
 
 	protected void mousePressedAt(Point p, MouseEvent e)

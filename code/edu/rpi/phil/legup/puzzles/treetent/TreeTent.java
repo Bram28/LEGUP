@@ -145,10 +145,8 @@ public class TreeTent extends PuzzleModule
 			
 			if (removed == false) // if we aren't removing, we're inserting
 				next.addExtraData(e);
-			//for(BoardState child : next.getTransitionsFrom())
-			{
-				next.propagateExtraData(e,!removed);
-			}
+			
+			next.propagateExtraData(e,!removed);
 		}
 	}
 

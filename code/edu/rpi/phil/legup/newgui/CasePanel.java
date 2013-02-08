@@ -152,6 +152,7 @@ public class CasePanel extends JustificationPanel
 		{
 			Object[] msg = new Object[2];
 			CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
+			crsh.mode = caseRules.get(button).crshMode();
 			msg[0] = "Select where you would like to apply the CaseRule, and then select ok.";
 			msg[1] = crsh;
 			JOptionPane.showMessageDialog(null,msg);
@@ -175,6 +176,10 @@ public class CasePanel extends JustificationPanel
 						tmp.endTransition();
 					}
 					Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0),false));
+				}
+				else if(crsh.mode == CaseRuleSelectionHelper.MODE_COL_ROW)
+				{
+					
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 package edu.rpi.phil.legup;
 
 import java.awt.Point;
+import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 /**
  * This clas represents a Case Rule, which can be applied to the parent of the splitting
@@ -10,6 +11,7 @@ import java.awt.Point;
 public abstract class CaseRule extends Justification
 {	
 	protected String defaultApplicationText;
+	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILE;}
 	
 	/**
 	 * Was this case rule applied correctly to this parent state

@@ -10,12 +10,14 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
+import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 public class CaseTentsInRow extends CaseRule
 {
 	
 	
 	protected final String defaultApplicationText= "Select a row number.";
+	public int crshMode(){return CaseRuleSelectionHelper.MODE_COL_ROW;}
 	
 	public CaseTentsInRow()
 	{

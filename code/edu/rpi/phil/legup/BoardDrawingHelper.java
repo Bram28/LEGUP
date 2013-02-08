@@ -28,7 +28,7 @@ public abstract class BoardDrawingHelper
 	 */
 	public static final boolean ANIMATE_SPLIT_CASE = true;
 
-	public static void draw(Graphics2D g, Point crshPointSelected)
+	public static void draw(Graphics2D g, Point crshPointSelected, int crshMode)
 	{
 		// initGraphics
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
@@ -96,15 +96,31 @@ public abstract class BoardDrawingHelper
 			{
 				for(int y = -1;y <= height;++y)
 				{
-					if((crshPointSelected.x == x) && (crshPointSelected.y == y))
+					if(crshMode == CaseRuleSelectionHelper.MODE_TILE)
 					{
-						g.setStroke(new BasicStroke(3f));
-						g.setColor(cyanFilter);
-						g.drawRect(
-							(x+1) * imageWidth + 2,
-							(y+1) * imageHeight + 2,
-							imageWidth - 4,
-							imageHeight - 4 );
+						if((crshPointSelected.x == x) && (crshPointSelected.y == y))
+						{
+							g.setStroke(new BasicStroke(3f));
+							g.setColor(cyanFilter);
+							g.drawRect(
+									(x+1) * imageWidth + 2,
+									(y+1) * imageHeight + 2,
+									imageWidth - 4,
+									imageHeight - 4 );
+						}
+					}
+					else if(crshMode == CaseRuleSelectionHelper.MODE_COL_ROW)
+					{
+						if(((crshPointSelected.x == -1)&&(crshPointSelected.y == y))||((crshPointSelected.x == x)&&(crshPointSelected.y == -1)))
+						{
+							g.setStroke(new BasicStroke(3f));
+							g.setColor(cyanFilter);
+							g.drawRect(
+									(x+1) * imageWidth + 2,
+									(y+1) * imageHeight + 2,
+									imageWidth - 4,
+									imageHeight - 4 );
+						}
 					}
 				}
 			}
