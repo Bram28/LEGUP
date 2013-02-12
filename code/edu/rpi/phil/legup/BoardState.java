@@ -491,6 +491,58 @@ public class BoardState
 			par.propagateContradiction(j);
 		}
 	}
+	public int numEmptySpaces(int where, boolean row)
+	{
+		if(where < 0)return -1;
+		int tmp = 0;
+		if(row)
+		{
+			if(where > height)return -1;
+			for(int c1=0;c1<width;c1++)
+			{
+				if(getCellContents(c1,where) == 0)tmp++;
+			}
+		}
+		else //column
+		{
+			if(where > width)return -1;
+			for(int c1=0;c1<height;c1++)
+			{
+				if(getCellContents(where,c1) == 0)tmp++;
+			}
+		}
+		return tmp;
+	}
+	public void fillBlanks(int where, boolean row, int[] filler)
+	{
+		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+		if(where < 0)return;
+		int tmp = 0;
+		if(row)
+		{
+			if(where > height)return;
+			for(int c1=0;c1<width;c1++)
+			{
+				if(getCellContents(c1,where) == 0)
+				{
+					setCellContents(c1,where,pm.getStateNumber(pm.getStateName(filler[tmp])));
+					tmp++;
+				}
+			}
+		}
+		else //column
+		{
+			if(where > width)return;
+			for(int c1=0;c1<height;c1++)
+			{
+				if(getCellContents(where,c1) == 0)
+				{
+					setCellContents(where,c1,pm.getStateNumber(pm.getStateName(filler[tmp])));
+					tmp++;
+				}
+			}
+		}
+	}
 	 //Used for puzzle generation.
 	 public void setModifiableCell(int x, int y, boolean value)
 	 {

@@ -175,12 +175,38 @@ public class CasePanel extends JustificationPanel
 						tmp.setCellContents(crsh.pointSelected.x,crsh.pointSelected.y,pm.getStateNumber(pm.getStateName(i)));
 						tmp.endTransition();
 					}
-					Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0),false));
 				}
 				else if(crsh.mode == CaseRuleSelectionHelper.MODE_COL_ROW)
 				{
-					
+					PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+					boolean row = (crsh.pointSelected.x == -1)? true : false;
+					int where = (row)? crsh.pointSelected.y : crsh.pointSelected.x;
+					int num_blanks = cur.numEmptySpaces(where,row);
+					int[] whatgoesintheblanks = new int[num_blanks];
+					int num_cases = 1;
+					for(int c1=0;c1<num_blanks;c1++)
+					{
+						num_cases = num_cases*(Legup.getInstance().getPuzzleModule().numAcceptableStates()-1);
+						whatgoesintheblanks[c1] = 1;
+					}
+					for(int c1=0;c1<num_cases;c1++)
+					{
+						BoardState tmp = cur.addTransitionFrom();
+						tmp.setCaseSplitJustification(caseRules.get(button));
+						tmp.fillBlanks(where,row,whatgoesintheblanks);
+						tmp.endTransition();
+						whatgoesintheblanks[0]++;
+						for(int c2=0;c2+1<num_blanks;c2++)
+						{
+							if(whatgoesintheblanks[c2] >= Legup.getInstance().getPuzzleModule().numAcceptableStates())
+							{
+								whatgoesintheblanks[c2]=1;
+								whatgoesintheblanks[c2+1]++;
+							}
+						}
+					}
 				}
+				if(cur.getTransitionsFrom().get(0) != null)Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0),false));
 			}
 		}
 		else
