@@ -160,7 +160,7 @@ public class FillapixEditorBoardFrame extends JFrame implements WindowListener
 
 					// do grid
 					pz.drawGrid(g,new Rectangle(imW,imH,imW * w,imH * h),w,h);
-					pz.drawExtraData(g,state.getExtraData(),new Rectangle(imW,imH,imW * w, imH * h),w,h);
+					pz.drawExtraData(g,state.getExtraData(),state.extraDataDelta,new Rectangle(imW,imH,imW * w, imH * h),w,h);
 				}
 			}
 		}

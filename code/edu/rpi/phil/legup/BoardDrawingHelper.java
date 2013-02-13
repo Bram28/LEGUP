@@ -167,7 +167,7 @@ public abstract class BoardDrawingHelper
 			width, height );
 		//Let the puzzle module draw its special stuff
 		try {
-			pm.drawExtraData( g, newState.getExtraData(),
+			pm.drawExtraData( g, newState.getExtraData(),newState.extraDataDelta,
 				new Rectangle(
 					imageWidth, imageHeight,
 					imageWidth * width, imageHeight * height ),

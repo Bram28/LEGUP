@@ -519,7 +519,7 @@ public abstract class PuzzleModule
 	 * @param w the width (in boxes) of the puzzle
 	 * @param h the height (in boxes) of the puzzle
 	 */
-	public void drawExtraData(Graphics g, ArrayList<Object> extraData, Rectangle bounds, int w, int h)
+	public void drawExtraData(Graphics g, ArrayList<Object> extraData, ArrayList<Object> extraDataDelta, Rectangle bounds, int w, int h)
 	{
 
 	}

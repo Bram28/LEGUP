@@ -155,14 +155,14 @@ public class TreeTent extends PuzzleModule
 	 * @param w the width (in boxes) of the puzzle
 	 * @param h the height (in boxes) of the puzzle
 	 */
-	public void drawExtraData(Graphics gr, ArrayList<Object> extraData, Rectangle bounds, int w, int h)
+	public void drawExtraData(Graphics gr, ArrayList<Object> extraData, ArrayList<Object> extraDataDelta, Rectangle bounds, int w, int h)
 	{
 		Graphics2D g = (Graphics2D)gr;
 		Stroke preStroke = g.getStroke();
 		Color preColor = g.getColor();
 		g.setColor(Color.red);
 		g.setStroke(med);
-
+		Stroke highlightStroke = new BasicStroke(2f);
 		double dx = bounds.width / (double)w;
 		double dy = bounds.height / (double)h;
 		double halfX = dx/2;
@@ -177,8 +177,20 @@ public class TreeTent extends PuzzleModule
 
 			double x2 = bounds.x + e.pos2.x * dx + halfX;
 			double y2 = bounds.y + e.pos2.y * dx + halfY;
-
+			int width_mult = (x1 == x2)? 1 : 2;
+			int height_mult = (y1 == y2)? 1 : 2;
 			g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
+			
+			if(extraDataDelta.contains(e))
+			{
+				g.setColor(Color.green);
+				g.setStroke(highlightStroke);
+				
+				g.drawRect((int)(x1-halfX+2),(int)(y1-halfY+2),(int)(2*width_mult*halfX-4),(int)(2*height_mult*halfY-4));
+				
+				g.setColor(Color.red);
+				g.setStroke(med);
+			}
 		}
 
 		g.setColor(preColor);
