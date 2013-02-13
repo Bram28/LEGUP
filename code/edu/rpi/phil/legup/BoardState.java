@@ -85,7 +85,8 @@ public class BoardState
 	// puzzle specific extra data
 	// for example, in tree tent, the tree which each tent belongs to
 	protected ArrayList <Object> extraData = new ArrayList <Object>();
-
+	public ArrayList <Object> extraDataDelta = new ArrayList <Object>();
+	
 	private boolean collapsed = false;
 
 	private ArrayList<Point> hintCells = new ArrayList<Point>();
@@ -121,6 +122,7 @@ public class BoardState
 		modifiableCells = new boolean[height][width];
 		editedCells = new boolean[height][width];
 		changedCells = new Vector<Point>();
+		extraDataDelta = new ArrayList<Object>();
 		
 		// Initialize arrays
 		for (int i=0;i<height;i++)
@@ -474,7 +476,10 @@ public class BoardState
 		if(present)if(!extraData.contains(ex))extraData.add(ex);
 		for(BoardState child : transitionsFrom)
 		{
-			child.propagateExtraData(ex,present);
+			if(!child.extraDataDelta.contains(ex))
+			{
+				child.propagateExtraData(ex,present);
+			}
 		}
 	}
 	

@@ -132,19 +132,16 @@ public class TreeTent extends PuzzleModule
 			if(next == null)return;
 			Legup.getInstance().getSelections().setSelection(new Selection(next,false));
 			ArrayList<Object> extra = next.getExtraData();
-			for (int x = 0; x < extra.size(); ++x)
+			removed = extra.remove(e);
+			if(!removed)
 			{
-				if (extra.get(x).equals(e))
-				{
-					extra.remove(x);
-					removed = true;
-					next.boardDataChanged();
-					break;
-				}
-			}
-			
-			if (removed == false) // if we aren't removing, we're inserting
 				next.addExtraData(e);
+			}
+			next.boardDataChanged();
+			if(!next.extraDataDelta.remove(e))
+			{
+				next.extraDataDelta.add(e);
+			}
 			
 			next.propagateExtraData(e,!removed);
 		}
