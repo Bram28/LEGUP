@@ -58,11 +58,16 @@ public abstract class BoardDrawingHelper
 			origState = state.getTransitionsTo().get(0);
 		boolean showOrange = false;
 
-		if( TreePanel.getMouseOver() != null ){
+		if( TreePanel.getMouseOver() != null )
+		{
 			selection = TreePanel.getMouseOver();
-			if (selection.isState()) origState = newState = selection.getState();
+			if(selection.isState())
+			{
+				newState = selection.getState();
+				origState = newState.getSingleParentState();
+			}
 			else newState = (origState = selection.getState()).getTransitionsFrom().get(0);
-			showOrange = true;
+			//showOrange = true;
 		}
 
 		if (ANIMATE_SPLIT_CASE && !selection.isState())
@@ -195,8 +200,10 @@ public abstract class BoardDrawingHelper
 		//Draw red if a cell has been changed, and not from an unknown
 		//If it is a transition then draw all cells which don't match as orange
 		if( prevVal == PuzzleModule.CELL_UNKNOWN && curVal != prevVal )
+		{
 			if( showOrange ) return orangeSquare;
 			else return greenFilter;
+		}
 		else if( prevVal != PuzzleModule.CELL_UNKNOWN && prevVal != curVal )
 			return redFilter;
 		else if( oldState == null && newState.getTransitionsTo().size() > 1 ){
