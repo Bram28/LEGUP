@@ -734,7 +734,7 @@ public class BoardState
 		{
 			if(!B.evalDelayStatus())
 			{
-				return rv;
+				rv = false;
 			}
 		}
 		return rv;
