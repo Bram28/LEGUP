@@ -28,8 +28,8 @@ public class CaseTentOrGrass extends CaseRule
 		}
 		else
 		{
-			BoardState one = parent.getTransitionsFrom().get(0);//.getTransitionsFrom().get(0);
-			BoardState two = parent.getTransitionsFrom().get(1);//.getTransitionsFrom().get(0);
+			BoardState one = parent.getTransitionsFrom().get(0);
+			BoardState two = parent.getTransitionsFrom().get(1);
 			
 			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
 			

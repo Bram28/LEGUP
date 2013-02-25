@@ -14,6 +14,7 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.PuzzleModule;
+import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -191,14 +192,36 @@ public class CasePanel extends JustificationPanel
 					}
 					for(int c1=0;c1<num_cases;c1++)
 					{
-						BoardState tmp = cur.addTransitionFrom();
-						tmp.setCaseSplitJustification(caseRules.get(button));
-						tmp.fillBlanks(where,row,whatgoesintheblanks);
-						tmp.endTransition();
+						boolean skip = false;
+						if(pm instanceof TreeTent)
+						{
+							int num_tents = 0;
+							for(int n=0;n<num_blanks;n++)
+							{
+								if(whatgoesintheblanks[n] == 1)num_tents++;
+							}
+							int correct_tents = 0;
+							if(row)
+							{
+								correct_tents = TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_RIGHT,where)); 
+							}
+							else
+							{
+								correct_tents = TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_BOTTOM,where)); 
+							}
+							if(num_tents != correct_tents)skip=true;
+						}
+						if(!skip)
+						{
+							BoardState tmp = cur.addTransitionFrom();
+							tmp.setCaseSplitJustification(caseRules.get(button));
+							tmp.fillBlanks(where,row,whatgoesintheblanks);
+							tmp.endTransition();
+						}
 						whatgoesintheblanks[0]++;
 						for(int c2=0;c2+1<num_blanks;c2++)
 						{
-							if(whatgoesintheblanks[c2] >= Legup.getInstance().getPuzzleModule().numAcceptableStates())
+							if(whatgoesintheblanks[c2] >= pm.numAcceptableStates())
 							{
 								whatgoesintheblanks[c2]=1;
 								whatgoesintheblanks[c2+1]++;
