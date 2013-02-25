@@ -21,16 +21,16 @@ public class CaseTentOrGrass extends CaseRule
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;
-		
-		if (state.getTransitionsFrom().size() != 2)
+		BoardState parent = state.getSingleParentState(); 
+		if (parent.getTransitionsFrom().size() != 2)
 		{
 			rv = "This case rule can only be applied on a two-way split.";
 		}
 		else
 		{
-			BoardState one = state.getTransitionsFrom().get(0);
-			BoardState two = state.getTransitionsFrom().get(1);
-						
+			BoardState one = parent.getTransitionsFrom().get(0);//.getTransitionsFrom().get(0);
+			BoardState two = parent.getTransitionsFrom().get(1);//.getTransitionsFrom().get(0);
+			
 			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
 			
 			if (dif.size() > 1)
@@ -52,7 +52,7 @@ public class CaseTentOrGrass extends CaseRule
 				{
 					rv = "In this case rule, one state's cell must contain grass and the other a tent.";
 				}
-				else if (state.getCellContents(p.x,p.y) != TreeTent.CELL_UNKNOWN)
+				else if (parent.getCellContents(p.x,p.y) != TreeTent.CELL_UNKNOWN)
 				{
 					rv = "The parent cell that you're applying the case rule on must be a blank cell.";
 				}

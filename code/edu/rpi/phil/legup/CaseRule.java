@@ -21,8 +21,16 @@ public abstract class CaseRule extends Justification
 	public final String checkCaseRule(BoardState state)
 	{
 		//Perhaps there are other checks needed?
-		
+		if(!allButOneChildLeadToContradiction(state.getSingleParentState()))
+		{
+			return "This set of cases does not lead to exactly one non-contradictory state.";
+		}
 		return checkCaseRuleRaw(state);
+	}
+	
+	public boolean allButOneChildLeadToContradiction(BoardState state)
+	{
+		return (state.doesNotLeadToContradiction() != null);
 	}
 	
 	protected abstract String checkCaseRuleRaw(BoardState state);

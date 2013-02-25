@@ -45,6 +45,7 @@ public class BoardState
 	private Color current_color = TreePanel.nodeColor;
 	public Color getColor() { return current_color; }
 	public void setColor(Color c) { current_color = c; }
+	public String justificationText = null; //strings returned by justification-checks, to be displayed on mouseover
 	// BoardState when initially created (set in constructor)
 	private BoardState originalState = null;
 	private int height;
@@ -123,6 +124,7 @@ public class BoardState
 		editedCells = new boolean[height][width];
 		changedCells = new Vector<Point>();
 		extraDataDelta = new ArrayList<Object>();
+		justificationText = null;
 		
 		// Initialize arrays
 		for (int i=0;i<height;i++)
@@ -190,6 +192,7 @@ public class BoardState
 			getRightLabels()[y] = copy.getRightLabels()[y];
 		}
 		extraData = new ArrayList<Object>(copy.extraData);
+		justificationText = null;
 		changedCells = copy.getChangedCells();
 		
 		transitionsTo.clear();
@@ -294,7 +297,7 @@ public class BoardState
 	 */
 	public String isJustifiedCaseSplit()
 	{
-		String rv = "No rule selected!";
+		String rv = null;//"No rule selected!";
 
 		if (getCaseRuleJustification() != null)
 		{
@@ -714,6 +717,7 @@ public class BoardState
 	public boolean evalDelayStatus()
 	{
 		delayStatus = getStatus();
+		boolean rv = delayStatus == STATUS_UNJUSTIFIED || delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT;
 		if(delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT)
 		{
 			if(isModifiable())current_color = Color.green;
@@ -722,14 +726,18 @@ public class BoardState
 		{
 			if(isModifiable())current_color = Color.red;
 		}
+		else
+		{
+			current_color = TreePanel.nodeColor;
+		}
 		for (BoardState B : transitionsFrom)
 		{
 			if(!B.evalDelayStatus())
 			{
-				return false;
+				return rv;
 			}
 		}
-		return delayStatus == STATUS_UNJUSTIFIED || delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT;
+		return rv;
 	}
 
 	private void modifyStatus()
@@ -1395,7 +1403,7 @@ public class BoardState
 	 */
 	public int getStatus()
 	{
-		if (status == -1)
+		//if (status == -1)
 		{
 			leadsToContradiction();
 			leadsToSolution();
@@ -1409,8 +1417,8 @@ public class BoardState
 				if (o instanceof Contradiction)
 				{
 					Contradiction c = (Contradiction)o;
-
-					if (c.checkContradiction(this) == null)
+					justificationText = c.checkContradiction(this);
+					if (justificationText == null)
 						status = STATUS_CONTRADICTION_CORRECT;
 					else
 						status = STATUS_CONTRADICTION_INCORRECT;
@@ -1418,8 +1426,8 @@ public class BoardState
 				else if (o instanceof PuzzleRule)
 				{
 					PuzzleRule pz = (PuzzleRule)o;
-
-					if (pz.checkRuleRaw(this) == null)
+					justificationText = pz.checkRuleRaw(this);
+					if (justificationText == null)
 						status = STATUS_RULE_CORRECT;
 					else
 						status = STATUS_RULE_INCORRECT;
@@ -1427,18 +1435,11 @@ public class BoardState
 			}
 			else
 			{
-				BoardState parent = getSingleParentState();
-
-				if (parent != null)
+				if(getCaseSplitJustification() != null)
 				{
-					if (parent.getTransitionsFrom().size() > 1 &&
-							parent.getCaseSplitJustification() != null)
-					{
-						if (parent.isJustifiedCaseSplit() == null)
-							status = STATUS_RULE_CORRECT;
-						else
-							status = STATUS_RULE_INCORRECT;
-					}
+					justificationText = isJustifiedCaseSplit(); 
+					if(justificationText == null)status = STATUS_RULE_CORRECT;
+					else status = STATUS_RULE_INCORRECT;
 				}
 			}
 		}

@@ -132,10 +132,16 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
 		if(mouseOver != null)
-		if((mouseOver.getState().getJustification() != null && !mouseOver.getState().isModifiable())
-		||(mouseOver.getState().getCaseRuleJustification() != null) && mouseOver.getState().isModifiable())
+		if((mouseOver.getState().getJustification() != null)||(mouseOver.getState().getCaseRuleJustification() != null))
 		{
 			draw = mousePoint;//(Point)mouseOver.getState().getLocation().clone();
+			if((mouseOver.getState().justificationText != null)&&(mouseOver.getState().getColor() != TreePanel.nodeColor))
+			{
+				g.setColor(Color.black);
+				g2D.drawString(mouseOver.getState().justificationText,draw.x,draw.y-40);
+				g2D.drawString("Status:"+mouseOver.getState().getStatus(),draw.x,draw.y-50);
+				//System.out.println(mouseOver.getState().justificationText);
+			}
 			g.setColor(Color.gray);
 			g2D.drawRect(draw.x+30,draw.y-30,100,100);
 		}
