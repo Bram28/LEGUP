@@ -1567,7 +1567,7 @@ public class BoardState
 		return rv;
 	}
 
-	 private boolean leadContradiction = false;
+	private boolean leadContradiction = false;
 	/**
 	 * Does this board state lead to a contradiction?
 	 * @param state the state we're checking
@@ -1575,7 +1575,12 @@ public class BoardState
 	 */
 	public boolean leadsToContradiction()
 	{
-		return leadContradiction;
+		if(transitionsFrom.size() > 0)
+		{
+			BoardState next = (transitionsFrom.get(0).getCaseRuleJustification() != null) ? doesNotLeadToContradiction() : transitionsFrom.get(0);
+			return (next != null) ? next.leadsToContradiction() : (getJustification() instanceof Contradiction);
+		}
+		else return (getJustification() instanceof Contradiction); //if there are no children
 		/*if (status != -1)
 			return leadContradiction;
 
@@ -1620,6 +1625,22 @@ public class BoardState
 		}
 
 		return (leadContradiction = rv);*/
+	}
+	//checks all children, returns the BoardState that does not lead to a contradiction
+	//returns null if the number of children that lead to contradictions is not exactly 1
+	public BoardState doesNotLeadToContradiction()
+	{
+		BoardState rv = null;
+		int numNonContradictions = 0;
+		for(BoardState child : transitionsFrom)
+		{
+			if(!child.leadsToContradiction())
+			{
+				numNonContradictions++;
+				rv = (numNonContradictions == 1) ? child : null;
+			}
+		}
+		return rv;
 	}
 
 	private boolean leadSolution = false;

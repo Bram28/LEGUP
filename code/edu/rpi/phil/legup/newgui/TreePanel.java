@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleRule;
@@ -351,10 +352,24 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		else
 		{
-			g2D.fill(triangle);
-			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-			g2D.setStroke((sel.contains(theSelection)? medium : thin));
-			g.drawPolygon(triangle);
+			if(!(state.getJustification() instanceof Contradiction))
+			{
+				g2D.fill(triangle);
+				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+				g2D.setStroke((sel.contains(theSelection)? medium : thin));
+				g.drawPolygon(triangle);
+			}
+			else
+			{
+				g2D.fillRect(x-NODE_RADIUS,y-NODE_RADIUS,NODE_RADIUS*2,NODE_RADIUS*2);
+				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+				g2D.setStroke((sel.contains(theSelection)? medium : thin));
+				g2D.drawRect(x-NODE_RADIUS,y-NODE_RADIUS,NODE_RADIUS*2,NODE_RADIUS*2);
+				g.setColor(Color.red);
+				g2D.drawLine(x-NODE_RADIUS,y-NODE_RADIUS,x+NODE_RADIUS,y+NODE_RADIUS);
+				g2D.drawLine(x+NODE_RADIUS,y-NODE_RADIUS,x-NODE_RADIUS,y+NODE_RADIUS);
+				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
+			}
 		}
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 
