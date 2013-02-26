@@ -209,6 +209,11 @@ public class CasePanel extends JustificationPanel
 							{
 								correct_tents = TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_BOTTOM,where)); 
 							}
+							for(int n=0;n<((row)?(cur.getWidth()):(cur.getHeight()));n++)
+							{
+								//subtract the amount of tents already in the row
+								correct_tents -= (TreeTent.CELL_TENT == (cur.getCellContents(row?n:where,row?where:n)))?1:0;
+							}
 							if(num_tents != correct_tents)skip=true;
 						}
 						if(!skip)

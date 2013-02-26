@@ -109,18 +109,20 @@ public class CaseTentsInRow extends CaseRule
 	}
 	public String checkCaseRuleRaw(BoardState state)
 	{
+		BoardState parent = state.getSingleParentState();
+		if(parent == null)return "The parent state is null.";
 		String rv = null;
 		int affectedRow = -1; // a value of -1 indicates that a column is being affected, not a row
 		int affectedColumn = -1;
-		int numChildStates = state.getTransitionsFrom().size();  // how many branches do we have?
+		int numChildStates = parent.getTransitionsFrom().size();  // how many branches do we have?
 		if (numChildStates < 2)
 		{
 			return "This case rule can only be applied on a two-way or more split.";
 		}
 		// we will first check one state to see which row/column we are working with 
 		// (we still will need to check the rest of the states to make sure they are also changing this row/col)
-		BoardState one = state.getTransitionsFrom().get(0);					
-		ArrayList<Point> pointsChangedInFirstNewState = BoardState.getDifferenceLocations(state,one);
+		BoardState one = parent.getTransitionsFrom().get(0);					
+		ArrayList<Point> pointsChangedInFirstNewState = BoardState.getDifferenceLocations(parent,one);
 		if(pointsChangedInFirstNewState.size() < 2){
 			return "At least two squares must be affected by this split";
 		}
@@ -144,21 +146,21 @@ public class CaseTentsInRow extends CaseRule
 		int numTentsExisting;
 		int numEmptySpaces;
 		if(affectedRow != -1){ // if we are dealing with a row being changed
-			numTentsTotal = numTentsNeededInRow(state,affectedRow);
-			numTentsExisting = numTentsInRow(state,affectedRow);
-			numEmptySpaces = numEmptySpacesInRow(state,affectedRow);
+			numTentsTotal = numTentsNeededInRow(parent,affectedRow);
+			numTentsExisting = numTentsInRow(parent,affectedRow);
+			numEmptySpaces = numEmptySpacesInRow(parent,affectedRow);
 		}
 		else{ // if we are dealing with a column being changed
-			numTentsTotal = numTentsNeededInColumn(state,affectedColumn);
-			numTentsExisting = numTentsInColumn(state, affectedColumn);
-			numEmptySpaces = numEmptySpacesInColumn(state,affectedColumn);
+			numTentsTotal = numTentsNeededInColumn(parent,affectedColumn);
+			numTentsExisting = numTentsInColumn(parent, affectedColumn);
+			numEmptySpaces = numEmptySpacesInColumn(parent,affectedColumn);
 		}
 		int numTentsNeeded = numTentsTotal - numTentsExisting;
 		if(numTentsNeeded == 0){
 			return "No more tents are needed here";
 		}
 		if(numTentsNeeded == numEmptySpaces){
-			return "There is only one possible way to place these tents.  Use the 'finish tents' rule.";
+			return "There is only one possible way to place these tents.\nUse the 'finish tents' rule.";
 		}
 		if(numTentsNeeded > numEmptySpaces){
 			return "There is no way to place "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces.";
@@ -168,14 +170,14 @@ public class CaseTentsInRow extends CaseRule
 		
 		int numCombinations = choose(numEmptySpaces,numTentsNeeded);
 		if(numChildStates != numCombinations){
-			return "The number of branches must be equal to the number of possible configurations for "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces";
+			return "The number of branches must be equal to the number of possible\nconfigurations for "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces";
 		}
-		Vector<BoardState> allChildStates = state.getTransitionsFrom();
+		Vector<BoardState> allChildStates = parent.getTransitionsFrom();
 		for(int i = 0; i < allChildStates.size(); i++){
 			BoardState currentChildState = allChildStates.get(i);
-			ArrayList<Point> pointsChanged = BoardState.getDifferenceLocations(state,currentChildState);
+			ArrayList<Point> pointsChanged = BoardState.getDifferenceLocations(parent,currentChildState);
 			if(pointsChanged.size() != numEmptySpaces){
-				return "The number of changed cells in each child state must be equal to the number of unfilled states in the relevant row of the parent";
+				return "The number of changed cells in each child state must\nbe equal to the number of unfilled states\nin the relevant row or column of the parent";
 			}
 			
 			// make sure that no child states are the same
@@ -208,7 +210,7 @@ public class CaseTentsInRow extends CaseRule
 				}
 			}
 			if(numTentsPlaced != numTentsNeeded){
-				return "The number of tents placed in each child cell must be equal to the number needed to complete the changed row or column.";
+				return "The number of tents placed in each child cell must be equal\nto the number needed to complete the changed row or column.";
 			}
 		}
 		return rv;
