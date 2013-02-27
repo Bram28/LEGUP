@@ -72,7 +72,7 @@ public class ContradictionMiscount extends Contradiction
     	int height = state.getHeight();
     	int width = state.getWidth();
 
-    	// Check all tents to see if they are adjacent to a tree
+    	// Check all rows for the correct amount of tents
     	for (int y=0;y<height;y++)
     	{
 			int n = getRowNum(y,state);
@@ -85,6 +85,7 @@ public class ContradictionMiscount extends Contradiction
 			}
     	}
     	
+    	// Check all columns for the correct amount of tents
     	for (int x=0;x<width;x++)
  	    {
 			int n = getColNum(x,state);

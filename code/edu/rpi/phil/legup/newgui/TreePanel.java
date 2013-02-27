@@ -361,22 +361,22 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		else
 		{
-			if(!(state.getJustification() instanceof Contradiction))
+			//if(!(state.getJustification() instanceof Contradiction))
 			{
 				g2D.fill(triangle);
 				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
 				g2D.setStroke((sel.contains(theSelection)? medium : thin));
 				g.drawPolygon(triangle);
 			}
-			else
+			if(state.getJustification() instanceof Contradiction)
 			{
-				g2D.fillRect(x-NODE_RADIUS,y-NODE_RADIUS,NODE_RADIUS*2,NODE_RADIUS*2);
+				/*g2D.fillRect(x-NODE_RADIUS,y-NODE_RADIUS,NODE_RADIUS*2,NODE_RADIUS*2);
 				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
 				g2D.setStroke((sel.contains(theSelection)? medium : thin));
-				g2D.drawRect(x-NODE_RADIUS,y-NODE_RADIUS,NODE_RADIUS*2,NODE_RADIUS*2);
+				g2D.drawRect(x-NODE_RADIUS,y-NODE_RADIUS,NODE_RADIUS*2,NODE_RADIUS*2);*/
 				g.setColor(Color.red);
-				g2D.drawLine(x-NODE_RADIUS,y-NODE_RADIUS,x+NODE_RADIUS,y+NODE_RADIUS);
-				g2D.drawLine(x+NODE_RADIUS,y-NODE_RADIUS,x-NODE_RADIUS,y+NODE_RADIUS);
+				g2D.drawLine(x-NODE_RADIUS+3*NODE_RADIUS,y-NODE_RADIUS,x+NODE_RADIUS+3*NODE_RADIUS,y+NODE_RADIUS);
+				g2D.drawLine(x+NODE_RADIUS+3*NODE_RADIUS,y-NODE_RADIUS,x-NODE_RADIUS+3*NODE_RADIUS,y+NODE_RADIUS);
 				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
 			}
 		}
