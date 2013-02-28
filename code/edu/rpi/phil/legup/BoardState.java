@@ -241,10 +241,8 @@ public class BoardState
 	public void setModifiableState(boolean mod)
 	{
 		modifiableState = mod;
-		if(mod)
-			this.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
-		else
-			this.setOffset(new Point(0, 0));
+		/*if(mod)this.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+		else this.setOffset(new Point(0, 0));*/
 	}
 
 

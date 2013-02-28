@@ -248,15 +248,11 @@ public class SaveableProof
 				
 				//add offset to child
 				//if(currentstate.isModifiable())
-					currentstate.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+				//	currentstate.setOffset(new Point(0, (int)(5*TreePanel.NODE_RADIUS)));
 				//else
 				//	currentstate.setOffset(new Point(0, 0));
 				
 				//add point changes to child (if they exist)
-				
-				//if was here before, while looks better, functionality-wise, but
-				//it gets a stack overflow (after outputting corrently the "Changing" lines for
-				//every cell in the current transition - Avi
 				while(scan.hasNext() == scan.hasNextInt())
 				{
 					//nested if structure to partially deal with non-triplets
