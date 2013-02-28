@@ -42,7 +42,15 @@ public class TreeTent extends PuzzleModule
 
 	public TreeTent(){
 	}
-
+	
+	public Object extraDataFromString(String str)
+	{
+		String[] data = str.split(",");
+		if(data.length != 4)return null;
+		ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(Integer.valueOf(data[0]).intValue(),Integer.valueOf(data[1]).intValue()),new Point(Integer.valueOf(data[2]).intValue(),Integer.valueOf(data[3]).intValue()));
+		return link;
+	}
+	
 	/**
 	 * Take an action when the left mouse button is pressed
 	 * @param state the current board state

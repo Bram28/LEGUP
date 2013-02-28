@@ -73,6 +73,12 @@ public abstract class PuzzleModule
 		return rv;
 	}
 	
+	//de-serializes extradata, intended to be implemented in every module that has extradata
+	public Object extraDataFromString(String str)
+	{
+		return null;
+	}
+	
 	public boolean checkBoardComplete(BoardState finalstate)
 	{
 		boolean ret = true;

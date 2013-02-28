@@ -227,13 +227,18 @@ public class SaveableProof
 			{
 				//add new child to parent
 				//currentstate.getTransitionsFrom().add(new BoardState(state));
-				currentstate.addTransitionFrom();
+				currentstate.addTransitionFromWithNoMovement();
+				
 				//add parent to child
 				//currentstate.getTransitionsFrom().lastElement().getTransitionsTo().add(currentstate);
 
 				//step in to child
 				currentstate = currentstate.getTransitionsFrom().lastElement();
 				
+				//set offset equal to the stored value
+				tmp = String.valueOf(scan.nextInt());
+				currentstate.setOffsetRaw(new Point(Integer.valueOf(tmp).intValue(),Integer.valueOf(scan.nextInt()).intValue()));
+				scan.nextLine();
 				//add justification to child
 				//System.out.println(scan.nextLine());
 				tmp = scan.nextLine();
@@ -266,7 +271,7 @@ public class SaveableProof
 						if(scan.hasNext() == scan.hasNextInt())
 						{
 							tmp_cell = scan.nextInt();
-							tmp_cell = ((currentstate.isModifiable()) ? Math.abs(tmp_cell) : -Math.abs(tmp_cell));
+							tmp_cell = ((/*currentstate.isModifiable()*/ false) ? Math.abs(tmp_cell) : -Math.abs(tmp_cell));
 							//change board cell at point
 							currentstate.getChangedCells().add(new Point(tmp_x,tmp_y));
 							currentstate.getBoardCells()[tmp_y][tmp_x] = tmp_cell;
@@ -376,12 +381,6 @@ public class SaveableProof
 		{
 			//SAVE HINTCELLS
 		}
-		//saveme.out.print("\nextraData:\n");
-		for (Object extra : state.getExtraData())
-		{
-			//SAVE EXTRADATA, ie
-			//extradata = new extra.tosavedata();
-		}
 		encrypt_me += "\nBoard:\n";
 		for (int i = 0; i < state.getHeight(); i++)
 		{
@@ -405,6 +404,7 @@ public class SaveableProof
 	{
 		String encrypt_me = "";
 		encrypt_me += "newState:\n";
+		encrypt_me += state.getOffset().x + " " + state.getOffset().y + "\n";
 		encrypt_me += state.getJustification();
 		encrypt_me += '\n';
 		encrypt_me += state.getCaseRuleJustification();

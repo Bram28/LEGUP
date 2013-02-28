@@ -49,4 +49,10 @@ public class ExtraTreeTentLink
 		
 		return rv;
 	}
+	//serializes the data for load/save proof
+	public String toString()
+	{
+		//intended to be splitted first by ;, then by ,
+		return pos1.x + "," + pos1.y + pos2.x + "," + pos2.y;
+	}
 }

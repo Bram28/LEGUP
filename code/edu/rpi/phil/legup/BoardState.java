@@ -1150,7 +1150,15 @@ public class BoardState
 
 		return b;
 	}
-
+	public BoardState addTransitionFromWithNoMovement()
+	{
+		BoardState b = copy();
+		b.setModifiableState(!modifiableState);
+		transitionsFrom.add(b);
+		b.transitionsTo.add(this);
+		
+		return b;
+	}
 	/**
 	 * Adds a transition from this board state.
 	 * @param b: the new child state
@@ -1291,9 +1299,9 @@ public class BoardState
 		newBoardState.virtualBoard = virtualBoard;
 		newBoardState.modifiableState = modifiableState;
 		if(modifiableState)
-			newBoardState.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+			newBoardState.setOffsetRaw(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
 		else
-			newBoardState.setOffset(new Point(0, 0));
+			newBoardState.setOffsetRaw(new Point(0, 0));
 	} catch (Exception e){
 		return newBoardState;
 	}
@@ -1780,7 +1788,12 @@ public class BoardState
 	{
 		this.location = location;
 	}
-
+	
+	public void resetLocation()
+	{
+		location = new Point(0,0);
+	}
+	
 	public Point getOffset()
 	{
 		return offset;
@@ -1790,6 +1803,14 @@ public class BoardState
 	{
 		this.offset = offset;
 		this.recalculateLocation();
+	}
+	
+	public void setOffsetRaw(Point offset)
+	{
+		this.offset = offset;
+		BoardState parent = (transitionsTo.size() > 0) ? transitionsTo.get(0) : null;
+		if(parent != null)parent.setOffsetRaw(parent.offset);
+		this.location = (parent != null) ? new Point(parent.location.x+offset.x,parent.location.y+offset.y) : offset;
 	}
 
 	public void recalculateLocation()
