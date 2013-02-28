@@ -90,6 +90,7 @@ public class SaveableProof
 		String str;
 		String tmp;
 		String name;
+		String[] tmp_str_array;
 		int in;
 		Vector <Integer> labels = new Vector<Integer>();
 		//iterate through file
@@ -219,14 +220,14 @@ public class SaveableProof
 		BoardState currentstate = state;
 		while (scan.hasNext() != scan.hasNextInt())
 		{
-			str = scan.next();
+			str = scan.nextLine();
 			//JOptionPane.showMessageDialog(null,str);
 			System.out.println(str);
-			scan.nextLine();
 			if (str.equals("newState:"))
 			{
 				//add new child to parent
 				//currentstate.getTransitionsFrom().add(new BoardState(state));
+				if(currentstate == null)System.out.println("currentstate == null");
 				currentstate.addTransitionFromWithNoMovement();
 				
 				//add parent to child
@@ -236,27 +237,47 @@ public class SaveableProof
 				currentstate = currentstate.getTransitionsFrom().lastElement();
 				
 				//set offset equal to the stored value
-				tmp = String.valueOf(scan.nextInt());
-				currentstate.setOffsetRaw(new Point(Integer.valueOf(tmp).intValue(),Integer.valueOf(scan.nextInt()).intValue()));
-				scan.nextLine();
+				tmp = scan.nextLine();
+				System.out.println("Offset: "+tmp);
+				tmp_str_array = tmp.split(" ");
+				currentstate.setOffsetRaw(new Point(Integer.valueOf(tmp_str_array[0]).intValue(),Integer.valueOf(tmp_str_array[1]).intValue()));
+				
 				//add justification to child
 				//System.out.println(scan.nextLine());
 				tmp = scan.nextLine();
+				System.out.println("Justification: "+tmp);
 				currentstate.setJustification(Legup.getInstance().getPuzzleModule().getRuleByName(tmp));
-				
+				System.out.println("test");
 				//add case rule to child
 				tmp = scan.nextLine();
+				System.out.println("CaseRule: "+tmp);
 				currentstate.setCaseRuleJustification(Legup.getInstance().getPuzzleModule().getCaseRuleByName(tmp));
 				
 				//is this a transition?
-				currentstate.setModifiableState(scan.nextBoolean());
+				tmp = scan.nextLine();
+				System.out.println("Transition: "+tmp);
+				currentstate.setModifiableState(Boolean.valueOf(tmp).booleanValue());
 				
-				//add offset to child
-				//if(currentstate.isModifiable())
-				//	currentstate.setOffset(new Point(0, (int)(5*TreePanel.NODE_RADIUS)));
-				//else
-				//	currentstate.setOffset(new Point(0, 0));
-				
+				//get extraData
+				tmp = scan.nextLine();
+				System.out.println("extraData: "+tmp);
+				tmp_str_array = tmp.split(";");
+				for(int c1=0;c1<tmp_str_array.length;c1++)
+				{
+					System.out.println(tmp_str_array[c1]);
+					Object exdat = Legup.getInstance().getPuzzleModule().extraDataFromString(tmp_str_array[c1]); 
+					if(exdat != null)currentstate.getExtraData().add(exdat);
+				}
+				//get extraDataDelta
+				tmp = scan.nextLine();
+				System.out.println("extraDataDelta: "+tmp);
+				tmp_str_array = tmp.split(";");
+				for(int c1=0;c1<tmp_str_array.length;c1++)
+				{
+					System.out.println(tmp_str_array[c1]);
+					Object exdat = Legup.getInstance().getPuzzleModule().extraDataFromString(tmp_str_array[c1]);
+					if(exdat != null)currentstate.extraDataDelta.add(exdat);
+				}
 				//add point changes to child (if they exist)
 				while(scan.hasNext() == scan.hasNextInt())
 				{
@@ -419,6 +440,18 @@ public class SaveableProof
 		encrypt_me += state.isModifiable();
 		encrypt_me += '\n';
 		
+		for(int c1=0;c1<state.getExtraData().size();c1++)
+		{
+			encrypt_me += state.getExtraData().get(c1).toString();
+			if(c1 != state.getExtraData().size()-1)encrypt_me += ";";
+		}
+		encrypt_me += "\n";
+		for(int c1=0;c1<state.extraDataDelta.size();c1++)
+		{
+			encrypt_me += state.extraDataDelta.get(c1).toString();
+			if(c1 != state.getExtraData().size()-1)encrypt_me += ";";
+		}
+		encrypt_me += "\n";
 		for(Point cell : state.getChangedCells())
 		{
 			encrypt_me += cell.x;
