@@ -351,6 +351,7 @@ public class BoardState
 	{
 		delayStatus = STATUS_UNJUSTIFIED;
 		modifyStatus();
+		evalDelayStatus();
 		for (BoardState B : transitionsTo) B.modifyStatus();
 		for (BoardState B : transitionsFrom) B.modifyStatus();
 		for (int a = 0; a < boardDataChangeListeners.size(); ++a)

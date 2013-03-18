@@ -427,8 +427,9 @@ public class TreeTent extends PuzzleModule
 		Vector <CaseRule> caseRules = new Vector <CaseRule>();
 
 		caseRules.add(new CaseTentOrGrass());
-		caseRules.add( new CaseTentsInRow() );
-
+		caseRules.add(new CaseTentsInRow());
+		caseRules.add(new CaseLinkTree());
+		
 		return caseRules;
 	}
 
