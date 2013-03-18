@@ -11,17 +11,13 @@ public class RuleNewTentLink extends RuleNewLink{
     public RuleNewTentLink()
     {
     	setName("New Link Tent");
-    	description = "A tent must link to a tree if there are no unlinked trees near the tent.";
+    	description = "A tent must link to a tree if only one unlinked tree is near the tent.";
     	image = new ImageIcon("images/treetent/NewTentLink.png");
     }
     
-    protected boolean checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
+    protected String checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
     {
-    	if(checkTreeNeededLink(tree,tent,state,validLinks))
-    		return true;
-    	if(checkTentNeededLink(tree, tent, state,validLinks))
-    		return true;
-    	return false;
+    	return this.checkTentNeededLink(tree,tent,state,validLinks);
     }
 	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
 	{

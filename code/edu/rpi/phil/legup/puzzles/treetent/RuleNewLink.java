@@ -24,7 +24,7 @@ public abstract class RuleNewLink extends PuzzleRule
      * @param state the board state
      * @return true iff the new link is valid
      */
-    protected boolean checkTreeNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
+    protected String checkTreeNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
 	{
 		int w = state.getWidth();
 		int h = state.getHeight();
@@ -37,7 +37,7 @@ public abstract class RuleNewLink extends PuzzleRule
 				
 			if (e.pos1.equals(tree) || e.pos2.equals(tree))
 			{
-				return false;
+				return "the tree already has a link.";
 			}
 		}
 		
@@ -70,7 +70,7 @@ public abstract class RuleNewLink extends PuzzleRule
 			//If we find an unknown, this isn't valid
 			if(contents == TreeTent.CELL_UNKNOWN)
 			{
-				return false;
+				return "there is a blank (which has potential to be a tent).";
 			}
 			else if(contents == TreeTent.CELL_TENT)
 			{
@@ -85,15 +85,13 @@ public abstract class RuleNewLink extends PuzzleRule
 						found = true;
 					}					
 				}
-				
-				if(!found)
-					return false;
+				return (found) ? null : "the tree has more than one adjacent unlinked tent.";
 			}
 		}
-		return true;
+		return null;
     }
 
-    protected boolean checkTentNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
+    protected String checkTentNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
 	{
 		int w = state.getWidth();
 		int h = state.getHeight();
@@ -106,7 +104,7 @@ public abstract class RuleNewLink extends PuzzleRule
 				
 			if (e.pos1.equals(tent) || e.pos2.equals(tent))
 			{
-				return false;
+				return "the tent already has a link.";
 			}
 		}
 		
@@ -150,15 +148,13 @@ public abstract class RuleNewLink extends PuzzleRule
 						found = true;
 					}					
 				}
-				
-				if(!found)
-					return false;
+				return (found) ? null : "the tent has more than one adjacent unlinked tree.";
 			}
 		}
-		return true;
+		return null;
     }
     
-    protected abstract boolean checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks);
+    protected abstract String checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks);
 
     
 	protected String checkRuleRaw(BoardState destBoardState)
@@ -256,13 +252,14 @@ public abstract class RuleNewLink extends PuzzleRule
 				
 			
 			// check the validity
-			if (!checkCellNeededLink(tree,tent,destBoardState,origExtra))
+			String err_string = checkCellNeededLink(tree,tent,destBoardState,origExtra); 
+			if(err_string != null)
 			{
 				String let = String.valueOf((char)(tent.y + (int)'A'));
 				
 				error = "Your link addition to the tent at " + 
 					let + "" 
-					+ (tent.x + 1)  + " is invalid";
+					+ (tent.x + 1)  + " is invalid because\n" + err_string;
 				break;
 			}
 		}
@@ -337,7 +334,7 @@ public abstract class RuleNewLink extends PuzzleRule
 	    			Point here = new Point(x,y);
 	    			for(Point p : points)
 	    			{
-		    			if(checkCellNeededLink(here,p,state,extra))
+		    			if(checkCellNeededLink(here,p,state,extra) == null)
 		    			{
 		    				ExtraTreeTentLink e = new ExtraTreeTentLink(here,p);
 	    					if (!extra.contains(e))

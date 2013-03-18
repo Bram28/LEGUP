@@ -12,10 +12,10 @@ public class RuleNewTreeLink extends RuleNewLink{
     {
     	setName("New Link Tree");
     	description = "A tree must link to a tent if there are no unknowns or unlinked tents near the tree.";
-    	image = new ImageIcon("images/treetent/NewTentLink.png");
+    	image = new ImageIcon("images/treetent/NewTreeLink.png");
     }
     
-    protected boolean checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
+    protected String checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
     {
     	return this.checkTreeNeededLink(tree, tent, state, validLinks);
     }

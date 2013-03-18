@@ -392,6 +392,7 @@ public class TreeTent extends PuzzleModule
 		Vector <PuzzleRule>ruleList = new Vector <PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
 		ruleList.add(new RuleNewTentLink());
+		ruleList.add(new RuleNewTreeLink());
 		ruleList.add(new RuleAllGrass());
 		ruleList.add(new RuleNoTreesAround());
 		ruleList.add(new RuleGrassNextToTent());

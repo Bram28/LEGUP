@@ -225,14 +225,9 @@ public class SaveableProof
 			System.out.println(str);
 			if (str.equals("newState:"))
 			{
-				//add new child to parent
-				//currentstate.getTransitionsFrom().add(new BoardState(state));
-				if(currentstate == null)System.out.println("currentstate == null");
+				//add new node
 				currentstate.addTransitionFromWithNoMovement();
 				
-				//add parent to child
-				//currentstate.getTransitionsFrom().lastElement().getTransitionsTo().add(currentstate);
-
 				//step in to child
 				currentstate = currentstate.getTransitionsFrom().lastElement();
 				
@@ -247,7 +242,7 @@ public class SaveableProof
 				tmp = scan.nextLine();
 				System.out.println("Justification: "+tmp);
 				currentstate.setJustification(Legup.getInstance().getPuzzleModule().getRuleByName(tmp));
-				System.out.println("test");
+				
 				//add case rule to child
 				tmp = scan.nextLine();
 				System.out.println("CaseRule: "+tmp);
@@ -264,9 +259,9 @@ public class SaveableProof
 				tmp_str_array = tmp.split(";");
 				for(int c1=0;c1<tmp_str_array.length;c1++)
 				{
-					System.out.println(tmp_str_array[c1]);
 					Object exdat = Legup.getInstance().getPuzzleModule().extraDataFromString(tmp_str_array[c1]); 
 					if(exdat != null)currentstate.getExtraData().add(exdat);
+					else System.out.println("exdat "+ c1 + " is null");
 				}
 				//get extraDataDelta
 				tmp = scan.nextLine();
@@ -274,9 +269,9 @@ public class SaveableProof
 				tmp_str_array = tmp.split(";");
 				for(int c1=0;c1<tmp_str_array.length;c1++)
 				{
-					System.out.println(tmp_str_array[c1]);
 					Object exdat = Legup.getInstance().getPuzzleModule().extraDataFromString(tmp_str_array[c1]);
 					if(exdat != null)currentstate.extraDataDelta.add(exdat);
+					else System.out.println("exdelt "+ c1 + " is null");
 				}
 				//add point changes to child (if they exist)
 				while(scan.hasNext() == scan.hasNextInt())
@@ -307,8 +302,16 @@ public class SaveableProof
 				//step out to parent (if we have a parent)
 				if (!currentstate.getTransitionsTo().isEmpty())
 				{
-					System.out.println("numChilds: "+currentstate.getTransitionsFrom().size());
-					System.out.println("numParents: "+currentstate.getTransitionsTo().size());
+					//System.out.println("numChilds: "+currentstate.getTransitionsFrom().size());
+					//System.out.println("numParents: "+currentstate.getTransitionsTo().size());
+					for(int y=0;y<currentstate.getHeight();y++)
+					{
+						for(int x=0;x<currentstate.getWidth();x++)
+						{
+							//int tmp_cell = Math.abs(currentstate.getBoardCells()[y][x]);
+							currentstate.setModifiableCell(x,y,currentstate.getChangedCells().contains(new Point(x,y))||(currentstate.getCellContents(x,y) == 0));
+						}
+					}
 					currentstate = currentstate.getTransitionsTo().lastElement();
 				}
 			}
