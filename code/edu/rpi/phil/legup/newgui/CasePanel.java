@@ -15,6 +15,8 @@ import edu.rpi.phil.legup.Selection;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
+import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
+import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
 
 import javax.swing.*;
 import java.awt.*;
@@ -154,6 +156,7 @@ public class CasePanel extends JustificationPanel
 			Object[] msg = new Object[2];
 			CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
 			crsh.mode = caseRules.get(button).crshMode();
+			crsh.tileType = caseRules.get(button).crshTileType();
 			msg[0] = "Select where you would like to apply the CaseRule, and then select ok.";
 			msg[1] = crsh;
 			JOptionPane.showMessageDialog(null,msg);
@@ -165,13 +168,13 @@ public class CasePanel extends JustificationPanel
 			else
 			{
 				//System.out.println("Point ("+crsh.pointSelected.x+","+crsh.pointSelected.y+") selected.");
+				PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 				if(crsh.mode == CaseRuleSelectionHelper.MODE_TILE)
 				{
 					int quantityofcases = Legup.getInstance().getPuzzleModule().numAcceptableStates(); 
 					for (int i = 1; i < quantityofcases; i++)
 					{
 						BoardState tmp = cur.addTransitionFrom();
-						PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 						tmp.setCaseSplitJustification(caseRules.get(button));
 						tmp.setCellContents(crsh.pointSelected.x,crsh.pointSelected.y,pm.getStateNumber(pm.getStateName(i)));
 						tmp.endTransition();
@@ -179,7 +182,6 @@ public class CasePanel extends JustificationPanel
 				}
 				else if(crsh.mode == CaseRuleSelectionHelper.MODE_COL_ROW)
 				{
-					PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 					boolean row = (crsh.pointSelected.x == -1)? true : false;
 					int where = (row)? crsh.pointSelected.y : crsh.pointSelected.x;
 					int num_blanks = cur.numEmptySpaces(where,row);
@@ -234,7 +236,47 @@ public class CasePanel extends JustificationPanel
 						}
 					}
 				}
-				if(cur.getTransitionsFrom().get(0) != null)Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0),false));
+				else if(crsh.mode == CaseRuleSelectionHelper.MODE_TILETYPE)
+				{
+					if(pm instanceof TreeTent)
+					{
+						if(caseRules.get(button) instanceof CaseLinkTree)
+						{
+							//int num_adj_blanks = ((CaseLinkTree)caseRules.get(button)).calcAdjacentTiles(cur,crsh.pointSelected,TreeTent.CELL_UNKNOWN);
+							for(int c1=0;c1<4;c1++) //4: one for each orthagonal direction
+							{
+								int x = crsh.pointSelected.x;
+								int y = crsh.pointSelected.y;
+								if(c1<2)x += ((c1%2 == 0)?-1:1);
+								else y += ((c1%2 == 0)?-1:1);
+								if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
+								if(cur.getCellContents(x,y) != TreeTent.CELL_UNKNOWN)continue;
+								BoardState tmp = cur.addTransitionFrom();
+								tmp.setCaseSplitJustification(caseRules.get(button));
+								tmp.setCellContents(x,y,TreeTent.CELL_TENT);
+								for(int c2=0;c2<4;c2++)
+								{
+									if(c1 == c2)continue;
+									int x2 = crsh.pointSelected.x;
+									int y2 = crsh.pointSelected.y;
+									if(c2<2)x2 += ((c2%2 == 0)?-1:1);
+									else y2 += ((c2%2 == 0)?-1:1);
+									if(x2 < 0 || x2 >= cur.getWidth() || y2 < 0 || y2 >= cur.getHeight())continue;
+									if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
+									tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
+								}
+								ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(x,y),crsh.pointSelected);
+								tmp.addExtraData(link);
+								tmp.extraDataDelta.add(link);
+								tmp.endTransition();
+							}
+						}
+					}
+				}
+				if((cur.getTransitionsFrom().size() > 0) && (cur.getTransitionsFrom().get(0) != null))
+				{
+					Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0),false));
+				}
 			}
 		}
 		else

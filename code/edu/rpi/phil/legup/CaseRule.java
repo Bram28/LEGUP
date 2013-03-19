@@ -12,7 +12,7 @@ public abstract class CaseRule extends Justification
 {	
 	protected String defaultApplicationText;
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILE;}
-	
+	public int crshTileType(){return 0;}
 	/**
 	 * Was this case rule applied correctly to this parent state
 	 * @param state the state where we apply it

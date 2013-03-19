@@ -22,6 +22,8 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 	public int mode = MODE_TILE;
 	public static final int MODE_TILE = 0;
 	public static final int MODE_COL_ROW = 1;
+	public static final int MODE_TILETYPE = 2;
+	int tileType = 0;
 	public Point pointSelected = new Point(-5,-5);
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
 	private LEGUP_Gui parent = null;
@@ -34,6 +36,7 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 		setSize(getProperSize());
 		zoomFit();
 		zoomTo(1.0);
+		tileType = 0;
 		pointSelected.x = -5;
 		pointSelected.y = -5;
 	}
@@ -104,12 +107,23 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 					p.y = -5;
 				}
 			}
-			if((mode == MODE_TILE) && !((p.x == -5)&&(p.y == -5)))
+			if(!((p.x == -5)&&(p.y == -5)))
 			{
-				if(!state.isModifiableCell(p.x,p.y))
+				if(mode == MODE_TILE)
 				{
-					p.x = -5;
-					p.y = -5;
+					if(!state.isModifiableCell(p.x,p.y))
+					{
+						p.x = -5;
+						p.y = -5;
+					}
+				}
+				if(mode == MODE_TILETYPE)
+				{
+					if(state.getCellContents(p.x,p.y) != tileType)
+					{
+						p.x = -5;
+						p.y = -5;
+					}
 				}
 			}
 			if(p.x == w)p.x = -1;

@@ -101,7 +101,7 @@ public abstract class BoardDrawingHelper
 			{
 				for(int y = 0;y < height;++y)
 				{
-					if(crshMode == CaseRuleSelectionHelper.MODE_TILE)
+					if((crshMode == CaseRuleSelectionHelper.MODE_TILE)||(crshMode == CaseRuleSelectionHelper.MODE_TILETYPE))
 					{
 						if((crshPointSelected.x == x) && (crshPointSelected.y == y))
 						{

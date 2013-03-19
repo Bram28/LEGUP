@@ -8,19 +8,22 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
 
 public class CaseLinkTree extends CaseRule
 {
-	
+	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
+	public int crshTileType(){return TreeTent.CELL_TREE;}
 	public CaseLinkTree()
 	{
 		setName("Possible links from tree");
 		description = "A tree has one linked tent, other adjacents are grass/tree.";
 		image = new ImageIcon("images/treetent/caseLinkTree.png");
 	}
-	protected boolean pointEquals(Point p1, Point p2)
+	
+	public boolean pointEquals(Point p1, Point p2)
 	{
 		if(p1 == null)
 		{
@@ -30,7 +33,7 @@ public class CaseLinkTree extends CaseRule
 		else if(p2 == null)return false;
 		return (p1.x==p2.x)&&(p1.y==p2.y);
 	}
-	protected Point findOnlyCommonTile(Vector<BoardState> states, int type)
+	public Point findOnlyCommonTile(Vector<BoardState> states, int type)
 	{
 		Point rv = null;
 		int num_trees = 0;
@@ -58,7 +61,7 @@ public class CaseLinkTree extends CaseRule
 		return (num_trees == 1)?rv:null;
 	}
 	
-	protected int calcAdjacentTiles(BoardState b, Point p, int type)
+	public int calcAdjacentTiles(BoardState b, Point p, int type)
 	{
 		int rv = 0;
 		if((b == null)||(p == null))return -1;
@@ -70,7 +73,7 @@ public class CaseLinkTree extends CaseRule
 			if(dir == 1)x -= 1;
 			if(dir == 2)y += 1;
 			if(dir == 3)y -= 1;
-			if(x < 0 || x > b.getWidth() || y < 0 || y > b.getHeight())continue;
+			if(x < 0 || x >= b.getWidth() || y < 0 || y >= b.getHeight())continue;
 			rv += (b.getCellContents(x,y) == type)?1:0;
 		}
 		return rv;
