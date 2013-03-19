@@ -429,6 +429,7 @@ public class TreeTent extends PuzzleModule
 		caseRules.add(new CaseTentOrGrass());
 		caseRules.add(new CaseTentsInRow());
 		caseRules.add(new CaseLinkTree());
+		caseRules.add(new CaseLinkTent());
 		
 		return caseRules;
 	}

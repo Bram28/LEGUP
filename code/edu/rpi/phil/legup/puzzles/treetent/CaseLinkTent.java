@@ -12,15 +12,15 @@ import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
 
-public class CaseLinkTree extends CaseRule
+public class CaseLinkTent extends CaseRule
 {
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
-	public int crshTileType(){return TreeTent.CELL_TREE;}
-	public CaseLinkTree()
+	public int crshTileType(){return TreeTent.CELL_TENT;}
+	public CaseLinkTent()
 	{
-		setName("Possible links from tree");
-		description = "A tree has one linked tent, other adjacents are grass/tree.";
-		image = new ImageIcon("images/treetent/caseLinkTree.png");
+		setName("Possible links from tent");
+		description = "A tent can link to exactly one adjacent tree.";
+		image = new ImageIcon("images/treetent/caseLinkTent.png");
 	}
 	
 	public boolean pointEquals(Point p1, Point p2)
@@ -64,7 +64,7 @@ public class CaseLinkTree extends CaseRule
 	public int calcAdjacentTiles(BoardState b, Point p, int type)
 	{
 		int rv = 0;
-		if((b == null)||(p == null))return -1;
+		if((b == null)||(p == null))return 0;
 		for(int dir=0;dir<4;dir++)
 		{
 			int x = p.x;
@@ -79,75 +79,78 @@ public class CaseLinkTree extends CaseRule
 		return rv;
 	}
 	
+	public int calcAdjacentLinkedTiles(BoardState b, Point p)
+	{
+		int rv = 0;
+		if((b == null)||(p == null))return 0;
+		for(int dir=0;dir<4;dir++)
+		{
+			int x = p.x;
+			int y = p.y;
+			if(dir<2)x += (dir%2==0)?-1:1;
+			else y += (dir%2==0)?-1:1;
+			if(x < 0 || x >= b.getWidth() || y < 0 || y >= b.getHeight())continue;
+			Point p2 = new Point(x,y);
+			for(Object o : b.getExtraData())
+			{
+				ExtraTreeTentLink link = (ExtraTreeTentLink)o;
+				rv += (pointEquals(link.pos1,p2))?1:0;
+				rv += (pointEquals(link.pos2,p2))?1:0;
+			}
+		}
+		return rv;
+	}
+	
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;
 		BoardState parent = state.getSingleParentState(); 
 		if(parent.getTransitionsFrom().size() > 4)
 		{
-			rv = "Only the blank tiles adjacent to a single tree and the\nlinks between those panels are to be modified\nin one step using this rule.";
+			rv = "Only the trees adjacent to a single tent should be\nlinked to in one step using this rule.";
 		}
 		else
 		{
 			int num_children = parent.getTransitionsFrom().size();
-			Point p = findOnlyCommonTile(parent.getTransitionsFrom(),TreeTent.CELL_TREE);
-			int num_adj_blanks = calcAdjacentTiles(parent,p,TreeTent.CELL_UNKNOWN);
+			Point p = findOnlyCommonTile(parent.getTransitionsFrom(),TreeTent.CELL_TENT);
+			int num_adj_trees = calcAdjacentTiles(parent,p,TreeTent.CELL_TREE);
+			num_adj_trees -= calcAdjacentLinkedTiles(parent,p);
 			if(p == null)
 			{
-				rv = "Only one tree should be involved in linking in one\napplication of this rule.";
+				rv = "Only one tent should be involved in linking in one\napplication of this rule.";
 			}
-			else if(num_adj_blanks != num_children)
+			else if(num_adj_trees != num_children)
 			{
-				rv = "There is not one branch for each blank adjacent to the tree.";
+				rv = "There should be one branch for each unlinked tree that\nis adjacent to the chosen tent.";
 			}
-			Vector<Point> tents = new Vector<Point>(); //location of tent in each branch
+			Vector<Point> trees = new Vector<Point>(); //location of tree in each branch
 			for(BoardState b : parent.getTransitionsFrom())
 			{
-				if(calcAdjacentTiles(b,p,TreeTent.CELL_UNKNOWN) != 0)
-				{
-					rv = "All tiles adjacent to the tree linked must be filled,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
-					break;
-				}
-				/*else if(calcAdjacentTiles(b,p,TreeTent.CELL_TENT) != 1)
-				{
-					rv = "Exactly one tent must be adjacent to the tree linked,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
-					break;
-				}*/
-				else if(b.extraDataDelta.size() != 1)
+				if(b.extraDataDelta.size() != 1)
 				{
 					rv = "Each branch must contain exactly one link, which is\nnot the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1); 
 					break;
 				}
 				ExtraTreeTentLink link = (ExtraTreeTentLink)b.extraDataDelta.get(0);
 				Point p1 = (pointEquals(p,link.pos1))?link.pos2:link.pos1;
-				if(b.getCellContents(p1.x,p1.y) != TreeTent.CELL_TENT)
+				if(b.getCellContents(p1.x,p1.y) != TreeTent.CELL_TREE)
 				{
 					rv = "The link must link a tent and a tree, which is\nnot the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;
 				}
 				else
 				{
-					if(tents.contains(p1))
+					if(trees.contains(p1))
 					{
-						rv = "Branch "+(tents.indexOf(p1)+1)+" is the same as branch "+(parent.getTransitionsFrom().indexOf(b)+1)+".\nNot all cases are covered.";
+						rv = "Branch "+(trees.indexOf(p1)+1)+" is the same as branch "+(parent.getTransitionsFrom().indexOf(b)+1)+".\nNot all cases are covered.";
 						break;
 					}
-					tents.add(p1);
+					trees.add(p1);
 				}
 				ArrayList<Point> dif = BoardState.getDifferenceLocations(b,parent);
-				if(dif.size() != num_adj_blanks)
+				if(dif.size() != 0)
 				{
-					rv = "Only cells adjacent to the tree being linked should be modified,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
-					break;
-				}
-				int num_tents_added = 0;
-				for(Point p2 : dif)
-				{
-					if(b.getCellContents(p2.x,p2.y) == TreeTent.CELL_TENT)num_tents_added++;
-				}
-				if(num_tents_added != 1)
-				{
-					rv = "Only one tent should be added per branch, which\nis not the case in branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					rv = "As this is a linking rule, no cells should be modified,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;
 				}
 			}
