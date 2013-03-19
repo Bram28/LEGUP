@@ -97,6 +97,7 @@ public class CaseLinkTree extends CaseRule
 			{
 				rv = "There is not one branch for each blank adjacent to the tree.";
 			}
+			Vector<Point> tents = new Vector<Point>(); //location of tent in each branch
 			for(BoardState b : parent.getTransitionsFrom())
 			{
 				if(calcAdjacentTiles(b,p,TreeTent.CELL_UNKNOWN) != 0)
@@ -120,6 +121,15 @@ public class CaseLinkTree extends CaseRule
 				{
 					rv = "The link must link a tent and a tree, which is\nnot the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;
+				}
+				else
+				{
+					if(tents.contains(p1))
+					{
+						rv = "Branch "+(tents.indexOf(p1)+1)+" is the same as branch "+(parent.getTransitionsFrom().indexOf(b)+1)+".\nNot all cases are covered.";
+						break;
+					}
+					tents.add(p1);
 				}
 				ArrayList<Point> dif = BoardState.getDifferenceLocations(b,parent);
 				if(dif.size() != num_adj_blanks)
