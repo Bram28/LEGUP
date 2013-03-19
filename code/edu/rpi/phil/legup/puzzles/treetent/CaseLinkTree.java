@@ -108,11 +108,11 @@ public class CaseLinkTree extends CaseRule
 					rv = "All tiles adjacent to the tree linked must be filled,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;
 				}
-				else if(calcAdjacentTiles(b,p,TreeTent.CELL_TENT) != 1)
+				/*else if(calcAdjacentTiles(b,p,TreeTent.CELL_TENT) != 1)
 				{
 					rv = "Exactly one tent must be adjacent to the tree linked,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;
-				}
+				}*/
 				else if(b.extraDataDelta.size() != 1)
 				{
 					rv = "Each branch must contain exactly one link, which is\nnot the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1); 
@@ -138,6 +138,16 @@ public class CaseLinkTree extends CaseRule
 				if(dif.size() != num_adj_blanks)
 				{
 					rv = "Only cells adjacent to the tree being linked should be modified,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					break;
+				}
+				int num_tents_added = 0;
+				for(Point p2 : dif)
+				{
+					if(b.getCellContents(p2.x,p2.y) == TreeTent.CELL_TENT)num_tents_added++;
+				}
+				if(num_tents_added != 1)
+				{
+					rv = "Only one tent should be added per branch, which\nis not the case in branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;
 				}
 			}
