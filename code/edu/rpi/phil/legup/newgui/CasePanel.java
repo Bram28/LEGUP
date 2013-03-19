@@ -16,6 +16,7 @@ import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
+import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTent;
 import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
 
 import javax.swing.*;
@@ -265,6 +266,24 @@ public class CasePanel extends JustificationPanel
 									if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
 									tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
 								}
+								ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(x,y),crsh.pointSelected);
+								tmp.addExtraData(link);
+								tmp.extraDataDelta.add(link);
+								tmp.endTransition();
+							}
+						}
+						if(caseRules.get(button) instanceof CaseLinkTent)
+						{
+							for(int c1=0;c1<4;c1++) //4: one for each orthagonal direction
+							{
+								int x = crsh.pointSelected.x;
+								int y = crsh.pointSelected.y;
+								if(c1<2)x += ((c1%2 == 0)?-1:1);
+								else y += ((c1%2 == 0)?-1:1);
+								if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
+								if(cur.getCellContents(x,y) != TreeTent.CELL_TREE)continue;
+								BoardState tmp = cur.addTransitionFrom();
+								tmp.setCaseSplitJustification(caseRules.get(button));
 								ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(x,y),crsh.pointSelected);
 								tmp.addExtraData(link);
 								tmp.extraDataDelta.add(link);
