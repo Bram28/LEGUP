@@ -354,6 +354,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		g.setColor(state.getColor());
 		if(!state.isModifiable())
 		{
+			if(state.leadsToContradiction())
+			{
+				g.setColor(new Color(255,128,128));
+			}
 			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
 			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
 			g2D.setStroke((sel.contains(theSelection)? medium : thin));
