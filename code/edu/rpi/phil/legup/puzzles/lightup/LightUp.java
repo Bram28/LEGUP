@@ -22,9 +22,11 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class LightUp extends PuzzleModule
 {
+	public static int CELL_UNKNOWN = 0;
 	public static int CELL_LIGHT = 1;
-	public static int CELL_BLANK = 2;
-
+	public static int CELL_BLANK = 2; //todo, replace with CELL_EMPTY
+	public int numAcceptableStates(){return 3;}
+	
 	public LightUp(){
 	}
 
@@ -167,7 +169,20 @@ public class LightUp extends PuzzleModule
 			return contents;
 		}
 	}
-
+	public String getStateName(int state)
+	{
+		if(state == 0)return "blank";
+		else if(state == 1)return "light";
+		else if(state == 2)return "empty";
+		else return null;
+	}
+	public int getStateNumber(String state)
+	{
+		if(state == "blank")return CELL_UNKNOWN;
+		else if(state == "light")return CELL_LIGHT;
+		else if(state == "empty")return CELL_BLANK;
+		else return CELL_UNKNOWN;
+	}
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}
