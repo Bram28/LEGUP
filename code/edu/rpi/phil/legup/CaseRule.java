@@ -8,8 +8,9 @@ import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
  * @author Stan
  *
  */
-public abstract class CaseRule extends Justification
+public abstract class CaseRule extends Justification implements java.io.Serializable
 {	
+	static final long serialVersionUID = 9003L;
 	protected String defaultApplicationText;
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILE;}
 	public int crshTileType(){return 0;}
@@ -76,3 +77,4 @@ public boolean startDefaultApplication(BoardState state)
     	return false;
     }
 }
+

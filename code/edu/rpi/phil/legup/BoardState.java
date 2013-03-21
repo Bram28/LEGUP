@@ -27,8 +27,10 @@ import edu.rpi.phil.legup.newgui.JustificationFrame;
  *
  * @author Drew Housten & Stan Bak
  */
-public class BoardState
+public class BoardState implements java.io.Serializable
 {
+	static final long serialVersionUID = 9001L;
+	
 	private static ArrayList<BoardDataChangeListener> boardDataChangeListeners = new ArrayList<BoardDataChangeListener>();
 	private static ArrayList<TransitionChangeListener> transitionChangeListeners = new ArrayList<TransitionChangeListener>();
 
@@ -66,6 +68,9 @@ public class BoardState
 	private int hintsGiven = 0;
 
 	private String puzzleName = null;
+	
+	// Duplicate Legup.user so that it can be saved in the file
+	private String user = null;
 
 	// the location of this node within the proof
 	private Point offset = new Point(0,0);
@@ -108,9 +113,10 @@ public class BoardState
 		this(height,width,true);		
 	}
 	
-	//used by all constructors
 	private BoardState(int height, int width, boolean makeOriginalState)
 	{
+		this.user = Legup.getInstance().getUser();
+		// Set the height and width
 		this.setHeight(height);
 		this.setWidth(width);
 		
@@ -245,8 +251,16 @@ public class BoardState
 		else this.setOffset(new Point(0, 0));*/
 	}
 
-
-	//Toggle whether this state and all its (single) children are collapsed
+	public String getUser()
+	{
+		return this.user;
+	}
+	
+	/**
+	 * Toggle whether this state and all its (single) children are collapsed
+	 * <not> called recursively to do the work
+	 * @see toggleCollapseRecursive
+	 */
 	public void toggleCollapse()
 	{
 		// if we can collapse it legally

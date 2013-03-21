@@ -130,6 +130,7 @@ public class Legup
 			if(b!=null)while(b.getTransitionsFrom().size() > 0)b = b.getTransitionsFrom().lastElement();
 			selections.setSelection(new Selection(b,b.isModifiable()));
 		}
+		catch (NullPointerException e1) {}
 		catch (Exception e)
 		{
 			initialBoardState = null;
@@ -221,6 +222,24 @@ public class Legup
 
 	// The GUI used - modified by Daniel for explicitness
 	private LEGUP_Gui gui = null;
+	private Login login = null;
+	private String user = null;
+	private String[] admins = {"heuveb"};
+	
+	public String getUser()
+	{
+		return user;
+	}
+	
+	public void setUser(String user)
+	{
+		this.user = user;  
+	}
+	
+	public String[] getAdmins()
+	{
+		return this.admins;
+	}
 
 	public void refresh()
 	{
@@ -240,9 +259,10 @@ public class Legup
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch( Exception e ){}
 
+		legup.login = new Login(legup);
+		//legup.login.promptLogin();
 		legup.gui = new LEGUP_Gui(legup);
 		
-		//Not prompting puzzle on startup
 		legup.gui.promptPuzzle();
 
 		// This is for the animation - Daniel P

@@ -3,6 +3,9 @@ package edu.rpi.phil.legup.newgui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.awt.event.ActionEvent;
@@ -20,13 +23,16 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import javax.swing.SwingConstants;
@@ -42,6 +48,7 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleGeneration;
 import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.Submission;
 import edu.rpi.phil.legup.saveable.SaveableProof;
 import edu.rpi.phil.legup.ILegupGui;
 
@@ -122,12 +129,13 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private static final int TOOLBAR_CONSOLE = 5;
 	private static final int TOOLBAR_HINT = 6;
 	private static final int TOOLBAR_CHECK = 7;
+	private static final int TOOLBAR_SUBMIT = 8;
 	/* --- */
-	private static final int TOOLBAR_DIRECTIONS = 8;
-	private static final int TOOLBAR_ZOOMIN = 9;
-	private static final int TOOLBAR_ZOOMOUT = 10;
-	private static final int TOOLBAR_ZOOMRESET = 11;
-	private static final int TOOLBAR_ZOOMFIT = 12;
+	private static final int TOOLBAR_DIRECTIONS = 9;
+	private static final int TOOLBAR_ZOOMIN = 10;
+	private static final int TOOLBAR_ZOOMOUT = 11;
+	private static final int TOOLBAR_ZOOMRESET = 12;
+	private static final int TOOLBAR_ZOOMFIT = 13;
 
 	final static String[] toolBarNames =
 	{
@@ -139,6 +147,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		"Console",
 		"Hint",
 		"Check",
+		"Submit",
 		"Directions",
 		"Zoom In",
 		"Zoom Out",
@@ -156,16 +165,17 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		new JButton(toolBarNames[5], new ImageIcon("images/" + toolBarNames[5] + ".png")),
 		new JButton(toolBarNames[6], new ImageIcon("images/" + toolBarNames[6] + ".png")),
 		new JButton(toolBarNames[7], new ImageIcon("images/" + toolBarNames[7] + ".png")), //Check
-		new JButton(toolBarNames[8], new ImageIcon("images/" + toolBarNames[8] + ".png")), //Directions
-		new JButton(/*toolBarNames[9],*/ new ImageIcon("images/" + toolBarNames[9] + ".png")),
+		new JButton(toolBarNames[8], new ImageIcon("images/" + toolBarNames[8] + ".png")), //Submit
+		new JButton(toolBarNames[9], new ImageIcon("images/" + toolBarNames[9] + ".png")), //Directions
 		new JButton(/*toolBarNames[10],*/ new ImageIcon("images/" + toolBarNames[10] + ".png")),
 		new JButton(/*toolBarNames[11],*/ new ImageIcon("images/" + toolBarNames[11] + ".png")),
-		new JButton(/*toolBarNames[12],*/ new ImageIcon("images/" + toolBarNames[12] + ".png"))
+		new JButton(/*toolBarNames[12],*/ new ImageIcon("images/" + toolBarNames[12] + ".png")),
+		new JButton(/*toolBarNames[13],*/ new ImageIcon("images/" + toolBarNames[13] + ".png")),
 	};
 
 	final static int[] toolbarSeperatorBefore =
 	{
-		3, 5, 8, 9
+		3, 5, 9, 10
 	};
 
 	public void repaintBoard()
@@ -186,12 +196,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		setupToolBar();
 		setupContent();
 		pack();
-
+		
 		setVisible(true);
+		
+		// Centers the window
+		setLocationRelativeTo( null );		
 
 		fileChooser = new FileDialog(this);
+	
 	}
-
+	
 	// menubar related fields
 	private JMenuBar bar = new JMenuBar();
 	private JMenu file = new JMenu("File");
@@ -316,6 +330,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
 		toolBarButtons[TOOLBAR_HINT].setEnabled(false);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(false);
+		toolBarButtons[TOOLBAR_SUBMIT].setEnabled(false);
 		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(false);
 
 		add( toolBar, BorderLayout.NORTH );
@@ -458,13 +473,43 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 		PuzzleModule pm = legupMain.getPuzzleModule();
 		if (pm.checkProof(root) && delayStatus)
+		{
+			int confirm = JOptionPane.showConfirmDialog(null, "Congratulations! Your proof is correct. Would you like to submit?", "Proof Submission", JOptionPane.YES_NO_OPTION);
+			if (confirm == 0)
+			{
+				Submission submit = new Submission(root, true);
+			}
 			showStatus("Your proof is correct.", false);
+		}
 		else
 		{
 			String message = "Your proof is incorrect.";
 			if(!delayStatus)message += "\nInvalid steps have been colored red.";
 			if(!pm.checkProof(root))message += "\nThe board must be completely filled.";
 			showStatus(message, true);
+		}
+	}
+	
+	private void submit()
+	{
+		BoardState root = legupMain.getInitialBoardState();
+		boolean delayStatus = root.evalDelayStatus();
+		repaintAll();
+
+		PuzzleModule pm = legupMain.getPuzzleModule();
+		if (pm.checkProof(root) && delayStatus)
+		{
+			// 0 means yes, 1 means no (Java's fault...)
+			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you wish to submit?", "Proof Submission", JOptionPane.YES_NO_OPTION);
+			if (confirm == 0)
+			{
+				Submission submit = new Submission(root, true);
+			}
+		}
+		else
+		{
+			JOptionPane.showConfirmDialog(null, "Your proof is incorrect! Are you sure you wish to submit?", "Proof Submission", JOptionPane.YES_NO_OPTION);
+			Submission submit = new Submission(root, false);
 		}
 	}
 	
@@ -476,6 +521,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_REDO].setEnabled(true);
 		toolBarButtons[TOOLBAR_HINT].setEnabled(true);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(true);
+		toolBarButtons[TOOLBAR_SUBMIT].setEnabled(true);
 		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(true);
 		///
 		this.pack();
@@ -625,6 +671,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == toolBarButtons[TOOLBAR_CHECK])
 		{
 			checkProof();
+		}
+		else if (e.getSource() == toolBarButtons[TOOLBAR_SUBMIT])
+		{
+			submit();
 		}
 		else if (e.getSource() == hint || e.getSource() == toolBarButtons[TOOLBAR_HINT])
 		{
