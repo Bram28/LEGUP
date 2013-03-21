@@ -130,17 +130,17 @@ public class Legup
 			if(b!=null)while(b.getTransitionsFrom().size() > 0)b = b.getTransitionsFrom().lastElement();
 			selections.setSelection(new Selection(b,b.isModifiable()));
 		}
-		catch (NullPointerException e1) {}
+		//catch (NullPointerException e1) {}
 		catch (Exception e)
 		{
 			initialBoardState = null;
-			errorMessage("Error loading proof:" + e.toString());
+			errorMessage("Error loading proof: " + e.toString());
 			return;
 		}
 
 		String puzzle = initialBoardState.getPuzzleName();
+		if(puzzle == null)return;
 		System.out.println("Loading puzzle module: " + puzzle);
-		if(puzzle == null)
 		if(loadPuzzleModule(puzzle))
 		{
 			errorMessage("Error encountered loading PuzzleModule.");

@@ -28,21 +28,24 @@ public class SaveableProof
 		Object obj = obj_in.readObject();
 		
 		obj_in.close();
-
+		f_in.close();
 		if (obj instanceof BoardState)
 		{
 			// Cast object to a BoardState
 			BoardState state = (BoardState) obj;
 			String user = Legup.getInstance().getUser();
+			String boardUser = state.getUser();
+			user = (user != null) ? user : "null";
+			boardUser = (boardUser != null) ? boardUser : "null";
 			String admins[] = Legup.getInstance().getAdmins();
-			if (!(state.getUser().equals(user)) && !(Arrays.asList(admins).contains(user)))
+			if (!(boardUser.equals(user)) && !(Arrays.asList(admins).contains(user)))
 			{
-				JOptionPane.showMessageDialog(null, "You do not have permission to open files owned by "+state.getUser()+".");
+				JOptionPane.showMessageDialog(null, "You do not have permission to open files owned by "+boardUser+".");
 				return null;
 			}
 			else
 			{
-				Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
+				//Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
 				Legup.getInstance().getGui().repaint();
 				return state;
 			}
@@ -63,6 +66,8 @@ public class SaveableProof
 		obj_out.writeObject ( state );
 		
 		obj_out.close();
+		
+		f_out.close();
 		
 		return true;
 	}

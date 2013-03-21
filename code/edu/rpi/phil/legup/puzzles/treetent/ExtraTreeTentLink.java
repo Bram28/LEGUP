@@ -2,8 +2,10 @@ package edu.rpi.phil.legup.puzzles.treetent;
 
 import java.awt.Point;
 
-public class ExtraTreeTentLink
+public class ExtraTreeTentLink implements java.io.Serializable
 {
+	static final long serialVersionUID = 9010L;
+	
 	Point pos1 = new Point();
 	Point pos2 = new Point();
 
