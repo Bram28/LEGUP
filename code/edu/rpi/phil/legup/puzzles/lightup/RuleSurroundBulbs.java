@@ -177,7 +177,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_BLANK || (litup[y][x-1] && destBoardState.getCellContents(x-1, y) == LightUp.CELL_UNKNOWN) || destBoardState.getCellContents(x-1, y) >= 10)
+				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_EMPTY || (litup[y][x-1] && destBoardState.getCellContents(x-1, y) == LightUp.CELL_UNKNOWN) || destBoardState.getCellContents(x-1, y) >= 10)
 					++blanks;
 			}
 			else
@@ -186,7 +186,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_BLANK|| (litup[y][x+1] && destBoardState.getCellContents(x+1, y) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x+1, y) >= 10)
+				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_EMPTY|| (litup[y][x+1] && destBoardState.getCellContents(x+1, y) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x+1, y) >= 10)
 					++blanks;
 			}
 			else
@@ -195,7 +195,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_BLANK|| (litup[y-1][x] && destBoardState.getCellContents(x, y-1) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x, y-1) >= 10)
+				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_EMPTY|| (litup[y-1][x] && destBoardState.getCellContents(x, y-1) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x, y-1) >= 10)
 					++blanks;
 			}
 			else
@@ -204,7 +204,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_BLANK|| (litup[y+1][x] && destBoardState.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x, y+1) >= 10)
+				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_EMPTY|| (litup[y+1][x] && destBoardState.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x, y+1) >= 10)
 					++blanks;
 			}
 			else
@@ -223,7 +223,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_BLANK || (litup[y][x-1] && destBoardState.getCellContents(x-1, y) == LightUp.CELL_UNKNOWN) || destBoardState.getCellContents(x-1, y) >= 10)
+				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_EMPTY || (litup[y][x-1] && destBoardState.getCellContents(x-1, y) == LightUp.CELL_UNKNOWN) || destBoardState.getCellContents(x-1, y) >= 10)
 					++blanks;
 			}
 			else
@@ -232,7 +232,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_BLANK|| (litup[y][x+1] && destBoardState.getCellContents(x+1, y) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x+1, y) >= 10)
+				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_EMPTY|| (litup[y][x+1] && destBoardState.getCellContents(x+1, y) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x+1, y) >= 10)
 					++blanks;
 			}
 			else
@@ -241,7 +241,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_BLANK|| (litup[y-1][x] && destBoardState.getCellContents(x, y-1) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x, y-1) >= 10)
+				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_EMPTY|| (litup[y-1][x] && destBoardState.getCellContents(x, y-1) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x, y-1) >= 10)
 					++blanks;
 			}
 			else
@@ -250,7 +250,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_BLANK|| (litup[y+1][x] && destBoardState.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x, y+1) >= 10)
+				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_EMPTY|| (litup[y+1][x] && destBoardState.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)|| destBoardState.getCellContents(x, y+1) >= 10)
 					++blanks;
 			}
 			else

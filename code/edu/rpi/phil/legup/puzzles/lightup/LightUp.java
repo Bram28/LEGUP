@@ -24,7 +24,7 @@ public class LightUp extends PuzzleModule
 {
 	public static int CELL_UNKNOWN = 0;
 	public static int CELL_LIGHT = 1;
-	public static int CELL_BLANK = 2; //todo, replace with CELL_EMPTY
+	public static int CELL_EMPTY = 2; //formerly CELL_BLANK
 	public int numAcceptableStates(){return 3;}
 	
 	public LightUp(){
@@ -58,7 +58,7 @@ public class LightUp extends PuzzleModule
 			return "images/lightup/unknown.gif";
 		} else if (cellValue == CELL_LIGHT){
 			return "images/lightup/light.png";
-		} else if (cellValue == CELL_BLANK){
+		} else if (cellValue == CELL_EMPTY){
 			return "images/lightup/blank.gif";
 		} else if (cellValue >= 10 && cellValue < 15){
 			return "images/lightup/" + (cellValue-10)+".gif";
@@ -118,9 +118,9 @@ public class LightUp extends PuzzleModule
 		}
 		else if (contents == CELL_LIGHT)
 		{
-			rv = CELL_BLANK;
+			rv = CELL_EMPTY;
 		}
-		else if (contents == CELL_BLANK)
+		else if (contents == CELL_EMPTY)
 		{
 			rv = 10;
 		}
@@ -158,9 +158,9 @@ public class LightUp extends PuzzleModule
 		}
 		else if (contents == CELL_LIGHT)
 		{
-			return CELL_BLANK;
+			return CELL_EMPTY;
 		}
-		else if (contents == CELL_BLANK)
+		else if (contents == CELL_EMPTY)
 		{
 			return CELL_UNKNOWN;
 		}
@@ -180,7 +180,7 @@ public class LightUp extends PuzzleModule
 	{
 		if(state == "blank")return CELL_UNKNOWN;
 		else if(state == "light")return CELL_LIGHT;
-		else if(state == "empty")return CELL_BLANK;
+		else if(state == "empty")return CELL_EMPTY;
 		else return CELL_UNKNOWN;
 	}
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
@@ -358,7 +358,7 @@ public class LightUp extends PuzzleModule
 			BoardState CaseBlank = Parent.addTransitionFrom();
 			CaseLight.setCellContents(guess.x, guess.y, CELL_LIGHT);
 			fillLight(CaseLight);
-			CaseBlank.setCellContents(guess.x, guess.y, CELL_BLANK);
+			CaseBlank.setCellContents(guess.x, guess.y, CELL_EMPTY);
 			fillLight(CaseBlank);
 			Parent.setCaseSplitJustification(new CaseLightOrWhite());
 			//System.out.println("Guessed at "+guess.x+","+guess.y);

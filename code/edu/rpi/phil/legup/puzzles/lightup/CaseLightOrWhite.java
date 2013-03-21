@@ -50,9 +50,9 @@ public class CaseLightOrWhite extends CaseRule
 				Point p = dif.get(0);
 				
 				if (!((one.getCellContents(p.x,p.y) == LightUp.CELL_LIGHT && 
-					two.getCellContents(p.x,p.y) == LightUp.CELL_BLANK) ||
+					two.getCellContents(p.x,p.y) == LightUp.CELL_EMPTY) ||
 					(two.getCellContents(p.x,p.y) == LightUp.CELL_LIGHT && 
-						one.getCellContents(p.x,p.y) == LightUp.CELL_BLANK)))
+						one.getCellContents(p.x,p.y) == LightUp.CELL_EMPTY)))
 				{
 					rv = "In this case rule, one state's cell must be white and the other a light.";
 				}
@@ -79,7 +79,7 @@ public class CaseLightOrWhite extends CaseRule
 		if(state.getCellContents(location.x, location.y) == LightUp.CELL_UNKNOWN)
 		{
 			Vector<Integer> states = new Vector<Integer>();
-			states.add( LightUp.CELL_BLANK );
+			states.add( LightUp.CELL_EMPTY );
 			states.add( LightUp.CELL_LIGHT );
 			
 			Permutations.permutationCell( state, location, states );

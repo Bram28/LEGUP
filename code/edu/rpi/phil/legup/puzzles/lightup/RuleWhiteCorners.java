@@ -52,7 +52,7 @@ public class RuleWhiteCorners extends PuzzleRule
 					{
 						changed = true;
 						
-						if (newState != LightUp.CELL_BLANK || origState != LightUp.CELL_UNKNOWN)
+						if (newState != LightUp.CELL_EMPTY || origState != LightUp.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding white cells!";
 							break;
@@ -101,7 +101,7 @@ public class RuleWhiteCorners extends PuzzleRule
 						{
 							if(this.willBlockLights(destBoardState, x, y, litup))
 							{
-								destBoardState.setCellContents(x, y, LightUp.CELL_BLANK);
+								destBoardState.setCellContents(x, y, LightUp.CELL_EMPTY);
 							}
 						}
 					}

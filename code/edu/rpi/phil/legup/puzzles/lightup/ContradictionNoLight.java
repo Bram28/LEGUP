@@ -43,7 +43,7 @@ public class ContradictionNoLight extends Contradiction
     		for(int y = 0; y < height; ++y)
     		{
     			cellvalue = state.getCellContents(x,y);
-    			if(cellvalue == LightUp.CELL_BLANK && !litup[y][x])
+    			if(cellvalue == LightUp.CELL_EMPTY && !litup[y][x])
     			{
     				if(!searchPath(state,x,y,width,height, litup))
     					return null;

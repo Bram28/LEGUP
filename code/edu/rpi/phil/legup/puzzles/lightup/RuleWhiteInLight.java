@@ -48,7 +48,7 @@ public class RuleWhiteInLight extends PuzzleRule
 					{
 						changed = true;
 						
-						if (newState != LightUp.CELL_BLANK || origState != LightUp.CELL_UNKNOWN)
+						if (newState != LightUp.CELL_EMPTY || origState != LightUp.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding white cells!";
 							break;
@@ -91,7 +91,7 @@ public class RuleWhiteInLight extends PuzzleRule
 	    			y = ((Point)extra.get(cnt)).y;
 	    			if( destBoardState.getCellContents(x,y) == 0)
 	    			{
-	    				destBoardState.setCellContents(x,y, LightUp.CELL_BLANK);
+	    				destBoardState.setCellContents(x,y, LightUp.CELL_EMPTY);
 	    			}
 	    		}
 	        	

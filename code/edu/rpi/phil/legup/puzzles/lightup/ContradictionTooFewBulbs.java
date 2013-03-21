@@ -46,7 +46,7 @@ public class ContradictionTooFewBulbs extends Contradiction
     				if(x > 0)
     				{
     					/*
-    					if(state.getCellContents(x-1, y) == LightUp.CELL_BLANK || (litup[y][x-1] && state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)||state.getCellContents(x-1, y) >= 10)
+    					if(state.getCellContents(x-1, y) == LightUp.CELL_EMPTY || (litup[y][x-1] && state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)||state.getCellContents(x-1, y) >= 10)
     						++blanks;
     					*/
     					if((state.getCellContents(x-1,y) == LightUp.CELL_LIGHT) || ((!litup[y][x-1]) && (state.getCellContents(x-1,y) == LightUp.CELL_UNKNOWN))) {
@@ -59,7 +59,7 @@ public class ContradictionTooFewBulbs extends Contradiction
     				if(x < width - 1)
     				{
     					/*
-    					if(state.getCellContents(x+1, y) == LightUp.CELL_BLANK|| (litup[y][x+1] && state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)||state.getCellContents(x+1, y) >= 10)
+    					if(state.getCellContents(x+1, y) == LightUp.CELL_EMPTY|| (litup[y][x+1] && state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)||state.getCellContents(x+1, y) >= 10)
     						++blanks;
     					*/
     					if((state.getCellContents(x+1,y) == LightUp.CELL_LIGHT) || ((!litup[y][x+1]) && (state.getCellContents(x+1,y) == LightUp.CELL_UNKNOWN))) {
@@ -72,7 +72,7 @@ public class ContradictionTooFewBulbs extends Contradiction
     				if(y > 0)
     				{
     					/*
-    					if(state.getCellContents(x, y-1) == LightUp.CELL_BLANK|| (litup[y-1][x] && state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)||state.getCellContents(x, y-1) >= 10)
+    					if(state.getCellContents(x, y-1) == LightUp.CELL_EMPTY|| (litup[y-1][x] && state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)||state.getCellContents(x, y-1) >= 10)
     						++blanks;
     					*/
     					if((state.getCellContents(x,y-1) == LightUp.CELL_LIGHT) || ((!litup[y-1][x]) && (state.getCellContents(x,y-1) == LightUp.CELL_UNKNOWN))) {
@@ -85,7 +85,7 @@ public class ContradictionTooFewBulbs extends Contradiction
     				if(y < height - 1)
     				{
     					/*
-    					if(state.getCellContents(x, y+1) == LightUp.CELL_BLANK|| (litup[y+1][x] && state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)||state.getCellContents(x, y+1) >= 10)
+    					if(state.getCellContents(x, y+1) == LightUp.CELL_EMPTY|| (litup[y+1][x] && state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)||state.getCellContents(x, y+1) >= 10)
     						++blanks;
     					*/
     					if((state.getCellContents(x,y+1) == LightUp.CELL_LIGHT) || ((!litup[y+1][x]) && (state.getCellContents(x,y+1) == LightUp.CELL_UNKNOWN))) {

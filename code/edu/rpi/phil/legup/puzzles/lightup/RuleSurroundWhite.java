@@ -47,7 +47,7 @@ public class RuleSurroundWhite extends PuzzleRule
 					{
 						changed = true;
 						
-						if (newState != LightUp.CELL_BLANK || origState != LightUp.CELL_UNKNOWN)
+						if (newState != LightUp.CELL_EMPTY || origState != LightUp.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding white cells!";
 							break;
@@ -139,7 +139,7 @@ public class RuleSurroundWhite extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_BLANK|| destBoardState.getCellContents(x-1, y) >= 10)
+				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_EMPTY|| destBoardState.getCellContents(x-1, y) >= 10)
 					++blanks;
 			}
 			else
@@ -148,7 +148,7 @@ public class RuleSurroundWhite extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_BLANK|| destBoardState.getCellContents(x+1, y) >= 10)
+				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_EMPTY|| destBoardState.getCellContents(x+1, y) >= 10)
 					++blanks;
 			}
 			else
@@ -157,7 +157,7 @@ public class RuleSurroundWhite extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_BLANK|| destBoardState.getCellContents(x, y-1) >= 10)
+				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_EMPTY|| destBoardState.getCellContents(x, y-1) >= 10)
 					++blanks;
 			}
 			else
@@ -166,7 +166,7 @@ public class RuleSurroundWhite extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_BLANK|| destBoardState.getCellContents(x, y+1) >= 10)
+				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_EMPTY|| destBoardState.getCellContents(x, y+1) >= 10)
 					++blanks;
 			}
 			else
@@ -185,7 +185,7 @@ public class RuleSurroundWhite extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_BLANK || destBoardState.getCellContents(x-1, y) >= 10)
+				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_EMPTY || destBoardState.getCellContents(x-1, y) >= 10)
 					++blanks;
 			}
 			else
@@ -194,7 +194,7 @@ public class RuleSurroundWhite extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_BLANK|| destBoardState.getCellContents(x+1, y) >= 10)
+				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_EMPTY|| destBoardState.getCellContents(x+1, y) >= 10)
 					++blanks;
 			}
 			else
@@ -203,7 +203,7 @@ public class RuleSurroundWhite extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_BLANK|| destBoardState.getCellContents(x, y-1) >= 10)
+				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_EMPTY|| destBoardState.getCellContents(x, y-1) >= 10)
 					++blanks;
 			}
 			else
@@ -212,7 +212,7 @@ public class RuleSurroundWhite extends PuzzleRule
 			{
 				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_LIGHT)
 					++bulbs;
-				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_BLANK|| destBoardState.getCellContents(x, y+1) >= 10)
+				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_EMPTY|| destBoardState.getCellContents(x, y+1) >= 10)
 					++blanks;
 			}
 			else
@@ -228,22 +228,22 @@ public class RuleSurroundWhite extends PuzzleRule
 			if(x > 0)
 			{
 				if(destBoardState.getCellContents(x-1, y) == LightUp.CELL_UNKNOWN)
-					destBoardState.setCellContents(x-1, y, LightUp.CELL_BLANK);
+					destBoardState.setCellContents(x-1, y, LightUp.CELL_EMPTY);
 			}
 			if(x < width - 1)
 			{
 				if(destBoardState.getCellContents(x+1, y) == LightUp.CELL_UNKNOWN)
-					destBoardState.setCellContents(x+1, y, LightUp.CELL_BLANK);
+					destBoardState.setCellContents(x+1, y, LightUp.CELL_EMPTY);
 			}
 			if(y > 0)
 			{
 				if(destBoardState.getCellContents(x, y-1) == LightUp.CELL_UNKNOWN)
-					destBoardState.setCellContents(x, y-1, LightUp.CELL_BLANK);
+					destBoardState.setCellContents(x, y-1, LightUp.CELL_EMPTY);
 			}
 			if(y < height - 1)
 			{
 				if(destBoardState.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN)
-					destBoardState.setCellContents(x, y+1, LightUp.CELL_BLANK);
+					destBoardState.setCellContents(x, y+1, LightUp.CELL_EMPTY);
 			}
 	 }
 	 

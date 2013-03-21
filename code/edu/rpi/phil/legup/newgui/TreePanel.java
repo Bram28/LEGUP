@@ -145,7 +145,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				}
 			}
 			//g2D.drawString("lTC:"+mouseOver.getState().leadsToContradiction(),draw.x,draw.y-20);
-			g2D.drawString("Depth:"+mouseOver.getState().getDepth(),draw.x,draw.y-30);
+			//g2D.drawString("Depth:"+mouseOver.getState().getDepth(),draw.x,draw.y-30);
 			g.setColor(Color.gray);
 			g2D.drawRect(draw.x+30,draw.y-30,100,100);
 		}

@@ -33,7 +33,7 @@ public class NumberedBlock
 						++bulbs;
 					else if(state.getCellContents(x - 1, y) == LightUp.CELL_UNKNOWN && litup[y][x-1])
 						++lit;
-					else if(state.getCellContents(x - 1, y) == LightUp.CELL_BLANK )
+					else if(state.getCellContents(x - 1, y) == LightUp.CELL_EMPTY )
 						++blanks;
 					else if(state.getCellContents(x - 1, y) >= 10)
 						++blocks;
@@ -49,7 +49,7 @@ public class NumberedBlock
 						++bulbs;
 					else if(state.getCellContents(x + 1, y) == LightUp.CELL_UNKNOWN && litup[y][x+1])
 						++lit;
-					else if(state.getCellContents(x + 1, y) == LightUp.CELL_BLANK )
+					else if(state.getCellContents(x + 1, y) == LightUp.CELL_EMPTY )
 						++blanks;
 					else if(state.getCellContents(x + 1, y) >= 10)
 						++blocks;
@@ -65,7 +65,7 @@ public class NumberedBlock
 						++bulbs;
 					else if(state.getCellContents(x, y - 1) == LightUp.CELL_UNKNOWN && litup[y-1][x])
 						++lit;
-					else if(state.getCellContents(x, y - 1) == LightUp.CELL_BLANK )
+					else if(state.getCellContents(x, y - 1) == LightUp.CELL_EMPTY )
 						++blanks;
 					else if(state.getCellContents(x, y-1) >= 10)
 						++blocks;
@@ -81,7 +81,7 @@ public class NumberedBlock
 						++bulbs;
 					else if(state.getCellContents(x, y + 1) == LightUp.CELL_UNKNOWN && litup[y+1][x])
 						++lit;
-					else if(state.getCellContents(x, y + 1) == LightUp.CELL_BLANK )
+					else if(state.getCellContents(x, y + 1) == LightUp.CELL_EMPTY )
 						++blanks;
 					else if(state.getCellContents(x, y+1) >= 10)
 						++blocks;
