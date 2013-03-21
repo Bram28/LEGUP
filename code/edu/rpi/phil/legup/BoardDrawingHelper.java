@@ -190,7 +190,8 @@ public abstract class BoardDrawingHelper
 	public static Color cyanFilter = new Color(0,255,255);
 	//public static Color blueFilter = new Color(000,255,255,64);
 	//public static Color orangeFilter = new Color(255,165,0,128);
-	private static Color orangeSquare = ((!ANIMATE_SPLIT_CASE) ? new Color(225,182,100,255) : new Color(255,182,100,128));
+	//private static Color orangeSquare = ((!ANIMATE_SPLIT_CASE) ? new Color(225,182,100,255) : new Color(255,182,100,128));
+	private static Color orangeSquare = new Color(255,192,0,255);
 	public static Color determineTransitionColor(int x, int y, BoardState newState, BoardState oldState, boolean showOrange)
 	{
 		int curVal = newState.getCellContents(x, y);

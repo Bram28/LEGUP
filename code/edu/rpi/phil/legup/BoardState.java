@@ -1078,13 +1078,13 @@ public class BoardState implements java.io.Serializable
 	{
 		if (mergeChildren.size() > 0)
 		{
-			int depth = getDirectDepth();
+			int depth = getDepth();
 			int mergeTot = 0; for (BoardState B : mergeChildren) mergeTot += B.numBranches();
 
 			int place = -(mergeTot-1)*(int)(1.5*TreePanel.NODE_RADIUS);
 			for (BoardState B : mergeChildren)
 			{
-				B.offset.y = (1+depth)*3*TreePanel.NODE_RADIUS;
+				B.offset.y = (1+depth)*4*TreePanel.NODE_RADIUS;
 				B.offset.x = place+(B.numBranches()-1)*((int)(1.5*TreePanel.NODE_RADIUS));
 				place += B.numBranches()*3*TreePanel.NODE_RADIUS;
 			}
@@ -1126,9 +1126,15 @@ public class BoardState implements java.io.Serializable
 		return maxMerge;
 	}
 
-	private int getDepth()
+	public int getDepth()
 	{
-		return getDirectDepth()+getMergeDepth();
+		//return getDirectDepth()+getMergeDepth();
+		int tmp_max = -1;
+		for(BoardState b : transitionsFrom)
+		{
+			if(b.getDepth() > tmp_max)tmp_max = b.getDepth();
+		}
+		return tmp_max+1;
 	}
 	// .... to this comment are all related to computation of position for
 	// regular nodes and Merge nodes
