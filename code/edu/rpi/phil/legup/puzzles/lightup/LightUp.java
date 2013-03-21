@@ -25,6 +25,12 @@ public class LightUp extends PuzzleModule
 	public static int CELL_UNKNOWN = 0;
 	public static int CELL_LIGHT = 1;
 	public static int CELL_EMPTY = 2; //formerly CELL_BLANK
+	public static int CELL_BLOCK0 = 10; //blocks with numbers
+	public static int CELL_BLOCK1 = 11;
+	public static int CELL_BLOCK2 = 12;
+	public static int CELL_BLOCK3 = 13;
+	public static int CELL_BLOCK4 = 14;
+	public static int CELL_BLOCK = 15; //the blank black block
 	public int numAcceptableStates(){return 3;}
 	
 	public LightUp(){
@@ -122,27 +128,27 @@ public class LightUp extends PuzzleModule
 		}
 		else if (contents == CELL_EMPTY)
 		{
-			rv = 10;
+			rv = CELL_BLOCK0;
 		}
-		else if (contents == 10)
+		else if (contents == CELL_BLOCK0)
 		{
-			rv = 11;
+			rv = CELL_BLOCK1;
 		}
-		else if (contents == 11)
+		else if (contents == CELL_BLOCK1)
 		{
-			rv = 12;
+			rv = CELL_BLOCK2;
 		}
-		else if (contents == 12)
+		else if (contents == CELL_BLOCK2)
 		{
-			rv = 13;
+			rv = CELL_BLOCK3;
 		}
-		else if (contents == 13)
+		else if (contents == CELL_BLOCK3)
 		{
-			rv = 14;
+			rv = CELL_BLOCK4;
 		}
-		else if (contents == 14)
+		else if (contents == CELL_BLOCK4)
 		{
-			rv = 15;
+			rv = CELL_BLOCK;
 		}
 
 		return rv;
