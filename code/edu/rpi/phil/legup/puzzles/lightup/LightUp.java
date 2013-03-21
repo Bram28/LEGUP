@@ -253,8 +253,8 @@ public class LightUp extends PuzzleModule
 		return true;
 	}
 
-	private final Color light = new Color( 255, 255, 0, 63 );
-	public void drawExtraData(Graphics gr, ArrayList<Object> extraData, Rectangle bounds, int w, int h)
+	private final Color light = new Color(0,255,255,96);
+	public void drawExtraData(Graphics gr, ArrayList<Object> extraData, ArrayList<Object> extraDataDelta, Rectangle bounds, int w, int h)
 	{
 		Graphics2D g = (Graphics2D)gr;
 		g.setColor( light );
