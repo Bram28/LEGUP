@@ -21,7 +21,7 @@ public class CaseTentOrGrass extends CaseRule
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;
-		BoardState parent = state.getSingleParentState(); 
+		BoardState parent = state.getSingleParentState();
 		if (parent.getTransitionsFrom().size() != 2)
 		{
 			rv = "This case rule can only be applied on a two-way split.";

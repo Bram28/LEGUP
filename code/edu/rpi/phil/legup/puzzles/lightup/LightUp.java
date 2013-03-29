@@ -18,6 +18,7 @@ import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree; //avoid duplicating helper functions
 
 
 public class LightUp extends PuzzleModule

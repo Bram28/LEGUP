@@ -10,6 +10,7 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Permutations;
+import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
 
 public class CaseSatisfyNumber extends CaseRule
 {
@@ -23,18 +24,78 @@ public class CaseSatisfyNumber extends CaseRule
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;
+		BoardState parent = state.getSingleParentState();
+		if(parent.getTransitionsFrom().size() > 4)
+		{
+			rv = "Only the blank tiles adjacent to a single block are to be modified\nin one step using this rule.";
+		}
+		else
+		{
+			int num_children = parent.getTransitionsFrom().size();
+			Point p = findCommonBlock(parent,state);
+			int block_value = (p != null)?getBlockValue(parent.getCellContents(p.x,p.y)):-2;
+			int num_adj_blanks = CaseLinkTree.calcAdjacentTiles(parent,p,LightUp.CELL_UNKNOWN);
+			int num_adj_lights = CaseLinkTree.calcAdjacentTiles(parent,p,LightUp.CELL_LIGHT);
+			int num_intended_branches = Permutations.combination(num_adj_blanks-num_adj_lights,block_value);
+			if(block_value == -1) //this will never execute since findCommonBlock only returns blocks. Replace with findCommonTile and this should work
+			{
+				rv = "The cell whose adjacents are modified is not a numbered block.";
+			}
+			else if(p == null)
+			{
+				rv = "All the cells modified should be adjacent to a single numbered block.";
+			}
+			else if(num_intended_branches != num_children)
+			{
+				rv = "There are not the same amount of branches as required to have\nall combinations of lights adjacent to a single block.";
+			}
+			if(rv != "")return rv; //ensures that the conditions checked above are not overwritten
+			Vector<Point> lights = new Vector<Point>(); //location of light in each branch
+			for(BoardState b : parent.getTransitionsFrom())
+			{
+				if(CaseLinkTree.calcAdjacentTiles(b,p,LightUp.CELL_UNKNOWN) != 0)
+				{
+					rv = "All tiles adjacent to the block must be filled, which\nis not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					break;
+				}
+				ArrayList<Point> dif = BoardState.getDifferenceLocations(b,parent);
+				if(dif.size() != num_adj_blanks)
+				{
+					rv = "Only cells adjacent to the block should be modified,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					break;
+				}
+				int num_lights_added = 0;
+				for(Point p2 : dif)
+				{
+					if(b.getCellContents(p2.x,p2.y) == LightUp.CELL_LIGHT)num_lights_added++;
+				}
+				if(num_lights_added != block_value)
+				{
+					rv = "Branch "+(parent.getTransitionsFrom().indexOf(b)+1)+" does not have the correct amount of lights.";
+					break;
+				}
+				for(BoardState b2 : parent.getTransitionsFrom()) //check sibling equivalence
+				{
+					if(b==b2)continue;
+					if(BoardState.getDifferenceLocations(b,b2).size()==0)
+					{
+						rv = "Branch "+(parent.getTransitionsFrom().indexOf(b)+1)+" is the same as branch "+(parent.getTransitionsFrom().indexOf(b2)+1)+".";
+					}
+				}
+			}
+		}
 		
-		if (state.getTransitionsFrom().size() < 2 || state.getTransitionsFrom().size() > 6 || state.getTransitionsFrom().size() == 5)
+		/*if (parent.getTransitionsFrom().size() < 2 || parent.getTransitionsFrom().size() > 6 || parent.getTransitionsFrom().size() == 5)
 		{
 			rv = "This case rule can only be applied on a split of 2,3,4 or 6.";
 		}
-		else if(state.getTransitionsFrom().size() == 2)
+		else if(parent.getTransitionsFrom().size() == 2)
 		{
-			BoardState one = state.getTransitionsFrom().get(0);
-			BoardState two = state.getTransitionsFrom().get(1);
+			BoardState one = parent.getTransitionsFrom().get(0);
+			BoardState two = parent.getTransitionsFrom().get(1);
 			
-			if(BoardState.getDifferenceLocations(state,one).size() != 2
-					|| BoardState.getDifferenceLocations(state,two).size() != 2)
+			if(BoardState.getDifferenceLocations(parent,one).size() != 2
+					|| BoardState.getDifferenceLocations(parent,two).size() != 2)
 			{
 				return "A 2 way split of this type must have exactly 2 cells changed from the parent.";
 			}
@@ -45,14 +106,14 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			Point cell1 = dif.get(0);
 			Point cell2 = dif.get(1);
-			Point block = findBlock(cell1, cell2, state);
+			Point block = findBlock(cell1, cell2, parent);
 			
 			if(block == null)
 			{
 				return "Changes must be made around a single block.";
 			}
 			
-			if(state.getCellContents(cell1.x, cell1.y) != LightUp.CELL_UNKNOWN || state.getCellContents(cell2.x, cell2.y) != LightUp.CELL_UNKNOWN )
+			if(parent.getCellContents(cell1.x, cell1.y) != LightUp.CELL_UNKNOWN || parent.getCellContents(cell2.x, cell2.y) != LightUp.CELL_UNKNOWN )
 			{
 				return "Changes can only be made to an unknown cell.";
 			}
@@ -63,15 +124,15 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			return null;
 		}
-		else if(state.getTransitionsFrom().size() == 3)
+		else if(state.getTransitionsFrom().size() == 3) //this looks only partially implemented, messages involving 2
 		{
-			BoardState one = state.getTransitionsFrom().get(0);
-			BoardState two = state.getTransitionsFrom().get(1);
-			BoardState three = state.getTransitionsFrom().get(2);
+			BoardState one = parent.getTransitionsFrom().get(0);
+			BoardState two = parent.getTransitionsFrom().get(1);
+			BoardState three = parent.getTransitionsFrom().get(2);
 			
-			if(BoardState.getDifferenceLocations(state,one).size() != 3
-					|| BoardState.getDifferenceLocations(state,two).size() != 3
-					|| BoardState.getDifferenceLocations(state,three).size() != 3)
+			if(BoardState.getDifferenceLocations(parent,one).size() != 3
+					|| BoardState.getDifferenceLocations(parent,two).size() != 3
+					|| BoardState.getDifferenceLocations(parent,three).size() != 3)
 			{
 				return "A 3 way split of this type must have exactly 3 cells changed from the parent.";
 			}
@@ -117,12 +178,12 @@ public class CaseSatisfyNumber extends CaseRule
 				return "Changes must be made around a single block.";
 			}
 			
-			if(state.getCellContents(cell1.x, cell1.y) != LightUp.CELL_UNKNOWN || state.getCellContents(cell2.x, cell2.y) != LightUp.CELL_UNKNOWN || state.getCellContents(cell3.x, cell3.y) != LightUp.CELL_UNKNOWN)
+			if(parent.getCellContents(cell1.x, cell1.y) != LightUp.CELL_UNKNOWN || parent.getCellContents(cell2.x, cell2.y) != LightUp.CELL_UNKNOWN || parent.getCellContents(cell3.x, cell3.y) != LightUp.CELL_UNKNOWN)
 			{
 				return "Changes can only be made to an unknown cell.";
 			}
 			
-			int bulbs = checkBlock(block, state);
+			int bulbs = checkBlock(block, parent);
 			int temp = 0;
 			if(bulbs == -1)
 			{
@@ -195,12 +256,12 @@ public class CaseSatisfyNumber extends CaseRule
 			
 			return null;
 		}
-		else if(state.getTransitionsFrom().size() == 4)
+		else if(parent.getTransitionsFrom().size() == 4)
 		{
-			BoardState one = state.getTransitionsFrom().get(0);
-			BoardState two = state.getTransitionsFrom().get(1);
-			BoardState three = state.getTransitionsFrom().get(2);
-			BoardState four = state.getTransitionsFrom().get(3);
+			BoardState one = parent.getTransitionsFrom().get(0);
+			BoardState two = parent.getTransitionsFrom().get(1);
+			BoardState three = parent.getTransitionsFrom().get(2);
+			BoardState four = parent.getTransitionsFrom().get(3);
 			
 			if(BoardState.getDifferenceLocations(state,one).size() != 4
 					|| BoardState.getDifferenceLocations(state,two).size() != 4
@@ -210,14 +271,14 @@ public class CaseSatisfyNumber extends CaseRule
 				return "A 4 way split of this type must have exactly 4 cells changed from the parent.";
 			}
 		}
-		else if(state.getTransitionsFrom().size() == 6)
+		else if(parent.getTransitionsFrom().size() == 6)
 		{
-			BoardState one = state.getTransitionsFrom().get(0);
-			BoardState two = state.getTransitionsFrom().get(1);
-			BoardState three = state.getTransitionsFrom().get(2);
-			BoardState four = state.getTransitionsFrom().get(3);
-			BoardState five = state.getTransitionsFrom().get(4);
-			BoardState six = state.getTransitionsFrom().get(5);
+			BoardState one = parent.getTransitionsFrom().get(0);
+			BoardState two = parent.getTransitionsFrom().get(1);
+			BoardState three = parent.getTransitionsFrom().get(2);
+			BoardState four = parent.getTransitionsFrom().get(3);
+			BoardState five = parent.getTransitionsFrom().get(4);
+			BoardState six = parent.getTransitionsFrom().get(5);
 			
 			if(BoardState.getDifferenceLocations(state,one).size() != 4
 					|| BoardState.getDifferenceLocations(state,two).size() != 4
@@ -232,12 +293,21 @@ public class CaseSatisfyNumber extends CaseRule
 		else
 		{
 			return "Error in applying case rule.";		
-		}
+		}*/
 			
 		return rv;
 	}
 	
-	Point findBlock(Point cell1, Point cell2, BoardState state)
+	static Point findCommonBlock(BoardState parent,BoardState state)
+	{
+		ArrayList<Point> dif = BoardState.getDifferenceLocations(parent,state);
+		if(dif.size() == 2)return findBlock(dif.get(0),dif.get(1),state);
+		else if(dif.size() == 3)return findBlock(dif.get(0),dif.get(1),dif.get(2));
+		else if(dif.size() == 4)return findBlock(dif.get(0),dif.get(1),dif.get(2),dif.get(3));
+		else return null;
+	}
+	
+	static Point findBlock(Point cell1, Point cell2, BoardState state)
 	{
 		if(cell1.x == cell2.x)
 		{
@@ -295,7 +365,7 @@ public class CaseSatisfyNumber extends CaseRule
 			return null;
 	}
 
-	Point findBlock(Point cell1, Point cell2, Point cell3)
+	static Point findBlock(Point cell1, Point cell2, Point cell3)
 	{
 		if(cell1.x == cell2.x)
 		{
@@ -465,7 +535,7 @@ public class CaseSatisfyNumber extends CaseRule
 			return null;
 	}
 	
-	Point findBlock(Point cell1, Point cell2, Point cell3, Point cell4)
+	static Point findBlock(Point cell1, Point cell2, Point cell3, Point cell4)
 	{
 		int minx = Math.min(Math.min(cell1.x, cell2.x),Math.min(cell3.x, cell4.x));
 		int maxx = Math.max(Math.max(cell1.x, cell2.x),Math.max(cell3.x, cell4.x));
@@ -532,7 +602,7 @@ public class CaseSatisfyNumber extends CaseRule
 			return null;
 	}
 	
-	Point lookUpBlock( Point cell1, Point cell2, Point test1, Point test2, BoardState state)
+	static Point lookUpBlock( Point cell1, Point cell2, Point test1, Point test2, BoardState state)
 	{
 		if(state.getCellContents(test1.x,test1.y) > 10 && state.getCellContents(test1.x,test1.y) < 14)
 		{
@@ -707,7 +777,16 @@ public class CaseSatisfyNumber extends CaseRule
 		}
 		return -1;
 	}
-
+	
+	int getBlockValue(int cell)
+	{
+		if(cell == LightUp.CELL_BLOCK0)return 0;
+		else if(cell == LightUp.CELL_BLOCK1)return 1;
+		else if(cell == LightUp.CELL_BLOCK2)return 2;
+		else if(cell == LightUp.CELL_BLOCK3)return 3;
+		else if(cell == LightUp.CELL_BLOCK4)return 4;
+		else return -1;
+	}
 	public boolean startDefaultApplicationRaw(BoardState state)
 	{
 		return true;

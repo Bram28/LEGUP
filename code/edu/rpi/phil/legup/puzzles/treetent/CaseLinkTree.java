@@ -23,7 +23,7 @@ public class CaseLinkTree extends CaseRule
 		image = new ImageIcon("images/treetent/caseLinkTree.png");
 	}
 	
-	public boolean pointEquals(Point p1, Point p2)
+	public static boolean pointEquals(Point p1, Point p2)
 	{
 		if(p1 == null)
 		{
@@ -33,7 +33,7 @@ public class CaseLinkTree extends CaseRule
 		else if(p2 == null)return false;
 		return (p1.x==p2.x)&&(p1.y==p2.y);
 	}
-	public Point findOnlyCommonTile(Vector<BoardState> states, int type)
+	public static Point findOnlyCommonTile(Vector<BoardState> states, int type)
 	{
 		Point rv = null;
 		int num_trees = 0;
@@ -61,7 +61,7 @@ public class CaseLinkTree extends CaseRule
 		return (num_trees == 1)?rv:null;
 	}
 	
-	public int calcAdjacentTiles(BoardState b, Point p, int type)
+	public static int calcAdjacentTiles(BoardState b, Point p, int type)
 	{
 		int rv = 0;
 		if((b == null)||(p == null))return -1;
@@ -69,10 +69,8 @@ public class CaseLinkTree extends CaseRule
 		{
 			int x = p.x;
 			int y = p.y;
-			if(dir == 0)x += 1;
-			if(dir == 1)x -= 1;
-			if(dir == 2)y += 1;
-			if(dir == 3)y -= 1;
+			if(dir<2)x += (dir%2==0)?-1:1;
+			else y += (dir%2==0)?-1:1;
 			if(x < 0 || x >= b.getWidth() || y < 0 || y >= b.getHeight())continue;
 			rv += (b.getCellContents(x,y) == type)?1:0;
 		}

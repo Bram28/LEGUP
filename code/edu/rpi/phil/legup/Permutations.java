@@ -231,4 +231,18 @@ public class Permutations
 				temp.setJustification( null );
 		}
 	}
+	public static int factorial(int n)
+	{
+		return (n>0)?(n*factorial(n-1)):1;
+	}
+	
+	public static int permutation(int n, int r)
+	{
+		return factorial(n)/factorial(n-r);
+	}
+	
+	public static int combination(int n, int r)
+	{
+		return permutation(n,r)/factorial(r);
+	}
 }
