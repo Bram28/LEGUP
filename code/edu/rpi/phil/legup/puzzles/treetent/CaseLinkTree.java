@@ -15,7 +15,10 @@ import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
 public class CaseLinkTree extends CaseRule
 {
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
-	public int crshTileType(){return TreeTent.CELL_TREE;}
+	public Vector<Integer> crshTileType()
+	{
+		return new Vector<Integer>(TreeTent.CELL_TREE);
+	}
 	public CaseLinkTree()
 	{
 		setName("Possible links from tree");

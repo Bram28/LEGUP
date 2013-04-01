@@ -18,6 +18,8 @@ import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
 import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTent;
 import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
+import edu.rpi.phil.legup.puzzles.lightup.LightUp;
+import edu.rpi.phil.legup.puzzles.lightup.CaseSatisfyNumber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -157,7 +159,7 @@ public class CasePanel extends JustificationPanel
 			Object[] msg = new Object[2];
 			CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
 			crsh.mode = caseRules.get(button).crshMode();
-			crsh.tileType = caseRules.get(button).crshTileType();
+			crsh.tileTypes = caseRules.get(button).crshTileType();
 			msg[0] = "Select where you would like to apply the CaseRule, and then select ok.";
 			msg[1] = crsh;
 			JOptionPane.showMessageDialog(null,msg);
@@ -290,6 +292,13 @@ public class CasePanel extends JustificationPanel
 								tmp.endTransition();
 							}
 						}
+					}
+				}
+				if(pm instanceof LightUp)
+				{
+					if(caseRules.get(button) instanceof CaseSatisfyNumber)
+					{
+						
 					}
 				}
 				if((cur.getTransitionsFrom().size() > 0) && (cur.getTransitionsFrom().get(0) != null))

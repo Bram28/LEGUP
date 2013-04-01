@@ -11,9 +11,22 @@ import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
+import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 public class CaseSatisfyNumber extends CaseRule
 {
+	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
+	public Vector<Integer> crshTileType()
+	{
+		Vector<Integer> retval = new Vector<Integer>();
+		retval.add(LightUp.CELL_BLOCK0);
+		retval.add(LightUp.CELL_BLOCK1);
+		retval.add(LightUp.CELL_BLOCK2);
+		retval.add(LightUp.CELL_BLOCK3);
+		retval.add(LightUp.CELL_BLOCK4);
+		return retval;
+	}
+	
 	public CaseSatisfyNumber()
 	{
 		setName("Satisfy Number");

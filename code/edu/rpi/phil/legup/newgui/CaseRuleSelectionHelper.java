@@ -16,6 +16,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JOptionPane;
+import java.util.Vector;
 
 public class CaseRuleSelectionHelper extends DynamicViewer implements ActionListener
 {
@@ -23,7 +25,7 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 	public static final int MODE_TILE = 0;
 	public static final int MODE_COL_ROW = 1;
 	public static final int MODE_TILETYPE = 2;
-	int tileType = 0;
+	Vector<Integer> tileTypes = null; //whitelist of allowed tiles for MODE_TILETYPE
 	public Point pointSelected = new Point(-5,-5);
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
 	private LEGUP_Gui parent = null;
@@ -36,7 +38,7 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 		setSize(getProperSize());
 		zoomFit();
 		zoomTo(1.0);
-		tileType = 0;
+		tileTypes = null;
 		pointSelected.x = -5;
 		pointSelected.y = -5;
 	}
@@ -119,8 +121,23 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 				}
 				if(mode == MODE_TILETYPE)
 				{
-					if(state.getCellContents(p.x,p.y) != tileType)
+					if(tileTypes != null)
 					{
+						int current_cell = state.getCellContents(p.x,p.y); 
+						boolean valid_type = false;
+						for(int type : tileTypes)
+						{
+							if(current_cell == type)valid_type = true;
+						}
+						if(!valid_type)
+						{
+							p.x = -5;
+							p.y = -5;
+						}
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null,"The tile type whitelist is null.");
 						p.x = -5;
 						p.y = -5;
 					}

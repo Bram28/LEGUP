@@ -1,6 +1,7 @@
 package edu.rpi.phil.legup;
 
 import java.awt.Point;
+import java.util.Vector;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 /**
@@ -13,7 +14,11 @@ public abstract class CaseRule extends Justification implements java.io.Serializ
 	static final long serialVersionUID = 9003L;
 	protected String defaultApplicationText;
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILE;}
-	public int crshTileType(){return 0;}
+	public Vector<Integer> crshTileType()
+	{
+		return new Vector<Integer>(0);
+	}
+	
 	/**
 	 * Was this case rule applied correctly to this parent state
 	 * @param state the state where we apply it
