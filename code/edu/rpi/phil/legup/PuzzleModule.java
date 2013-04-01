@@ -186,16 +186,16 @@ public abstract class PuzzleModule
 		   rv = 1;
 		return rv;
 	}
-	//Helper function for popup menu
+	//Helper function for user-enterable tile types, for indexing with 0->n
 	//defined in the abstract class to be consistent with getNextCellValue()
-	public /*abstract*/ String getStateName(int state)
+	public static /*abstract*/ String getStateName(int state)
 	{
 		if(state == 0)return "false";
 		else if(state == 1)return "true";
 		else return null;
 	}
-	//inverse function needed because one of the puzzles has negative numbers for the states
-	public /*abstract*/ int getStateNumber(String state)
+	//inverse function needed to reliably map 0->n to arbitrary state-defined types
+	public static /*abstract*/ int getStateNumber(String state)
 	{
 		if(state == "false")return 0;
 		else if(state == "true")return 1;

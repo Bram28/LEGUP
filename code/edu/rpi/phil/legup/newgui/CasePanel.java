@@ -298,7 +298,68 @@ public class CasePanel extends JustificationPanel
 				{
 					if(caseRules.get(button) instanceof CaseSatisfyNumber)
 					{
-						
+						int num_blanks = CaseLinkTree.calcAdjacentTiles(cur,crsh.pointSelected,LightUp.CELL_UNKNOWN);
+						int num_lights = CaseLinkTree.calcAdjacentTiles(cur,crsh.pointSelected,LightUp.CELL_LIGHT);
+						int num_lights_needed = CaseSatisfyNumber.getBlockValue(cur.getCellContents(crsh.pointSelected.x,crsh.pointSelected.y))-num_lights;
+						boolean skip = false;
+						int[] whatgoesintheblanks = new int[4];
+						int num_cases = 1;
+						for(int c1=0;c1<4;c1++)
+						{
+							num_cases = num_cases*(Legup.getInstance().getPuzzleModule().numAcceptableStates()-1);
+							whatgoesintheblanks[c1] = 1;
+						}
+						for(int c2=0;c2<num_cases;c2++)
+						{
+							int lights_in_array = 0;
+							for(int c3=0;c3<4;c3++)
+							{
+								lights_in_array += (LightUp.getStateNumber(LightUp.getStateName(whatgoesintheblanks[c3])) == LightUp.CELL_LIGHT)?1:0;
+							}
+							//System.out.println("lightsinarray: "+lights_in_array+"\nlights_needed: "+num_lights_needed);
+							//System.out.println(whatgoesintheblanks[0]+","+whatgoesintheblanks[1]+","+whatgoesintheblanks[2]+","+whatgoesintheblanks[3]);
+							if(lights_in_array == num_lights_needed)
+							{
+								skip = false;
+								for(int c3=0;c3<4;c3++)
+								{
+									int x = crsh.pointSelected.x;
+									int y = crsh.pointSelected.y;
+									if(c3<2)x += ((c3%2 == 0)?-1:1);
+									else y += ((c3%2 == 0)?-1:1);
+									if(whatgoesintheblanks[c3] == LightUp.CELL_LIGHT)
+									{
+										if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())skip = true;
+										else if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)skip = true;
+									}
+								}
+								if(!skip)
+								{
+									BoardState tmp = cur.addTransitionFrom();
+									tmp.setCaseSplitJustification(caseRules.get(button));
+									for(int c3=0;c3<4;c3++)
+									{
+										int x = crsh.pointSelected.x;
+										int y = crsh.pointSelected.y;
+										if(c3<2)x += ((c3%2 == 0)?-1:1);
+										else y += ((c3%2 == 0)?-1:1);
+										if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
+										if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)continue;
+										tmp.setCellContents(x,y,LightUp.getStateNumber(LightUp.getStateName(whatgoesintheblanks[c3])));
+									}
+									tmp.endTransition();
+								}
+							}
+							whatgoesintheblanks[0]++;
+							for(int c3=0;c3+1<4;c3++)
+							{
+								if(whatgoesintheblanks[c3] >= pm.numAcceptableStates())
+								{
+									whatgoesintheblanks[c3]=1;
+									whatgoesintheblanks[c3+1]++;
+								}
+							}
+						}
 					}
 				}
 				if((cur.getTransitionsFrom().size() > 0) && (cur.getTransitionsFrom().get(0) != null))

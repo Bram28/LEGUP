@@ -367,17 +367,14 @@ public class TreeTent extends PuzzleModule
 			return contents;
 		}
 	}
-	public String getStateName(int state)
+	public static String getStateName(int state)
 	{
 		if(state == 0)return "blank";
-		//commented out to skip over & return null, since the user shouldn't be able to make trees
-		//included for readability/potential future extension
-		//else if(state == CELL_TREE)return "tree";
 		else if(state == 1)return "tent";
 		else if(state == 2)return "grass";
 		else return null;
 	}
-	public int getStateNumber(String state)
+	public static int getStateNumber(String state)
 	{
 		if(state == "blank")return CELL_UNKNOWN;
 		else if(state == "tent")return CELL_TENT;

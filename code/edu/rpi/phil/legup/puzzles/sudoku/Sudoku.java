@@ -296,7 +296,7 @@ public class Sudoku extends PuzzleModule
 
 		return rv;
 	}
-	public String getStateName(int state)
+	public static String getStateName(int state)
 	{
 		if(state == CELL_UNKNOWN)return "";
 		else if(state == 1)return "1";
@@ -310,7 +310,7 @@ public class Sudoku extends PuzzleModule
 		else if(state == 9)return "9";
 		else return null;
 	}
-	public int getStateNumber(String state)
+	public static int getStateNumber(String state)
 	{
 		if(state == "")return CELL_UNKNOWN;
 		else if(state == "1")return 1;

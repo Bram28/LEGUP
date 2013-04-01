@@ -124,12 +124,7 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 					if(tileTypes != null)
 					{
 						int current_cell = state.getCellContents(p.x,p.y); 
-						boolean valid_type = false;
-						for(int type : tileTypes)
-						{
-							if(current_cell == type)valid_type = true;
-						}
-						if(!valid_type)
+						if(!tileTypes.contains(current_cell))
 						{
 							p.x = -5;
 							p.y = -5;
