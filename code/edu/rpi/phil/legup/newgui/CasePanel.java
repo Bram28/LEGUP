@@ -314,7 +314,7 @@ public class CasePanel extends JustificationPanel
 							int lights_in_array = 0;
 							for(int c3=0;c3<4;c3++)
 							{
-								lights_in_array += (LightUp.getStateNumber(LightUp.getStateName(whatgoesintheblanks[c3])) == LightUp.CELL_LIGHT)?1:0;
+								lights_in_array += (pm.getStateNumber(pm.getStateName(whatgoesintheblanks[c3])) == LightUp.CELL_LIGHT)?1:0;
 							}
 							//System.out.println("lightsinarray: "+lights_in_array+"\nlights_needed: "+num_lights_needed);
 							//System.out.println(whatgoesintheblanks[0]+","+whatgoesintheblanks[1]+","+whatgoesintheblanks[2]+","+whatgoesintheblanks[3]);
@@ -345,7 +345,7 @@ public class CasePanel extends JustificationPanel
 										else y += ((c3%2 == 0)?-1:1);
 										if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
 										if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)continue;
-										tmp.setCellContents(x,y,LightUp.getStateNumber(LightUp.getStateName(whatgoesintheblanks[c3])));
+										tmp.setCellContents(x,y,pm.getStateNumber(pm.getStateName(whatgoesintheblanks[c3])));
 									}
 									tmp.endTransition();
 								}

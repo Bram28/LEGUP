@@ -176,14 +176,14 @@ public class LightUp extends PuzzleModule
 			return contents;
 		}
 	}
-	public static String getStateName(int state)
+	public String getStateName(int state)
 	{
 		if(state == 0)return "blank";
 		else if(state == 1)return "light";
 		else if(state == 2)return "empty";
 		else return null;
 	}
-	public static int getStateNumber(String state)
+	public int getStateNumber(String state)
 	{
 		if(state == "blank")return CELL_UNKNOWN;
 		else if(state == "light")return CELL_LIGHT;
