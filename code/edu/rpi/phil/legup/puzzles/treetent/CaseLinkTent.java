@@ -17,7 +17,9 @@ public class CaseLinkTent extends CaseRule
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
 	public Vector<Integer> crshTileType()
 	{
-		return new Vector<Integer>(TreeTent.CELL_TENT);
+		Vector<Integer> ret = new Vector<Integer>();
+		ret.add(TreeTent.CELL_TENT);
+		return ret;
 	}
 	public CaseLinkTent()
 	{

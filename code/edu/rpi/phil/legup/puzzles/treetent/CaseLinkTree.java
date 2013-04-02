@@ -17,7 +17,9 @@ public class CaseLinkTree extends CaseRule
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
 	public Vector<Integer> crshTileType()
 	{
-		return new Vector<Integer>(TreeTent.CELL_TREE);
+		Vector<Integer> ret = new Vector<Integer>();
+		ret.add(TreeTent.CELL_TREE);
+		return ret;
 	}
 	public CaseLinkTree()
 	{
@@ -93,14 +95,17 @@ public class CaseLinkTree extends CaseRule
 			int num_children = parent.getTransitionsFrom().size();
 			Point p = findOnlyCommonTile(parent.getTransitionsFrom(),TreeTent.CELL_TREE);
 			int num_adj_blanks = calcAdjacentTiles(parent,p,TreeTent.CELL_UNKNOWN);
+			int num_preexisting_tents = calcAdjacentTiles(parent,p,TreeTent.CELL_TENT);
+			int num_intended_branches = num_adj_blanks + num_preexisting_tents;
 			if(p == null)
 			{
-				rv = "Only one tree should be involved in linking in one\napplication of this rule.";
+				rv = "Exactly one tree should be involved in linking in one\napplication of this rule.";
 			}
-			else if(num_adj_blanks != num_children)
+			else if(num_intended_branches != num_children)
 			{
-				rv = "There is not one branch for each blank adjacent to the tree.";
+				rv = "There is not one branch for each blank/tent\n adjacent to the tree.";
 			}
+			if(rv != null)return rv;
 			Vector<Point> tents = new Vector<Point>(); //location of tent in each branch
 			for(BoardState b : parent.getTransitionsFrom())
 			{
@@ -146,7 +151,7 @@ public class CaseLinkTree extends CaseRule
 				{
 					if(b.getCellContents(p2.x,p2.y) == TreeTent.CELL_TENT)num_tents_added++;
 				}
-				if(num_tents_added != 1)
+				if(num_tents_added > 1)
 				{
 					rv = "Only one tent should be added per branch, which\nis not the case in branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;

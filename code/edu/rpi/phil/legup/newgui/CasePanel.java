@@ -253,25 +253,48 @@ public class CasePanel extends JustificationPanel
 								if(c1<2)x += ((c1%2 == 0)?-1:1);
 								else y += ((c1%2 == 0)?-1:1);
 								if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
-								if(cur.getCellContents(x,y) != TreeTent.CELL_UNKNOWN)continue;
-								BoardState tmp = cur.addTransitionFrom();
-								tmp.setCaseSplitJustification(caseRules.get(button));
-								tmp.setCellContents(x,y,TreeTent.CELL_TENT);
-								for(int c2=0;c2<4;c2++)
+								BoardState tmp = null;
+								if(cur.getCellContents(x,y) == TreeTent.CELL_UNKNOWN)
 								{
-									if(c1 == c2)continue;
-									int x2 = crsh.pointSelected.x;
-									int y2 = crsh.pointSelected.y;
-									if(c2<2)x2 += ((c2%2 == 0)?-1:1);
-									else y2 += ((c2%2 == 0)?-1:1);
-									if(x2 < 0 || x2 >= cur.getWidth() || y2 < 0 || y2 >= cur.getHeight())continue;
-									if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
-									tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
+									tmp = cur.addTransitionFrom();
+									tmp.setCaseSplitJustification(caseRules.get(button));
+									tmp.setCellContents(x,y,TreeTent.CELL_TENT);
+									for(int c2=0;c2<4;c2++)
+									{
+										if(c1 == c2)continue;
+										int x2 = crsh.pointSelected.x;
+										int y2 = crsh.pointSelected.y;
+										if(c2<2)x2 += ((c2%2 == 0)?-1:1);
+										else y2 += ((c2%2 == 0)?-1:1);
+										if(x2 < 0 || x2 >= cur.getWidth() || y2 < 0 || y2 >= cur.getHeight())continue;
+										if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
+										tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
+									}
 								}
-								ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(x,y),crsh.pointSelected);
-								tmp.addExtraData(link);
-								tmp.extraDataDelta.add(link);
-								tmp.endTransition();
+								else if(cur.getCellContents(x,y) == TreeTent.CELL_TENT)
+								{
+									tmp = cur.addTransitionFrom();
+									tmp.setCaseSplitJustification(caseRules.get(button));
+									for(int c2=0;c2<4;c2++)
+									{
+										if(c1 == c2)continue;
+										int x2 = crsh.pointSelected.x;
+										int y2 = crsh.pointSelected.y;
+										if(c2<2)x2 += ((c2%2 == 0)?-1:1);
+										else y2 += ((c2%2 == 0)?-1:1);
+										if(x2 < 0 || x2 >= cur.getWidth() || y2 < 0 || y2 >= cur.getHeight())continue;
+										if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
+										tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
+									}
+								}
+								else if(cur.getCellContents(x,y) != TreeTent.CELL_TENT)continue;
+								if(tmp != null)
+								{
+									ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(x,y),crsh.pointSelected);
+									tmp.addExtraData(link);
+									tmp.extraDataDelta.add(link);
+									tmp.endTransition();
+								}
 							}
 						}
 						if(caseRules.get(button) instanceof CaseLinkTent)
