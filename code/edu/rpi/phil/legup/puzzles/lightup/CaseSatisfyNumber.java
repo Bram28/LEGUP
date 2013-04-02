@@ -38,11 +38,6 @@ public class CaseSatisfyNumber extends CaseRule
 	{
 		String rv = null;
 		BoardState parent = state.getSingleParentState();
-		if(parent.getTransitionsFrom().size() > 4)
-		{
-			rv = "Only the blank tiles adjacent to a single block are to be modified\nin one step using this rule.";
-		}
-		else
 		{
 			int num_children = parent.getTransitionsFrom().size();
 			Vector<Point> points = findCommonTile(parent,state,crshTileType());
@@ -62,7 +57,6 @@ public class CaseSatisfyNumber extends CaseRule
 			else if(num_intended_branches != num_children)
 			{
 				rv = "There are not the same amount of branches as required to have\nall combinations of lights adjacent to a single block.";
-				rv += "\n"+num_intended_branches+","+num_children;
 			}
 			if(rv != null)return rv; //ensures that the conditions checked above are not overwritten
 			Vector<Point> lights = new Vector<Point>(); //location of light in each branch
@@ -94,7 +88,6 @@ public class CaseSatisfyNumber extends CaseRule
 				}
 			}
 		}
-		
 		return rv;
 	}
 	
@@ -104,6 +97,7 @@ public class CaseSatisfyNumber extends CaseRule
 	{
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(parent,state);
 		Vector<Point> ret = new Vector<Point>();
+		Vector<Integer> adjacents = new Vector<Integer>();
 		if(dif.size() >= 2)
 		{
 			for(int x=0;x<parent.getHeight();x++)
@@ -111,35 +105,55 @@ public class CaseSatisfyNumber extends CaseRule
 				for(int y=0;y<parent.getWidth();y++)
 				{
 					boolean is_common_point = false;
-					int tmp_x = x;
-					int tmp_y = y;
+					int num_adjacents = 0;
+					int tmp_x;// = x;
+					int tmp_y;// = y;
 					Point tmp_p = null;
 					for(int dir=0;dir<4;dir++)
 					{
-						tmp_x += (dir<2)?((dir%2==0)?-1:1):0;
-						tmp_y += (dir>=2)?((dir%2==0)?-1:1):0;
-						if(tmp_x < 0 || tmp_x > parent.getWidth())continue;
-						if(tmp_y < 0 || tmp_y > parent.getHeight())continue;
+						tmp_x = (dir<2)?((dir%2==0)?(x-1):(x+1)):x; //these two lines enumerate all orthagonal
+						tmp_y = (dir<2)?y:((dir%2==0)?(y-1):(y+1)); //directions 1 unit from (x,y)
+						if(tmp_x < 0 || tmp_x >= parent.getWidth())continue;
+						if(tmp_y < 0 || tmp_y >= parent.getHeight())continue;
 						if(parent.getCellContents(tmp_x,tmp_y) != PuzzleModule.CELL_UNKNOWN)continue;
 						tmp_p = new Point(tmp_x,tmp_y);
+						//System.out.println("At ("+tmp_x+","+tmp_y+") from ("+x+","+y+"), dir == "+dir);
 						if(dif.contains(tmp_p))
 						{
 							is_common_point = true;
+							num_adjacents++;
 						}
 					}
 					if(is_common_point)
 					{
 						tmp_p = new Point(x,y);
-						System.out.println(tmp_p);
 						if(!ret.contains(tmp_p))
 						{
 							if(types == null || types.contains(parent.getCellContents(x,y)))
 							{
 								ret.add(tmp_p);
+								adjacents.add(num_adjacents);
+								//System.out.println(tmp_p+" has "+num_adjacents+" adjacents.");
 							}
 						}
 					}
 				}
+			}
+		}
+		int max_adjs = 0;
+		//assumes ret and adjacent are the same size
+		//removes any element with less adjacent difs than the maximum
+		for(int c1=0;c1<ret.size();c1++)
+		{
+			if(adjacents.get(c1) > max_adjs)max_adjs = adjacents.get(c1);
+		}
+		for(int c1=0;c1<ret.size();c1++)
+		{
+			if(adjacents.get(c1) < max_adjs)
+			{
+				ret.remove(c1);
+				adjacents.remove(c1);
+				c1--;
 			}
 		}
 		return ret;
