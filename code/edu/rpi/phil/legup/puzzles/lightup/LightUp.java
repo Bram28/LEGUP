@@ -18,6 +18,7 @@ import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.Selection;
 import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree; //avoid duplicating helper functions
 
 
@@ -279,7 +280,20 @@ public class LightUp extends PuzzleModule
 		}
 	}
 
-
+	public void treeSelectionChanged(ArrayList <Selection> newSelection)
+	{
+		if(newSelection.size() != 0)
+		{
+			BoardState b = newSelection.get(0).getState();
+			fillLight(b);
+		}
+	}
+	
+	public void boardDataChanged(BoardState state)
+	{
+		fillLight(state);
+	}
+	
 	public static void fillLight(BoardState state)
 	{
 		ArrayList<Object> extra = state.getExtraData();

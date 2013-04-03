@@ -21,6 +21,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import edu.rpi.phil.legup.newgui.TreeSelectionListener;
+import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
+
 /**
  * Generic Puzzle class. All puzzles should extend this class and implement the
  * Puzzle specific functionality
@@ -33,7 +36,7 @@ import javax.swing.JOptionPane;
  *		has been given a new obtainRuleOrder(int state, int rule) method, where the index
  *		Consult comments on this method for more details
  */
-public abstract class PuzzleModule
+public abstract class PuzzleModule implements TreeSelectionListener, BoardDataChangeListener
 {
 	public static int CELL_UNKNOWN = 0;
 	public int numAcceptableStates() {return 2;} //defined to be consistent with getNextCellValue()
@@ -42,6 +45,12 @@ public abstract class PuzzleModule
 	static final Color clear = new Color(0,0,0,0);
 	public String name;
 	public CaseRule defaultApplication;
+	
+	public PuzzleModule()
+	{
+		Legup.getInstance().getSelections().addTreeSelectionListener(this);
+		BoardState.addCellChangeListener(this); 
+	}
 	/**
 	 * Take an action when the left mouse button is pressed
 	 * @param state the current board state
@@ -194,14 +203,24 @@ public abstract class PuzzleModule
 		else if(state == 1)return "true";
 		else return null;
 	}
-	//inverse function needed to reliably map 0->n to arbitrary state-defined types
+	//inverse function needed to reliably map 0->n to arbitrary puzzle-defined values
 	public /*abstract*/ int getStateNumber(String state)
 	{
 		if(state == "false")return 0;
 		else if(state == "true")return 1;
 		else return CELL_UNKNOWN;
 	}
-
+	
+	public void boardDataChanged(BoardState state)
+	{
+		
+	}
+	
+	public void treeSelectionChanged(ArrayList <Selection> newSelection)
+	{
+		
+	}
+	
 	/**
 	 * Checks if the current board is the goal board
 	 *
