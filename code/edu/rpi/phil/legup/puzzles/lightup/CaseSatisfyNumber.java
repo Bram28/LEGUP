@@ -111,8 +111,8 @@ public class CaseSatisfyNumber extends CaseRule
 					Point tmp_p = null;
 					for(int dir=0;dir<4;dir++)
 					{
-						tmp_x = (dir<2)?((dir%2==0)?(x-1):(x+1)):x; //these two lines enumerate all orthagonal
-						tmp_y = (dir<2)?y:((dir%2==0)?(y-1):(y+1)); //directions 1 unit from (x,y)
+						tmp_x = (dir<2)? ((dir%2==0)?(x-1):(x+1)) :x; //these two lines enumerate all orthagonal
+						tmp_y = (dir<2)?y: ((dir%2==0)?(y-1):(y+1)) ; //directions 1 unit from (x,y)
 						if(tmp_x < 0 || tmp_x >= parent.getWidth())continue;
 						if(tmp_y < 0 || tmp_y >= parent.getHeight())continue;
 						if(parent.getCellContents(tmp_x,tmp_y) != PuzzleModule.CELL_UNKNOWN)continue;

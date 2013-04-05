@@ -146,6 +146,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			}
 			//g2D.drawString("lTC:"+mouseOver.getState().leadsToContradiction(),draw.x,draw.y-20);
 			//g2D.drawString("Depth:"+mouseOver.getState().getDepth(),draw.x,draw.y-30);
+			//g2D.drawString("dnltc:"+(mouseOver.getState().doesNotLeadToContradiction() == null),draw.x,draw.y-30);
 			g.setColor(Color.gray);
 			g2D.drawRect(draw.x+30,draw.y-30,100,100);
 		}
@@ -366,7 +367,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		else
 		{
-			//if(!(state.getJustification() instanceof Contradiction))
+			if(state.getStatus() == BoardState.STATUS_CASE_SETUP)
+			{
+				g.setColor(new Color(128,255,128));
+			}
 			{
 				g2D.fill(triangle);
 				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));

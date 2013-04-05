@@ -44,6 +44,7 @@ public class BoardState implements java.io.Serializable
 	static final public int STATUS_RULE_INCORRECT = 2;
 	static final public int STATUS_CONTRADICTION_CORRECT = 3;
 	static final public int STATUS_CONTRADICTION_INCORRECT = 4;
+	static final public int STATUS_CASE_SETUP = 5;
 	private Color current_color = TreePanel.nodeColor;
 	public Color getColor() { return current_color; }
 	public void setColor(Color c) { current_color = c; }
@@ -313,7 +314,7 @@ public class BoardState implements java.io.Serializable
 
 		if (getCaseRuleJustification() != null)
 		{
-			rv = getCaseRuleJustification().checkCaseRuleRaw(this);
+			rv = getCaseRuleJustification().checkCaseRule(this);
 		}
 
 		return rv;
@@ -734,6 +735,10 @@ public class BoardState implements java.io.Serializable
 		if(delayStatus == STATUS_RULE_CORRECT || delayStatus == STATUS_CONTRADICTION_CORRECT)
 		{
 			if(isModifiable())current_color = Color.green;
+		}
+		else if(delayStatus == STATUS_CASE_SETUP)
+		{
+			if(isModifiable())current_color = new Color(128,255,128);
 		}
 		else if(delayStatus != STATUS_UNJUSTIFIED)
 		{
@@ -1466,6 +1471,7 @@ public class BoardState implements java.io.Serializable
 				{
 					justificationText = isJustifiedCaseSplit(); 
 					if(justificationText == null)status = STATUS_RULE_CORRECT;
+					else if(justificationText == CaseRule.caseSetupMessage())status = STATUS_CASE_SETUP;
 					else status = STATUS_RULE_INCORRECT;
 				}
 			}

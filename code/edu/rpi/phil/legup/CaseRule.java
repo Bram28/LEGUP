@@ -26,12 +26,19 @@ public abstract class CaseRule extends Justification implements java.io.Serializ
 	 */
 	public final String checkCaseRule(BoardState state)
 	{
-		//Perhaps there are other checks needed?
-		if(!allButOneChildLeadToContradiction(state.getSingleParentState()))
+		String rv = checkCaseRuleRaw(state);
+		BoardState parent = state.getSingleParentState(); 
+		if(parent != null)
+		if((rv == null) && (!allButOneChildLeadToContradiction(parent)))
 		{
-			return "This set of cases does not lead to exactly one non-contradictory state.";
+			rv = caseSetupMessage();
 		}
-		return checkCaseRuleRaw(state);
+		return rv;
+	}
+	
+	public static String caseSetupMessage()
+	{
+		return "The cases are set up correctly, but not all\nbut one of them lead to a contradiction.";
 	}
 	
 	public boolean allButOneChildLeadToContradiction(BoardState state)
