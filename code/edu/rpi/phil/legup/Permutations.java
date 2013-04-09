@@ -245,4 +245,47 @@ public class Permutations
 	{
 		return permutation(n,r)/factorial(r);
 	}
+	
+	public static int intPower(int base, int exponent)
+	{
+		return (exponent>0)?(base*intPower(base,exponent-1)):1;
+	}
+	
+	//returns true iff the array 'arr' has exactly x instances of digit y
+	public static boolean has_x_ys(int[] arr, int x, int y)
+	{
+		int num_ys = 0;
+		for(int c1=0;c1<arr.length;c1++)
+		{
+			if(arr[c1] == y)num_ys++;
+		}
+		return (x == num_ys);
+	}
+	
+	//modifies perm to contain the next permutation
+	//returns false iff there is no next permutation constructible from the inputs 
+	public static boolean nextPermutation(int[] perm, int maximumDigit, int numDefaults)
+	{
+		//boolean atMaximum = true;
+		//for(int c1=0;c1<perm.length;c1++)if(perm[c1]!=maxDigit)atMaximum = false;
+		//if(!atMaximum)
+		int default_cell_type = Legup.getInstance().getPuzzleModule().getNonunknownBlank();
+		do
+		{
+			perm[0]++;
+			for(int c1=0;c1+1<perm.length;c1++)
+			{
+				if(perm[c1] >= maximumDigit)
+				{
+					perm[c1]=1;
+					perm[c1+1]++;
+				}
+				
+			}
+			//for(int c1=0;c1<perm.length;c1++)System.out.print(perm[c1]+",");
+			//System.out.println("");
+			if(perm[perm.length-1] >= maximumDigit)return false;
+		}while(!has_x_ys(perm,numDefaults,default_cell_type)); 
+		return true;
+	}
 }

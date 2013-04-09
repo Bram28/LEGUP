@@ -34,6 +34,7 @@ public class LightUp extends PuzzleModule
 	public static int CELL_BLOCK4 = 14;
 	public static int CELL_BLOCK = 15; //the blank black block
 	public int numAcceptableStates(){return 3;}
+	public int getNonunknownBlank() {return 2;} //the index into getStateName of empty
 	
 	public LightUp(){
 	}

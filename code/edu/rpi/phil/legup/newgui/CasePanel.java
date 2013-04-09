@@ -12,6 +12,7 @@ import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
@@ -189,54 +190,31 @@ public class CasePanel extends JustificationPanel
 					int where = (row)? crsh.pointSelected.y : crsh.pointSelected.x;
 					int num_blanks = cur.numEmptySpaces(where,row);
 					int[] whatgoesintheblanks = new int[num_blanks];
-					int num_cases = 1;
-					for(int c1=0;c1<num_blanks;c1++)
+					for(int c1=0;c1<whatgoesintheblanks.length;c1++)
 					{
-						num_cases = num_cases*(Legup.getInstance().getPuzzleModule().numAcceptableStates()-1);
 						whatgoesintheblanks[c1] = 1;
 					}
-					for(int c1=0;c1<num_cases;c1++)
+					int num_defaults = 0;
+					if(pm instanceof TreeTent)
 					{
-						boolean skip = false;
-						if(pm instanceof TreeTent)
+						//start with what the label says
+						int correct_tents = row?(TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_RIGHT,where))):(TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_BOTTOM,where)));
+						//subtract the amount of tents already in the row
+						for(int n=0;n<((row)?(cur.getWidth()):(cur.getHeight()));n++)
 						{
-							int num_tents = 0;
-							for(int n=0;n<num_blanks;n++)
-							{
-								if(whatgoesintheblanks[n] == 1)num_tents++;
-							}
-							int correct_tents = 0;
-							if(row)
-							{
-								correct_tents = TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_RIGHT,where)); 
-							}
-							else
-							{
-								correct_tents = TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_BOTTOM,where)); 
-							}
-							for(int n=0;n<((row)?(cur.getWidth()):(cur.getHeight()));n++)
-							{
-								//subtract the amount of tents already in the row
-								correct_tents -= (TreeTent.CELL_TENT == (cur.getCellContents(row?n:where,row?where:n)))?1:0;
-							}
-							if(num_tents != correct_tents)skip=true;
+							correct_tents -= (TreeTent.CELL_TENT == (cur.getCellContents(row?n:where,row?where:n)))?1:0;
 						}
-						if(!skip)
-						{
-							BoardState tmp = cur.addTransitionFrom();
-							tmp.setCaseSplitJustification(caseRules.get(button));
-							tmp.fillBlanks(where,row,whatgoesintheblanks);
-							tmp.endTransition();
-						}
-						whatgoesintheblanks[0]++;
-						for(int c2=0;c2+1<num_blanks;c2++)
-						{
-							if(whatgoesintheblanks[c2] >= pm.numAcceptableStates())
-							{
-								whatgoesintheblanks[c2]=1;
-								whatgoesintheblanks[c2+1]++;
-							}
-						}
+						//set the amount of defaults (grass) to the number of tiles that need to be filled minus the correct number of tents
+						num_defaults = num_blanks - correct_tents;
+					}
+					System.out.println(num_defaults);
+					if(num_defaults < 0)return null; //state is a contradiction in a way that interferes with the construction of a caserule
+					while(Permutations.nextPermutation(whatgoesintheblanks,pm.numAcceptableStates(),num_defaults))
+					{
+						BoardState tmp = cur.addTransitionFrom();
+						tmp.setCaseSplitJustification(caseRules.get(button));
+						tmp.fillBlanks(where,row,whatgoesintheblanks);
+						tmp.endTransition();
 					}
 				}
 				else if(crsh.mode == CaseRuleSelectionHelper.MODE_TILETYPE)

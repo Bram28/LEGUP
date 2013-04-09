@@ -37,6 +37,7 @@ public class TreeTent extends PuzzleModule
 	public static int CELL_GRASS = 3;
 	public static int CELL_UNKNOWN = 0;
 	public int numAcceptableStates(){return 3;}
+	public int getNonunknownBlank() {return 2;} //the index into getStateName for grass
 	public boolean hasLabels(){return true;}
 	private static Stroke med = new BasicStroke(2);
 
