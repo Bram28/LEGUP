@@ -264,12 +264,11 @@ public class Permutations
 	
 	//modifies perm to contain the next permutation
 	//returns false iff there is no next permutation constructible from the inputs 
-	public static boolean nextPermutation(int[] perm, int maximumDigit, int numDefaults)
+	public static boolean nextPermutation(int[] perm, int numDefaults)
 	{
-		//boolean atMaximum = true;
-		//for(int c1=0;c1<perm.length;c1++)if(perm[c1]!=maxDigit)atMaximum = false;
-		//if(!atMaximum)
-		int default_cell_type = Legup.getInstance().getPuzzleModule().getNonunknownBlank();
+		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+		int maximumDigit = pm.numAcceptableStates();
+		int default_cell_type = pm.getNonunknownBlank();
 		do
 		{
 			perm[0]++;
@@ -282,10 +281,8 @@ public class Permutations
 				}
 				
 			}
-			//for(int c1=0;c1<perm.length;c1++)System.out.print(perm[c1]+",");
-			//System.out.println("");
 			if(perm[perm.length-1] >= maximumDigit)return false;
-		}while(!has_x_ys(perm,numDefaults,default_cell_type)); 
+		}while(!has_x_ys(perm,numDefaults,default_cell_type) || !has_x_ys(perm,0,0)); 
 		return true;
 	}
 }

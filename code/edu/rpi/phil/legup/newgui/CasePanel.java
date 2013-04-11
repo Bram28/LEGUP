@@ -192,7 +192,7 @@ public class CasePanel extends JustificationPanel
 					int[] whatgoesintheblanks = new int[num_blanks];
 					for(int c1=0;c1<whatgoesintheblanks.length;c1++)
 					{
-						whatgoesintheblanks[c1] = 1;
+						whatgoesintheblanks[c1] = 0;
 					}
 					int num_defaults = 0;
 					if(pm instanceof TreeTent)
@@ -207,9 +207,9 @@ public class CasePanel extends JustificationPanel
 						//set the amount of defaults (grass) to the number of tiles that need to be filled minus the correct number of tents
 						num_defaults = num_blanks - correct_tents;
 					}
-					System.out.println(num_defaults);
+					//System.out.println(num_defaults);
 					if(num_defaults < 0)return null; //state is a contradiction in a way that interferes with the construction of a caserule
-					while(Permutations.nextPermutation(whatgoesintheblanks,pm.numAcceptableStates(),num_defaults))
+					while(Permutations.nextPermutation(whatgoesintheblanks,num_defaults))
 					{
 						BoardState tmp = cur.addTransitionFrom();
 						tmp.setCaseSplitJustification(caseRules.get(button));
@@ -223,13 +223,10 @@ public class CasePanel extends JustificationPanel
 					{
 						if(caseRules.get(button) instanceof CaseLinkTree)
 						{
-							//int num_adj_blanks = ((CaseLinkTree)caseRules.get(button)).calcAdjacentTiles(cur,crsh.pointSelected,TreeTent.CELL_UNKNOWN);
 							for(int c1=0;c1<4;c1++) //4: one for each orthagonal direction
 							{
-								int x = crsh.pointSelected.x;
-								int y = crsh.pointSelected.y;
-								if(c1<2)x += ((c1%2 == 0)?-1:1);
-								else y += ((c1%2 == 0)?-1:1);
+								int x = crsh.pointSelected.x + ((c1<2) ? ((c1%2 == 0)?-1:1) : 0);
+								int y = crsh.pointSelected.y + ((c1<2) ? 0 : ((c1%2 == 0)?-1:1));
 								if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
 								BoardState tmp = null;
 								if(cur.getCellContents(x,y) == TreeTent.CELL_UNKNOWN)
@@ -240,10 +237,8 @@ public class CasePanel extends JustificationPanel
 									for(int c2=0;c2<4;c2++)
 									{
 										if(c1 == c2)continue;
-										int x2 = crsh.pointSelected.x;
-										int y2 = crsh.pointSelected.y;
-										if(c2<2)x2 += ((c2%2 == 0)?-1:1);
-										else y2 += ((c2%2 == 0)?-1:1);
+										int x2 = crsh.pointSelected.x + ((c2<2) ? ((c2%2 == 0)?-1:1) : 0);
+										int y2 = crsh.pointSelected.y + ((c2<2) ? 0 : ((c2%2 == 0)?-1:1));
 										if(x2 < 0 || x2 >= cur.getWidth() || y2 < 0 || y2 >= cur.getHeight())continue;
 										if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
 										tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
@@ -256,10 +251,8 @@ public class CasePanel extends JustificationPanel
 									for(int c2=0;c2<4;c2++)
 									{
 										if(c1 == c2)continue;
-										int x2 = crsh.pointSelected.x;
-										int y2 = crsh.pointSelected.y;
-										if(c2<2)x2 += ((c2%2 == 0)?-1:1);
-										else y2 += ((c2%2 == 0)?-1:1);
+										int x2 = crsh.pointSelected.x + ((c2<2) ? ((c2%2 == 0)?-1:1) : 0);
+										int y2 = crsh.pointSelected.y + ((c2<2) ? 0 : ((c2%2 == 0)?-1:1));
 										if(x2 < 0 || x2 >= cur.getWidth() || y2 < 0 || y2 >= cur.getHeight())continue;
 										if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
 										tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
@@ -279,10 +272,8 @@ public class CasePanel extends JustificationPanel
 						{
 							for(int c1=0;c1<4;c1++) //4: one for each orthagonal direction
 							{
-								int x = crsh.pointSelected.x;
-								int y = crsh.pointSelected.y;
-								if(c1<2)x += ((c1%2 == 0)?-1:1);
-								else y += ((c1%2 == 0)?-1:1);
+								int x = crsh.pointSelected.x + ((c1<2) ? ((c1%2 == 0)?-1:1) : 0);
+								int y = crsh.pointSelected.y + ((c1<2) ? 0 : ((c1%2 == 0)?-1:1));
 								if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
 								if(cur.getCellContents(x,y) != TreeTent.CELL_TREE)continue;
 								BoardState tmp = cur.addTransitionFrom();
@@ -302,64 +293,28 @@ public class CasePanel extends JustificationPanel
 						int num_blanks = CaseLinkTree.calcAdjacentTiles(cur,crsh.pointSelected,LightUp.CELL_UNKNOWN);
 						int num_lights = CaseLinkTree.calcAdjacentTiles(cur,crsh.pointSelected,LightUp.CELL_LIGHT);
 						int num_lights_needed = CaseSatisfyNumber.getBlockValue(cur.getCellContents(crsh.pointSelected.x,crsh.pointSelected.y))-num_lights;
-						boolean skip = false;
-						int[] whatgoesintheblanks = new int[4];
-						int num_cases = 1;
-						for(int c1=0;c1<4;c1++)
+						int num_empties = num_blanks - num_lights_needed;
+						int[] whatgoesintheblanks = new int[num_blanks];
+						for(int c1=0;c1<num_blanks;c1++)
 						{
-							num_cases = num_cases*(Legup.getInstance().getPuzzleModule().numAcceptableStates()-1);
-							whatgoesintheblanks[c1] = 1;
+							whatgoesintheblanks[c1] = 0;
 						}
-						for(int c2=0;c2<num_cases;c2++)
+						System.out.println(num_empties);
+						while(Permutations.nextPermutation(whatgoesintheblanks,num_empties))
 						{
-							int lights_in_array = 0;
+							BoardState tmp = cur.addTransitionFrom();
+							tmp.setCaseSplitJustification(caseRules.get(button));
+							int counter = 0;
 							for(int c3=0;c3<4;c3++)
 							{
-								lights_in_array += (pm.getStateNumber(pm.getStateName(whatgoesintheblanks[c3])) == LightUp.CELL_LIGHT)?1:0;
+								int x = crsh.pointSelected.x + ((c3<2) ? ((c3%2 == 0)?-1:1) : 0);
+								int y = crsh.pointSelected.y + ((c3<2) ? 0 : ((c3%2 == 0)?-1:1));
+								if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
+								if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)continue;
+								tmp.setCellContents(x,y,pm.getStateNumber(pm.getStateName(whatgoesintheblanks[counter])));
+								++counter;
 							}
-							//System.out.println("lightsinarray: "+lights_in_array+"\nlights_needed: "+num_lights_needed);
-							//System.out.println(whatgoesintheblanks[0]+","+whatgoesintheblanks[1]+","+whatgoesintheblanks[2]+","+whatgoesintheblanks[3]);
-							if(lights_in_array == num_lights_needed)
-							{
-								skip = false;
-								for(int c3=0;c3<4;c3++)
-								{
-									int x = crsh.pointSelected.x;
-									int y = crsh.pointSelected.y;
-									if(c3<2)x += ((c3%2 == 0)?-1:1);
-									else y += ((c3%2 == 0)?-1:1);
-									if(whatgoesintheblanks[c3] == LightUp.CELL_LIGHT)
-									{
-										if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())skip = true;
-										else if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)skip = true;
-									}
-								}
-								if(!skip)
-								{
-									BoardState tmp = cur.addTransitionFrom();
-									tmp.setCaseSplitJustification(caseRules.get(button));
-									for(int c3=0;c3<4;c3++)
-									{
-										int x = crsh.pointSelected.x;
-										int y = crsh.pointSelected.y;
-										if(c3<2)x += ((c3%2 == 0)?-1:1);
-										else y += ((c3%2 == 0)?-1:1);
-										if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
-										if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)continue;
-										tmp.setCellContents(x,y,pm.getStateNumber(pm.getStateName(whatgoesintheblanks[c3])));
-									}
-									tmp.endTransition();
-								}
-							}
-							whatgoesintheblanks[0]++;
-							for(int c3=0;c3+1<4;c3++)
-							{
-								if(whatgoesintheblanks[c3] >= pm.numAcceptableStates())
-								{
-									whatgoesintheblanks[c3]=1;
-									whatgoesintheblanks[c3+1]++;
-								}
-							}
+							tmp.endTransition();
 						}
 					}
 				}
