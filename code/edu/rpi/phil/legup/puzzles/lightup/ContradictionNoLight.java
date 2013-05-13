@@ -9,12 +9,13 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionNoLight extends Contradiction
-{	 
+{
+	public String getImageName() {return "images/lightup/contradictions/NoLight.png";}
 	 ContradictionNoLight()
 	 {
 		setName("Can't Light A Cell");
 		description = "All cells must be able to be lit.";
-		image = new ImageIcon("images/lightup/contradictions/NoLight.png");
+		//image = new ImageIcon("images/lightup/contradictions/NoLight.png");
 	 }
 	 
 	 /**

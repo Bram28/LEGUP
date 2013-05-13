@@ -6,12 +6,13 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleWhiteCorners extends PuzzleRule
-{	 
+{
+	public String getImageName() {return "images/lightup/rules/WhiteCorners.png";}
 	 RuleWhiteCorners()
 	 {
 		setName("White Corners");
 		description = "Cells on the corners of a number must be white if they would prevent the number from acheiving its lights.";
-		image = new ImageIcon("images/lightup/rules/WhiteCorners.png");
+		//image = new ImageIcon("images/lightup/rules/WhiteCorners.png");
 	 }
 	 
 	 /**

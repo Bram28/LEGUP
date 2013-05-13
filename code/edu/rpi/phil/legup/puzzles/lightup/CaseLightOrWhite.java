@@ -13,11 +13,12 @@ import edu.rpi.phil.legup.Permutations;
 
 public class CaseLightOrWhite extends CaseRule
 {
+	public String getImageName() {return "images/lightup/cases/LightOrWhite.png";}
 	public CaseLightOrWhite()
 	{
 		setName("Light or White");
 		description = "Each blank cell is either a light or white.";
-		image = new ImageIcon("images/lightup/cases/LightOrWhite.png");
+		//image = new ImageIcon("images/lightup/cases/LightOrWhite.png");
 		
 		defaultApplicationText= "Select an unknown square.";
 	}

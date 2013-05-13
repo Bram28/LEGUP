@@ -6,12 +6,13 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionBulbsInPath extends Contradiction
-{	 
+{
+	public String getImageName() {return "images/lightup/contradictions/BulbsInPath.png";}
 	 ContradictionBulbsInPath()
 	 {
 		setName("Bulbs Light Each Other");
 		description = "A bulb cannot be placed in another's light path.";
-		image = new ImageIcon("images/lightup/contradictions/BulbsInPath.png");
+		//image = new ImageIcon("images/lightup/contradictions/BulbsInPath.png");
 	 }
 	 
 	 /**

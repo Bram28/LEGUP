@@ -7,12 +7,12 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionTooFewBulbs extends Contradiction
 {
-
+	public String getImageName() {return "images/lightup/contradictions/TooFewBulbs.png";}
 	 ContradictionTooFewBulbs()
 	 {
 		setName("Too Few Bulbs");
 		description = "There cannot be less bulbs around a block than its number states.";
-		image = new ImageIcon("images/lightup/contradictions/TooFewBulbs.png");
+		//image = new ImageIcon("images/lightup/contradictions/TooFewBulbs.png");
 	 }
 
 	 /**

@@ -11,13 +11,13 @@ import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.RuleApplication;
 
 public class RuleSurroundBulbs extends PuzzleRule
-{	 
+{
+	public String getImageName() {return "images/lightup/rules/SurroundBulbs.png";}
 	 RuleSurroundBulbs()
 	 {
-		 super();
 		 setName("Finish Bulbs");
 		 description = "The remaining unknowns around a block must be bulbs to satisfy the number.";
-		 image = new ImageIcon("images/lightup/rules/SurroundBulbs.png");
+		 //image = new ImageIcon("images/lightup/rules/SurroundBulbs.png");
 	 }
 	 
 	 /**

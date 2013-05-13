@@ -6,12 +6,13 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleSurroundWhite extends PuzzleRule
-{	 
+{
+	public String getImageName() {return "images/lightup/rules/SurroundWhite.png";}
 	 RuleSurroundWhite()
 	 {
 		setName("Finish White");
 		description = "The remaining unknowns around a block must be white if the number is satisfied.";
-		image = new ImageIcon("images/lightup/rules/SurroundWhite.png");
+		//image = new ImageIcon("images/lightup/rules/SurroundWhite.png");
 	 }
 	 
 	 /**

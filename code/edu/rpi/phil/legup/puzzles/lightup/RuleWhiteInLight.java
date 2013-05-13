@@ -9,7 +9,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleWhiteInLight extends PuzzleRule
-{	 
+{
+	public String getImageName() {return "images/lightup/rules/WhiteInLight.png";}
 	 RuleWhiteInLight()
 	 {
 		setName("White In Light");
