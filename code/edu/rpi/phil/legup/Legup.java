@@ -12,6 +12,7 @@ import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.newgui.TreeSelectionListener;
 import edu.rpi.phil.legup.saveable.SaveableProof;
+import java.awt.Image;
 
 //TODO system l&f
 import javax.swing.UnsupportedLookAndFeelException;
@@ -245,7 +246,7 @@ public class Legup
 	{
 		gui.repaintBoard();
 	}
-
+	
 	/**
 	 * Starts up the program and the GUI
 	 */

@@ -3,6 +3,7 @@ package edu.rpi.phil.legup.puzzles.treetent;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.lang.ClassLoader;
 
 import javax.swing.ImageIcon;
 
@@ -25,7 +26,7 @@ public class CaseLinkTree extends CaseRule
 	{
 		setName("Possible links from tree");
 		description = "A tree has one linked tent, other adjacents are grass/tree.";
-		image = new ImageIcon("images/treetent/caseLinkTree.png");
+		image = new ImageIcon(ClassLoader.getSystemResource("images/treetent/caseLinkTree.png"));
 	}
 	
 	public static boolean pointEquals(Point p1, Point p2)

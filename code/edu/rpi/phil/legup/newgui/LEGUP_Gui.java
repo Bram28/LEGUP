@@ -279,7 +279,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 					proofMode.add(proofModeItems[i]);
 				}*/
 
-		bar.add(AI);
+		/*bar.add(AI);
 			AI.add(Step);
 				Step.addActionListener(this);
 				Step.setAccelerator(KeyStroke.getKeyStroke("F9"));
@@ -290,7 +290,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				Test.addActionListener(this);
 			AI.add(hint);
 				hint.addActionListener(this);
-				hint.setAccelerator(KeyStroke.getKeyStroke('H',0));
+				hint.setAccelerator(KeyStroke.getKeyStroke('H',0));*/
 
 		bar.add(help);
 
