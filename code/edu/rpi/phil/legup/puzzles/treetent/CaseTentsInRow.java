@@ -14,16 +14,15 @@ import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 public class CaseTentsInRow extends CaseRule
 {
-	
-	
 	protected final String defaultApplicationText= "Select a row number.";
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_COL_ROW;}
 	
+	public String getImageName() {return "images/treetent/case_rowcount.png";}
 	public CaseTentsInRow()
 	{
 		setName("Fill In row");
 		description = "A row must have the number of tents of its clue.";
-		image = new ImageIcon("images/treetent/case_rowcount.png");
+		//image = new ImageIcon("images/treetent/case_rowcount.png");
 	}
 	
 	private int numTentsNeededInRow(BoardState state, int row){

@@ -18,12 +18,12 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleAllTents extends PuzzleRule{
 
-	
+	public String getImageName() {return "images/treetent/finishTent.png";}
 	public RuleAllTents()
     {
 		setName("Finish Tents");
 		description = "Tents can be added to finish a row or column that has one open spot per required tent.";
-		image = new ImageIcon("images/treetent/finishTent.png");
+		//image = new ImageIcon("images/treetent/finishTent.png");
     }
 
     

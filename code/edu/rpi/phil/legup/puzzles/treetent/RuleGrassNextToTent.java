@@ -17,12 +17,12 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleGrassNextToTent extends PuzzleRule{
 
-	
+	public String getImageName() {return "images/treetent/aroundTent.png";}
     public RuleGrassNextToTent()
     {
     	setName("Surround Tent");
     	description = "Cells next to a tent are grass.";
-    	image = new ImageIcon("images/treetent/aroundTent.png");
+    	//image = new ImageIcon("images/treetent/aroundTent.png");
     }
 
 

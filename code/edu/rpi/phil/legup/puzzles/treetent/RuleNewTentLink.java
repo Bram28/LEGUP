@@ -7,12 +7,12 @@ import edu.rpi.phil.legup.BoardState;
 
 public class RuleNewTentLink extends RuleNewLink{
 
-	
+	public String getImageName() {return "images/treetent/NewTentLink.png";}
     public RuleNewTentLink()
     {
     	setName("New Link Tent");
     	description = "A tent must link to a tree if only one unlinked tree is near the tent.";
-    	image = new ImageIcon("images/treetent/NewTentLink.png");
+    	//image = new ImageIcon("images/treetent/NewTentLink.png");
     }
     
     protected String checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)

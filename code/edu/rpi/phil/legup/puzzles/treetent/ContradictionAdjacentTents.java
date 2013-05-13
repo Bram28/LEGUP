@@ -7,12 +7,12 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionAdjacentTents extends Contradiction
 {	 
-	
+	public String getImageName() {return "images/treetent/contra_adjacentTents.png";}
 	public ContradictionAdjacentTents()
 	 {
 		setName("Adjacent Tents");
 		description = "Tents cannot be adjacent or diagonal.";
-		image = new ImageIcon("images/treetent/contra_adjacentTents.png");
+		//image = new ImageIcon("images/treetent/contra_adjacentTents.png");
 	 }
 	 
 	 /**

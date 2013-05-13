@@ -9,12 +9,12 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionTentNotNearTree extends Contradiction
 {	 
-	
+	public String getImageName() {return "images/treetent/contra_notree.png";}
 	public ContradictionTentNotNearTree()
 	 {
 		setName("No Trees For Tent");
 		description = "Unlinked tent not near an unlinked tree.";
-		image = new ImageIcon("images/treetent/contra_notree.png");
+		//image = new ImageIcon("images/treetent/contra_notree.png");
 	 }
 	 
 	 /**

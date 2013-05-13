@@ -18,12 +18,12 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleAllGrass extends PuzzleRule{
 
-	
+	public String getImageName() {return "images/treetent/finishGrass.png";}
     public RuleAllGrass()
     {
     	setName("Finish Grass");
     	description = "Grass can be added to finish a row or column that has reached its tent limit.";
-    	image = new ImageIcon("images/treetent/finishGrass.png");
+    	//image = new ImageIcon("images/treetent/finishGrass.png");
     }
 
 

@@ -19,12 +19,12 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleNoTreesAround extends PuzzleRule{
 
-	
+	public String getImageName() {return "images/treetent/noTreesAround.png";}
 	public RuleNoTreesAround()
     {
 		setName("Empty Field");
 		description = "Any cell not next to a tree can be marked grass.";
-		image = new ImageIcon("images/treetent/noTreesAround.png");
+		//image = new ImageIcon("images/treetent/noTreesAround.png");
     }
     
     private boolean hasLink(BoardState state, int x, int y)

@@ -10,12 +10,12 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionNoTents extends Contradiction
 {	 
-	
+	public String getImageName() {return "images/treetent/contra_noNeighbors.png";}
 	public ContradictionNoTents()
 	 {
 		setName("No Tents For Tree");
 		description = "Each tree must have a tent.";
-		image = new ImageIcon("images/treetent/contra_noNeighbors.png");
+		//image = new ImageIcon("images/treetent/contra_noNeighbors.png");
 	 }
 	 
 	 /**

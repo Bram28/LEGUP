@@ -17,7 +17,14 @@ public abstract class Justification implements java.io.Serializable
 	protected String description = "A blank justification";
 	protected ImageIcon image = null;
 	
-	public String getImageName() {return "images/unknown.gif";} 
+	public Justification()
+	{
+		name = "Default Justification";
+		description = "A blank justification";
+		loadImage();
+	}
+	
+	public String getImageName() {return "images/unknown.gif";}
 	public void loadImage()
 	{
 		image = (getImageName() != null)?new ImageIcon(ClassLoader.getSystemResource(getImageName())):null;

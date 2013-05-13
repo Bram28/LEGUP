@@ -10,12 +10,12 @@ import edu.rpi.phil.legup.CaseRule;
 
 public class CaseTentOrGrass extends CaseRule
 {
-	
+	public String getImageName() {return "images/treetent/caseTentOrGrass.png";}
 	public CaseTentOrGrass()
 	{
 		setName("Tree or Grass");
 		description = "Each blank cell is either a tent or grass.";
-		image = new ImageIcon("images/treetent/caseTentOrGrass.png");
+		//image = new ImageIcon("images/treetent/caseTentOrGrass.png");
 	}
 	
 	public String checkCaseRuleRaw(BoardState state)

@@ -7,12 +7,12 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionMiscount extends Contradiction
 {	 
-	
+	public String getImageName() {return "images/treetent/contra_miscount.png";}
 	public ContradictionMiscount()
 	 {
 		setName("Clue Miscount");
 		description = "Rows and columns must have exactly their clue in tents.";
-		image = new ImageIcon("images/treetent/contra_miscount.png");
+		//image = new ImageIcon("images/treetent/contra_miscount.png");
 	 }
 	 
 	

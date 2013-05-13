@@ -21,11 +21,11 @@ public class CaseLinkTent extends CaseRule
 		ret.add(TreeTent.CELL_TENT);
 		return ret;
 	}
+	public String getImageName() {return "images/treetent/caseLinkTent.png";}
 	public CaseLinkTent()
 	{
 		setName("Possible links from tent");
 		description = "A tent can link to exactly one adjacent tree.";
-		image = new ImageIcon("images/treetent/caseLinkTent.png");
 	}
 	
 	public boolean pointEquals(Point p1, Point p2)
