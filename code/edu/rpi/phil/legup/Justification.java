@@ -1,6 +1,9 @@
 package edu.rpi.phil.legup;
 
 import javax.swing.ImageIcon;
+import java.io.IOException;
+import java.lang.ClassNotFoundException;
+import java.io.ObjectStreamException;
 
 /**
  * An abstract class representing all types of Justifications
@@ -13,6 +16,12 @@ public abstract class Justification implements java.io.Serializable
 	String name = "Default Justification";
 	protected String description = "A blank justification";
 	protected ImageIcon image = null;
+	
+	public String getImageName() {return "images/unknown.gif";} 
+	public void loadImage()
+	{
+		image = (getImageName() != null)?new ImageIcon(ClassLoader.getSystemResource(getImageName())):null;
+	}
 	
 	public String getName()
 	{
@@ -60,5 +69,25 @@ public abstract class Justification implements java.io.Serializable
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	//methods from Serializable are given custom implementations to work around ImageIcon having different
+	//serial IDs in different versions of java
+	private void writeObject(java.io.ObjectOutputStream stream)throws IOException
+	{
+		stream.writeObject(name);
+		stream.writeObject(description);
+	}
+	private void readObject(java.io.ObjectInputStream stream)throws IOException, ClassNotFoundException
+	{
+		name = (String)stream.readObject();
+		description = (String)stream.readObject();
+		loadImage();
+	}
+	private void readObjectNoData()throws ObjectStreamException
+	{
+		name = "Default Justification";
+		description = "A blank justification";
+		loadImage();
 	}
 }

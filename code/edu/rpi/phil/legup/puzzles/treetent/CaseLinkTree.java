@@ -22,11 +22,13 @@ public class CaseLinkTree extends CaseRule
 		ret.add(TreeTent.CELL_TREE);
 		return ret;
 	}
+	public String getImageName() {return "images/treetent/caseLinkTree.png";} 
 	public CaseLinkTree()
 	{
 		setName("Possible links from tree");
 		description = "A tree has one linked tent, other adjacents are grass/tree.";
-		image = new ImageIcon(ClassLoader.getSystemResource("images/treetent/caseLinkTree.png"));
+		loadImage();
+		//image = new ImageIcon(ClassLoader.getSystemResource("images/treetent/caseLinkTree.png"));
 	}
 	
 	public static boolean pointEquals(Point p1, Point p2)

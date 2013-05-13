@@ -9,7 +9,7 @@ import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
  * @author Stan
  *
  */
-public abstract class CaseRule extends Justification implements java.io.Serializable
+public abstract class CaseRule extends Justification
 {	
 	static final long serialVersionUID = 9003L;
 	protected String defaultApplicationText;
