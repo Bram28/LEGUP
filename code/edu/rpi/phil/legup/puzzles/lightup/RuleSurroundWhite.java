@@ -173,7 +173,7 @@ public class RuleSurroundWhite extends PuzzleRule
 				++blanks;
 		 
 		 
-		 return ((bulbs + blanks == 4) && (bulbs == destBoardState.getCellContents(x, y)-10));
+		 return ((bulbs + blanks <= 4) && (bulbs == destBoardState.getCellContents(x, y)-10));
 	 }
 	 
 	 private boolean checkBlockCompletable(BoardState destBoardState, int x, int y, int width, int height)
