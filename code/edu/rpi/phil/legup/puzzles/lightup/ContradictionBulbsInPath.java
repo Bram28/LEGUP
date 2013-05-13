@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionBulbsInPath extends Contradiction
 {
+	static final long serialVersionUID = 4189821508780095618L;
 	public String getImageName() {return "images/lightup/contradictions/BulbsInPath.png";}
 	 ContradictionBulbsInPath()
 	 {

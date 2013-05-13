@@ -10,6 +10,7 @@ import edu.rpi.phil.legup.CaseRule;
 
 public class CaseTentOrGrass extends CaseRule
 {
+	static final long serialVersionUID = 9505L;
 	public String getImageName() {return "images/treetent/caseTentOrGrass.png";}
 	public CaseTentOrGrass()
 	{

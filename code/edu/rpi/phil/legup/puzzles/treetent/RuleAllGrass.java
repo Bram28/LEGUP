@@ -16,8 +16,9 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleAllGrass extends PuzzleRule{
-
+public class RuleAllGrass extends PuzzleRule
+{
+	static final long serialVersionUID = 9511L;
 	public String getImageName() {return "images/treetent/finishGrass.png";}
     public RuleAllGrass()
     {

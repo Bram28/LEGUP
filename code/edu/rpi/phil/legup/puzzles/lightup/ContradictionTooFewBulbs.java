@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionTooFewBulbs extends Contradiction
 {
+	static final long serialVersionUID = 9500L;
 	public String getImageName() {return "images/lightup/contradictions/TooFewBulbs.png";}
 	 ContradictionTooFewBulbs()
 	 {

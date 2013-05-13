@@ -18,8 +18,9 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleOneUnknownNearTree extends PuzzleRule{
-
+public class RuleOneUnknownNearTree extends PuzzleRule
+{
+	static final long serialVersionUID = 9518L;
 	public String getImageName() {return "images/treetent/oneTentPosition.png";}
 	public RuleOneUnknownNearTree()
     {

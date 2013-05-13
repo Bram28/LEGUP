@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleSurroundWhite extends PuzzleRule
 {
+	static final long serialVersionUID = 2828176895339413023L;
 	public String getImageName() {return "images/lightup/rules/SurroundWhite.png";}
 	 RuleSurroundWhite()
 	 {

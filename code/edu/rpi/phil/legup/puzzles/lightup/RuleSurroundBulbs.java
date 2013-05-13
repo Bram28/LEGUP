@@ -12,6 +12,7 @@ import edu.rpi.phil.legup.RuleApplication;
 
 public class RuleSurroundBulbs extends PuzzleRule
 {
+	static final long serialVersionUID = 5613497586353427743L;
 	public String getImageName() {return "images/lightup/rules/SurroundBulbs.png";}
 	 RuleSurroundBulbs()
 	 {

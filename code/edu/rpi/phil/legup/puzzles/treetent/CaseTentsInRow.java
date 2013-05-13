@@ -14,6 +14,7 @@ import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 public class CaseTentsInRow extends CaseRule
 {
+	static final long serialVersionUID = 9506L;
 	protected final String defaultApplicationText= "Select a row number.";
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_COL_ROW;}
 	

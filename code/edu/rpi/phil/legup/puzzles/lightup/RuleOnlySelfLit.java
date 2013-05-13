@@ -10,6 +10,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleOnlySelfLit extends PuzzleRule
 {
+	static final long serialVersionUID = 3220052913694553750L;
 	public String getImageName() {return "images/lightup/rules/NoLight.png";}//needs own image
 	RuleOnlySelfLit()
 	{

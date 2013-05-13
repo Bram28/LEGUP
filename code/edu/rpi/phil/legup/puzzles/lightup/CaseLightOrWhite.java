@@ -13,6 +13,7 @@ import edu.rpi.phil.legup.Permutations;
 
 public class CaseLightOrWhite extends CaseRule
 {
+	static final long serialVersionUID = -1977535413148184084L;
 	public String getImageName() {return "images/lightup/cases/LightOrWhite.png";}
 	public CaseLightOrWhite()
 	{

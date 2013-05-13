@@ -10,6 +10,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleWhiteInLight extends PuzzleRule
 {
+	static final long serialVersionUID = 9502L;
 	public String getImageName() {return "images/lightup/rules/WhiteInLight.png";}
 	 RuleWhiteInLight()
 	 {

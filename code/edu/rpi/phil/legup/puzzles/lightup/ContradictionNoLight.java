@@ -10,6 +10,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionNoLight extends Contradiction
 {
+	static final long serialVersionUID = -7418828924174890795L;
 	public String getImageName() {return "images/lightup/contradictions/NoLight.png";}
 	 ContradictionNoLight()
 	 {

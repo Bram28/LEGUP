@@ -14,6 +14,7 @@ import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
 
 public class CaseLinkTent extends CaseRule
 {
+	static final long serialVersionUID = 9504L;
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
 	public Vector<Integer> crshTileType()
 	{

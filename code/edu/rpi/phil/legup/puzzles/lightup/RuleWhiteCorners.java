@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleWhiteCorners extends PuzzleRule
 {
+	static final long serialVersionUID = 9501L;
 	public String getImageName() {return "images/lightup/rules/WhiteCorners.png";}
 	 RuleWhiteCorners()
 	 {

@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 
-public class RuleNewTreeLink extends RuleNewLink{
-
+public class RuleNewTreeLink extends RuleNewLink
+{
+	static final long serialVersionUID = 9516L;
 	public String getImageName() {return "images/treetent/NewTreeLink.png";}
     public RuleNewTreeLink()
     {

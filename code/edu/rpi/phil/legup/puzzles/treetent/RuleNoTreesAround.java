@@ -17,8 +17,9 @@ import java.awt.Point;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleNoTreesAround extends PuzzleRule{
-
+public class RuleNoTreesAround extends PuzzleRule
+{
+	static final long serialVersionUID = 9517L;
 	public String getImageName() {return "images/treetent/noTreesAround.png";}
 	public RuleNoTreesAround()
     {

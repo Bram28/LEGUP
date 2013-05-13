@@ -11,7 +11,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public abstract class RuleNewLink extends PuzzleRule
 {
-
+	static final long serialVersionUID = 9514L;
 	public RuleNewLink()
     {
     	super();

@@ -8,7 +8,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionTentNotNearTree extends Contradiction
-{	 
+{
+	static final long serialVersionUID = 9510L;
 	public String getImageName() {return "images/treetent/contra_notree.png";}
 	public ContradictionTentNotNearTree()
 	 {

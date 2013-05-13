@@ -15,6 +15,7 @@ import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 public class CaseSatisfyNumber extends CaseRule
 {
+	static final long serialVersionUID = 5238481899970588295L;
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
 	public Vector<Integer> crshTileType()
 	{

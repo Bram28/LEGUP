@@ -16,8 +16,9 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleAllTents extends PuzzleRule{
-
+public class RuleAllTents extends PuzzleRule
+{
+	static final long serialVersionUID = 9512L;
 	public String getImageName() {return "images/treetent/finishTent.png";}
 	public RuleAllTents()
     {

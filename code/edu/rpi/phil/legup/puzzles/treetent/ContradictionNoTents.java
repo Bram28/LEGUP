@@ -9,7 +9,8 @@ import edu.rpi.phil.legup.Contradiction;
 
 
 public class ContradictionNoTents extends Contradiction
-{	 
+{
+	static final long serialVersionUID = 9509L;
 	public String getImageName() {return "images/treetent/contra_noNeighbors.png";}
 	public ContradictionNoTents()
 	 {

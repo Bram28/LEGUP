@@ -6,7 +6,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionMiscount extends Contradiction
-{	 
+{
+	static final long serialVersionUID = 9508L;
 	public String getImageName() {return "images/treetent/contra_miscount.png";}
 	public ContradictionMiscount()
 	 {

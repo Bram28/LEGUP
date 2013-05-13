@@ -6,7 +6,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionAdjacentTents extends Contradiction
-{	 
+{
+	static final long serialVersionUID = 9507L;
 	public String getImageName() {return "images/treetent/contra_adjacentTents.png";}
 	public ContradictionAdjacentTents()
 	 {
