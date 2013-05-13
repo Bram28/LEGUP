@@ -1661,7 +1661,7 @@ public class BoardState implements java.io.Serializable
 		return (leadContradiction = rv);*/
 	}
 	//checks all children, returns the BoardState that does not lead to a contradiction
-	//returns null if the number of children that lead to contradictions is not exactly 1
+	//returns null if the number of children that do not lead to a contradiction is not exactly 1
 	public BoardState doesNotLeadToContradiction()
 	{
 		BoardState rv = null;
@@ -1929,33 +1929,14 @@ public class BoardState implements java.io.Serializable
 		}
 		return count + 1;
 	}
-
+	
+	//return the unique leaf node that is not a contradiction, or null if none exists
 	public BoardState getFinalState()
 	{
-		BoardState ret = null;
-		BoardState test;
-		if(this.leadsToContradiction())
-			return null;
-		if(this.transitionsFrom.size() == 0)
-			return this;
-		else
-		{
-			for(BoardState s : this.transitionsFrom)
-			{
-				test = s.getFinalState();
-				if(test != null && ret != null)
-				{
-					//Multiple not closed
-					ret = null;
-					break;
-				}
-				else
-				{
-					ret = test;
-				}
-			}
-		}
-		return ret;
+		if(this.leadsToContradiction())return null;
+		else if(this.transitionsFrom.size() == 0)return this; //leaf node
+		else if(this.transitionsFrom.size() == 1)return this.transitionsFrom.lastElement().getFinalState();
+		else return (doesNotLeadToContradiction() != null)?doesNotLeadToContradiction().getFinalState():null;
 	}
 
 	public void setAsSolution()

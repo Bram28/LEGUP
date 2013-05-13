@@ -363,6 +363,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
 			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
 			g2D.setStroke((sel.contains(theSelection)? medium : thin));
+			//if(state == Legup.getInstance().getInitialBoardState().getFinalState())g.setColor(Color.red);
 			g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
 		}
 		else
@@ -375,6 +376,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				g2D.fill(triangle);
 				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
 				g2D.setStroke((sel.contains(theSelection)? medium : thin));
+				//if(state == Legup.getInstance().getInitialBoardState().getFinalState())g.setColor(Color.red);
 				g.drawPolygon(triangle);
 			}
 			if(state.getJustification() instanceof Contradiction)
