@@ -26,7 +26,7 @@ public class CaseLinkTree extends CaseRule
 	public CaseLinkTree()
 	{
 		setName("Possible links from tree");
-		description = "A tree has one linked tent, other adjacents are grass/tree.";
+		description = "A tree has one linked tent.";//, other adjacents are grass/tree.";
 	}
 	
 	public static boolean pointEquals(Point p1, Point p2)
@@ -110,9 +110,9 @@ public class CaseLinkTree extends CaseRule
 			Vector<Point> tents = new Vector<Point>(); //location of tent in each branch
 			for(BoardState b : parent.getTransitionsFrom())
 			{
-				if(calcAdjacentTiles(b,p,TreeTent.CELL_UNKNOWN) != 0)
+				if(calcAdjacentTiles(b,p,TreeTent.CELL_UNKNOWN) != num_adj_blanks-1)
 				{
-					rv = "All tiles adjacent to the tree linked must be filled,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					rv = "Only one tile should be modified per branch,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;
 				}
 				/*else if(calcAdjacentTiles(b,p,TreeTent.CELL_TENT) != 1)
@@ -142,7 +142,7 @@ public class CaseLinkTree extends CaseRule
 					tents.add(p1);
 				}
 				ArrayList<Point> dif = BoardState.getDifferenceLocations(b,parent);
-				if(dif.size() != num_adj_blanks)
+				if(dif.size() != 1)//num_adj_blanks)
 				{
 					rv = "Only cells adjacent to the tree being linked should be modified,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
 					break;

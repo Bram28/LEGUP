@@ -52,6 +52,39 @@ public class TreeTent extends PuzzleModule
 		return link;
 	}
 	
+	public boolean checkBoardComplete(BoardState finalstate)
+	{
+		if(super.checkBoardComplete(finalstate)) //make sure there are no blanks (which is what PuzzleModule.checkBoardComplete() does)
+		{
+			Vector<Point> pointsThatAreLinked = new Vector<Point>();
+			for(Object obj : finalstate.getExtraData())
+			{
+				ExtraTreeTentLink link = (ExtraTreeTentLink)obj;
+				int numTreesInLink = ((finalstate.getCellContents(link.pos1.x,link.pos1.y) == CELL_TREE)?1:0) + ((finalstate.getCellContents(link.pos2.x,link.pos2.y) == CELL_TREE)?1:0);
+				int numTentsInLink = ((finalstate.getCellContents(link.pos1.x,link.pos1.y) == CELL_TENT)?1:0) + ((finalstate.getCellContents(link.pos2.x,link.pos2.y) == CELL_TENT)?1:0);
+				if((numTreesInLink != 1) || (numTentsInLink != 1))return false; //since there is a link that's not between a tree and a tent
+				pointsThatAreLinked.add(link.pos1);
+				pointsThatAreLinked.add(link.pos2);
+			}
+			for(int y=0;y<finalstate.getHeight();y++)
+			{
+				for(int x=0;x<finalstate.getWidth();x++)
+				{
+					//System.out.println("Contents of ("+x+","+y+") is "+finalstate.getCellContents(x,y));
+					if((finalstate.getCellContents(x,y) == CELL_TREE)||(finalstate.getCellContents(x,y) == CELL_TENT))
+					{
+						if(!pointsThatAreLinked.contains(new Point(x,y)))
+						{
+							return false; //since the current cell is a tree or tent, but not linked
+						}
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Take an action when the left mouse button is pressed
 	 * @param state the current board state
