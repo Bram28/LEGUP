@@ -935,7 +935,7 @@ public class BoardState implements java.io.Serializable
 		
 		
 		BoardState child = states.get(0).copy();
-
+		
 		for (int c = 1; c < states.size(); ++c)
 		{
 			BoardState parent = states.get(c);
@@ -960,6 +960,15 @@ public class BoardState implements java.io.Serializable
 							child.setCellContents(x, y, PuzzleModule.CELL_UNKNOWN);
 						}
 					}
+				}
+			}
+			for(int c1=0;c1<child.getExtraData().size();c1++)
+			{
+				Object obj = child.getExtraData().get(c1);
+				if(!parent.getExtraData().contains(obj))
+				{
+					child.getExtraData().remove(c1);
+					c1--;
 				}
 			}
 		}
