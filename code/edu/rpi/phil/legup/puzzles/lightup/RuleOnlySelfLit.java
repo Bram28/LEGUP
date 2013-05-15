@@ -11,12 +11,11 @@ import edu.rpi.phil.legup.PuzzleRule;
 public class RuleOnlySelfLit extends PuzzleRule
 {
 	static final long serialVersionUID = 3220052913694553750L;
-	public String getImageName() {return "images/lightup/rules/NoLight.png";}//needs own image
+	public String getImageName() {return "images/lightup/rules/MustLight.png";}
 	RuleOnlySelfLit()
 	{
 		setName("Must Light");
 		description = "A cell must be a light if it is the only cell to be able to light another.";
-		//image = new ImageIcon("images/lightup/rules/NoLight.png");
 	}
 	
 	//Returns a point which is the only way to light up this cell
