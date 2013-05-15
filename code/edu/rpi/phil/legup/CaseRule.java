@@ -29,7 +29,7 @@ public abstract class CaseRule extends Justification
 		String rv = checkCaseRuleRaw(state);
 		BoardState parent = state.getSingleParentState(); 
 		if(parent != null)
-		if((rv == null) && (!allButOneChildLeadToContradiction(parent)))
+		if((rv == null) && (parent.numNonContradictoryChildren() > 1))
 		{
 			rv = caseSetupMessage();
 		}
@@ -39,11 +39,6 @@ public abstract class CaseRule extends Justification
 	public static String caseSetupMessage()
 	{
 		return "The cases are set up correctly, but not all\nbut one of them lead to a contradiction.";
-	}
-	
-	public boolean allButOneChildLeadToContradiction(BoardState state)
-	{
-		return (state.doesNotLeadToContradiction() != null);
 	}
 	
 	protected abstract String checkCaseRuleRaw(BoardState state);

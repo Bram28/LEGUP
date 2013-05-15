@@ -1620,7 +1620,16 @@ public class BoardState implements java.io.Serializable
 	{
 		if(transitionsFrom.size() > 0)
 		{
-			BoardState next = (transitionsFrom.get(0).getCaseRuleJustification() != null) ? doesNotLeadToContradiction() : transitionsFrom.get(0);
+			BoardState next;
+			if(transitionsFrom.get(0).getCaseRuleJustification() != null)
+			{
+				if(numNonContradictoryChildren() == 0)return true;
+				next = doesNotLeadToContradiction();
+			}
+			else
+			{
+				next = transitionsFrom.get(0);
+			}
 			return (next != null) ? next.leadsToContradiction() : (getJustification() instanceof Contradiction);
 		}
 		else return (getJustification() instanceof Contradiction); //if there are no children
@@ -1685,7 +1694,17 @@ public class BoardState implements java.io.Serializable
 		}
 		return rv;
 	}
-
+	
+	public int numNonContradictoryChildren()
+	{
+		int numNonContradictions = 0;
+		for(BoardState child : transitionsFrom)
+		{
+			if(!child.leadsToContradiction())numNonContradictions++;
+		}
+		return numNonContradictions;
+	}
+	
 	private boolean leadSolution = false;
 	/**
 	 * Does this board state lead to the solution?
