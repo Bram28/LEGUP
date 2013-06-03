@@ -231,6 +231,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public static void colorTransitions()
 	{
+		if(Legup.getInstance().getInitialBoardState() == null)return;
 		if(Legup.getInstance().getGui().imdFeedbackFlag)
 		{
 			Legup.getInstance().getInitialBoardState().evalDelayStatus();

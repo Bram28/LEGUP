@@ -483,11 +483,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		}
 		else
 		{
-			String message = "Your proof is incorrect.";
+			String message = "";
 			if(root.getFinalState() != null)
 			{
-				if(!delayStatus)message += "\nInvalid steps have been colored red.";
-				else if(!pm.checkProof(root))message += "\nThe board is not solved.";
+				if(!delayStatus)message += "\nThere are invalid steps, which have been colored red.";
+				if(!pm.checkProof(root))message += "\nThe board is not solved.";
 			}
 			else message += "There is not a unique non-condradictory leaf state. Incomplete case rules are pale green.";
 			

@@ -131,6 +131,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
+		Tree.colorTransitions();
 		if(mouseOver != null)
 		if((mouseOver.getState().getJustification() != null)||(mouseOver.getState().getCaseRuleJustification() != null))
 		{
@@ -144,6 +145,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 					g2D.drawString(tmp[c1],draw.x,draw.y-10*(3+tmp.length)+10*c1);
 				}
 			}
+			//g2D.drawString("color:"+mouseOver.getState().getColor().toString(),draw.x,draw.y-30);
+			//g2D.drawString("status:"+mouseOver.getState().getStatus(),draw.x-50,draw.y-30);
 			//g2D.drawString("lTC:"+mouseOver.getState().leadsToContradiction(),draw.x,draw.y-20);
 			//g2D.drawString("Depth:"+mouseOver.getState().getDepth(),draw.x,draw.y-30);
 			//g2D.drawString("dnltc:"+(mouseOver.getState().doesNotLeadToContradiction() == null),draw.x,draw.y-30);
@@ -352,14 +355,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		Selection theSelection = new Selection(state,false);
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
-		//g.setColor(((!state.isModifiable()) ? nodeColor : Color.green));
 		g.setColor(state.getColor());
 		if(!state.isModifiable())
 		{
-			if(state.leadsToContradiction())
-			{
-				g.setColor(new Color(255,128,128));
-			}
 			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
 			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
 			g2D.setStroke((sel.contains(theSelection)? medium : thin));
@@ -368,10 +366,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 		else
 		{
-			if(state.getStatus() == BoardState.STATUS_CASE_SETUP)
-			{
-				g.setColor(new Color(128,255,128));
-			}
 			{
 				g2D.fill(triangle);
 				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
@@ -885,6 +879,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 	public void treeSelectionChanged(ArrayList <Selection> newSelection)
 	{
-
+		Legup.getInstance().getGui().repaintBoard();
 	}
 }

@@ -740,13 +740,17 @@ public class BoardState implements java.io.Serializable
 		{
 			if(isModifiable())current_color = new Color(128,255,128);
 		}
-		else if(delayStatus != STATUS_UNJUSTIFIED)
+		else if(delayStatus != STATUS_UNJUSTIFIED || delayStatus == STATUS_RULE_INCORRECT || delayStatus == STATUS_RULE_INCORRECT)
 		{
 			if(isModifiable())current_color = Color.red;
 		}
 		else
 		{
 			current_color = TreePanel.nodeColor;
+		}
+		if(!isModifiable() && leadsToContradiction())
+		{
+			current_color = new Color(255,128,128);
 		}
 		for (BoardState B : transitionsFrom)
 		{
