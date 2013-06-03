@@ -25,7 +25,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 	public RuleOneUnknownNearTree()
     {
 		setName("Last Camping Spot");
-		description = "If there is one unknown cell next to a tentless unlinked tree, it is a tent.";
+		description = "If there is one unknown cell next to a tentless unlinked tree, it is a tent which must be linked to the tree.";
 		//image = new ImageIcon("images/treetent/oneTentPosition.png");
     }
 
@@ -163,7 +163,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
  
     	return rv;
     }
-
+    
     protected String checkRuleRaw(BoardState destBoardState)
     {
     	String error = null;
@@ -175,10 +175,14 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 		{
 			error = "This rule only involves having a single branch!";
 		}
-		/*else if (!destBoardState.getExtraData().equals(origBoardState.getExtraData()))
+		else if (destBoardState.getExtraData().equals(origBoardState.getExtraData()))
 		{
-			error = "This rule does not involve changing tree-tent links.";
-		}*/
+			error = "This rule requires links to be added to the tents added.";
+		}
+		else if(!TreeTent.noInvalidLinks(destBoardState))
+		{
+			error = "There is an invalid link in this state";
+		}
 		else
 		{
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
@@ -194,7 +198,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 						
 						if (newState != TreeTent.CELL_TENT || origState != TreeTent.CELL_UNKNOWN)
 						{
-							error = "This rule only involves adding one or more tents!";
+							error = "This rule only involves adding and linking tents!";
 							break;
 						}
 						

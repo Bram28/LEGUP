@@ -24,7 +24,7 @@ public class RuleNoTreesAround extends PuzzleRule
 	public RuleNoTreesAround()
     {
 		setName("Empty Field");
-		description = "Any cell not next to a tree can be marked grass.";
+		description = "Any cell not next to an unlinked tree can be marked grass.";
 		//image = new ImageIcon("images/treetent/noTreesAround.png");
     }
     

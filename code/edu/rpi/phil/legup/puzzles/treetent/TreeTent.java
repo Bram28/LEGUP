@@ -52,6 +52,19 @@ public class TreeTent extends PuzzleModule
 		return link;
 	}
 	
+	//returns true iff there are no invalid links
+    public static boolean noInvalidLinks(BoardState state)
+    {
+    	for(Object obj : state.getExtraData())
+		{
+			ExtraTreeTentLink link = (ExtraTreeTentLink)obj;
+			int numTreesInLink = ((state.getCellContents(link.pos1.x,link.pos1.y) == CELL_TREE)?1:0) + ((state.getCellContents(link.pos2.x,link.pos2.y) == CELL_TREE)?1:0);
+			int numTentsInLink = ((state.getCellContents(link.pos1.x,link.pos1.y) == CELL_TENT)?1:0) + ((state.getCellContents(link.pos2.x,link.pos2.y) == CELL_TENT)?1:0);
+			if((numTreesInLink != 1) || (numTentsInLink != 1))return false; //since there is a link that's not between a tree and a tent
+		}
+    	return true;
+    }
+	
 	public boolean checkBoardComplete(BoardState finalstate)
 	{
 		if(super.checkBoardComplete(finalstate)) //make sure there are no blanks (which is what PuzzleModule.checkBoardComplete() does)
