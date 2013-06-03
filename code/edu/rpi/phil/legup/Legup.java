@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.newgui.TreeSelectionListener;
+import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
+import edu.rpi.phil.legup.newgui.TransitionChangeListener;
 import edu.rpi.phil.legup.saveable.SaveableProof;
 import java.awt.Image;
 
@@ -28,7 +30,25 @@ import javax.swing.UIManager;
 public class Legup
 {
 	private static Legup instance = null;
-
+	
+	public static ArrayList<BoardDataChangeListener> boardDataChangeListeners = new ArrayList<BoardDataChangeListener>();
+	public static ArrayList<TransitionChangeListener> transitionChangeListeners = new ArrayList<TransitionChangeListener>();
+	
+	public static void renewListeners()
+	{
+		Legup legup = getInstance();
+		boardDataChangeListeners.clear();
+		transitionChangeListeners.clear();
+		legup.getSelections().clearTreeSelectionListeners();
+		BoardState.addCellChangeListener(legup.getGui().getBoard());
+		BoardState.addCellChangeListener(legup.getGui().getJustificationFrame());
+		BoardState.addCellChangeListener(legup.getGui().getTree());
+		BoardState.addTransitionChangeListener(legup.getGui().getTree().treePanel);
+		legup.getSelections().addTreeSelectionListener(legup.getGui().getJustificationFrame());
+		legup.getSelections().addTreeSelectionListener(legup.getGui());
+		legup.getSelections().addTreeSelectionListener(legup.getGui().getTree());
+		legup.getSelections().addTreeSelectionListener(legup.getGui().getTree().treePanel);
+	}
 	/**
 	 * Legup is a singleton. Get the instance of legup
 	 *
@@ -175,6 +195,7 @@ public class Legup
 	 */
 	public boolean loadPuzzleModule(String moduleName)
 	{
+		renewListeners();
 		// Load the puzzle
 		try
 		{

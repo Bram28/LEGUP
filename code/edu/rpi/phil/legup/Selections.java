@@ -89,4 +89,9 @@ public class Selections
     {
     	treeSelectionListeners.add(l);
     }
+    
+    public void clearTreeSelectionListeners()
+    {
+    	treeSelectionListeners.clear();
+    }
 }

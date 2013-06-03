@@ -30,9 +30,6 @@ import edu.rpi.phil.legup.newgui.JustificationFrame;
 public class BoardState implements java.io.Serializable
 {
 	static final long serialVersionUID = 9001L;
-	
-	private static ArrayList<BoardDataChangeListener> boardDataChangeListeners = new ArrayList<BoardDataChangeListener>();
-	private static ArrayList<TransitionChangeListener> transitionChangeListeners = new ArrayList<TransitionChangeListener>();
 
 	static final public int LABEL_TOP = 0;
 	static final public int LABEL_BOTTOM = 1;
@@ -369,9 +366,9 @@ public class BoardState implements java.io.Serializable
 		evalDelayStatus();
 		for (BoardState B : transitionsTo) B.modifyStatus();
 		for (BoardState B : transitionsFrom) B.modifyStatus();
-		for (int a = 0; a < boardDataChangeListeners.size(); ++a)
+		for (int a = 0; a < Legup.boardDataChangeListeners.size(); ++a)
 		{
-			BoardDataChangeListener c = boardDataChangeListeners.get(a);
+			BoardDataChangeListener c = Legup.boardDataChangeListeners.get(a);
 
 			c.boardDataChanged(this);
 		}
@@ -600,7 +597,7 @@ public class BoardState implements java.io.Serializable
 	 */
 	public static void addCellChangeListener(BoardDataChangeListener listener)
 	{
-		boardDataChangeListeners.add(listener);
+		Legup.boardDataChangeListeners.add(listener);
 	}
 
 	/**
@@ -609,7 +606,7 @@ public class BoardState implements java.io.Serializable
 	 */
 	public static void addTransitionChangeListener(TransitionChangeListener l)
 	{
-		transitionChangeListeners.add(l);
+		Legup.transitionChangeListeners.add(l);
 	}
 
 	/**
@@ -789,9 +786,9 @@ public class BoardState implements java.io.Serializable
 
 	private static void _transitionsChanged()
 	{
-		for (int x = 0; x < transitionChangeListeners.size(); ++x) 
+		for (int x = 0; x < Legup.transitionChangeListeners.size(); ++x) 
 		{
-			transitionChangeListeners.get(x).transitionChanged();
+			Legup.transitionChangeListeners.get(x).transitionChanged();
 		}
 	}
 	
@@ -803,7 +800,7 @@ public class BoardState implements java.io.Serializable
 	}
 	private static void removeColorsFromTransitions(BoardState state)
 	{
-		if(state.isModifiable())state.setColor(TreePanel.nodeColor);
+		/*if(state.isModifiable())*/state.setColor(TreePanel.nodeColor);
 		for(BoardState b : state.transitionsFrom)removeColorsFromTransitions(b);
 	}
 	
