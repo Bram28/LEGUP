@@ -131,7 +131,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
-		//Tree.colorTransitions();
 		if(mouseOver != null)
 		if((mouseOver.getState().getJustification() != null)||(mouseOver.getState().getCaseRuleJustification() != null))
 		{
@@ -875,7 +874,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 	public void transitionChanged()
 	{
-		Legup.getInstance().getGui().getTree().treeSelectionChanged(Legup.getInstance().getSelections().getCurrentSelection());
 		repaint();
 	}
 

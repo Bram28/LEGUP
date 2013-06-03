@@ -326,7 +326,18 @@ public class CasePanel extends JustificationPanel
 		}
 		else
 		{
-			cur.setCaseSplitJustification(caseRules.get(button));
+			if(cur.getSingleParentState().getTransitionsFrom().size() <= 1)cur.setCaseSplitJustification(caseRules.get(button));
+			else
+			{
+				cur.setCaseSplitJustification(cur.getSingleParentState().getTransitionsFrom().get(0).getCaseRuleJustification());
+				if(cur.getSingleParentState().getTransitionsFrom().get(0).getCaseRuleJustification() != caseRules.get(button))
+				{
+					String msg = "Different case rules cannot be selected for the same branch set, the rule used for the first branch was used instead of the one selected.";
+					//Legup.getInstance().getGui().showStatus(msg,true);
+					JOptionPane.showMessageDialog(null,msg);
+					System.out.println(msg);
+				}
+			}
 		}
 		//Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0), false));
 		return r;
