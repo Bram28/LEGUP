@@ -115,16 +115,13 @@ public class CaseTentsInRow extends CaseRule
 		int affectedRow = -1; // a value of -1 indicates that a column is being affected, not a row
 		int affectedColumn = -1;
 		int numChildStates = parent.getTransitionsFrom().size();  // how many branches do we have?
-		if (numChildStates < 2)
-		{
-			return "This case rule can only be applied on a two-way or more split.";
-		}
 		// we will first check one state to see which row/column we are working with 
 		// (we still will need to check the rest of the states to make sure they are also changing this row/col)
 		BoardState one = parent.getTransitionsFrom().get(0);					
 		ArrayList<Point> pointsChangedInFirstNewState = BoardState.getDifferenceLocations(parent,one);
-		if(pointsChangedInFirstNewState.size() < 2){
-			return "At least two squares must be affected by this split";
+		if(pointsChangedInFirstNewState.size() < 1)
+		{
+			return "At least one square must be affected by this split";
 		}
 		// we first check two points to see which row/col they share
 		Point firstPointChanged = pointsChangedInFirstNewState.get(0);
@@ -156,12 +153,6 @@ public class CaseTentsInRow extends CaseRule
 			numEmptySpaces = numEmptySpacesInColumn(parent,affectedColumn);
 		}
 		int numTentsNeeded = numTentsTotal - numTentsExisting;
-		if(numTentsNeeded == 0){
-			return "No more tents are needed here";
-		}
-		if(numTentsNeeded == numEmptySpaces){
-			return "There is only one possible way to place these tents.\nUse the 'finish tents' rule.";
-		}
 		if(numTentsNeeded > numEmptySpaces){
 			return "There is no way to place "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces.";
 		}
