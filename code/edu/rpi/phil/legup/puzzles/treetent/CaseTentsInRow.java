@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Permutations;
@@ -17,6 +18,40 @@ public class CaseTentsInRow extends CaseRule
 	static final long serialVersionUID = 9506L;
 	protected final String defaultApplicationText= "Select a row number.";
 	public int crshMode(){return CaseRuleSelectionHelper.MODE_COL_ROW;}
+	
+	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
+	{
+		boolean row = (pointSelected.x == -1)? true : false;
+		int where = (row)? pointSelected.y : pointSelected.x;
+		int num_blanks = cur.numEmptySpaces(where,row);
+		int[] whatgoesintheblanks = new int[num_blanks];
+		for(int c1=0;c1<whatgoesintheblanks.length;c1++)
+		{
+			whatgoesintheblanks[c1] = 0;
+		}
+		int num_defaults = 0;
+		
+		//start with what the label says
+		int correct_tents = row?(TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_RIGHT,where))):(TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_BOTTOM,where)));
+		//subtract the amount of tents already in the row
+		for(int n=0;n<((row)?(cur.getWidth()):(cur.getHeight()));n++)
+		{
+			correct_tents -= (TreeTent.CELL_TENT == (cur.getCellContents(row?n:where,row?where:n)))?1:0;
+		}
+		//set the amount of defaults (grass) to the number of tiles that need to be filled minus the correct number of tents
+		num_defaults = num_blanks - correct_tents;
+		
+		System.out.println(num_defaults);
+		if(num_defaults < 0)return null; //state is a contradiction in a way that interferes with the construction of a caserule
+		while(Permutations.nextPermutation(whatgoesintheblanks,num_defaults))
+		{
+			BoardState tmp = cur.addTransitionFrom();
+			tmp.setCaseSplitJustification(this);
+			tmp.fillBlanks(where,row,whatgoesintheblanks);
+			tmp.endTransition();
+		}
+		return Legup.getCurrentState();
+	}
 	
 	public String getImageName() {return "images/treetent/case_rowcount.png";}
 	public CaseTentsInRow()
@@ -117,11 +152,14 @@ public class CaseTentsInRow extends CaseRule
 		int numChildStates = parent.getTransitionsFrom().size();  // how many branches do we have?
 		// we will first check one state to see which row/column we are working with 
 		// (we still will need to check the rest of the states to make sure they are also changing this row/col)
-		BoardState one = parent.getTransitionsFrom().get(0);					
+		BoardState one = parent.getTransitionsFrom().get(0);
 		ArrayList<Point> pointsChangedInFirstNewState = BoardState.getDifferenceLocations(parent,one);
-		if(pointsChangedInFirstNewState.size() < 1)
+		if(pointsChangedInFirstNewState.size() < 2)
 		{
-			return "At least one square must be affected by this split";
+			//this is an "arbitrary" limitation mandated by the algorithm for determining direction
+			//changing the way this rule is validated is neccessary for it to be a FULL substitute of
+			//RullAllGrass ("finish grass") and RuleAllTents ("finish tents")
+			return "At least two squares must be affected by this split";
 		}
 		// we first check two points to see which row/col they share
 		Point firstPointChanged = pointsChangedInFirstNewState.get(0);

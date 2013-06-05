@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.PuzzleModule;
@@ -27,6 +28,38 @@ public class CaseSatisfyNumber extends CaseRule
 		retval.add(LightUp.CELL_BLOCK4);
 		return retval;
 	}
+	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
+	{
+		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+		int num_blanks = CaseLinkTree.calcAdjacentTiles(cur,pointSelected,LightUp.CELL_UNKNOWN);
+		int num_lights = CaseLinkTree.calcAdjacentTiles(cur,pointSelected,LightUp.CELL_LIGHT);
+		int num_lights_needed = CaseSatisfyNumber.getBlockValue(cur.getCellContents(pointSelected.x,pointSelected.y))-num_lights;
+		int num_empties = num_blanks - num_lights_needed;
+		int[] whatgoesintheblanks = new int[num_blanks];
+		for(int c1=0;c1<num_blanks;c1++)
+		{
+			whatgoesintheblanks[c1] = 0;
+		}
+		//System.out.println(num_empties);
+		while(Permutations.nextPermutation(whatgoesintheblanks,num_empties))
+		{
+			BoardState tmp = cur.addTransitionFrom();
+			tmp.setCaseSplitJustification(this);
+			int counter = 0;
+			for(int c3=0;c3<4;c3++)
+			{
+				int x = pointSelected.x + ((c3<2) ? ((c3%2 == 0)?-1:1) : 0);
+				int y = pointSelected.y + ((c3<2) ? 0 : ((c3%2 == 0)?-1:1));
+				if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
+				if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)continue;
+				tmp.setCellContents(x,y,pm.getStateNumber(pm.getStateName(whatgoesintheblanks[counter])));
+				++counter;
+			}
+			tmp.endTransition();
+		}
+		return Legup.getCurrentState();
+	}
+	
 	public String getImageName() {return "images/lightup/cases/SatisfyNumber.png";}
 	public CaseSatisfyNumber()
 	{

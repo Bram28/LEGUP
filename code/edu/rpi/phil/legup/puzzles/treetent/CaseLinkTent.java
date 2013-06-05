@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
@@ -22,6 +23,25 @@ public class CaseLinkTent extends CaseRule
 		ret.add(TreeTent.CELL_TENT);
 		return ret;
 	}
+	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
+	{
+		for(int c1=0;c1<4;c1++) //4: one for each orthagonal direction
+		{
+			int x = pointSelected.x + ((c1<2) ? ((c1%2 == 0)?-1:1) : 0);
+			int y = pointSelected.y + ((c1<2) ? 0 : ((c1%2 == 0)?-1:1));
+			if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
+			if(cur.getCellContents(x,y) != TreeTent.CELL_TREE)continue;
+			if(TreeTent.isLinked(cur.getExtraData(),new Point(x,y)))continue;
+			BoardState tmp = cur.addTransitionFrom();
+			tmp.setCaseSplitJustification(this);
+			ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(x,y),pointSelected);
+			tmp.addExtraData(link);
+			tmp.extraDataDelta.add(link);
+			tmp.endTransition();
+		}
+		return Legup.getCurrentState();
+	}
+	
 	public String getImageName() {return "images/treetent/caseLinkTent.png";}
 	public CaseLinkTent()
 	{

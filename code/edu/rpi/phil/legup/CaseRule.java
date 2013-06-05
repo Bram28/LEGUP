@@ -18,6 +18,20 @@ public abstract class CaseRule extends Justification
 	{
 		return new Vector<Integer>(0);
 	}
+	//do the case rule autogeneration, return the state to be transitioned to
+	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
+	{
+		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+		int quantityofcases = pm.numAcceptableStates(); 
+		for (int i = 1; i < quantityofcases; i++)
+		{
+			BoardState tmp = cur.addTransitionFrom();
+			tmp.setCaseSplitJustification(this);
+			tmp.setCellContents(pointSelected.x,pointSelected.y,pm.getStateNumber(pm.getStateName(i)));
+			tmp.endTransition();
+		}
+		return Legup.getCurrentState();
+	}
 	
 	/**
 	 * Was this case rule applied correctly to this parent state

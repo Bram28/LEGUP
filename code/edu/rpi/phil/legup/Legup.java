@@ -98,7 +98,17 @@ public class Legup
 	{
 		return this.initialBoardState;
 	}
-
+	
+	public static BoardState getCurrentState()
+	{
+		return Legup.getInstance().getSelections().getFirstSelection().getState();
+	}
+	
+	public static void setCurrentState(BoardState b)
+	{
+		Legup.getInstance().getSelections().setSelection(new Selection(b,false));
+	}
+	
 	public void loadRandomBoard(String puzzle)
 	{
 		Vector<String> allBoards = config.getBoardsForPuzzle(puzzle);

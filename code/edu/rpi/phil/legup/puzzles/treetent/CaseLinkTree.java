@@ -7,6 +7,7 @@ import java.lang.ClassLoader;
 
 import javax.swing.ImageIcon;
 
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
@@ -22,6 +23,56 @@ public class CaseLinkTree extends CaseRule
 		ret.add(TreeTent.CELL_TREE);
 		return ret;
 	}
+	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
+	{
+		for(int c1=0;c1<4;c1++) //4: one for each orthagonal direction
+		{
+			int x = pointSelected.x + ((c1<2) ? ((c1%2 == 0)?-1:1) : 0);
+			int y = pointSelected.y + ((c1<2) ? 0 : ((c1%2 == 0)?-1:1));
+			if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
+			BoardState tmp = null;
+			if(cur.getCellContents(x,y) == TreeTent.CELL_UNKNOWN)
+			{
+				tmp = cur.addTransitionFrom();
+				tmp.setCaseSplitJustification(this);
+				tmp.setCellContents(x,y,TreeTent.CELL_TENT);
+				/*for(int c2=0;c2<4;c2++)
+				{
+					if(c1 == c2)continue;
+					int x2 = crsh.pointSelected.x + ((c2<2) ? ((c2%2 == 0)?-1:1) : 0);
+					int y2 = crsh.pointSelected.y + ((c2<2) ? 0 : ((c2%2 == 0)?-1:1));
+					if(x2 < 0 || x2 >= cur.getWidth() || y2 < 0 || y2 >= cur.getHeight())continue;
+					if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
+					tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
+				}*/
+			}
+			else if(cur.getCellContents(x,y) == TreeTent.CELL_TENT)
+			{
+				tmp = cur.addTransitionFrom();
+				tmp.setCaseSplitJustification(this);
+				/*for(int c2=0;c2<4;c2++)
+				{
+					if(c1 == c2)continue;
+					int x2 = crsh.pointSelected.x + ((c2<2) ? ((c2%2 == 0)?-1:1) : 0);
+					int y2 = crsh.pointSelected.y + ((c2<2) ? 0 : ((c2%2 == 0)?-1:1));
+					if(x2 < 0 || x2 >= cur.getWidth() || y2 < 0 || y2 >= cur.getHeight())continue;
+					if(cur.getCellContents(x2,y2) != TreeTent.CELL_UNKNOWN)continue;
+					tmp.setCellContents(x2,y2,TreeTent.CELL_GRASS);
+				}*/
+			}
+			else if(cur.getCellContents(x,y) != TreeTent.CELL_TENT)continue;
+			if(tmp != null)
+			{
+				ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(x,y),pointSelected);
+				tmp.addExtraData(link);
+				tmp.extraDataDelta.add(link);
+				tmp.endTransition();
+			}
+		}
+		
+		return Legup.getCurrentState();
+	}
+	
 	public String getImageName() {return "images/treetent/caseLinkTree.png";}
 	public CaseLinkTree()
 	{
