@@ -47,11 +47,11 @@ public class CaseSatisfyNumber extends CaseRule
 			int num_adj_blanks = CaseLinkTree.calcAdjacentTiles(parent,p,LightUp.CELL_UNKNOWN);
 			int num_adj_lights = CaseLinkTree.calcAdjacentTiles(parent,p,LightUp.CELL_LIGHT);
 			int num_intended_branches = Permutations.combination(num_adj_blanks,block_value-num_adj_lights);
-			if(num_children == 1)
+			/*if(num_children == 1)
 			{
 				rv = "Use a basic rule instead of a case rule when\nonly one case can be created.";
 			}
-			else if(p == null)
+			else */if(p == null)
 			{
 				rv = "All the cells modified should be adjacent to a single numbered block.";
 			}
@@ -99,7 +99,7 @@ public class CaseSatisfyNumber extends CaseRule
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(parent,state);
 		Vector<Point> ret = new Vector<Point>();
 		Vector<Integer> adjacents = new Vector<Integer>();
-		if(dif.size() >= 2)
+		if(dif.size() >= 1)
 		{
 			for(int x=0;x<parent.getHeight();x++)
 			{
