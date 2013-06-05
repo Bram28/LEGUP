@@ -116,39 +116,16 @@ public class TreeTent extends PuzzleModule
 	{
 		//System.out.println(index);
 		//System.out.println(side);
-		if(side == 0 || side == 1)
+		BoardState next = state.conditionalAddTransition();
+		if(next != null)
 		{
-			for(int i = 0; i < state.getHeight(); i++)
+			boolean horizontal = (side == 2 || side == 3);
+			int max = horizontal ? next.getWidth() : next.getHeight();
+			for(int i = 0; i < max; ++i)
 			{
-				if (state.isModifiableCell(index,i))
-				{
-					if (!state.isModifiable()) {
-						BoardState next = state.addTransitionFrom();
-						state = next;
-						state.setCellContents(index,i,CELL_GRASS);
-						Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
-					} else {
-						state.setCellContents(index,i,CELL_GRASS);
-
-					}
-				}
-			}
-		}
-		if(side == 2 || side == 3)
-		{
-			for(int i = 0; i < state.getWidth(); i++)
-			{
-				if (state.isModifiableCell(i,index))
-				{
-					if (!state.isModifiable()) {
-						BoardState next = state.addTransitionFrom();
-						state = next;
-						state.setCellContents(i,index,CELL_GRASS);
-						Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
-					} else {
-						state.setCellContents(i,index,CELL_GRASS);
-					}
-				}
+				int x = horizontal ? i : index;
+				int y = horizontal ? index : i;
+				if(next.isModifiableCell(x,y))next.setCellContents(x,y,CELL_GRASS);
 			}
 		}
 	}

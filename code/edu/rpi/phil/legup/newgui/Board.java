@@ -43,21 +43,8 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 				optionchosen = a;
 				
-				if (!state.isModifiable())
-				{
-					BoardState next = BoardState.addTransition();
-					if(next != null)
-					{
-						Tree.colorTransitions();
-						Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
-						next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
-					}
-				}
-				else
-				{
-					Tree.colorTransitions();
-					state.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
-				}
+				BoardState next = state.conditionalAddTransition();
+				if(next != null)next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
 			}
 		}
 	}
@@ -260,23 +247,8 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 
 						if (state.isModifiableCell(p.x,p.y))
 						{
-							
-							if (!state.isModifiable())
-							{
-								BoardState next = BoardState.addTransition();
-								if(next != null)
-								{
-									Tree.colorTransitions();
-									Legup.getInstance().getSelections().setSelection(new Selection(next, false));	
-									pm.mousePressedEvent(next, p);
-								}
-							}
-							else
-							{
-								Tree.colorTransitions();
-								pm.mousePressedEvent(state, p);
-							}
-							
+							BoardState next = state.conditionalAddTransition();
+							if(next != null)pm.mousePressedEvent(next,p);
 							// This is unnecessary, board is repainted on
 							// boardstate change anyway
 							//repaint();

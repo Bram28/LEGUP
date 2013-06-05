@@ -827,6 +827,26 @@ public class BoardState implements java.io.Serializable
 		return next;
 	}
 	
+	public BoardState conditionalAddTransition()
+	{
+		BoardState state = Legup.getInstance().getSelections().getFirstSelection().getState();
+		if (!state.isModifiable())
+		{
+			BoardState next = BoardState.addTransition();
+			if(next != null)
+			{
+				Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+				state = next;
+			}
+			else
+			{
+				state = null;
+			}
+		}
+		Legup.getInstance().getGui().getTree().colorTransitions();
+		return state;
+	}
+	
 	/**
 	 * Adds a transition from this board state.
 	 */
