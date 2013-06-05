@@ -1447,8 +1447,8 @@ public class BoardState implements java.io.Serializable
 	{
 		//if (status == -1)
 		{
-			leadsToContradiction();
-			leadsToSolution();
+			//leadsToContradiction();
+			//leadsToSolution();
 
 			status = STATUS_UNJUSTIFIED;
 
@@ -1619,6 +1619,7 @@ public class BoardState implements java.io.Serializable
 	 */
 	public boolean leadsToContradiction()
 	{
+		if(leadsToInvalidInference())return false; //since a contradiction obtained after an invalid inference doesn't reflect poorly on the states before
 		if(transitionsFrom.size() > 0)
 		{
 			BoardState next;
@@ -1704,6 +1705,19 @@ public class BoardState implements java.io.Serializable
 			if(!child.leadsToContradiction())numNonContradictions++;
 		}
 		return numNonContradictions;
+	}
+	
+	public boolean leadsToInvalidInference()
+	{
+		if((status == STATUS_RULE_INCORRECT) || (status == STATUS_CONTRADICTION_INCORRECT))
+		{
+			return true;
+		}
+		for(BoardState b : transitionsFrom)
+		{
+			if(b.leadsToInvalidInference())return true;
+		}
+		return false;
 	}
 	
 	private boolean leadSolution = false;
