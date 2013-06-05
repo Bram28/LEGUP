@@ -27,12 +27,11 @@ public class CaseSatisfyNumber extends CaseRule
 		retval.add(LightUp.CELL_BLOCK4);
 		return retval;
 	}
-	
+	public String getImageName() {return "images/lightup/cases/SatisfyNumber.png";}
 	public CaseSatisfyNumber()
 	{
 		setName("Satisfy Number");
 		description = "The different ways a blocks number can be satisfied.";
-		image = new ImageIcon("images/lightup/cases/SatisfyNumber.png");
 	}
 	
 	public String checkCaseRuleRaw(BoardState state)
