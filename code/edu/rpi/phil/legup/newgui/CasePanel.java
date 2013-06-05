@@ -276,6 +276,7 @@ public class CasePanel extends JustificationPanel
 								int y = crsh.pointSelected.y + ((c1<2) ? 0 : ((c1%2 == 0)?-1:1));
 								if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
 								if(cur.getCellContents(x,y) != TreeTent.CELL_TREE)continue;
+								if(TreeTent.isLinked(cur.getExtraData(),new Point(x,y)))continue;
 								BoardState tmp = cur.addTransitionFrom();
 								tmp.setCaseSplitJustification(caseRules.get(button));
 								ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(x,y),crsh.pointSelected);
@@ -333,7 +334,7 @@ public class CasePanel extends JustificationPanel
 				if(cur.getSingleParentState().getTransitionsFrom().get(0).getCaseRuleJustification() != caseRules.get(button))
 				{
 					String msg = "Different case rules cannot be selected for the same branch set, the rule used for the first branch was used instead of the one selected.";
-					//Legup.getInstance().getGui().showStatus(msg,true);
+					//Legup.getInstance().getGui().showStatus(msg,true); //this won't work due to occuring before a transition change (which clears the status bar), if a clean workaround is thought of, possibly replace the modal box (JOptionPane) with this (same message)
 					JOptionPane.showMessageDialog(null,msg);
 					System.out.println(msg);
 				}
