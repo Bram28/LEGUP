@@ -208,6 +208,15 @@ public abstract class BoardDrawingHelper
 			}
 		}
 		
+		if(newState.getTransitionsFrom().size() > 0)
+		if(newState.getTransitionsFrom().get(0).getCaseRuleJustification() != null) 
+		{
+			for(BoardState b : newState.getTransitionsFrom())
+			{
+				if(b.getCellContents(x,y) != curVal)return caseRuleSiblingColor;
+			}
+		}
+		
 		//Draw green if a cell has been changed from CELL_UNKNOWN to a value
 		//Draw red if a cell has been changed, and not from an unknown
 		//If it is a transition then draw all cells which don't match as orange
