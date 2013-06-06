@@ -130,7 +130,7 @@ public class ContradictionPanel extends JustificationPanel
 			BoardState next = cur.addTransition();
 			if(next == null)return null;
 			next.setJustification(contradictions.get(button));
-			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+			Legup.setCurrentState(next);
 			//cur.setJustification(contradictions.get(button));
 			//cur.propagateContradiction(contradictions.get(button));
 			return contradictions.get(button);

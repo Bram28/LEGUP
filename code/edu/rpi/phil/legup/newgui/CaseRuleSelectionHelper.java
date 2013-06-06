@@ -76,7 +76,7 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 	{
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
-			BoardState state = Legup.getInstance().getSelections().getFirstSelection().getState();
+			BoardState state = Legup.getCurrentState();
 			PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 			Dimension d = pm.getImageSize();
 			

@@ -162,7 +162,7 @@ public class BasicRulePanel extends JustificationPanel
 			}
 			else return null; //don't do anything if there's already a split (since this is a basic rule)
 			next.setJustification(rules.get(button));
-			Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+			Legup.setCurrentState(next);
 			return rules.get(button);
 		}
 		return rules.get(button);

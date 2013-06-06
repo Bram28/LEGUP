@@ -66,7 +66,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		{
 			if( e.getSource() == addChild )
 			{
-				BoardState cur = Legup.getInstance().getSelections().getFirstSelection().getState();
+				BoardState cur = Legup.getCurrentState();
 				//cur.getSingleParentState().getTransitionsFrom().lastElement().getCaseRuleJustification();
 				cur.setCaseRuleJustification(cur.getSingleParentState().getFirstChild().getCaseRuleJustification());
 				addChildAtCurrentState();
@@ -246,7 +246,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	public void treeSelectionChanged(ArrayList <Selection> newSelectionList)
 	{
 		//System.out.println("tree select changed");
-		BoardState cur = Legup.getInstance().getSelections().getFirstSelection().getState();
+		BoardState cur = Legup.getCurrentState();
 		if(cur.getSingleParentState() != null)
 		{
 			if(cur.getSingleParentState().getFirstChild() != null)

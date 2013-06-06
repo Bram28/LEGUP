@@ -162,7 +162,7 @@ public class TreeTent extends PuzzleModule
 				return;
 			BoardState next = ((state.isModifiable())? state : BoardState.addTransition());
 			if(next == null)return;
-			Legup.getInstance().getSelections().setSelection(new Selection(next,false));
+			Legup.setCurrentState(next);
 			ArrayList<Object> extra = next.getExtraData();
 			removed = extra.remove(e);
 			if(!removed)

@@ -533,7 +533,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			{
 				//cur.setModifiableState(false);
 				//cur.finalize_cells();
-				Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
+				Legup.setCurrentState(cur.endTransition());
 			}
 		}
 		return cur;
@@ -628,7 +628,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			BoardState.deleteState(currentState.getSingleParentState());
 		}
 		
-		Legup.getInstance().getSelections().setSelection(new Selection(parentState, false));
+		Legup.setCurrentState(parentState);
 	}
 
 	/**
@@ -654,14 +654,14 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			
 			BoardState.deleteState(state);
 			
-			Legup.getInstance().getSelections().setSelection(new Selection(parent, false));
+			Legup.setCurrentState(parent);
 			
 		}
 		else
 		{ //  transition, delete all the things we're trasitioning from
 			
 			// select current state
-			Legup.getInstance().getSelections().setSelection(new Selection(state, false));
+			Legup.setCurrentState(state);
 
 			// delete children states
 			Vector <BoardState> children = state.getTransitionsFrom();

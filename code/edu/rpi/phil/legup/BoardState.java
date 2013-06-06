@@ -806,7 +806,7 @@ public class BoardState implements java.io.Serializable
 	
 	public static BoardState addTransition()
 	{
-		BoardState s = Legup.getInstance().getSelections().getFirstSelection().getState();
+		BoardState s = Legup.getCurrentState();
 		BoardState next = s;
 		if(s.getTransitionsFrom().size() == 0)
 		{
@@ -829,13 +829,13 @@ public class BoardState implements java.io.Serializable
 	
 	public BoardState conditionalAddTransition()
 	{
-		BoardState state = Legup.getInstance().getSelections().getFirstSelection().getState();
+		BoardState state = Legup.getCurrentState();
 		if (!state.isModifiable())
 		{
 			BoardState next = BoardState.addTransition();
 			if(next != null)
 			{
-				Legup.getInstance().getSelections().setSelection(new Selection(next, false));
+				Legup.setCurrentState(next);
 				state = next;
 			}
 			else
@@ -1012,7 +1012,7 @@ public class BoardState implements java.io.Serializable
 		child.setModifiableState(true);
 		BoardState grandchild = child.addTransitionFrom(null);
 
-		Legup.getInstance().getSelections().setSelection(new Selection(grandchild, false));
+		Legup.setCurrentState(grandchild);
 
 		_transitionsChanged();
 	}

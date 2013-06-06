@@ -196,7 +196,7 @@ public class CasePanel extends JustificationPanel
 				}
 			}
 		}
-		//Legup.getInstance().getSelections().setSelection(new Selection(cur.getTransitionsFrom().get(0), false));
+		//Legup.setCurrentState(cur.getTransitionsFrom().get(0));
 		return r;
 	}
 
