@@ -33,15 +33,19 @@ import javax.swing.border.TitledBorder;
 public class Tree extends JPanel implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
-
-	private class TreeToolbar extends JPanel implements ActionListener {
+	
+	public boolean modifiedSinceSave = false;
+	public boolean modifiedSinceTransitionChange = false;
+	
+	private class TreeToolbar extends JPanel implements ActionListener
+	{
 		private static final long serialVersionUID = 8572197337878587284L;
 
 		JButton addChild = new JButton(new ImageIcon("images/AddChild.png"));
 		JButton delChild = new JButton(new ImageIcon("images/DelChild.png"));
 		JButton merge = new JButton(new ImageIcon("images/Merge.png"));
 		JButton collapse = new JButton(new ImageIcon("images/Collapse.png"));
-
+		
 		TreeToolbar()
 		{
 			this.setLayout(new GridLayout(2,2));
@@ -269,6 +273,8 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		{
 			toolbar.addChild.setEnabled(false);
 		}
+		this.modifiedSinceSave = true;
+		this.modifiedSinceTransitionChange = false;
 		updateStatus();
 		colorTransitions();
 	}
@@ -276,6 +282,8 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	public void boardDataChanged(BoardState state)
 	{
 		//System.out.println("board data changed");
+		this.modifiedSinceSave = true;
+		this.modifiedSinceTransitionChange = true;
 		updateStatus();
 		colorTransitions();
 	}
@@ -295,6 +303,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		{
 			this.status.setText("");
 		}*/
+		//this.status.setText((modifiedSinceTransitionChange?"The board has been modified since the selection was changed. ":"")+(modifiedSinceSave?"The proof has been modified since the last save.":""));
 	}
 	
 	

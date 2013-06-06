@@ -457,6 +457,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 			try {
 				SaveableProof.saveProof(root, filename);
+				getTree().modifiedSinceSave = false;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -597,6 +598,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	//ask to save current proof
 	public boolean noquit(String instr)
 	{
+		if(!getTree().modifiedSinceSave)return true;
 		String quest = "Would you like to save your proof before ";
 		quest += instr;
 		LEGUP_Gui curgui = Legup.getInstance().getGui();

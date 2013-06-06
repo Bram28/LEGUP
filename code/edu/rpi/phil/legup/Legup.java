@@ -219,6 +219,8 @@ public class Legup
 			errorMessage("PuzzleModule load error: " + e.toString());
 			return true;
 		}
+		getGui().getTree().modifiedSinceSave = false;
+		getGui().getTree().modifiedSinceTransitionChange = false;
 		return false;
 	}
 
