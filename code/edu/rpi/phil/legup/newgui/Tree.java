@@ -5,6 +5,7 @@ import edu.rpi.phil.legup.Justification;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.saveable.SaveableProof;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -17,6 +18,7 @@ import java.awt.Point;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Stack;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -36,6 +38,9 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public boolean modifiedSinceSave = false;
 	public boolean modifiedSinceTransitionChange = false;
+	
+	public Stack<byte[]> undoStack = new Stack<byte[]>();
+	public Stack<byte[]> redoStack = new Stack<byte[]>();
 	
 	private class TreeToolbar extends JPanel implements ActionListener
 	{
@@ -126,6 +131,36 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		gui.legupMain.getSelections().addTreeSelectionListener(this);
 		BoardState.addCellChangeListener(this);
 		setupKeyEvents();
+		undoStack = new Stack<byte[]>();
+		redoStack = new Stack<byte[]>();
+	}
+	
+	public void undo()
+	{
+		System.out.println(undoStack.size());
+		if(undoStack.size() > 0)
+		{
+			BoardState state = SaveableProof.bytesToState(undoStack.peek());
+			if(undoStack.size() > 1)
+			{
+				redoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
+				undoStack.pop();
+			}
+			Legup.getInstance().setInitialBoardState(state);
+			Legup.setCurrentState(state);
+		}
+	}
+	public void redo()
+	{
+		System.out.println(redoStack.size());
+		if(redoStack.size() > 0)
+		{
+			BoardState state = SaveableProof.bytesToState(redoStack.peek());
+			undoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
+			redoStack.pop();
+			Legup.getInstance().setInitialBoardState(state);
+			Legup.setCurrentState(state);
+		}
 	}
 	
 	/**
@@ -273,17 +308,27 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		{
 			toolbar.addChild.setEnabled(false);
 		}
-		this.modifiedSinceSave = true;
-		this.modifiedSinceTransitionChange = false;
+		if(modifiedSinceTransitionChange)
+		{
+			pushUndo();
+		}
+		modifiedSinceSave = true;
+		modifiedSinceTransitionChange = false;
 		updateStatus();
 		colorTransitions();
+	}
+	
+	public void pushUndo()
+	{
+		redoStack.clear();
+		undoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
 	}
 	
 	public void boardDataChanged(BoardState state)
 	{
 		//System.out.println("board data changed");
-		this.modifiedSinceSave = true;
-		this.modifiedSinceTransitionChange = true;
+		modifiedSinceSave = true;
+		modifiedSinceTransitionChange = true;
 		updateStatus();
 		colorTransitions();
 	}

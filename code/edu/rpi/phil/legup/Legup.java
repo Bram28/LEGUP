@@ -98,6 +98,10 @@ public class Legup
 	{
 		return this.initialBoardState;
 	}
+	public void setInitialBoardState(BoardState state)
+	{
+		this.initialBoardState = state;
+	}
 	
 	public static BoardState getCurrentState()
 	{
@@ -221,6 +225,7 @@ public class Legup
 		}
 		getGui().getTree().modifiedSinceSave = false;
 		getGui().getTree().modifiedSinceTransitionChange = false;
+		getGui().getTree().pushUndo();
 		return false;
 	}
 

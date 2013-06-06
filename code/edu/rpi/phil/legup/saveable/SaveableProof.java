@@ -2,6 +2,8 @@ package edu.rpi.phil.legup.saveable;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -70,6 +72,46 @@ public class SaveableProof
 		f_out.close();
 		
 		return true;
+	}
+	
+	public static BoardState bytesToState(byte[] bytes)// throws ClassNotFoundException, IOException
+	{
+		try
+		{
+			ByteArrayInputStream b_in = new ByteArrayInputStream(bytes);
+			ObjectInputStream obj_in = new ObjectInputStream(b_in);
+			Object obj = obj_in.readObject();
+			obj_in.close();
+			b_in.close();
+			if(!(obj instanceof BoardState))return null;
+			BoardState state = (BoardState)obj;
+			//validation of user is omitted since this is intended to be used for temporary storage
+			//within one run of the program (undo/redo stacks). use loadProof() and saveProof() for long-term
+			//storage or storage that should require authentication.
+			return state;
+		}
+		catch(Exception ex)
+		{
+		}
+		return null;
+	}
+	
+	public static byte[] stateToBytes(BoardState state)// throws IOException
+	{
+		try
+		{
+			ByteArrayOutputStream b_out = new ByteArrayOutputStream();
+			ObjectOutputStream obj_out = new ObjectOutputStream(b_out);
+			obj_out.writeObject(state);
+			obj_out.close();
+			byte[] bytes = b_out.toByteArray();
+			b_out.close();
+			return bytes;
+		}
+		catch(Exception ex)
+		{
+		}
+		return null;
 	}
 }
 

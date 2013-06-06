@@ -786,6 +786,7 @@ public class BoardState implements java.io.Serializable
 
 	private static void _transitionsChanged()
 	{
+		Legup.setCurrentState(Legup.getCurrentState()); //trigger a TreeSelectChanged also
 		for (int x = 0; x < Legup.transitionChangeListeners.size(); ++x) 
 		{
 			Legup.transitionChangeListeners.get(x).transitionChanged();
@@ -1348,49 +1349,51 @@ public class BoardState implements java.io.Serializable
 	 *
 	 * @return New BoardState that is a copy of this board state
 	 */
-	public BoardState copy(){
-	BoardState newBoardState = null;
-	try{
-		newBoardState = new BoardState(this.getHeight(),this.getWidth());
-		newBoardState.virtualBoard = virtualBoard;
-		newBoardState.modifiableState = modifiableState;
-		if(modifiableState)
-			newBoardState.setOffsetRaw(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
-		else
-			newBoardState.setOffsetRaw(new Point(0, 0));
-	} catch (Exception e){
-		return newBoardState;
-	}
-
-	// Initialize the arrays
-	for (int i=0;i<getHeight();i++)
+	public BoardState copy()
 	{
-		newBoardState.getLeftLabels()[i]=getLeftLabels()[i];
-		newBoardState.getRightLabels()[i]=getRightLabels()[i];
-
-		for (int j=0;j<getWidth();j++)
+		BoardState newBoardState = null;
+		try
 		{
-			newBoardState.getBoardCells()[i][j] = getBoardCells()[i][j];
-			newBoardState.modifiableCells[i][j] = modifiableCells[i][j];
-			newBoardState.editedCells[i][j] = editedCells[i][j];
-
-			if (i==0)
+			newBoardState = new BoardState(this.getHeight(),this.getWidth());
+			newBoardState.virtualBoard = virtualBoard;
+			newBoardState.modifiableState = modifiableState;
+			if(modifiableState)newBoardState.setOffsetRaw(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
+			else newBoardState.setOffsetRaw(new Point(0, 0));
+		}
+		catch(Exception e)
+		{
+			return newBoardState;
+		}
+		
+		// Initialize the arrays
+		for(int i=0;i<getHeight();i++)
+		{
+			newBoardState.getLeftLabels()[i]=getLeftLabels()[i];
+			newBoardState.getRightLabels()[i]=getRightLabels()[i];
+			
+			for (int j=0;j<getWidth();j++)
 			{
-				newBoardState.getTopLabels()[j] = getTopLabels()[j];
-				newBoardState.getBottomLabels()[j] = getBottomLabels()[j];
+				newBoardState.getBoardCells()[i][j] = getBoardCells()[i][j];
+				newBoardState.modifiableCells[i][j] = modifiableCells[i][j];
+				newBoardState.editedCells[i][j] = editedCells[i][j];
+				if (i==0)
+				{
+					newBoardState.getTopLabels()[j] = getTopLabels()[j];
+					newBoardState.getBottomLabels()[j] = getBottomLabels()[j];
+				}
 			}
 		}
+		
+		// copy the extra data
+		newBoardState.setExtraData(copyExtraData());
+		newBoardState.extraDataDelta = new ArrayList<Object>(extraDataDelta);
+		
+		// copy the location
+		newBoardState.location = new Point(location.x, location.y);
+		
+		return newBoardState;
 	}
-
-	// copy the extra data
-	newBoardState.setExtraData(copyExtraData());
-
-	// copy the location
-	newBoardState.location = new Point(location.x, location.y);
-
-	return newBoardState;
-	}
-
+	
 	protected ArrayList<Object> copyExtraData()
 	{
 		return new ArrayList<Object>( extraData );

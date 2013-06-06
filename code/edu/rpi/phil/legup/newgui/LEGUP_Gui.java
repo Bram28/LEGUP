@@ -523,8 +523,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		((Board)test.getRightComponent()).initSize();
 		// TODO disable buttons
 		toolBarButtons[TOOLBAR_SAVE].setEnabled(true);
-		toolBarButtons[TOOLBAR_UNDO].setEnabled(true);
-		toolBarButtons[TOOLBAR_REDO].setEnabled(true);
+		toolBarButtons[TOOLBAR_UNDO].setEnabled(false);
+		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
 		toolBarButtons[TOOLBAR_HINT].setEnabled(true);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(true);
 		toolBarButtons[TOOLBAR_SUBMIT].setEnabled(true);
@@ -664,11 +664,15 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		}
 		else if (e.getSource() == undo || e.getSource() == toolBarButtons[TOOLBAR_UNDO])
 		{
-			System.out.println("Undo!");
+			getTree().undo();
+			resetUndoRedo();
+			//System.out.println("Undo!");
 		}
 		else if (e.getSource() == redo || e.getSource() == toolBarButtons[TOOLBAR_REDO])
 		{
-			System.out.println("Redo!");
+			getTree().redo();
+			resetUndoRedo();
+			//System.out.println("Redo!");
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_CONSOLE])
 		{
@@ -750,9 +754,18 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			}
 		}
 	}
-
+	
+	public void resetUndoRedo()
+	{
+		undo.setEnabled(getTree().undoStack.size() > 0);
+		toolBarButtons[TOOLBAR_UNDO].setEnabled(getTree().undoStack.size() > 0);
+		redo.setEnabled(getTree().redoStack.size() > 0);
+		toolBarButtons[TOOLBAR_REDO].setEnabled(getTree().redoStack.size() > 0);
+	}
+	
 	public void treeSelectionChanged(ArrayList <Selection> s)
 	{
+		resetUndoRedo();
 		repaintAll();
 	}
 
