@@ -183,7 +183,8 @@ public abstract class BoardDrawingHelper
 			System.out.println("Another one bites the dust: " + e);
 		}
 	}
-
+	
+	public static Color caseRuleSiblingColor = new Color(0,0,255); 
 	public static Color greenFilter = new Color(0,255,0);//,128);
 	public static Color redFilter = new Color(255,0,0);//,128);
 	public static Color purpleFilter = new Color(240,0,240);//,128);
@@ -196,7 +197,17 @@ public abstract class BoardDrawingHelper
 	{
 		int curVal = newState.getCellContents(x, y);
 		int prevVal = ((oldState == null) ? curVal : oldState.getCellContents(x, y));
-
+		
+		if(oldState != null)if(oldState.getTransitionsFrom().size() > 0)
+		if(oldState.getTransitionsFrom().get(0).getCaseRuleJustification() != null) 
+		{
+			for(BoardState b : oldState.getTransitionsFrom())
+			{
+				if(b == newState)continue;
+				if((b.getCellContents(x,y) != prevVal) && (curVal == prevVal))return caseRuleSiblingColor;
+			}
+		}
+		
 		//Draw green if a cell has been changed from CELL_UNKNOWN to a value
 		//Draw red if a cell has been changed, and not from an unknown
 		//If it is a transition then draw all cells which don't match as orange
