@@ -1407,7 +1407,6 @@ public class BoardState implements java.io.Serializable
 		
 		// copy the extra data
 		newBoardState.setExtraData(copyExtraData());
-		newBoardState.extraDataDelta = new ArrayList<Object>(extraDataDelta);
 		
 		// copy the location
 		newBoardState.location = new Point(location.x, location.y);
