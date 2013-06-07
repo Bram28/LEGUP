@@ -32,13 +32,14 @@ import javax.swing.BorderFactory;
 //import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class Tree extends JPanel implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener
+public class Tree extends JPanel implements JustificationAppliedListener, TreeSelectionListener, BoardDataChangeListener, TransitionChangeListener
 {
 	private static final long serialVersionUID = -2304281047341398965L;
 	
 	public boolean modifiedSinceSave = false;
-	public boolean modifiedSinceTransitionChange = false;
+	public boolean modifiedSinceUndoPush = false;
 	
+	public byte[] origInitState = null;
 	public Stack<byte[]> undoStack = new Stack<byte[]>();
 	public Stack<ArrayList<Integer>> undoStackState = new Stack<ArrayList<Integer>>();
 	public Stack<byte[]> redoStack = new Stack<byte[]>();
@@ -139,6 +140,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		redoStack = new Stack<byte[]>();
 		redoStackState = new Stack<ArrayList<Integer>>();
 		tempSuppressUndoPushing = false;
+		origInitState = null;
 	}
 	
 	public void undo()
@@ -147,19 +149,23 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		{
 			tempSuppressUndoPushing = true;
 			BoardState state = SaveableProof.bytesToState(undoStack.peek());
-			if(undoStack.size() > 1)
-			{
-				redoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
-				redoStackState.push(Legup.getCurrentState().getPathToNode());
-			}
+			redoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
+			redoStackState.push(Legup.getCurrentState().getPathToNode());
 			Legup.getInstance().setInitialBoardState(state);
 			Legup.setCurrentState(BoardState.evaluatePathToNode(undoStackState.peek()));
-			if(undoStack.size() > 1)
-			{
-				undoStack.pop();
-				undoStackState.pop();
-			}
+			undoStack.pop();
+			undoStackState.pop();
 			tempSuppressUndoPushing = false;
+		}
+		if(undoStack.size() == 0)
+		{
+			if(origInitState != null)
+			{
+				BoardState state = SaveableProof.bytesToState(origInitState);
+				Legup.getInstance().setInitialBoardState(state);
+				while(state.getTransitionsFrom().size()>0)state = state.getTransitionsFrom().lastElement();
+				Legup.setCurrentState(state);
+			}
 		}
 	}
 	public void redo()
@@ -323,23 +329,33 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		{
 			toolbar.addChild.setEnabled(false);
 		}
-		if(modifiedSinceTransitionChange)
+		if(modifiedSinceUndoPush)
 		{
 			pushUndo();
 		}
 		modifiedSinceSave = true;
-		modifiedSinceTransitionChange = false;
 		updateStatus();
 		colorTransitions();
+	}
+	
+	public void transitionChanged()
+	{
+		//pushUndo();
 	}
 	
 	public void pushUndo()
 	{
 		if(!tempSuppressUndoPushing)
 		{
+			boolean pushTwice = (undoStack.size() == 0);
+			byte[] bytesOfState = SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()); 
+			if(undoStack.size() > 0)if(bytesOfState.equals(undoStack.peek()))return;
 			redoStack.clear();
-			undoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
+			redoStackState.clear();
+			undoStack.push(bytesOfState);
 			undoStackState.push(Legup.getCurrentState().getPathToNode());
+			modifiedSinceUndoPush = false;
+			if(pushTwice)pushUndo();
 		}
 	}
 	
@@ -347,7 +363,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	{
 		//System.out.println("board data changed");
 		modifiedSinceSave = true;
-		modifiedSinceTransitionChange = true;
+		modifiedSinceUndoPush = true;
 		updateStatus();
 		colorTransitions();
 	}
@@ -367,7 +383,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		{
 			this.status.setText("");
 		}*/
-		//this.status.setText((modifiedSinceTransitionChange?"The board has been modified since the selection was changed. ":"")+(modifiedSinceSave?"The proof has been modified since the last save.":""));
+		//this.status.setText((modifiedSinceUndoPush?"The board has been modified since the selection was changed. ":"")+(modifiedSinceSave?"The proof has been modified since the last save.":""));
 	}
 	
 	

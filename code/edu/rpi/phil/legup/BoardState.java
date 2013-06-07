@@ -732,7 +732,6 @@ public class BoardState implements java.io.Serializable
 		if(back1 == null)return retval; //if there's no previous node, we're at the root, return an empty list (no steps to take to get to the root from the root)
 		retval.add(back1.getTransitionsFrom().indexOf(this));
 		retval.addAll(0,back1.getPathToNode()); //recursively prepend the rest of the path
-		//for(int c1=0;c1<retval.size();c1++)printf
 		return retval;
 	}
 	
@@ -807,7 +806,7 @@ public class BoardState implements java.io.Serializable
 
 	private static void _transitionsChanged()
 	{
-		Legup.setCurrentState(Legup.getCurrentState()); //trigger a TreeSelectChanged also
+		//Legup.setCurrentState(Legup.getCurrentState()); //trigger a TreeSelectChanged also
 		for (int x = 0; x < Legup.transitionChangeListeners.size(); ++x) 
 		{
 			Legup.transitionChangeListeners.get(x).transitionChanged();
@@ -1228,7 +1227,7 @@ public class BoardState implements java.io.Serializable
 
 		return b;
 	}
-	public BoardState addTransitionFromWithNoMovement()
+	/*public BoardState addTransitionFromWithNoMovement()
 	{
 		BoardState b = copy();
 		b.setModifiableState(!modifiableState);
@@ -1236,7 +1235,7 @@ public class BoardState implements java.io.Serializable
 		b.transitionsTo.add(this);
 		
 		return b;
-	}
+	}*/
 	/**
 	 * Adds a transition from this board state.
 	 * @param b: the new child state
@@ -1244,6 +1243,7 @@ public class BoardState implements java.io.Serializable
 	 */
 	public void addTransitionFrom(BoardState b, PuzzleRule rule)
 	{
+		Legup.getInstance().getGui().getTree().pushUndo();
 		transitionsFrom.add(b);
 		 b.transitionsTo.add(this);
 		 b.justification = rule;
@@ -1278,7 +1278,7 @@ public class BoardState implements java.io.Serializable
 			mergeOverlord.evalMergeY();
 		else
 			transitionsTo.get(0).evalMergeY();
-
+		
 		if (!virtualBoard)
 		{
 			transitionsChanged();
@@ -1836,6 +1836,7 @@ public class BoardState implements java.io.Serializable
 	 */
 	public static void deleteState(BoardState s)
 	{
+		Legup.getInstance().getGui().getTree().pushUndo();
 		s.subDelete();
 
 		if (!s.virtualBoard) _transitionsChanged();

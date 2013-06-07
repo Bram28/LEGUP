@@ -44,6 +44,7 @@ public class Legup
 		BoardState.addCellChangeListener(legup.getGui().getBoard());
 		BoardState.addCellChangeListener(legup.getGui().getJustificationFrame());
 		BoardState.addCellChangeListener(legup.getGui().getTree());
+		BoardState.addTransitionChangeListener(legup.getGui().getTree());
 		BoardState.addTransitionChangeListener(legup.getGui().getTree().treePanel);
 		legup.getSelections().addTreeSelectionListener(legup.getGui().getJustificationFrame());
 		legup.getSelections().addTreeSelectionListener(legup.getGui());
@@ -164,7 +165,7 @@ public class Legup
 			selections = new Selections();
 			BoardState b = initialBoardState;
 			if(b!=null)while(b.getTransitionsFrom().size() > 0)b = b.getTransitionsFrom().lastElement();
-			selections.setSelection(new Selection(b,b.isModifiable()));
+			setCurrentState(b);
 		}
 		//catch (NullPointerException e1) {}
 		catch (Exception e)
@@ -226,11 +227,12 @@ public class Legup
 		}
 		Tree tree = getGui().getTree();
 		tree.modifiedSinceSave = false;
-		tree.modifiedSinceTransitionChange = false;
+		tree.modifiedSinceUndoPush = false;
 		tree.undoStack.clear();
 		tree.redoStack.clear();
 		tree.tempSuppressUndoPushing = false;
-		tree.pushUndo();
+		//tree.pushUndo();
+		tree.origInitState = SaveableProof.stateToBytes(getInitialBoardState());
 		return false;
 	}
 

@@ -757,8 +757,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	
 	public void resetUndoRedo()
 	{
-		undo.setEnabled(getTree().undoStack.size() > 0);
-		toolBarButtons[TOOLBAR_UNDO].setEnabled(getTree().undoStack.size() > 0);
+		undo.setEnabled(getTree().undoStack.size() > 1);
+		toolBarButtons[TOOLBAR_UNDO].setEnabled(getTree().undoStack.size() > 1);
 		redo.setEnabled(getTree().redoStack.size() > 0);
 		toolBarButtons[TOOLBAR_REDO].setEnabled(getTree().redoStack.size() > 0);
 	}
