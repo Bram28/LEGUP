@@ -40,7 +40,10 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	public boolean modifiedSinceTransitionChange = false;
 	
 	public Stack<byte[]> undoStack = new Stack<byte[]>();
+	public Stack<ArrayList<Integer>> undoStackState = new Stack<ArrayList<Integer>>();
 	public Stack<byte[]> redoStack = new Stack<byte[]>();
+	public Stack<ArrayList<Integer>> redoStackState = new Stack<ArrayList<Integer>>();
+	public boolean tempSuppressUndoPushing = false;
 	
 	private class TreeToolbar extends JPanel implements ActionListener
 	{
@@ -132,34 +135,46 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		BoardState.addCellChangeListener(this);
 		setupKeyEvents();
 		undoStack = new Stack<byte[]>();
+		undoStackState = new Stack<ArrayList<Integer>>();
 		redoStack = new Stack<byte[]>();
+		redoStackState = new Stack<ArrayList<Integer>>();
+		tempSuppressUndoPushing = false;
 	}
 	
 	public void undo()
 	{
-		System.out.println(undoStack.size());
 		if(undoStack.size() > 0)
 		{
+			tempSuppressUndoPushing = true;
 			BoardState state = SaveableProof.bytesToState(undoStack.peek());
 			if(undoStack.size() > 1)
 			{
 				redoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
-				undoStack.pop();
+				redoStackState.push(Legup.getCurrentState().getPathToNode());
 			}
 			Legup.getInstance().setInitialBoardState(state);
-			Legup.setCurrentState(state);
+			Legup.setCurrentState(BoardState.evaluatePathToNode(undoStackState.peek()));
+			if(undoStack.size() > 1)
+			{
+				undoStack.pop();
+				undoStackState.pop();
+			}
+			tempSuppressUndoPushing = false;
 		}
 	}
 	public void redo()
 	{
-		System.out.println(redoStack.size());
 		if(redoStack.size() > 0)
 		{
+			tempSuppressUndoPushing = true;
 			BoardState state = SaveableProof.bytesToState(redoStack.peek());
 			undoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
-			redoStack.pop();
+			undoStackState.push(Legup.getCurrentState().getPathToNode());
 			Legup.getInstance().setInitialBoardState(state);
-			Legup.setCurrentState(state);
+			Legup.setCurrentState(BoardState.evaluatePathToNode(redoStackState.peek()));
+			redoStack.pop();
+			redoStackState.pop();
+			tempSuppressUndoPushing = false;
 		}
 	}
 	
@@ -320,8 +335,12 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public void pushUndo()
 	{
-		redoStack.clear();
-		undoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
+		if(!tempSuppressUndoPushing)
+		{
+			redoStack.clear();
+			undoStack.push(SaveableProof.stateToBytes(Legup.getInstance().getInitialBoardState()));
+			undoStackState.push(Legup.getCurrentState().getPathToNode());
+		}
 	}
 	
 	public void boardDataChanged(BoardState state)

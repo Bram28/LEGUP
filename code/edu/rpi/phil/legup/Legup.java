@@ -10,6 +10,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
+import edu.rpi.phil.legup.newgui.Tree;
 import edu.rpi.phil.legup.newgui.TreeSelectionListener;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 import edu.rpi.phil.legup.newgui.TransitionChangeListener;
@@ -223,9 +224,13 @@ public class Legup
 			errorMessage("PuzzleModule load error: " + e.toString());
 			return true;
 		}
-		getGui().getTree().modifiedSinceSave = false;
-		getGui().getTree().modifiedSinceTransitionChange = false;
-		getGui().getTree().pushUndo();
+		Tree tree = getGui().getTree();
+		tree.modifiedSinceSave = false;
+		tree.modifiedSinceTransitionChange = false;
+		tree.undoStack.clear();
+		tree.redoStack.clear();
+		tree.tempSuppressUndoPushing = false;
+		tree.pushUndo();
 		return false;
 	}
 
