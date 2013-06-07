@@ -173,12 +173,15 @@ public class CasePanel extends JustificationPanel
 			{
 				//System.out.println("Point ("+crsh.pointSelected.x+","+crsh.pointSelected.y+") selected.");
 				PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+				//Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
 				BoardState b = caseRules.get(button).autoGenerateCases(cur,crsh.pointSelected);
 				if(b != null)Legup.getInstance().setCurrentState(b);
 				if((cur.getTransitionsFrom().size() > 0) && (cur.getTransitionsFrom().get(0) != null))
 				{
 					Legup.setCurrentState(cur.getTransitionsFrom().get(0));
 				}
+				//Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
+				//Legup.getInstance().getGui().getTree().pushUndo();
 			}
 		}
 		else
@@ -190,9 +193,9 @@ public class CasePanel extends JustificationPanel
 				if(cur.getSingleParentState().getTransitionsFrom().get(0).getCaseRuleJustification() != caseRules.get(button))
 				{
 					String msg = "Different case rules cannot be selected for the same branch set, the rule used for the first branch was used instead of the one selected.";
-					//Legup.getInstance().getGui().showStatus(msg,true); //this won't work due to occuring before a transition change (which clears the status bar), if a clean workaround is thought of, possibly replace the modal box (JOptionPane) with this (same message)
-					JOptionPane.showMessageDialog(null,msg);
-					System.out.println(msg);
+					Legup.getInstance().getGui().showStatus(msg,true,8); //timer constant found via trial & error
+					//JOptionPane.showMessageDialog(null,msg);
+					//System.out.println(msg);
 				}
 			}
 		}

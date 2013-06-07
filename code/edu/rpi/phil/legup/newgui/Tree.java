@@ -46,6 +46,8 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	public Stack<ArrayList<Integer>> redoStackState = new Stack<ArrayList<Integer>>();
 	public boolean tempSuppressUndoPushing = false;
 	
+	public int updateStatusTimer = 0;
+	
 	private class TreeToolbar extends JPanel implements ActionListener
 	{
 		private static final long serialVersionUID = 8572197337878587284L;
@@ -141,6 +143,8 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		redoStackState = new Stack<ArrayList<Integer>>();
 		tempSuppressUndoPushing = false;
 		origInitState = null;
+		
+		updateStatusTimer = 0;
 	}
 	
 	public void undo()
@@ -370,6 +374,8 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public void updateStatus()
 	{
+		updateStatusTimer = ((updateStatusTimer-1) > 0)?(updateStatusTimer-1):0;
+		if(updateStatusTimer > 0)return;
 		/*ArrayList <Selection> newSelectionList = gui.legupMain.getSelections().getCurrentSelection();
 		
 		if (newSelectionList != null && newSelectionList.size() == 1 
@@ -384,6 +390,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			this.status.setText("");
 		}*/
 		//this.status.setText((modifiedSinceUndoPush?"The board has been modified since the selection was changed. ":"")+(modifiedSinceSave?"The proof has been modified since the last save.":""));
+		this.status.setText("");
 	}
 	
 	

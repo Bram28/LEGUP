@@ -544,9 +544,14 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 * ILegupGui interface methods
 	 * @see edu.rpi.phil.legup.ILegupGui
 	 */
-
+	
 	public void showStatus(String status, boolean error)
 	{
+		showStatus(status,error,1);
+	}
+	public void showStatus(String status, boolean error, int timer)
+	{
+		getTree().updateStatusTimer = timer;
 		((JustificationFrame)test.getLeftComponent()).setStatus(!error,status);
 		// TODO console
 		console.println( "Status: " + status );

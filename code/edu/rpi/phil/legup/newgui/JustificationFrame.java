@@ -110,7 +110,7 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 	public void resetStatus()
 	{
 		//status.setText("");
-		Legup.getInstance().getGui().getTree().getStatus().setText("");
+		Legup.getInstance().getGui().getTree().updateStatus();
 	}
 
 	/**
