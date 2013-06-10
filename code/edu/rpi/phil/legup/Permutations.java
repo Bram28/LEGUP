@@ -266,6 +266,7 @@ public class Permutations
 	//returns false iff there is no next permutation constructible from the inputs 
 	public static boolean nextPermutation(int[] perm, int numDefaults)
 	{
+		if(perm.length == 0)return false;
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 		int maximumDigit = pm.numAcceptableStates();
 		int default_cell_type = pm.getNonunknownBlank();

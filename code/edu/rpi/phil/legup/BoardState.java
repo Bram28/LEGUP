@@ -177,7 +177,14 @@ public class BoardState implements java.io.Serializable
 	private void setFromBoardState(BoardState copy, boolean makeOriginalState)
 	{
 		virtualBoard = copy.virtualBoard;
-
+		
+    	/*System.out.println("("+copy.getWidth()+","+copy.getHeight()+")");
+    	System.out.println("("+copy.getBoardCells()[0].length+","+copy.getBoardCells().length+")");
+    	System.out.println("("+copy.modifiableCells[0].length+","+copy.modifiableCells.length+")");
+    	System.out.println("("+copy.editedCells[0].length+","+copy.editedCells.length+")");
+    	System.out.println(getLeftLabels().length);
+    	System.out.flush();*/
+    	
 		// Allocate the arrays
 		for (int x = 0; x < getWidth(); x++) for (int y = 0; y < getHeight(); y++)
 		{

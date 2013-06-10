@@ -65,7 +65,7 @@ public class SaveableBoardState
     	}
     	
     	BoardState state = BoardState.loadFromSaveableBoardState(rv); 
-    	
+
     	if (state == null) {
        		JOptionPane.showMessageDialog(null,"Board Load Failed");
        		return null;

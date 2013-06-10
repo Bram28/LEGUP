@@ -41,7 +41,7 @@ public class CaseTentsInRow extends CaseRule
 		//set the amount of defaults (grass) to the number of tiles that need to be filled minus the correct number of tents
 		num_defaults = num_blanks - correct_tents;
 		
-		System.out.println(num_defaults);
+		//System.out.println(num_defaults);
 		if(num_defaults < 0)return null; //state is a contradiction in a way that interferes with the construction of a caserule
 		while(Permutations.nextPermutation(whatgoesintheblanks,num_defaults))
 		{

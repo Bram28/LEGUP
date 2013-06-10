@@ -132,7 +132,7 @@ public class Legup
 		try
 		{
 			initialBoardState = SaveableBoardState.loadState(filename);
-			selections.setSelection(new Selection(initialBoardState,false));
+			setCurrentState(initialBoardState);
 		}
 		catch (Exception e)
 		{
