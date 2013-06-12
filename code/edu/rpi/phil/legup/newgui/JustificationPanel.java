@@ -46,6 +46,7 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 	private Object lastSource = null;
 	private long lastTime = 0;
 	
+	public JToggleButton[] getButtons(){return buttons;}
 	
 	/**
 	 * a button was pressed

@@ -140,7 +140,7 @@ public class BasicRulePanel extends JustificationPanel
 	{
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
-		if(cur.getSingleParentState().getTransitionsFrom().size() > 1)return null;
+		if(cur.getSingleParentState() != null)if(cur.getSingleParentState().getTransitionsFrom().size() > 1)return null;
 		if (cur.isModifiable()) {
 			if (cur.getSingleParentState().getCaseRuleJustification() != null)
 				return null;

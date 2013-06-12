@@ -180,7 +180,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	public void repaintBoard()
 	{
-		if (((Board)test.getRightComponent()) != null) ((Board)test.getRightComponent()).boardDataChanged(null);
+		if (getBoard() != null) getBoard().boardDataChanged(null);
 	}
 
 	public LEGUP_Gui(Legup legupMain)
@@ -200,7 +200,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		setVisible(true);
 		
 		// Centers the window
-		setLocationRelativeTo( null );		
+		setLocationRelativeTo( null );
 
 		fileChooser = new FileDialog(this);
 	
@@ -520,7 +520,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 	
 	private void showAll() {
-		((Board)test.getRightComponent()).initSize();
+		getBoard().initSize();
 		// TODO disable buttons
 		toolBarButtons[TOOLBAR_SAVE].setEnabled(true);
 		toolBarButtons[TOOLBAR_UNDO].setEnabled(false);
@@ -534,8 +534,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 
 	private void repaintAll(){
-		((Board)test.getRightComponent()).repaint();
-		((JustificationFrame)test.getLeftComponent()).repaint();
+		getBoard().repaint();
+		getJustificationFrame().repaint();
 		tree.repaint();
 	}
 
@@ -552,7 +552,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	public void showStatus(String status, boolean error, int timer)
 	{
 		getTree().updateStatusTimer = timer;
-		((JustificationFrame)test.getLeftComponent()).setStatus(!error,status);
+		getJustificationFrame().setStatus(!error,status);
 		// TODO console
 		console.println( "Status: " + status );
 	}
@@ -573,7 +573,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			legupMain.loadBoardFile( newPuzzle.getSelectedFile().getAbsolutePath() );
 			PuzzleModule pm = legupMain.getPuzzleModule();
 			if( pm != null ){
-				((JustificationFrame)test.getLeftComponent()).setJustifications(pm);
+				getJustificationFrame().setJustifications(pm);
 				// AI setup
 				myAI.setBoard(pm);
 			}
@@ -586,8 +586,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	public void reloadGui()
 	{
-		((JustificationFrame)test.getLeftComponent()).setJustifications(Legup.getInstance().getPuzzleModule());
-
+		getJustificationFrame().setJustifications(Legup.getInstance().getPuzzleModule());
+		getJustificationFrame().resetSize();
+		
 		// AI setup
 		myAI.setBoard(Legup.getInstance().getPuzzleModule());
 
@@ -654,7 +655,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				BoardState puzzle = PuzzleGeneration.makePuzzle(pgd.puzzleChosen(), pgd.difficultyChosen(), this);
 				legupMain.initializeGeneratedPuzzle(module, puzzle);
 
-				((JustificationFrame)test.getLeftComponent()).setJustifications(module);
+				getJustificationFrame().setJustifications(module);
 
 				// AI setup
 				myAI.setBoard(module);
@@ -704,16 +705,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			/*/ DEBUG - Not actual actions!
 			((BasicToolBarUI) justificationFrame.getUI()).setFloatingLocation(500,500);
 			((BasicToolBarUI) justificationFrame.getUI()).setFloating(true, new Point(500,500));*/
-			((Board)test.getRightComponent()).zoomIn();
+			getBoard().zoomIn();
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMOUT]){
-			((Board)test.getRightComponent()).zoomOut();
+			getBoard().zoomOut();
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMRESET]){
-			((Board)test.getRightComponent()).zoomTo(1.0);
+			getBoard().zoomTo(1.0);
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMFIT]){
-			((Board)test.getRightComponent()).zoomFit();
+			getBoard().zoomFit();
 		}
 		else if (e.getSource() == allowDefault)
 		{
@@ -786,7 +787,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 		AI.setEnabled(profFlag(ALLOW_FULLAI));
 
-		((JustificationFrame)test.getLeftComponent()).setStatus(true, "Proof mode "+PROFILES[index]+" has been activated");
+		getJustificationFrame().setStatus(true, "Proof mode "+PROFILES[index]+" has been activated");
 	}
 
 	@Override

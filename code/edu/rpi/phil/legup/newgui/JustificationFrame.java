@@ -77,6 +77,7 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 		//JPanel main = new JPanel();
 		setLayout(new BorderLayout());
 		setMinimumSize(new Dimension(250,256));
+		setPreferredSize(new Dimension(330,256));
 		
 		//status.setPreferredSize(new Dimension(128,20));
 		/*main.*/add(tabs);
@@ -84,7 +85,7 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 		/*main.*/add(status,BorderLayout.SOUTH);
 		
 		//add(main);
-
+		
 		TitledBorder title = BorderFactory.createTitledBorder("Rules");
 		title.setTitleJustification(TitledBorder.CENTER);
 		setBorder(title);
@@ -111,6 +112,27 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 	{
 		//status.setText("");
 		Legup.getInstance().getGui().getTree().updateStatus();
+	}
+	
+	public void resetSize()
+	{
+		int buttonWidth = 0;
+		
+		if(basicRulePanel != null)if(basicRulePanel.getButtons() != null)
+		if(basicRulePanel.getButtons().length > 0)if(basicRulePanel.getButtons()[0].getWidth()>buttonWidth)
+		buttonWidth = basicRulePanel.getButtons()[0].getWidth(); 
+		
+		if(casePanel != null)if(casePanel.getButtons() != null)
+		if(casePanel.getButtons().length > 0)if(casePanel.getButtons()[0].getWidth()>buttonWidth)
+		buttonWidth = basicRulePanel.getButtons()[0].getWidth(); 
+			
+		if(contradictionPanel != null)if(contradictionPanel.getButtons() != null)
+		if(contradictionPanel.getButtons().length > 0)if(contradictionPanel.getButtons()[0].getWidth()>buttonWidth)
+		buttonWidth = contradictionPanel.getButtons()[0].getWidth(); 
+		
+		System.out.println("("+(2*buttonWidth + 64)+","+this.getHeight()+")");
+		
+		this.setMinimumSize(new Dimension(2*buttonWidth + 64,this.getHeight()));
 	}
 
 	/**
