@@ -26,11 +26,13 @@ public class CaseLinkTree extends CaseRule
 	}
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
+		if(TreeTent.isLinked(cur.getExtraData(),pointSelected))return Legup.getCurrentState();
 		for(int c1=0;c1<4;c1++) //4: one for each orthagonal direction
 		{
 			int x = pointSelected.x + ((c1<2) ? ((c1%2 == 0)?-1:1) : 0);
 			int y = pointSelected.y + ((c1<2) ? 0 : ((c1%2 == 0)?-1:1));
 			if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
+			if(TreeTent.isLinked(cur.getExtraData(),new Point(x,y)))continue;
 			BoardState tmp = null;
 			if(cur.getCellContents(x,y) == TreeTent.CELL_UNKNOWN)
 			{
@@ -77,7 +79,7 @@ public class CaseLinkTree extends CaseRule
 	public String getImageName() {return "images/treetent/caseLinkTree.png";}
 	public CaseLinkTree()
 	{
-		setName("Possible links from tree");
+		setName("Links from tree");
 		description = "A tree has one linked tent.";//, other adjacents are grass/tree.";
 	}
 	
@@ -153,6 +155,10 @@ public class CaseLinkTree extends CaseRule
 			if(p == null)
 			{
 				rv = "Exactly one tree should be involved in linking in one\napplication of this rule.";
+			}
+			else if(TreeTent.isLinked(parent.getExtraData(),p))
+			{
+				rv = "The tree is already linked.";
 			}
 			else if(num_intended_branches != num_children)
 			{

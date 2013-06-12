@@ -45,7 +45,7 @@ public class CaseLinkTent extends CaseRule
 	public String getImageName() {return "images/treetent/caseLinkTent.png";}
 	public CaseLinkTent()
 	{
-		setName("Possible links from tent");
+		setName("Links from tent");
 		description = "A tent can link to exactly one adjacent tree.";
 	}
 	
