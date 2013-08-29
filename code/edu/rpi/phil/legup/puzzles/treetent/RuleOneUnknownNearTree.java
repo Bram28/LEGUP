@@ -169,16 +169,17 @@ public class RuleOneUnknownNearTree extends PuzzleRule
     	String error = null;
     	boolean changed = false;
     	BoardState origBoardState = destBoardState.getSingleParentState();
+    	int numTentsAdded = 0;
     	
     	// Check for only one branch
 		if (destBoardState.getTransitionsTo().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
-		else if (destBoardState.getExtraData().equals(origBoardState.getExtraData()))
+		/*else if(destBoardState.getExtraData().equals(origBoardState.getExtraData()))
 		{
-			error = "This rule requires links to be added to the tents added.";
-		}
+			error = "This rule requires links to be added for every tent added.";
+		}*/
 		else if(!TreeTent.noInvalidLinks(destBoardState))
 		{
 			error = "There is an invalid link in this state";
@@ -202,6 +203,8 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 							break;
 						}
 						
+						numTentsAdded++;
+						
 						if (!checkLegal(origBoardState,x,y))
 						{
 							error = "The tent at " + (char)(y + (int)'A') + "" + (x + 1)  
@@ -210,6 +213,10 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 						}
 					}
 				}
+			}
+			if((destBoardState.getExtraData().size() - origBoardState.getExtraData().size()) != numTentsAdded)
+			{
+				error = "This rule requires links to be added for every tent added.";
 			}
 			
 			if (error == null && !changed)

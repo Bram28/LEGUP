@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import javax.swing.GroupLayout;
 import java.awt.Insets;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -346,11 +347,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private JSplitPane test, test2;
 	public JustificationFrame getJustificationFrame()
 	{
-		return ((JustificationFrame)test.getLeftComponent());
+		return justificationFrame;//((JustificationFrame)test.getLeftComponent());
 	}
 	public Board getBoard()
 	{
-		return ((Board)test.getRightComponent());
+		return board;//((Board)test.getRightComponent());
 	}
 	// contains all the code to setup the main content
 	private void setupContent(){
@@ -364,10 +365,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		//consoleBox.add( console, BorderLayout.SOUTH );
 		
 		// TODO experimental floating toolbar
-		/**/
+		
 		//((BasicToolBarUI) console.getUI()).setFloatingLocation(500,500);
 		//((BasicToolBarUI) console.getUI()).setFloating(true, new Point(500,500));
-		/**/
+		
 		
 		// TODO
 		tree = new Tree( this );
@@ -403,6 +404,48 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		//placeholder.setPreferredSize( new Dimension( 600, 400 ) );
 		//add( placeholder );
 		
+		
+		/*JPanel panel = new JPanel();
+		GroupLayout layout = new GroupLayout(panel);
+		panel.setLayout(layout);
+		
+		tree = new Tree( this );
+		panel.add(tree);
+		
+		justificationFrame = new JustificationFrame( this );
+		panel.add(tree);
+		
+		board = new Board( this );
+		board.setPreferredSize( new Dimension( 600, 400 ) );
+		
+		//JPanel boardPanel = new JPanel( new BorderLayout() );
+
+		//test = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, justificationFrame, board);
+		//test2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, test, tree);
+		//test.setPreferredSize(new Dimension(600, 400));
+		//test2.setPreferredSize(new Dimension(600, 600));
+		//boardPanel.add(test2);
+		TitledBorder title = BorderFactory.createTitledBorder("Board");
+		title.setTitleJustification(TitledBorder.CENTER);
+		board.setBorder(title);
+		panel.add(board);
+		
+		layout.setHorizontalGroup(	layout.createParallelGroup()
+										.addGroup(layout.createSequentialGroup()
+											.addComponent(justificationFrame)
+											.addComponent(board)
+										)
+										.addComponent(tree)
+									);
+		layout.setVerticalGroup(	layout.createSequentialGroup()
+										.addGroup(layout.createParallelGroup()
+											.addComponent(justificationFrame)
+											.addComponent(board)
+										)
+										.addComponent(tree)
+									);
+		
+		add(panel);*/
 	}
 	class proofFilter implements FilenameFilter
 	{
