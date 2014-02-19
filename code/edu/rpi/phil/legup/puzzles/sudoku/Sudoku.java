@@ -18,6 +18,7 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import javax.swing.JFrame;
 import javax.swing.JDialog;
@@ -30,6 +31,7 @@ import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.PuzzleGeneration;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 
 public class Sudoku extends PuzzleModule
 {
@@ -42,7 +44,8 @@ public class Sudoku extends PuzzleModule
 
 	private static final int[][] groups = new int[27][9], crossRef = new int[81][3];
 	
-	public static boolean[][][] annotations = new boolean[9][9][9];
+	private static boolean[][][] annotations = new boolean[9][9][9];
+	private static ArrayList<Vector<Integer> > validNums = new ArrayList<Vector<Integer> >();
 	
 	static
 	{	
@@ -98,7 +101,7 @@ public class Sudoku extends PuzzleModule
 	 *	Returns a matrix of the form [x][y][v-1], designating if the value v is valid at cell (x,y)
 	 */
 	static boolean[][][] getPossMatrix(BoardState B)
-	{
+	{	
 		boolean[][][] possMatrix = new boolean[9][9][9];
 		for (int a = 0; a < 9; a++) for (int b = 0; b < 9; b++) for (int c = 0; c < 9; c++)
 			possMatrix[a][b][c] = true;
@@ -112,8 +115,34 @@ public class Sudoku extends PuzzleModule
 					for (int cell : groups[group])
 						possMatrix[cell%9][cell/9][index] = false;
 			}
-
 		return possMatrix;
+	}
+	
+	/**
+	 * Marks possible numbers that could fit in each cell.
+	 * @param B
+	 */
+	static void setAnnotations(BoardState B)
+	{
+		//obtain a large truth table of values that may or may not fit in the cell
+		annotations = getPossMatrix(B);
+		
+		//obtain all the numbers that could potentially fit each cell
+		validNums.clear();
+		for (int y = 0; y < 9; y++)
+		{
+			for (int x = 0; x < 9; x++)
+			{
+				//Determine which numbers will work
+				Vector<Integer> tempNums = new Vector<Integer>();
+				for (int i = 0; i < 9; i++)
+				{
+					if (annotations[x][y][i])
+						tempNums.add(i + 1);
+				}
+				validNums.add(tempNums);
+			}
+		}
 	}
 
 	public Sudoku()
@@ -408,7 +437,7 @@ public class Sudoku extends PuzzleModule
 						return false;
 				}
 			}
-		}
+		} 
 
 		return true;
 	}
@@ -423,6 +452,21 @@ public class Sudoku extends PuzzleModule
 	public void drawCell( Graphics2D g, int x, int y, int state ){
 		if( state > 0 && state < 10 )
 			drawText( g, x, y, String.valueOf(state) );
+		else
+		{
+			//puzzle has just begun
+			if (validNums.size() == 0)
+				return;
+			
+			//draw annotations once a case rule has been pressed
+			int cellIndex = x + y * 9;
+			int totalNumbers = validNums.get(cellIndex).size();
+			for (int i = 0; i < totalNumbers; i++)
+			{
+				int number = validNums.get(cellIndex).get(i);
+				drawSmallText(g, x, y, String.valueOf(number), totalNumbers, i);
+			}
+		}
 	}
 
 	/**
@@ -440,20 +484,20 @@ public class Sudoku extends PuzzleModule
 		double dx = bounds.width / (double)w;
 		double dy = bounds.height / (double)h;
 		Stroke thin = new BasicStroke(1);
-				Stroke thick = new BasicStroke(2);
+		Stroke thick = new BasicStroke(2);
 
 		// draw vertical lines
 		for (int x = 0; x <= w; ++x)
 		{
-						int drawX = bounds.x + (int)(x * dx);
+			int drawX = bounds.x + (int)(x * dx);
 
 			if (x % 3 == 0)
 				g.setStroke(thick);
 			else
-							g.setStroke(thin);
+				g.setStroke(thin);
 
 			g.drawLine(drawX, bounds.y, drawX,bounds.y + bounds.height);
-				}
+		}
 
 		// draw horizontal lines
 		for (int y = 0; y <= h; ++y)
@@ -463,11 +507,11 @@ public class Sudoku extends PuzzleModule
 			if (y % 3 == 0)
 				g.setStroke(thick);
 			else
-							g.setStroke(thin);
+				g.setStroke(thin);
 
 			g.drawLine(bounds.x, drawY, bounds.x + bounds.width, drawY);
 		}
-		}
+	}
 
 	/**
 	 * Get the forced dimension for this puzzle, or null if there isn't a forced dimension

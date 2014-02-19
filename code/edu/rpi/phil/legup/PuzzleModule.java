@@ -480,7 +480,29 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 			cellSize.width * (x + 1) + w,
 			cellSize.height * (y + 1) + h );
 	}
-
+	
+	/**
+	 * Currently used to draw small anotations
+	 * @param g the Graphics to draw with
+	 * @param x the x-coordinate of the cell
+	 * @param y the y-coordinate of the cell
+	 * @param text the number in the cell
+	 * @param numSqueezed the total amount of numbers in one cell
+	 * @param numIndex indicates which number is currently being printed 
+	 */
+	protected void drawSmallText( Graphics2D g, int x, int y, String text, int numSqueezed, int numIndex )
+	{
+		Font smallFont = new Font( "Arial", Font.PLAIN, 10);
+		g.setColor( fontColor );
+		g.setFont( smallFont );
+		FontMetrics fm = g.getFontMetrics();
+		int w = ( cellSize.width - fm.stringWidth(text) ) / (3 * numSqueezed) + (numIndex%3) * 6;
+		int h = ( cellSize.height - fm.getAscent() ) / (3 * numSqueezed) + (numIndex/3) * 9 + fm.getAscent();
+		g.drawString( text,
+			cellSize.width * (x + 1) + w,
+			cellSize.height * (y + 1) + h );
+	}
+	
 	protected void drawImage( Graphics2D g, int x, int y, Image img ){
 		g.drawImage( img,
 			cellSize.width * (x + 1), cellSize.height * (y + 1),

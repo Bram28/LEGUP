@@ -74,7 +74,7 @@ public class RuleForcedDeduction extends PuzzleRule
 				error = "You must insert a number to apply this rule!";
 		}
 
-		Sudoku.annotations = Sudoku.getPossMatrix(destBoardState);
+		Sudoku.setAnnotations(destBoardState);
 
 		return error;
 	}

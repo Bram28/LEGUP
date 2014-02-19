@@ -65,9 +65,9 @@ public class RuleForcedLocation extends PuzzleRule
 			if (!anychange)
 				error = "You must insert a number to apply this rule!";
 		}
+	
+		Sudoku.setAnnotations(destBoardState);
 		
-		Sudoku.annotations = Sudoku.getPossMatrix(destBoardState);
-
 		return error;
 	}
 
