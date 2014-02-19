@@ -1,12 +1,14 @@
 package edu.rpi.phil.legup.puzzles.sudoku;
 
 import javax.swing.ImageIcon;
+
 import java.awt.Point;
 import java.util.LinkedList;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 
 /**
  *	RuleForcedDeduction applies when there is a specific cell for which all but one possible answers can
@@ -72,21 +74,26 @@ public class RuleForcedDeduction extends PuzzleRule
 				error = "You must insert a number to apply this rule!";
 		}
 
+		Sudoku.annotations = Sudoku.getPossMatrix(destBoardState);
+
 		return error;
 	}
 
 	boolean checkDeduced(int x, int y, int n, BoardState origBoardState)
 	{
 		int index = 9*y+x;
-
-		LinkedList<Integer> list = new LinkedList<Integer>();
+		 
+		//Add all integers to the list that don't equal the newly added value (n)
+		LinkedList<Integer> list = new LinkedList<Integer>(); 
 		for (int i = 0; i < 9; i++) if (i+1 != n) list.add(new Integer(i+1));
 
+		//Remove all integers that exist in the same row, column, or box as this value
 		for (int group : cellToGroupRef[index])
 			for (int cell : groupToCellRef[group])
 				if (origBoardState.getCellContents(cell%9, cell/9) != Sudoku.CELL_UNKNOWN)
 					list.remove(new Integer(origBoardState.getCellContents(cell%9, cell/9)));
 
+		//if there are no elements left, then this value is the only one that seems to fit
 		return (list.size() == 0);
 	}
 

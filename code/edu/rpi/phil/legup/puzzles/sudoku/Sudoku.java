@@ -9,6 +9,7 @@ package edu.rpi.phil.legup.puzzles.sudoku;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -17,6 +18,7 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.HashSet;
+
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 
@@ -39,15 +41,24 @@ public class Sudoku extends PuzzleModule
 	Vector <CaseRule> caseList = new Vector <CaseRule>();
 
 	private static final int[][] groups = new int[27][9], crossRef = new int[81][3];
-
+	
+	public static boolean[][][] annotations = new boolean[9][9][9];
+	
 	static
-	{
+	{	
+		//The groups array contains references to each square in the entire grid (numbered from 0 to 80)
+		
+		//Go through row by row, starting with the topmost row
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
 				groups[i][j] = 9*i+j;
+		
+		//Go through column by column, starting with the leftmost column
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
 				groups[i+9][j] = 9*j+i;
+		
+		//Go through box by box, starting with the top left corner
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
 				groups[i+18][j] = 9*(3*(i/3)+(j/3))+3*(i%3)+(j%3);
@@ -402,6 +413,13 @@ public class Sudoku extends PuzzleModule
 		return true;
 	}
 
+	/**
+	 * Draw the current cell in the puzzle.
+	 * @param g the Graphics to draw with
+	 * @param x the x-coordinate of the cell
+	 * @param y the y-coordinate of the cell
+	 * @param state the current number in the box
+	 */
 	public void drawCell( Graphics2D g, int x, int y, int state ){
 		if( state > 0 && state < 10 )
 			drawText( g, x, y, String.valueOf(state) );

@@ -1,6 +1,7 @@
 package edu.rpi.phil.legup.puzzles.sudoku;
 
 import javax.swing.ImageIcon;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,6 +10,7 @@ import java.util.HashSet;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 
 /**
  *	RuleAdvancedDeduction uses group logic to make eliminations, i.e., if there are only
