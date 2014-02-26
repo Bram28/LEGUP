@@ -125,18 +125,18 @@ public class CaseLinkTent extends CaseRule
 			}
 		}
 		return rv;
-	}
+	} 
 	
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;
-		BoardState parent = state.getSingleParentState(); 
+		BoardState parent = state.getSingleParentState();  
 		if(parent.getTransitionsFrom().size() > 4)
 		{
 			rv = "Only the trees adjacent to a single tent should be\nlinked to in one step using this rule.";
 		}
 		else
-		{
+		{ 
 			int num_children = parent.getTransitionsFrom().size();
 			Point p = findOnlyCommonTile(parent.getTransitionsFrom(),TreeTent.CELL_TENT);
 			int num_adj_trees = calcAdjacentTiles(parent,p,TreeTent.CELL_TREE);

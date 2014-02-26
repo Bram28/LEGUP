@@ -27,8 +27,9 @@ public class RuleGrassNextToTent extends PuzzleRule
     }
 
 
-    public void print(){
-	System.out.print(getName());
+    public void print()
+    {
+    	System.out.print(getName());
     }
 
     /**
@@ -42,6 +43,7 @@ public class RuleGrassNextToTent extends PuzzleRule
     {
     	boolean found = false;
     	
+    	//clamp the adjacent cell coordinates to the board
     	int xs[] = {
     					x - 1 >= 0 ? x - 1 : 0,
     					x,
@@ -54,13 +56,16 @@ public class RuleGrassNextToTent extends PuzzleRule
 				y + 1 < boardState.getHeight() ? y + 1 : y
 			};
 
+    	//loop through all adjacent and diagonal cells from the current cells
     	for (int a = 0; a < xs.length && !found; ++a)
     	{
     		for (int b = 0; b < ys.length; ++b)
         	{
+    			//Get the cell's coordinates
         		int nx = xs[a];
         		int ny = ys[b];
         		
+        		//Skip if the cell is the same as the current one
         		if (nx != x || ny != y)
         		{
         			if (boardState.getCellContents(nx,ny) == TreeTent.CELL_TENT)
@@ -92,8 +97,7 @@ public class RuleGrassNextToTent extends PuzzleRule
 		}
 		else
 		{
-// For each cell, check if the row or column has a sufficient number of tents in it
-			
+			// For each cell, check if the row or column has a sufficient number of tents in it
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
 			{
 				for (int x = 0; x < origBoardState.getWidth(); ++x)
@@ -126,6 +130,8 @@ public class RuleGrassNextToTent extends PuzzleRule
 				error = "You must add grass to use this rule!";
 			}
 		}
+		
+		TreeTent.setAnnotations(destBoardState);
 		
 		return error;
     }

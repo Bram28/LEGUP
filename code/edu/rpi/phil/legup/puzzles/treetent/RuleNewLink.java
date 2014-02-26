@@ -264,6 +264,8 @@ public abstract class RuleNewLink extends PuzzleRule
 			}
 		}
 		
+		TreeTent.setAnnotations(destBoardState);
+		
 		return error;
     }
     

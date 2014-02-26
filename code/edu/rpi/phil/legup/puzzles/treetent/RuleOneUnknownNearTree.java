@@ -134,10 +134,14 @@ public class RuleOneUnknownNearTree extends PuzzleRule
     	int w = state.getWidth();
     	int h = state.getHeight();
     	
+    	//Make sure the current position is within bounds
     	if (x >= 0 && x < w && y >= 0 && y < h)
     	{
+    		//Make sure the tree at the position is unlinked
     		return (state.getCellContents(x,y) == TreeTent.CELL_TREE) && !TreeTent.isLinked(state.getExtraData(), new Point(x,y));
     	}
+    	
+    	//The position is out of bounds
     	return false;
     }
     
@@ -201,7 +205,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 						{
 							error = "This rule only involves adding and linking tents!";
 							break;
-						}
+						} 
 						
 						numTentsAdded++;
 						
@@ -224,6 +228,8 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 				error = "You must add one or more tents to use this rule!";
 			}
 		}
+		
+		TreeTent.setAnnotations(destBoardState);
 		
 		return error;
 	}

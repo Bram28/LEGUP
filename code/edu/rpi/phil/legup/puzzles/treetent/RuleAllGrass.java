@@ -31,20 +31,20 @@ public class RuleAllGrass extends PuzzleRule
     private boolean checkRow(BoardState boardState, int y)
     {
 		int width = boardState.getWidth();
-		int numTents = 0;
 		int label = boardState.getLabel(BoardState.LABEL_RIGHT, y);
-		numTents = TreeTent.translateNumTents(label);
+		int numTents = TreeTent.translateNumTents(label);
 		
-		for (int i=0;i<width;i++)
+		//Iterate through each cell in this row
+		for (int i = 0; i < width; i++)
 		{    
-			int contents = boardState.getCellContents(i,y) ; 
-			
-			if (contents == 2)
+			//If the cell is a tent, subtract from the total tents remaining
+			if (boardState.getCellContents(i,y) == 2)
 			{
 			    numTents--;
 			}
 		}
 	
+		//True, if no more tents are remaining.
 		return numTents == 0;
     }
 
@@ -53,17 +53,17 @@ public class RuleAllGrass extends PuzzleRule
 		int height = boardState.getHeight();
 		int numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_BOTTOM, x));
 		
-		for (int i=0;i<height;i++)
+		//Iterate through each cell in this column
+		for (int i = 0; i < height; i++)
 		{
 			if (boardState.getCellContents(x,i) == 2)
 			{
 			    numTents--;
 			}
-		   
 		}
 		
+		//True, if no more tents are remaining
 		return numTents == 0;
-
     }
 
     protected String checkRuleRaw(BoardState destBoardState)
@@ -84,7 +84,6 @@ public class RuleAllGrass extends PuzzleRule
 		else
 		{
 			// For each cell, check if the row or column has a sufficient number of tents in it
-			
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
 			{
 				for (int x = 0; x < origBoardState.getWidth(); ++x)
@@ -117,6 +116,8 @@ public class RuleAllGrass extends PuzzleRule
 				error = "You must add grass to use this rule!";
 			}
 		}
+		
+		TreeTent.setAnnotations(destBoardState);
 		
 		return error;
 	}

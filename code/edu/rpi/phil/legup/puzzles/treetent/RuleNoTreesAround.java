@@ -121,6 +121,8 @@ public class RuleNoTreesAround extends PuzzleRule
 			}
 		}
 		
+		TreeTent.setAnnotations(destBoardState);
+		
 		return error;
 	}
 	protected boolean doDefaultApplicationRaw(BoardState destBoardState)

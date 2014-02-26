@@ -79,21 +79,27 @@ public class RuleAllTents extends PuzzleRule
     public boolean checkLegal(BoardState state, int x, int y)
     {
     	boolean rv = false;
+    	
+    	//Total number of tents that can exist in a row or column
     	int numRow = TreeTent.translateNumTents(state.getLabel(BoardState.LABEL_RIGHT, y));
     	int numCol = TreeTent.translateNumTents(state.getLabel(BoardState.LABEL_BOTTOM, x));
     	
+    	//Current number of unknown spots which can be filled
     	int spotsCol = countCell(state,true,TreeTent.CELL_UNKNOWN,x);
     	int spotsRow = countCell(state,false,TreeTent.CELL_UNKNOWN,y);
     	
+    	//Current number of tents
     	int tentsCol = countCell(state,true,TreeTent.CELL_TENT,x);
     	int tentsRow = countCell(state,false,TreeTent.CELL_TENT,y);
     	
+    	//Total number of tents = Number of unknown cells + Current number of tents
+    	//There is enough unknown spaces to be filled up with tents
     	if (numRow == spotsRow + tentsRow || numCol == spotsCol + tentsCol)
     		rv = true;
     	
     	return rv;
-    }
-
+    }  
+   
     protected String checkRuleRaw(BoardState destBoardState)
     {
     	String error = null;
@@ -147,6 +153,8 @@ public class RuleAllTents extends PuzzleRule
 			}
 		}
 		
+		TreeTent.setAnnotations(destBoardState);
+		
 		return error;
 	}
 	
@@ -163,7 +171,7 @@ public class RuleAllTents extends PuzzleRule
 	        	for(int x = 0; x < width; ++x)
 	        	{
 	        		int num_empty = 0;
-	    			int total = TreeTent.translateNumTents(destBoardState.getLabel(destBoardState.LABEL_BOTTOM, x));
+	    			int total = TreeTent.translateNumTents(destBoardState.getLabel(BoardState.LABEL_BOTTOM, x));
 	        		for(int y = 0; y < height; ++y)
 	    			{
 	    				if(destBoardState.getCellContents(x, y)==0 || destBoardState.getCellContents(x, y)==TreeTent.CELL_TENT)

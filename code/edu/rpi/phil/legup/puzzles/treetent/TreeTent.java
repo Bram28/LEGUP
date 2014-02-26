@@ -11,11 +11,14 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Vector;
+
+import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
@@ -25,7 +28,7 @@ import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
-
+  
 /**
  * @TODO add link rule from the tree's perspective:
  * 	 grass / tree / linked tent
@@ -41,9 +44,79 @@ public class TreeTent extends PuzzleModule
 	public boolean hasLabels(){return true;}
 	private static Stroke med = new BasicStroke(2);
 
+	private static int[][] annotations = null;
+	
 	public TreeTent(){
 	}
 	
+	static void setAnnotations(BoardState B)
+	{
+		//0 - unknown
+		//1 - tree
+		//2 - tent
+		//3 - grass
+		
+		int w = B.getWidth();
+		int h = B.getHeight();
+		
+		annotations = new int[h][w];	
+		for (int x = 0; x < w; x++)
+		{
+			for (int y = 0; y < h; y++)
+			{
+				annotations[x][y] = 0;
+			}
+		}
+		
+		for (int y = 0; y < h; y++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				//skip this cell if it already has a known value
+				if (B.getCellContents(x, y) != TreeTent.CELL_UNKNOWN)
+					continue;
+		    	
+		    	//clamp the adjacent cell coordinates to the board
+				int xs[] = {
+						x - 1 >= 0 ? x - 1 : 0,
+								x,
+								x + 1 < B.getWidth() ? x + 1 : x
+				};
+
+				int ys[] = {
+						y - 1 >= 0 ? y - 1 : 0,
+								y,
+								y + 1 < B.getHeight() ? y + 1 : y
+				};
+ 
+				//loop through all adjacent and diagonal cells from the current cells
+				boolean noTrees = true;
+				for (int a = 0; a < xs.length; ++a)
+				{
+					for (int b = 0; b < ys.length; ++b)
+					{
+						//Get the cell's coordinates
+						int nx = xs[a];
+						int ny = ys[b];
+
+						//Skip if the cell is the same as the current one
+						if (nx != x || ny != y)
+						{
+							if (B.getCellContents(nx,ny) == TreeTent.CELL_TREE)
+							{
+								noTrees = false;
+								break;
+							}
+						}
+					}
+				}
+				
+				if (noTrees)
+					annotations[x][y] = TreeTent.CELL_GRASS;
+			}
+		}
+	}
+ 	
 	public Object extraDataFromString(String str)
 	{
 		String[] data = str.split(",");
@@ -106,12 +179,20 @@ public class TreeTent extends PuzzleModule
 	 */
 	public void mousePressedEvent(BoardState state, Point where)
 	{
+		//get rid of annotation 
+		if (annotations != null)
+		{
+			int x = where.x;
+			int y = where.y; 
+			annotations[x][y] = 0;
+		}
+		
 		super.mousePressedEvent(state,where);
 	}
 	public void mouseDraggedEvent(BoardState state, Point where)
 	{
         state.setCellContents(where.x,where.y,CELL_GRASS);
-	}
+	} 
 	public void labelPressedEvent(BoardState state, int index, int side)
 	{
 		//System.out.println(index);
@@ -177,7 +258,7 @@ public class TreeTent extends PuzzleModule
 			
 			next.propagateExtraData(e,!removed);
 		}
-	}
+	} 
 
 	/**
 	 * Draw any extra data for the board
@@ -247,6 +328,25 @@ public class TreeTent extends PuzzleModule
 			return "images/treetent/unknown.gif";
 		}
 	}
+	
+	public String getImageLocation(int x, int y, BoardState boardState)
+	{
+		//just started
+		if (annotations == null)
+			return getImageLocation(boardState.getCellContents(x, y));
+		
+		if (annotations[x][y] != 0)
+			return "images/treetent/annotate_grass.png";
+		else
+			return getImageLocation(boardState.getCellContents(x, y));
+	}
+	
+	public void drawCell( Graphics2D g, int x, int y, BoardState state ){
+		String imagePath = getImageLocation(x, y, state);
+		Image i = new ImageIcon(imagePath).getImage();
+		drawImage(g,x,y,i);
+	}
+
 
 	public void initBoard(BoardState state)
 	{
@@ -347,7 +447,7 @@ public class TreeTent extends PuzzleModule
 			curValue = 9; // will get incremented
 
 		return (curValue + 1 <= 39 ? curValue + 1 : 10);
-	}
+	} 
 
 	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
 	{
@@ -456,182 +556,244 @@ public class TreeTent extends PuzzleModule
 	}
 
 	public static int translateNumTents(int cellValue){
-	return (cellValue - 10);
+		return (cellValue - 10);
 	}
 
-	public boolean checkValidBoardState(BoardState boardState){
-	int height = boardState.getHeight();
-	int width = boardState.getWidth();
+	public boolean checkValidBoardState(BoardState boardState)
+	{
+		int height = boardState.getHeight();
+		int width = boardState.getWidth();
 
+		// Check all tents to see if they are adjacent to a tree
+		for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++)
+			{
+				try
+				{
+					if (boardState.getCellContents(i,j) == 2)
+					{
+						// Check if it is adjacent to a tree
+						if (!checkAdjacentTree(boardState, i, j))
+						{
+							System.out.println("A tent is not adjacent to a tree");
+							return false;
+						}
 
-	// Check all tents to see if they are adjacent to a tree
-	for (int i=0;i<height;i++){
-		for (int j=0;j<width;j++){
-		try{
-			if (boardState.getCellContents(i,j) == 2){
+						// Check if it is adjacent to another tent
+						if (checkAdjacentTent(boardState, i, j))
+						{
+							System.out.println("A tent is adjacent to another tent");
+							return false;
+						}
+					}
+				} 
+				catch (Exception e)
+				{
+				}
+			}
+		}
 
-			// Check if it is adjacent to a tree
-			if (!checkAdjacentTree(boardState, i, j)){
-				System.out.println("A tent is not adjacent to a tree");
+		// Check that the number of tents in a row or column do not exceed the
+		// number allowed
+		for (int i = 0; i < height; i++)
+		{
+			if (!checkRow(boardState, i))
+			{
 				return false;
 			}
-
-			// Check if it is adjacent to another tent
-			if (checkAdjacentTent(boardState, i, j)){
-				System.out.println("A tent is adjacent to another tent");
+		}
+		
+		for (int i = 0; i < width; i++)
+		{
+			if (!checkCol(boardState, i))
+			{
 				return false;
 			}
+		}	
+
+		return true;
+	}
+
+
+	private boolean checkRow(BoardState boardState, int rowNum)
+	{
+		int width = boardState.getWidth();
+		int numTents = 0;
+		try
+		{
+			numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_RIGHT, rowNum));
+		} 
+		catch (Exception e)
+		{
+		}
+
+		for (int i = 0; i < width; i++)
+		{
+			try
+			{
+				if (boardState.getCellContents(rowNum,i) == 2)
+				{
+					numTents--;
+				}
+			} 
+			catch (Exception e)
+			{
 			}
-		} catch (Exception e){
 		}
+
+		if (numTents < 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
 		}
 	}
 
-	// Check that the number of tents in a row or column do not exceed the
-	// number allowed
-	for (int i =0;i<height;i++){
-		if (!checkRow(boardState, i)){
+	private boolean checkCol(BoardState boardState, int colNum)
+	{
+		int height = boardState.getHeight();
+		int numTents = 0;
+		try
+		{
+			numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_BOTTOM, colNum));
+		} 
+		catch (Exception e)
+		{
+		}
+
+		for (int i = 0; i < height; i++)
+		{
+			try
+			{
+				if (boardState.getCellContents(i,colNum) == 2)
+				{
+					numTents--;
+				}
+			} 
+			catch (Exception e)
+			{
+			}
+		}
+
+		if (numTents < 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	private boolean checkAdjacentTent(BoardState boardState, int row, int col)
+	{
+		// Check Up
+		try
+		{
+			if (boardState.getCellContents(row-1, col) == 2)
+			{
+				return true;
+			}
+		} 
+		catch (Exception e)
+		{
+		}
+
+		// Check Left
+		try
+		{
+			if (boardState.getCellContents(row, col-1) == 2)
+			{
+				return true;
+			}
+		} 
+		catch (Exception e)
+		{
+		}
+
+
+		// Check Right
+		try
+		{
+			if (boardState.getCellContents(row, col+1) == 2)
+			{
+				return true;
+			}
+		} 
+		catch (Exception e)
+		{
+		}
+
+		// Check Down
+		try
+		{
+			if (boardState.getCellContents(row+1, col) == 2)
+			{
+				return true;
+			}
+		} 
+		catch (Exception e)
+		{
+		}
+
 		return false;
-		}
 	}
-	for (int i =0;i<width;i++){
-		if (!checkCol(boardState, i)){
+
+	private boolean checkAdjacentTree(BoardState boardState, int row, int col)
+	{
+		// Check Up
+		try
+		{
+			if (boardState.getCellContents(row-1, col) == 1)
+			{
+				return true;
+			}
+		} 
+		catch (Exception e)
+		{
+		}
+
+		// Check Left
+		try
+		{
+			if (boardState.getCellContents(row, col-1) == 1)
+			{
+				return true;
+			}
+		} 
+		catch (Exception e)
+		{
+		}
+
+
+		// Check Right
+		try
+		{
+			if (boardState.getCellContents(row, col+1) == 1)
+			{
+				return true;
+			}
+		} 
+		catch (Exception e)
+		{
+		}
+
+		// Check Down
+		try
+		{
+			if (boardState.getCellContents(row+1, col) == 1)
+			{
+				return true;
+			}
+		} 
+		catch (Exception e)
+		{
+		}
+
 		return false;
-		}
-	}
-
-
-	return true;
-
-	}
-
-
-	private boolean checkRow(BoardState boardState, int rowNum){
-	int width = boardState.getWidth();
-	int numTents = 0;
-	try{
-		numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_RIGHT, rowNum));
-	} catch (Exception e){
-	}
-
-	for (int i=0;i<width;i++){
-		try{
-		if (boardState.getCellContents(rowNum,i) == 2){
-			numTents--;
-		}
-		} catch (Exception e){
-		}
-	}
-
-	if (numTents < 0){
-		return false;
-	}
-	else{
-		return true;
-	}
-	}
-
-	private boolean checkCol(BoardState boardState, int colNum){
-	int height = boardState.getHeight();
-	int numTents = 0;
-	try{
-		numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_BOTTOM, colNum));
-	} catch (Exception e){
-	}
-
-	for (int i=0;i<height;i++){
-		try{
-		if (boardState.getCellContents(i,colNum) == 2){
-			numTents--;
-		}
-		} catch (Exception e){
-		}
-	}
-
-	if (numTents < 0){
-		return false;
-	}
-	else{
-		return true;
-	}
-
-	}
-
-
-
-	private boolean checkAdjacentTent(BoardState boardState, int row, int col){
-	// Check Up
-	try{
-		if (boardState.getCellContents(row-1, col) == 2){
-		return true;
-		}
-	} catch (Exception e){
-	}
-
-	// Check Left
-	try{
-		if (boardState.getCellContents(row, col-1) == 2){
-		return true;
-		}
-	} catch (Exception e){
-	}
-
-
-	// Check Right
-	try{
-		if (boardState.getCellContents(row, col+1) == 2){
-		return true;
-		}
-	} catch (Exception e){
-	}
-
-	// Check Down
-	try{
-		if (boardState.getCellContents(row+1, col) == 2){
-		return true;
-		}
-	} catch (Exception e){
-	}
-
-	return false;
-
-	}
-
-	private boolean checkAdjacentTree(BoardState boardState, int row, int col){
-	// Check Up
-	try{
-		if (boardState.getCellContents(row-1, col) == 1){
-		return true;
-		}
-	} catch (Exception e){
-	}
-
-	// Check Left
-	try{
-		if (boardState.getCellContents(row, col-1) == 1){
-		return true;
-		}
-	} catch (Exception e){
-	}
-
-
-	// Check Right
-	try{
-		if (boardState.getCellContents(row, col+1) == 1){
-		return true;
-		}
-	} catch (Exception e){
-	}
-
-	// Check Down
-	try{
-		if (boardState.getCellContents(row+1, col) == 1){
-		return true;
-		}
-	} catch (Exception e){
-	}
-
-	return false;
 	}
 
 	public static boolean isLinked(ArrayList<Object> links, Point cell)
@@ -667,9 +829,6 @@ public class TreeTent extends PuzzleModule
 		return Board;
 	}
    
-
-
-
 	private Point GenerateBestGuess(BoardState Board) {
 		// this should more properly be some kind of ranking system whereby different
 		// conditions scored points and the highest scoring square was chosen.
