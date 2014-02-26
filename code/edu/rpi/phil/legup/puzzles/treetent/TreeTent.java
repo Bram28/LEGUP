@@ -65,7 +65,7 @@ public class TreeTent extends PuzzleModule
 			for (int y = 0; y < h; y++)
 			{
 				annotations[x][y] = 0;
-			}
+			} 
 		}
 		
 		for (int y = 0; y < h; y++)
@@ -75,40 +75,32 @@ public class TreeTent extends PuzzleModule
 				//skip this cell if it already has a known value
 				if (B.getCellContents(x, y) != TreeTent.CELL_UNKNOWN)
 					continue;
-		    	
-		    	//clamp the adjacent cell coordinates to the board
-				int xs[] = {
-						x - 1 >= 0 ? x - 1 : 0,
-								x,
-								x + 1 < B.getWidth() ? x + 1 : x
-				};
-
-				int ys[] = {
-						y - 1 >= 0 ? y - 1 : 0,
-								y,
-								y + 1 < B.getHeight() ? y + 1 : y
-				};
- 
-				//loop through all adjacent and diagonal cells from the current cells
+		
+				//loop through all adjacent cells
 				boolean noTrees = true;
-				for (int a = 0; a < xs.length; ++a)
+				
+				//Check North
+				if (y - 1 >= 0 && B.getCellContents(x, y - 1) == TreeTent.CELL_TREE)
 				{
-					for (int b = 0; b < ys.length; ++b)
-					{
-						//Get the cell's coordinates
-						int nx = xs[a];
-						int ny = ys[b];
-
-						//Skip if the cell is the same as the current one
-						if (nx != x || ny != y)
-						{
-							if (B.getCellContents(nx,ny) == TreeTent.CELL_TREE)
-							{
-								noTrees = false;
-								break;
-							}
-						}
-					}
+					noTrees = false;
+				}
+				
+				//Check South
+				if (y + 1 < h && B.getCellContents(x, y + 1) == TreeTent.CELL_TREE)
+				{
+					noTrees = false;
+				}
+				
+				//Check West
+				if (x - 1 >= 0 && B.getCellContents(x - 1, y) == TreeTent.CELL_TREE)
+				{
+					noTrees = false;
+				}
+				
+				//Check East
+				if (x + 1 < w && B.getCellContents(x + 1, y) == TreeTent.CELL_TREE)
+				{
+					noTrees = false;
 				}
 				
 				if (noTrees)
