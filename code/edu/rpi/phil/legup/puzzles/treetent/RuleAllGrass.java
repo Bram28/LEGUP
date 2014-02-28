@@ -81,7 +81,7 @@ public class RuleAllGrass extends PuzzleRule
 		{
 			error = "This rule does not involve changing tree-tent links.";
 		}
-		else
+		else 
 		{
 			// For each cell, check if the row or column has a sufficient number of tents in it
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)

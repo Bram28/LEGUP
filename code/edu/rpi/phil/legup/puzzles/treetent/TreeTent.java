@@ -49,6 +49,96 @@ public class TreeTent extends PuzzleModule
 	public TreeTent(){
 	}
 	
+	static void setAnnotationsGrass(BoardState B)
+	{ 
+		int w = B.getWidth();
+		int h = B.getHeight();
+		
+		int dx[] = { 0, -1, 1, 0 };
+		int dy[] = { -1, 0, 0, 1 };
+		
+		//Mark annotations for grass
+		//Place grass if there is no tree adjacent to the tile
+		for (int y = 0; y < h; y++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				//skip this cell if it already has a known value
+				if (B.getCellContents(x, y) != TreeTent.CELL_UNKNOWN)
+					continue;
+
+				//loop through all adjacent cells
+				boolean noTrees = true;
+
+				//loop through all adjacent tiles
+				for (int i = 0; i < 4; i++)
+				{
+					int nx = x + dx[i];
+					int ny = y + dy[i];
+				
+					if (nx >= 0 && ny >= 0 && nx < w && ny < h)
+					{
+						if (B.getCellContents(nx, ny) == TreeTent.CELL_TREE)
+							noTrees = false;
+					}
+				}
+
+				//No trees nearby, so note this can be a grass tile
+				if (noTrees)
+					annotations[x][y] = TreeTent.CELL_GRASS;
+			}
+		}
+	}
+	
+	static void setAnnotationsTents(BoardState B)
+	{
+		int w = B.getWidth();
+		int h = B.getHeight();
+	
+		int dx[] = { 0, -1, 1, 0 };
+		int dy[] = { -1, 0, 0, 1 };
+
+		//Mark annotations for tents
+		//Try to find a tree with a lone tent spot
+		for (int y = 0; y < h; y++)
+		{ 
+			for (int x = 0; x < w; x++)
+			{				
+				int numUnknown = 0;
+				int numExistingTents = 0;
+
+				//Skip this cell if it isn't a tree
+				if (B.getCellContents(x, y) != TreeTent.CELL_TREE)
+					continue;
+
+				int unknownX = 0, unknownY = 0;
+
+				//loop through all adjacent tiles
+				for (int i = 0; i < 4; i++)
+				{
+					int nx = x + dx[i];
+					int ny = y + dy[i];
+					
+					if (nx >= 0 && ny >= 0 && nx < w && ny < h)
+					{
+						if (B.getCellContents(nx, ny) == TreeTent.CELL_UNKNOWN )
+						{
+							unknownX = nx;
+							unknownY = ny;
+							numUnknown++;
+						}
+						else if (B.getCellContents(nx, ny) == TreeTent.CELL_TENT)
+							numExistingTents++;
+					}
+				}
+				
+				//mark the spot where the tree should be placed
+				if (numUnknown == 1 && numExistingTents == 0)
+					annotations[unknownX][unknownY] = TreeTent.CELL_TENT;
+			}
+		}	
+	}
+	
 	static void setAnnotations(BoardState B)
 	{
 		//0 - unknown
@@ -59,54 +149,17 @@ public class TreeTent extends PuzzleModule
 		int w = B.getWidth();
 		int h = B.getHeight();
 		
-		annotations = new int[h][w];	
+		annotations = new int[w][h];	
 		for (int x = 0; x < w; x++)
 		{
 			for (int y = 0; y < h; y++)
 			{
 				annotations[x][y] = 0;
-			} 
-		}
-		
-		for (int y = 0; y < h; y++)
-		{
-			for (int x = 0; x < w; x++)
-			{
-				//skip this cell if it already has a known value
-				if (B.getCellContents(x, y) != TreeTent.CELL_UNKNOWN)
-					continue;
-		
-				//loop through all adjacent cells
-				boolean noTrees = true;
-				
-				//Check North
-				if (y - 1 >= 0 && B.getCellContents(x, y - 1) == TreeTent.CELL_TREE)
-				{
-					noTrees = false;
-				}
-				
-				//Check South
-				if (y + 1 < h && B.getCellContents(x, y + 1) == TreeTent.CELL_TREE)
-				{
-					noTrees = false;
-				}
-				
-				//Check West
-				if (x - 1 >= 0 && B.getCellContents(x - 1, y) == TreeTent.CELL_TREE)
-				{
-					noTrees = false;
-				}
-				
-				//Check East
-				if (x + 1 < w && B.getCellContents(x + 1, y) == TreeTent.CELL_TREE)
-				{
-					noTrees = false;
-				}
-				
-				if (noTrees)
-					annotations[x][y] = TreeTent.CELL_GRASS;
 			}
 		}
+		
+		setAnnotationsGrass(B);
+		setAnnotationsTents(B);
 	}
  	
 	public Object extraDataFromString(String str)
@@ -323,12 +376,14 @@ public class TreeTent extends PuzzleModule
 	
 	public String getImageLocation(int x, int y, BoardState boardState)
 	{
-		//just started
+		//just started 
 		if (annotations == null)
 			return getImageLocation(boardState.getCellContents(x, y));
 		
-		if (annotations[x][y] != 0)
+		if (annotations[x][y] == TreeTent.CELL_GRASS)
 			return "images/treetent/annotate_grass.png";
+		else if (annotations[x][y] == TreeTent.CELL_TENT)
+			return "images/treetent/annotate_tent.png";
 		else
 			return getImageLocation(boardState.getCellContents(x, y));
 	}
