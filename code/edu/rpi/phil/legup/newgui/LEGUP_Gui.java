@@ -537,8 +537,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			
 			showStatus(message, true);
 		}
-	}
-	
+	} 
+	 
 	private void submit()
 	{
 		BoardState root = legupMain.getInitialBoardState();
@@ -560,6 +560,13 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			JOptionPane.showConfirmDialog(null, "Your proof is incorrect! Are you sure you wish to submit?", "Proof Submission", JOptionPane.YES_NO_OPTION);
 			Submission submit = new Submission(root, false);
 		}
+	}
+	
+	private void directions()
+	{
+		JOptionPane.showMessageDialog(null, "For ever move you make, you must provide a justification for it (located in the Rules panel).\n"
+				+ "While working on the puzzle, you may click on the \"Check\" button to test your proof for correctness.", 
+				"Directions", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	private void showAll() {
@@ -735,6 +742,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == toolBarButtons[TOOLBAR_SUBMIT])
 		{
 			submit();
+		} 
+		else if (e.getSource() == toolBarButtons[TOOLBAR_DIRECTIONS])
+		{
+			directions();
 		}
 		else if (e.getSource() == hint || e.getSource() == toolBarButtons[TOOLBAR_HINT])
 		{

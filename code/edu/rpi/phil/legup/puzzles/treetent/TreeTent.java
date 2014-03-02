@@ -48,7 +48,7 @@ public class TreeTent extends PuzzleModule
 	
 	public TreeTent(){
 	}
-	
+	 
 	static void setAnnotationsGrass(BoardState B)
 	{ 
 		int w = B.getWidth();
