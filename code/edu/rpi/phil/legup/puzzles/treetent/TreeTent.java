@@ -84,7 +84,7 @@ public class TreeTent extends PuzzleModule
 				}
 
 				//No trees nearby, so note this can be a grass tile
-				if (noTrees)
+				if (noTrees && annotations[x][y] == 0)
 					annotations[x][y] = TreeTent.CELL_GRASS;
 			}
 		}
@@ -110,7 +110,7 @@ public class TreeTent extends PuzzleModule
 				//Skip this cell if it isn't a tree
 				if (B.getCellContents(x, y) != TreeTent.CELL_TREE)
 					continue;
-
+ 
 				int unknownX = 0, unknownY = 0;
 
 				//loop through all adjacent tiles
@@ -121,19 +121,22 @@ public class TreeTent extends PuzzleModule
 					
 					if (nx >= 0 && ny >= 0 && nx < w && ny < h)
 					{
-						if (B.getCellContents(nx, ny) == TreeTent.CELL_UNKNOWN )
+						if (B.getCellContents(nx, ny) == TreeTent.CELL_UNKNOWN)
 						{
 							unknownX = nx;
 							unknownY = ny;
 							numUnknown++;
+							
+							if (numUnknown > 1)
+								break;
 						}
 						else if (B.getCellContents(nx, ny) == TreeTent.CELL_TENT)
 							numExistingTents++;
 					}
 				}
-				
+				 
 				//mark the spot where the tree should be placed
-				if (numUnknown == 1 && numExistingTents == 0)
+				if (numUnknown == 1 && numExistingTents == 0 && annotations[x][y] == 0)
 					annotations[unknownX][unknownY] = TreeTent.CELL_TENT;
 			}
 		}	
@@ -145,7 +148,7 @@ public class TreeTent extends PuzzleModule
 		//1 - tree
 		//2 - tent
 		//3 - grass
-		
+	
 		int w = B.getWidth();
 		int h = B.getHeight();
 		
@@ -159,7 +162,7 @@ public class TreeTent extends PuzzleModule
 		}
 		
 		setAnnotationsGrass(B);
-		setAnnotationsTents(B);
+		setAnnotationsTents(B); 
 	}
  	
 	public Object extraDataFromString(String str)
@@ -377,7 +380,7 @@ public class TreeTent extends PuzzleModule
 	public String getImageLocation(int x, int y, BoardState boardState)
 	{
 		//just started 
-		if (annotations == null)
+		if (annotations == null || !drawAnnotations)
 			return getImageLocation(boardState.getCellContents(x, y));
 		
 		if (annotations[x][y] == TreeTent.CELL_GRASS)
@@ -387,13 +390,12 @@ public class TreeTent extends PuzzleModule
 		else
 			return getImageLocation(boardState.getCellContents(x, y));
 	}
-	
+	 
 	public void drawCell( Graphics2D g, int x, int y, BoardState state ){
 		String imagePath = getImageLocation(x, y, state);
 		Image i = new ImageIcon(imagePath).getImage();
 		drawImage(g,x,y,i);
 	}
-
 
 	public void initBoard(BoardState state)
 	{

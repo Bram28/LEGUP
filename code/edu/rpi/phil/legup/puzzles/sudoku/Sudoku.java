@@ -123,7 +123,7 @@ public class Sudoku extends PuzzleModule
 	 * @param B
 	 */
 	static void setAnnotations(BoardState B)
-	{
+	{	
 		//obtain a large truth table of values that may or may not fit in the cell
 		annotations = getPossMatrix(B);
 		
@@ -454,6 +454,9 @@ public class Sudoku extends PuzzleModule
 			drawText( g, x, y, String.valueOf(state) );
 		else
 		{
+			if (!drawAnnotations)
+				return;
+			
 			//puzzle has just begun
 			if (validNums.size() == 0)
 				return;

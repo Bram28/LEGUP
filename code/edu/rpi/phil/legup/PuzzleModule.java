@@ -47,10 +47,13 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	public String name;
 	public CaseRule defaultApplication;
 	
+	public static boolean drawAnnotations;
+	
 	public PuzzleModule()
 	{
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 		BoardState.addCellChangeListener(this); 
+		drawAnnotations = false;
 	}
 	/**
 	 * Take an action when the left mouse button is pressed
@@ -602,5 +605,10 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 		String imagePath = getImageLocation(val);
 		Image i = new ImageIcon(imagePath).getImage();
 		drawImage(g,x,y,i);*/
+	}
+	
+	public void toggleAnnotations()
+	{
+		drawAnnotations = !drawAnnotations;
 	}
 }

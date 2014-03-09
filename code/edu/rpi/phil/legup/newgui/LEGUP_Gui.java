@@ -84,7 +84,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 */
 	private static int CONFIG_INDEX = 0;
 	public static final int ALLOW_HINTS = 1;
-	public static final int ALLOW_DEFAPP = 2;
+	public static final int ALLOW_DEFAPP = 2; 
 	public static final int ALLOW_FULLAI = 4;
 	public static final int ALLOW_JUST = 8;
 	public static final int REQ_STEP_JUST = 16;
@@ -137,6 +137,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private static final int TOOLBAR_ZOOMOUT = 11;
 	private static final int TOOLBAR_ZOOMRESET = 12;
 	private static final int TOOLBAR_ZOOMFIT = 13;
+	/* --- */
+	private static final int TOOLBAR_ANNOTATIONS = 14;
 
 	final static String[] toolBarNames =
 	{
@@ -153,7 +155,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		"Zoom In",
 		"Zoom Out",
 		"Normal Zoom",
-		"Best Fit"
+		"Best Fit",
+		"Annotations"
 	};
 
 	AbstractButton[] toolBarButtons =
@@ -172,6 +175,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		new JButton(/*toolBarNames[11],*/ new ImageIcon("images/" + toolBarNames[11] + ".png")),
 		new JButton(/*toolBarNames[12],*/ new ImageIcon("images/" + toolBarNames[12] + ".png")),
 		new JButton(/*toolBarNames[13],*/ new ImageIcon("images/" + toolBarNames[13] + ".png")),
+		new JButton(toolBarNames[14], new ImageIcon("images/" + toolBarNames[14] + ".png")) //Toggle annotations
 	};
 
 	final static int[] toolbarSeperatorBefore =
@@ -333,7 +337,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(false);
 		toolBarButtons[TOOLBAR_SUBMIT].setEnabled(false);
 		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(false);
-
+		toolBarButtons[TOOLBAR_ANNOTATIONS].setEnabled(false);
+		
 		add( toolBar, BorderLayout.NORTH );
 	}
 
@@ -579,6 +584,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(true);
 		toolBarButtons[TOOLBAR_SUBMIT].setEnabled(true);
 		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(true);
+		toolBarButtons[TOOLBAR_ANNOTATIONS].setEnabled(true);
 		///
 		this.pack();
 	}
@@ -769,6 +775,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ZOOMFIT]){
 			getBoard().zoomFit();
+		}
+		else if (e.getSource() == toolBarButtons[TOOLBAR_ANNOTATIONS])
+		{
+			legupMain.getPuzzleModule().toggleAnnotations();
 		}
 		else if (e.getSource() == allowDefault)
 		{
