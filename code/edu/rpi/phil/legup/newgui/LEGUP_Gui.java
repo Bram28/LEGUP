@@ -779,6 +779,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ANNOTATIONS])
 		{
 			legupMain.getPuzzleModule().toggleAnnotations();
+			repaintAll(); 
 		}
 		else if (e.getSource() == allowDefault)
 		{

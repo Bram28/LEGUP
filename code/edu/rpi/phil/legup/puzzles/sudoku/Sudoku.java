@@ -453,7 +453,7 @@ public class Sudoku extends PuzzleModule
 		if( state > 0 && state < 10 )
 			drawText( g, x, y, String.valueOf(state) );
 		else
-		{
+		{ 
 			if (!drawAnnotations)
 				return;
 			
@@ -469,7 +469,7 @@ public class Sudoku extends PuzzleModule
 				int number = validNums.get(cellIndex).get(i);
 				drawSmallText(g, x, y, String.valueOf(number), totalNumbers, i);
 			}
-		}
+		} 
 	}
 
 	/**
