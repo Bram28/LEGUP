@@ -48,7 +48,14 @@ public class TreeTent extends PuzzleModule
 	
 	public TreeTent(){
 	}
-	 
+	
+	/*
+	 * The grass annotation will indicate that grass will fit in the specified cell.
+	 * The following rules can be used for justification:
+	 * -Finish Grass
+	 * -Empty Field
+	 * -Surround Tent
+	 */
 	static void setAnnotationsGrass(BoardState B)
 	{ 
 		int w = B.getWidth();
@@ -57,18 +64,68 @@ public class TreeTent extends PuzzleModule
 		int dx[] = { 0, -1, 1, 0 };
 		int dy[] = { -1, 0, 0, 1 };
 		
-		//Mark annotations for grass
-		//Place grass if there is no tree adjacent to the tile
+		//Apply the "Finish Grass" rule if an entire row or entire column has been filled with the required number of tents.
+		
+		//Check if all the tents have been filled in for each row.
+		for (int y = 0; y < h; y++)
+		{
+			int numTentsInRow = TreeTent.translateNumTents(B.getLabel(BoardState.LABEL_RIGHT, y));
+			for (int i = 0; i < w; i++)
+			{    
+				//If the cell is a tent, subtract from the total tents remaining
+				if (B.getCellContents(i, y) == TreeTent.CELL_TENT)
+					numTentsInRow--;
+			}
+
+			//Fill in the rest of this row with grass and skip to the next row
+			if (numTentsInRow == 0)
+			{
+				for (int i = 0; i < w; i++)
+				{    
+					if (B.getCellContents(i, y) == TreeTent.CELL_UNKNOWN)
+						annotations[i][y] = TreeTent.CELL_GRASS;
+				}
+			}
+		}
+
+		//Check if all the tents have been filled in for each column
+		for (int x = 0; x < w; x++)
+		{	
+			int numTentsInCol = TreeTent.translateNumTents(B.getLabel(BoardState.LABEL_BOTTOM, x));
+			for (int i = 0; i < h; i++)
+			{    
+				//If the cell is a tent, subtract from the total tents remaining
+				if (B.getCellContents(x, i) == TreeTent.CELL_TENT)
+					numTentsInCol--;
+			}
+
+			//Fill in the rest of this column with grass
+			if (numTentsInCol == 0)
+			{
+				for (int i = 0; i < h; i++)
+				{      
+					if (B.getCellContents(x, i) == TreeTent.CELL_UNKNOWN)
+						annotations[x][i] = TreeTent.CELL_GRASS;
+				}
+			}
+		}
+		
+		//Fill in individual cells
 		for (int y = 0; y < h; y++)
 		{
 			for (int x = 0; x < w; x++)
-			{
-				//skip this cell if it already has a known value
-				if (B.getCellContents(x, y) != TreeTent.CELL_UNKNOWN)
+			{				
+				//Skip this cell if it already has a known value
+				if (B.getCellContents(x, y) != TreeTent.CELL_UNKNOWN || annotations[x][y] != 0)
 					continue;
 
-				//loop through all adjacent cells
-				boolean noTrees = true;
+				//Check if there any trees are adjacent to this cell
+				//If no trees nearby, the rule "Empty Field" can be used to justify that grass will fit in this cell.
+				boolean isEmptyField = true;
+				
+				//Check if there are any tents nearby.
+				//If there is a tent nearby, the rule "Suround Tent" can be used to justify that grass will fit in this cell.
+				boolean isSurroundTent = false;
 
 				//loop through all adjacent tiles
 				for (int i = 0; i < 4; i++)
@@ -79,20 +136,29 @@ public class TreeTent extends PuzzleModule
 					if (nx >= 0 && ny >= 0 && nx < w && ny < h)
 					{
 						if (B.getCellContents(nx, ny) == TreeTent.CELL_TREE)
-						{
-							noTrees = false;
-							break;
-						}
+							isEmptyField = false;
+						
+						if (B.getCellContents(nx, ny) == TreeTent.CELL_TENT)
+							isSurroundTent = true;
 					}
 				}
 
 				//No trees nearby, so note this can be a grass tile
-				if (noTrees && annotations[x][y] == 0)
+				//OR
+				//A tent is nearby, so note this can be a grass tile
+				if (isEmptyField || isSurroundTent)
 					annotations[x][y] = TreeTent.CELL_GRASS;
 			}
 		}
+		
 	}
 	
+	/*
+	 * The tent annotation will indicate that grass will fit in the specified cell.
+	 * The following rules can be used for justification:
+	 * -Finish Tents
+	 * -Last Camping Spot
+	 */
 	static void setAnnotationsTents(BoardState B)
 	{
 		int w = B.getWidth();
@@ -100,28 +166,85 @@ public class TreeTent extends PuzzleModule
 	
 		int dx[] = { 0, -1, 1, 0 };
 		int dy[] = { -1, 0, 0, 1 };
-
-		//Mark annotations for tents
-		//Try to find a tree with a lone tent spot
+		
+		//Apply the "Finish Tents" rule if tents can be filled in for the remaining unknown spots.
+		
+		//Check if all the tents can be filled in for each row.
+		for (int y = 0; y < h; y++)
+		{
+			int totalTentRow = TreeTent.translateNumTents(B.getLabel(BoardState.LABEL_RIGHT, y));
+			if (totalTentRow == 0)
+				continue;
+			
+			int tentCount = 0, unknownCount = 0;
+			for (int i = 0; i < w; i++)
+			{    
+				if (B.getCellContents(i, y) == TreeTent.CELL_TENT)
+					tentCount++;
+				
+				if (B.getCellContents(i, y) == TreeTent.CELL_UNKNOWN)
+					unknownCount++;
+			}
+			
+			if (tentCount + unknownCount == totalTentRow)
+			{
+				for (int i = 0; i < w; i++)
+				{
+					if (B.getCellContents(i, y) == TreeTent.CELL_UNKNOWN)
+						annotations[i][y] = TreeTent.CELL_TENT;
+				}
+			}
+		}
+		
+		//Check if all the tents can be filled in for each col.
+		for (int x = 0; x < w; x++)
+		{
+	    	int totalTentCol = TreeTent.translateNumTents(B.getLabel(BoardState.LABEL_BOTTOM, x));
+	    	if (totalTentCol == 0)
+	    		continue;
+	    	
+	    	int tentCount = 0, unknownCount = 0;
+			for (int i = 0; i < h; i++)
+			{    
+				if (B.getCellContents(x, i) == TreeTent.CELL_TENT)
+					tentCount++;
+				
+				if (B.getCellContents(x, i) == TreeTent.CELL_UNKNOWN)
+					unknownCount++;
+			}
+			
+			if (tentCount + unknownCount == totalTentCol)
+			{
+				for (int i = 0; i < h; i++)
+				{
+					if (B.getCellContents(x, i) == TreeTent.CELL_UNKNOWN)
+						annotations[x][i] = TreeTent.CELL_TENT;
+				}
+			}
+		}
+		
+		//Fill in individual cells
 		for (int y = 0; y < h; y++)
 		{ 
 			for (int x = 0; x < w; x++)
 			{				
+				//Skip this cell if it isn't a tree or if an annotation has been placed already
+				if (B.getCellContents(x, y) != TreeTent.CELL_TREE || annotations[x][y] != 0)
+					continue;
+
+				//Check if there are any tree with a lone tent spot
+				//If so, then the rule "Last Camping Spot" can be applied.
 				int numUnknown = 0;
 				int numExistingTents = 0;
-
-				//Skip this cell if it isn't a tree
-				if (B.getCellContents(x, y) != TreeTent.CELL_TREE)
-					continue;
- 
 				int unknownX = 0, unknownY = 0;
-
-				//loop through all adjacent tiles
+ 
+				//Loop through all the adjacent tiles
 				for (int i = 0; i < 4; i++)
 				{
 					int nx = x + dx[i];
 					int ny = y + dy[i];
 					
+					//Make sure the tile is in bounds
 					if (nx >= 0 && ny >= 0 && nx < w && ny < h)
 					{
 						if (B.getCellContents(nx, ny) == TreeTent.CELL_UNKNOWN)
@@ -129,9 +252,6 @@ public class TreeTent extends PuzzleModule
 							unknownX = nx;
 							unknownY = ny;
 							numUnknown++;
-							
-							if (numUnknown > 1)
-								break;
 						}
 						else if (B.getCellContents(nx, ny) == TreeTent.CELL_TENT)
 							numExistingTents++;
@@ -139,7 +259,7 @@ public class TreeTent extends PuzzleModule
 				}
 				 
 				//mark the spot where the tree should be placed
-				if (numUnknown == 1 && numExistingTents == 0 && annotations[x][y] == 0)
+				if (numUnknown == 1 && numExistingTents == 0)
 					annotations[unknownX][unknownY] = TreeTent.CELL_TENT;
 			}
 		}	
@@ -258,7 +378,13 @@ public class TreeTent extends PuzzleModule
 			{
 				int x = horizontal ? i : index;
 				int y = horizontal ? index : i;
-				if(next.isModifiableCell(x,y))next.setCellContents(x,y,CELL_GRASS);
+				if(next.isModifiableCell(x,y))
+				{
+					next.setCellContents(x,y,CELL_GRASS);
+					
+					//make sure to disable annotations since the cell will be filled with grass
+					disableAnnotationsForCell(x, y);
+				}
 			}
 		}
 	}
