@@ -44,7 +44,13 @@ public class Board extends DynamicViewer implements BoardDataChangeListener, Act
 				optionchosen = a;
 				
 				BoardState next = state.conditionalAddTransition();
-				if(next != null)next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
+				if(next != null)
+				{
+					next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
+					
+					//make sure annotations don't cover the final result
+					pm.disableAnnotationsForCell(lastRightMousePoint.x,lastRightMousePoint.y); 
+				}
 			}
 		}
 	}

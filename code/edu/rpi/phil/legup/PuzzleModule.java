@@ -611,4 +611,8 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	{
 		drawAnnotations = !drawAnnotations;
 	}
+	
+	public void disableAnnotationsForCell(int x, int y)
+	{
+	}
 }

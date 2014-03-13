@@ -588,7 +588,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		///
 		this.pack();
 	}
-
+ 
 	private void repaintAll(){
 		getBoard().repaint();
 		getJustificationFrame().repaint();

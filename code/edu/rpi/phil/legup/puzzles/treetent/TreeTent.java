@@ -79,7 +79,10 @@ public class TreeTent extends PuzzleModule
 					if (nx >= 0 && ny >= 0 && nx < w && ny < h)
 					{
 						if (B.getCellContents(nx, ny) == TreeTent.CELL_TREE)
+						{
 							noTrees = false;
+							break;
+						}
 					}
 				}
 
@@ -164,6 +167,12 @@ public class TreeTent extends PuzzleModule
 		setAnnotationsGrass(B);
 		setAnnotationsTents(B); 
 	}
+	
+	public void disableAnnotationsForCell(int x, int y)
+	{
+		if (annotations != null)
+			annotations[x][y] = 0;
+	}
  	
 	public Object extraDataFromString(String str)
 	{
@@ -228,12 +237,7 @@ public class TreeTent extends PuzzleModule
 	public void mousePressedEvent(BoardState state, Point where)
 	{
 		//get rid of annotation 
-		if (annotations != null)
-		{
-			int x = where.x;
-			int y = where.y; 
-			annotations[x][y] = 0;
-		}
+		disableAnnotationsForCell(where.x, where.y);
 		
 		super.mousePressedEvent(state,where);
 	}

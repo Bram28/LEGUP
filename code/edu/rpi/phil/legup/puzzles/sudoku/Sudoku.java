@@ -471,7 +471,7 @@ public class Sudoku extends PuzzleModule
 			}
 		} 
 	}
-
+ 
 	/**
 	 * Draw the grid for the puzzle in the specified coords
 	 * @param g the Graphics to draw with
