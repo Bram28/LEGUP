@@ -154,7 +154,9 @@ public class BoardState implements java.io.Serializable
 			this.setPuzzleName(Legup.getInstance().getPuzzleModule().name);
 		}
 		
-		if (makeOriginalState)
+		//Only make a new boardstate (height and width are swapped) if the board is square
+		//Otherwise, the board will not load.
+		if (makeOriginalState && height == width)
 		{
 			originalState = new BoardState(this,false);
 		}
