@@ -396,8 +396,8 @@ public class BoardState implements java.io.Serializable
 	{
 		return Math.abs(getBoardCells()[y][x]);
 	}
-
-
+	
+	
 	/**
 	 * Sets the cell contents at a particular row and column
 	 *

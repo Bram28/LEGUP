@@ -22,18 +22,23 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class Nurikabe extends PuzzleModule
 {	
-	public static int CELL_BLACK = -1;
-	public static int CELL_WHITE = -2;
+	public static int CELL_BLACK = 1;
+	public static int CELL_WHITE = 2;
+
+	public int numAcceptableStates(){ return 3; }
+	
+	//0 - 9 on the board are represented internally as 10 - 19
+	//int CELL_BLOCK0 = 10, CELL_BLOCK1 = 11, etc...
 	
 	public Nurikabe(){
 	}
 
 	public void drawCell( Graphics2D g, int x, int y, int state ){
 		if( state != 0 ){
-			g.setColor( (state==-1) ? Color.black : Color.white );
+			g.setColor( (state==1) ? Color.black : Color.white );
 			g.fill( getCellBounds(x,y) );
-			if( state > 0 )
-				drawText( g, x, y, String.valueOf(state) );
+			if( state > 10 )
+				drawText( g, x, y, String.valueOf(state - 10) );
 		}
 	}
 
@@ -42,9 +47,23 @@ public class Nurikabe extends PuzzleModule
 		int contents = boardState.getCellContents(x,y);
 		int rv = CELL_UNKNOWN;
 		
-		rv = contents + 1;
-		if(rv > 0)
-			rv = -2;
+		if (contents == CELL_UNKNOWN)
+		{
+			return CELL_BLACK;
+		}
+		else if (contents == CELL_BLACK)
+		{
+			return CELL_WHITE;
+		}
+		else if (contents == CELL_WHITE)
+		{
+			return 10;
+		}
+		else
+		{
+			if (contents >= 10 && contents < 19)
+				return contents + 1;
+		}
 
 		return rv;
 	}
