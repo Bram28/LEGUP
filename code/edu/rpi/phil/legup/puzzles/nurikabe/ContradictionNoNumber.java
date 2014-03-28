@@ -60,7 +60,7 @@ public class ContradictionNoNumber extends Contradiction
     private int loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
     {
     	int numcount = 0;
-    	if(boardState.getCellContents(x,y) > 0)
+    	if(boardState.getCellContents(x,y) > 10)
     		++numcount;
     	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
     		++numcount;

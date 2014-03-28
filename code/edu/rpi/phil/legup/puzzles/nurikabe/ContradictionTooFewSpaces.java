@@ -72,10 +72,10 @@ public class ContradictionTooFewSpaces extends Contradiction
     {
     	Point numcount = new Point(0,0);
     	Point temp = new Point();
-    	if(boardState.getCellContents(x,y) > 0 )
+    	if(boardState.getCellContents(x,y) - 10 > 0 )
     	{
     		numcount.x += 1;
-    		numcount.y = boardState.getCellContents(x,y);
+    		numcount.y = boardState.getCellContents(x,y) - 10;
     	}
     	else if(boardState.getCellContents(x,y) == Nurikabe.CELL_WHITE)
     		numcount.x += 1;
