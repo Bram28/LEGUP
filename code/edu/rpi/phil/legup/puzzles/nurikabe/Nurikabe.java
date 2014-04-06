@@ -35,7 +35,7 @@ public class Nurikabe extends PuzzleModule
 
 	public void drawCell( Graphics2D g, int x, int y, int state ){
 		if( state != 0 ){
-			g.setColor( (state==1) ? Color.black : Color.white );
+			g.setColor( (state == 1) ? Color.black : Color.white );
 			g.fill( getCellBounds(x,y) );
 			if( state > 10 )
 				drawText( g, x, y, String.valueOf(state - 10) );
