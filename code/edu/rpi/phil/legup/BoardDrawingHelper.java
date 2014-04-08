@@ -70,8 +70,13 @@ public abstract class BoardDrawingHelper
 			//showOrange = true;
 		}
 
-		if (ANIMATE_SPLIT_CASE && !selection.isState())
-			newState = origState.getTransitionsFrom().get((int)((System.currentTimeMillis()/1000)%origState.getTransitionsFrom().size()));
+		//only gets redrawn intermittently, enable when an elegent way to force redraws is found (and possibly change base)
+		/*if (ANIMATE_SPLIT_CASE && origState != null)
+		{
+			int whichChild = (int)((System.currentTimeMillis()/1000)%origState.getTransitionsFrom().size());
+			//System.out.format("%d,%d\n",whichChild,origState.getTransitionsFrom().size());
+			newState = origState.getTransitionsFrom().get(whichChild);
+		}*/
 
 		// Draw each cell
 		for( int y = 0; y < height; ++y )
