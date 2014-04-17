@@ -99,7 +99,9 @@ public class BoardState implements java.io.Serializable
 
 	private ArrayList<BoardState> mergeChildren = new ArrayList<BoardState>();
 	private BoardState mergeOverlord;
-
+	private boolean isMerged = false; //only merge once
+	private Point fixedOffset = new Point(0, 0); //offset applied after merge
+	
 	private boolean virtualBoard = false;
 	
 	private boolean modifiableState = false;
@@ -1936,6 +1938,9 @@ public class BoardState implements java.io.Serializable
 		this.location = (parent != null) ? new Point(parent.location.x+offset.x,parent.location.y+offset.y) : offset;
 	}
 
+	/*
+	 * Get the next location of the tree node to draw.
+	 */
 	public void recalculateLocation()
 	{
 		if (this.getTransitionsTo().size() == 1)
@@ -1962,9 +1967,19 @@ public class BoardState implements java.io.Serializable
 		else // Merge Case - All calculations are performed when Tree is edited
 		{
 			if (mergeOverlord != null) // Safeguard for complex delete function
-			{
-				this.location.x = mergeOverlord.location.x + offset.x;
-				this.location.y = mergeOverlord.location.y + offset.y;
+			{	
+				//Merging increases the offset value.
+				//However, it's only neecessary to increase the offset once.
+				//This fixes a bug where the offset kept increasing and strectched the tree.
+				if (isMerged == false)
+				{
+					fixedOffset.x = offset.x;
+					fixedOffset.y = offset.y;
+					isMerged = true;
+				}
+				
+				this.location.x = mergeOverlord.location.x + fixedOffset.x;
+				this.location.y = mergeOverlord.location.y + fixedOffset.y;
 			}
 		}
 
