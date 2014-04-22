@@ -16,6 +16,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import java.util.Vector;
 
@@ -29,6 +31,13 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 	public Point pointSelected = new Point(-5,-5);
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
 	private LEGUP_Gui parent = null;
+	public JDialog dialog = null;
+	
+	public static boolean HIGHLIGHT_SELECTABLES = true;
+	public static boolean CLOSE_ON_SELECTION = true;
+	public static String helpMessage = (HIGHLIGHT_SELECTABLES && CLOSE_ON_SELECTION)?
+			"Click an orange-highlighed square to apply the case rule there.":
+			"Select where you would like to apply the CaseRule, and then select ok.";
 	
 	CaseRuleSelectionHelper(LEGUP_Gui gui)
 	{
@@ -69,7 +78,60 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 	
 	protected void draw( Graphics2D g )
 	{
-		BoardDrawingHelper.draw(g,pointSelected,mode);
+		BoardDrawingHelper.draw(g,this);//pointSelected,mode);
+	}
+	
+	//used for highlighting now, remove duplication below later
+	public boolean isForbiddenTile(Point p)
+	{
+		BoardState state = Legup.getCurrentState();
+		int w  = state.getWidth();
+		int h = state.getHeight();
+		if((p.x < -1)||(p.x > w)||(p.y < -1)||(p.y > h))return true;
+		if(((p.x == -1)||(p.x == w))&&((p.y == -1)||(p.y == h)))return true;
+		if((!allowLabels)||(mode != MODE_COL_ROW))
+		{
+			if((p.x == -1)||(p.x == w)||(p.y == -1)||(p.y == h))
+			{
+				return true;
+			}
+		}
+		if(!((p.x == -5)&&(p.y == -5)))
+		{
+			if(mode == MODE_TILE)
+			{
+				if(!state.isModifiableCell(p.x,p.y))
+				{
+					return true;
+				}
+			}
+			if(mode == MODE_TILETYPE)
+			{
+				if(tileTypes != null)
+				{
+					int current_cell = state.getCellContents(p.x,p.y); 
+					if(!tileTypes.contains(current_cell))
+					{
+						return true;
+					}
+				}
+				else
+				{
+					//JOptionPane.showMessageDialog(null,"The tile type whitelist is null.");
+					return true;
+				}
+			}
+		}
+		if(p.x == w)p.x = -1;
+		if(p.y == h)p.y = -1;
+		if(mode == MODE_COL_ROW)
+		{
+			if((p.x != -1)&&(p.y != -1))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	protected void mousePressedAt(Point p, MouseEvent e)
@@ -149,8 +211,17 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 				}
 			}
 			
+			
+			
 			pointSelected.x = p.x;
 			pointSelected.y = p.y;
+			if(dialog != null && CLOSE_ON_SELECTION)
+			{
+				if((p.x != -5) && (p.y != -5))
+				{
+					dialog.setVisible(false);
+				}
+			}
 		}
 		repaint();
 	}
