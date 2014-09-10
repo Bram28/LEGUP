@@ -134,6 +134,30 @@ public class CasePanel extends JustificationPanel
 		return false;
 	}
 
+    protected boolean doCaseRuleAutogen(Point point, BoardState cur, int button)
+    {
+        if((point.x == -5) && (point.y == -5))
+        {
+            //System.out.println("Nothing selected.");
+            return false;
+        }
+        else
+        {
+            //System.out.println("Point ("+point.x+","+point.y+") selected.");
+            PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+            //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
+            BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
+            if(b != null)Legup.getInstance().setCurrentState(b);
+            if((cur.getTransitionsFrom().size() > 0) && (cur.getTransitionsFrom().get(0) != null))
+            {
+                Legup.setCurrentState(cur.getTransitionsFrom().get(0));
+            }
+            //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
+            //Legup.getInstance().getGui().getTree().pushUndo();
+            return true;
+        }
+    }
+
 	@Override
 	protected Justification addJustification(int button)
 	{
@@ -161,25 +185,7 @@ public class CasePanel extends JustificationPanel
 			crsh.mode = caseRules.get(button).crshMode();
 			crsh.tileTypes = caseRules.get(button).crshTileType();
             crsh.showInNewDialog();
-			if((crsh.pointSelected.x == -5) && (crsh.pointSelected.y == -5))
-			{
-				//System.out.println("Nothing selected.");
-				return null;
-			}
-			else
-			{
-				//System.out.println("Point ("+crsh.pointSelected.x+","+crsh.pointSelected.y+") selected.");
-				PuzzleModule pm = Legup.getInstance().getPuzzleModule();
-				//Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
-				BoardState b = caseRules.get(button).autoGenerateCases(cur,crsh.pointSelected);
-				if(b != null)Legup.getInstance().setCurrentState(b);
-				if((cur.getTransitionsFrom().size() > 0) && (cur.getTransitionsFrom().get(0) != null))
-				{
-					Legup.setCurrentState(cur.getTransitionsFrom().get(0));
-				}
-				//Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
-				//Legup.getInstance().getGui().getTree().pushUndo();
-			}
+            if(!doCaseRuleAutogen(crsh.pointSelected, cur, button)) { return null; }
 		}
 		else
 		{
