@@ -100,50 +100,9 @@ public abstract class BoardDrawingHelper
 				}
 			}
 		}
-		if((crsh != null))
+		if(crsh != null)
 		{
-			for(int x = -1;x < width;++x)
-			{
-				for(int y = -1;y < height;++y)
-				{
-					if(CaseRuleSelectionHelper.HIGHLIGHT_SELECTABLES && !crsh.isForbiddenTile(new Point(x,y)))
-					{
-						g.setStroke(new BasicStroke(3f));
-						g.setColor(caseRuleTargetHighlight);
-						g.fillRect(
-								(x+1) * imageWidth,
-								(y+1) * imageHeight,
-								imageWidth - 0,
-								imageHeight - 0);
-					}
-					if((crsh.mode == CaseRuleSelectionHelper.MODE_TILE)||(crsh.mode == CaseRuleSelectionHelper.MODE_TILETYPE))
-					{
-						if((crsh.pointSelected.x == x) && (crsh.pointSelected.y == y))
-						{
-							g.setStroke(new BasicStroke(3f));
-							g.setColor(cyanFilter);
-							g.drawRect(
-									(x+1) * imageWidth + 2,
-									(y+1) * imageHeight + 2,
-									imageWidth - 4,
-									imageHeight - 4 );
-						}
-					}
-					else if(crsh.mode == CaseRuleSelectionHelper.MODE_COL_ROW)
-					{
-						if(((crsh.pointSelected.x == -1)&&(crsh.pointSelected.y == y))||((crsh.pointSelected.x == x)&&(crsh.pointSelected.y == -1)))
-						{
-							g.setStroke(new BasicStroke(3f));
-							g.setColor(cyanFilter);
-							g.drawRect(
-									(x+1) * imageWidth + 2,
-									(y+1) * imageHeight + 2,
-									imageWidth - 4,
-									imageHeight - 4 );
-						}
-					}
-				}
-			}
+			crsh.drawBoardOverlay(g, width, height, imageWidth, imageHeight);
 		}
 		// Color hint cells
 		if( newState.getHintCells() != null ){
@@ -207,7 +166,6 @@ public abstract class BoardDrawingHelper
 	//public static Color blueFilter = new Color(000,255,255,64);
 	public static Color orangeFilter = new Color(255,165,0,128);
 	public static Color orangeHighlight = new Color(255,165,0,192);
-	public static Color caseRuleTargetHighlight = new Color(0,192,255,192);
 	//private static Color orangeSquare = ((!ANIMATE_SPLIT_CASE) ? new Color(225,182,100,255) : new Color(255,182,100,128));
 	private static Color orangeSquare = new Color(255,192,0,255);
 	public static Color determineTransitionColor(int x, int y, BoardState newState, BoardState oldState, boolean showOrange)

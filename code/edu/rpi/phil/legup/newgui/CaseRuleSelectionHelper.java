@@ -9,6 +9,7 @@ import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.Selection;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -225,6 +226,54 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 		}
 		repaint();
 	}
+
+    public static Color caseRuleTargetHighlight = new Color(0,192,255,192);
+    public static final Color cyanFilter = BoardDrawingHelper.cyanFilter;
+    public void drawBoardOverlay(Graphics2D g, int width, int height, int imageWidth, int imageHeight)
+    {
+        for(int x = -1;x < width;++x)
+        {
+            for(int y = -1;y < height;++y)
+            {
+                if(HIGHLIGHT_SELECTABLES && !isForbiddenTile(new Point(x,y)))
+                {
+                    g.setStroke(new BasicStroke(3f));
+                    g.setColor(caseRuleTargetHighlight);
+                    g.fillRect(
+                            (x+1) * imageWidth,
+                            (y+1) * imageHeight,
+                            imageWidth - 0,
+                            imageHeight - 0);
+                }
+                if((mode == CaseRuleSelectionHelper.MODE_TILE)||(mode == CaseRuleSelectionHelper.MODE_TILETYPE))
+                {
+                    if((pointSelected.x == x) && (pointSelected.y == y))
+                    {
+                        g.setStroke(new BasicStroke(3f));
+                        g.setColor(cyanFilter);
+                        g.drawRect(
+                                (x+1) * imageWidth + 2,
+                                (y+1) * imageHeight + 2,
+                                imageWidth - 4,
+                                imageHeight - 4 );
+                    }
+                }
+                else if(mode == CaseRuleSelectionHelper.MODE_COL_ROW)
+                {
+                    if(((pointSelected.x == -1)&&(pointSelected.y == y))||((pointSelected.x == x)&&(pointSelected.y == -1)))
+                    {
+                        g.setStroke(new BasicStroke(3f));
+                        g.setColor(cyanFilter);
+                        g.drawRect(
+                                (x+1) * imageWidth + 2,
+                                (y+1) * imageHeight + 2,
+                                imageWidth - 4,
+                                imageHeight - 4 );
+                    }
+                }
+            }
+        }
+    }
 	
 	public void actionPerformed(ActionEvent e)
 	{
