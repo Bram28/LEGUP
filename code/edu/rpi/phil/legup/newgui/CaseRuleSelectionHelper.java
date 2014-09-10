@@ -53,6 +53,19 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 		pointSelected.y = -5;
 	}
 
+    public void showInNewDialog()
+    {
+        Object[] msg = new Object[2];
+        msg[0] = helpMessage;
+        msg[1] = this;
+        //JOptionPane.showMessageDialog(null,msg);
+        JOptionPane pane = new JOptionPane(msg);
+        pane.setOptions(new Object[]{"Cancel"});
+        this.dialog = pane.createDialog("Case Rule selection");
+        this.dialog.pack();
+        this.dialog.setVisible(true);
+    }
+
 	private Dimension getProperSize()
 	{
 		Dimension rv = new Dimension();

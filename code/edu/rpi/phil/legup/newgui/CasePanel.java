@@ -157,18 +157,10 @@ public class CasePanel extends JustificationPanel
 		*/
 		if(Legup.getInstance().getGui().autoGenCaseRules)
 		{
-			Object[] msg = new Object[2];
 			CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
 			crsh.mode = caseRules.get(button).crshMode();
 			crsh.tileTypes = caseRules.get(button).crshTileType();
-			msg[0] = CaseRuleSelectionHelper.helpMessage;
-			msg[1] = crsh;
-			//JOptionPane.showMessageDialog(null,msg);
-			JOptionPane pane = new JOptionPane(msg);
-			pane.setOptions(new Object[]{"Cancel"});
-			crsh.dialog = pane.createDialog("Case Rule selection");
-			crsh.dialog.pack();
-			crsh.dialog.setVisible(true);
+            crsh.showInNewDialog();
 			if((crsh.pointSelected.x == -5) && (crsh.pointSelected.y == -5))
 			{
 				//System.out.println("Nothing selected.");
