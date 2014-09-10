@@ -22,7 +22,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import java.util.Vector;
 
-public class CaseRuleSelectionHelper extends DynamicViewer implements ActionListener
+public class CaseRuleSelectionHelper extends Board
 {
 	public int mode = MODE_TILE;
 	public static final int MODE_TILE = 0;
@@ -239,6 +239,8 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 		}
 		repaint();
 	}
+	protected void mouseReleasedAt(Point p, MouseEvent e) {}
+    public void initSize() { System.out.println("CaseRuleSelectionHelper#initSize() called."); }
 
     public static Color caseRuleTargetHighlight = new Color(0,192,255,192);
     public static final Color cyanFilter = BoardDrawingHelper.cyanFilter;
@@ -288,8 +290,6 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
         }
     }
 	
-	public void actionPerformed(ActionEvent e)
-	{
-		
-	}
+	public void actionPerformed(ActionEvent e) {}
+    public void boardDataChanged(BoardState state) {}
 }
