@@ -382,7 +382,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		justificationFrame = new JustificationFrame( this );
 		//ruleBox.add( justificationFrame, BorderLayout.WEST );
 		
-		board = new Board( this );
+		board = new NormalBoard( this );
 		board.setPreferredSize( new Dimension( 600, 400 ) );
 		
 		JPanel boardPanel = new JPanel( new BorderLayout() );
