@@ -36,7 +36,7 @@ public class CaseRuleSelectionHelper extends DynamicViewer implements ActionList
 	public static boolean HIGHLIGHT_SELECTABLES = true;
 	public static boolean CLOSE_ON_SELECTION = true;
 	public static String helpMessage = (HIGHLIGHT_SELECTABLES && CLOSE_ON_SELECTION)?
-			"Click an orange-highlighed square to apply the case rule there.":
+			"Click an blue-highlighed square to apply the case rule there.":
 			"Select where you would like to apply the CaseRule, and then select ok.";
 	
 	CaseRuleSelectionHelper(LEGUP_Gui gui)

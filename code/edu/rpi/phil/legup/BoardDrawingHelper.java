@@ -109,7 +109,7 @@ public abstract class BoardDrawingHelper
 					if(CaseRuleSelectionHelper.HIGHLIGHT_SELECTABLES && !crsh.isForbiddenTile(new Point(x,y)))
 					{
 						g.setStroke(new BasicStroke(3f));
-						g.setColor(orangeHighlight);
+						g.setColor(caseRuleTargetHighlight);
 						g.fillRect(
 								(x+1) * imageWidth,
 								(y+1) * imageHeight,
@@ -207,6 +207,7 @@ public abstract class BoardDrawingHelper
 	//public static Color blueFilter = new Color(000,255,255,64);
 	public static Color orangeFilter = new Color(255,165,0,128);
 	public static Color orangeHighlight = new Color(255,165,0,192);
+	public static Color caseRuleTargetHighlight = new Color(0,192,255,192);
 	//private static Color orangeSquare = ((!ANIMATE_SPLIT_CASE) ? new Color(225,182,100,255) : new Color(255,182,100,128));
 	private static Color orangeSquare = new Color(255,192,0,255);
 	public static Color determineTransitionColor(int x, int y, BoardState newState, BoardState oldState, boolean showOrange)
