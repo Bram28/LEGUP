@@ -358,6 +358,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	{
 		return board;//((Board)test.getRightComponent());
 	}
+    public void setBoard(Board b)
+    {
+        board = b;
+        test.setRightComponent(b);
+    }
 	// contains all the code to setup the main content
 	private void setupContent(){
 		

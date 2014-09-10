@@ -158,11 +158,13 @@ public class CasePanel extends JustificationPanel
         }
     }
 
+    boolean experimentalCaseRuleBoardSwap = false; //still a bit buggy, so use a flag
+
 	@Override
-	protected Justification addJustification(int button)
+	protected Justification addJustification(final int button)
 	{
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
-		BoardState cur = selection.getState();
+		final BoardState cur = selection.getState();
 		
 		if (cur.getTransitionsFrom().size() > 0)
 			return null;
@@ -181,11 +183,26 @@ public class CasePanel extends JustificationPanel
 		*/
 		if(Legup.getInstance().getGui().autoGenCaseRules)
 		{
-			CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
+			final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
 			crsh.mode = caseRules.get(button).crshMode();
 			crsh.tileTypes = caseRules.get(button).crshTileType();
-            crsh.showInNewDialog();
-            if(!doCaseRuleAutogen(crsh.pointSelected, cur, button)) { return null; }
+            if(!experimentalCaseRuleBoardSwap)
+            {
+                crsh.showInNewDialog();
+                if(!doCaseRuleAutogen(crsh.pointSelected, cur, button)) { return null; }
+            }
+            else
+            {
+                //Board theBoard = Legup.getInstance().getGui().getBoard();
+                //Legup.getInstance().getGui().setBoard(crsh);
+                crsh.temporarilyReplaceBoard(Legup.getInstance().getGui(), this);
+                //try { this.wait(); } catch(Exception e){e.printStackTrace();}
+                new Thread(new Runnable(){ public void run() {
+                    crsh.blockUntilSelectionMade();
+                    System.out.println("unblocked");
+                    if(!doCaseRuleAutogen(crsh.pointSelected, cur, button)) {} //{ return null; }
+                }}).start();
+            }
 		}
 		else
 		{

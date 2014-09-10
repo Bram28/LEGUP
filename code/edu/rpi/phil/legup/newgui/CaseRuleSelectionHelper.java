@@ -33,7 +33,9 @@ public class CaseRuleSelectionHelper extends Board
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
 	private LEGUP_Gui parent = null;
 	public JDialog dialog = null;
-	
+    public Board oldBoard = null;
+	public volatile Object notifyOnSelection = null;
+
 	public static boolean HIGHLIGHT_SELECTABLES = true;
 	public static boolean CLOSE_ON_SELECTION = true;
 	public static String helpMessage = (HIGHLIGHT_SELECTABLES && CLOSE_ON_SELECTION)?
@@ -229,13 +231,23 @@ public class CaseRuleSelectionHelper extends Board
 			
 			pointSelected.x = p.x;
 			pointSelected.y = p.y;
-			if(dialog != null && CLOSE_ON_SELECTION)
-			{
-				if((p.x != -5) && (p.y != -5))
-				{
-					dialog.setVisible(false);
-				}
-			}
+            if(CLOSE_ON_SELECTION)
+            {
+                if(dialog != null)
+                {
+                    if((p.x != -5) && (p.y != -5))
+                    {
+                        dialog.setVisible(false);
+                    }
+                }
+                else if(oldBoard != null)
+                {
+                    Legup.getInstance().getGui().setBoard(oldBoard);
+                    //notifyOnSelection.notify();
+                    //System.out.println("setting CRSH.notifyOnSelection to null.");
+                    notifyOnSelection = null;
+                }
+            }
 		}
 		repaint();
 	}
@@ -289,7 +301,16 @@ public class CaseRuleSelectionHelper extends Board
             }
         }
     }
-	
+	public void temporarilyReplaceBoard(LEGUP_Gui gui, Object toNotify)
+    {
+        oldBoard = gui.getBoard();
+        gui.setBoard(this);
+        notifyOnSelection = toNotify;
+    }
+    public void blockUntilSelectionMade()
+    {
+        while(notifyOnSelection != null) {}
+    }
 	public void actionPerformed(ActionEvent e) {}
     public void boardDataChanged(BoardState state) {}
 }
