@@ -195,13 +195,16 @@ public class CasePanel extends JustificationPanel
             {
                 //Board theBoard = Legup.getInstance().getGui().getBoard();
                 //Legup.getInstance().getGui().setBoard(crsh);
-                crsh.temporarilyReplaceBoard(Legup.getInstance().getGui(), this);
-                //try { this.wait(); } catch(Exception e){e.printStackTrace();}
-                new Thread(new Runnable(){ public void run() {
-                    crsh.blockUntilSelectionMade();
-                    System.out.println("unblocked");
-                    if(!doCaseRuleAutogen(crsh.pointSelected, cur, button)) {} //{ return null; }
-                }}).start();
+                if(!(Legup.getInstance().getGui().getBoard() instanceof CaseRuleSelectionHelper))
+                {
+                    crsh.temporarilyReplaceBoard(Legup.getInstance().getGui(), this);
+                    //try { this.wait(); } catch(Exception e){e.printStackTrace();}
+                    new Thread(new Runnable(){ public void run() {
+                        crsh.blockUntilSelectionMade();
+                        System.out.println("unblocked");
+                        if(!doCaseRuleAutogen(crsh.pointSelected, cur, button)) {} //{ return null; }
+                    }}).start();
+                }
             }
 		}
 		else
