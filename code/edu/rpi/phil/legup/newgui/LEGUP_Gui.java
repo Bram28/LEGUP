@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -358,8 +359,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	{
 		return board;//((Board)test.getRightComponent());
 	}
-    public void setBoard(Board b)
+    private LinkedList<Board> boardStack = new LinkedList<Board>();
+    public void pushBoard(Board b)
     {
+        boardStack.push(board);
+        board = b;
+        test.setRightComponent(b);
+    }
+    public void popBoard()// throws java.util.NoSuchElementException
+    {
+        Board b = boardStack.pop();
         board = b;
         test.setRightComponent(b);
     }
