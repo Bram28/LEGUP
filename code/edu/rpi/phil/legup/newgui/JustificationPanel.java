@@ -60,17 +60,21 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 		else
 		{
 			Justification j = addJustification(button); 
-			if(j != null)
-			{
-				Legup.getInstance().getGui().getTree().addChildAtCurrentState();
-				if((j instanceof CaseRule) && (!Legup.getInstance().getGui().autoGenCaseRules))
-				for(int c1=0;c1<2;c1++)
-				{
-					Legup.setCurrentState(Legup.getCurrentState().getSingleParentState());
-				}
-			}
+            buttonPressedContinuation1(j);
 		}
 	}
+    protected void buttonPressedContinuation1(Justification j)
+    {
+        if(j != null)
+        {
+            Legup.getInstance().getGui().getTree().addChildAtCurrentState();
+            if((j instanceof CaseRule) && (!Legup.getInstance().getGui().autoGenCaseRules))
+            for(int c1=0;c1<2;c1++)
+            {
+                Legup.setCurrentState(Legup.getCurrentState().getSingleParentState());
+            }
+        }
+    }
 	
 	protected abstract Justification addJustification(int button);
 	protected abstract void checkJustification(int button);

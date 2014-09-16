@@ -158,7 +158,7 @@ public class CasePanel extends JustificationPanel
         }
     }
 
-    boolean experimentalCaseRuleBoardSwap = false; //still a bit buggy, so use a flag
+    boolean experimentalCaseRuleBoardSwap = true; //still a bit buggy, so use a flag
 
 	@Override
 	protected Justification addJustification(final int button)
@@ -175,7 +175,7 @@ public class CasePanel extends JustificationPanel
 		if (cur.getCaseRuleJustification() != null)
 			return null;
 
-		CaseRule r = caseRules.get(button);
+		final CaseRule r = caseRules.get(button);
 		
 		/*int quantityofcases = Integer.valueOf(JOptionPane.showInputDialog(null,"How many branches?")).intValue();
 		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
@@ -202,7 +202,10 @@ public class CasePanel extends JustificationPanel
                     new Thread(new Runnable(){ public void run() {
                         crsh.blockUntilSelectionMade();
                         System.out.println("unblocked");
-                        if(!doCaseRuleAutogen(crsh.pointSelected, cur, button)) {} //{ return null; }
+                        if(doCaseRuleAutogen(crsh.pointSelected, cur, button))
+                        {
+                            buttonPressedContinuation1(r);
+                        }
                     }}).start();
                 }
             }
