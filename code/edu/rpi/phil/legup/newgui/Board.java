@@ -23,6 +23,8 @@ import edu.rpi.phil.legup.Selection;
 
 public abstract class Board extends DynamicViewer implements BoardDataChangeListener, ActionListener
 {
+    protected Board() { super(); }
+    protected Board(boolean b) { super(b); }
 	abstract public void actionPerformed(ActionEvent e);
 	abstract public void initSize();
 	abstract protected void draw( Graphics2D g );

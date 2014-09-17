@@ -350,6 +350,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	public Tree getTree() {return tree;}
 	private Console console;
 	private Board board;
+    private TitledBorder boardBorder;
 	private JSplitPane test, test2;
 	public JustificationFrame getJustificationFrame()
 	{
@@ -362,13 +363,22 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
     private LinkedList<Board> boardStack = new LinkedList<Board>();
     public void pushBoard(Board b)
     {
+        b.setBorder(boardBorder);
         boardStack.push(board);
+        int z1 = board.getZoom();
+        double z2 = ((double)z1) / 100;
+        b.zoomTo(z2);
+        //b.zoomTo(board.getZoom());
         board = b;
         test.setRightComponent(b);
     }
     public void popBoard()// throws java.util.NoSuchElementException
     {
         Board b = boardStack.pop();
+        int z1 = board.getZoom();
+        double z2 = ((double)z1) / 100;
+        b.zoomTo(z2);
+        //b.zoomTo(board.getZoom());
         board = b;
         test.setRightComponent(b);
     }
@@ -410,9 +420,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		//boardPanel.add(test);
 		boardPanel.add(test2);
 		//no more fun :(
-		TitledBorder title = BorderFactory.createTitledBorder("Board");
-		title.setTitleJustification(TitledBorder.CENTER);
-		board.setBorder(title);
+		boardBorder = BorderFactory.createTitledBorder("Board");
+		boardBorder.setTitleJustification(TitledBorder.CENTER);
+		board.setBorder(boardBorder);
 		
 		ruleBox.add( boardPanel );
 		treeBox.add( ruleBox );

@@ -43,6 +43,7 @@ public class CaseRuleSelectionHelper extends Board
 	
 	CaseRuleSelectionHelper(LEGUP_Gui gui)
 	{
+        super(false);
 		parent = gui;
 		setPreferredSize(new Dimension(600,400));
 		setBackground(new Color(0xE0E0E0));
