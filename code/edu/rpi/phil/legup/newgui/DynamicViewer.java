@@ -254,6 +254,8 @@ public abstract class DynamicViewer extends JScrollPane {
 		return (int)( scale * 100.0 );
 	}
 
+    public JViewport getViewport() { return viewport; }
+
 	/*** CUSTOMIZATION METHODS ***/
 
 	public void setBackground( Color c ){

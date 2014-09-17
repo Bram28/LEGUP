@@ -368,6 +368,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
         int z1 = board.getZoom();
         double z2 = ((double)z1) / 100;
         b.zoomTo(z2);
+        b.getViewport().setViewPosition(board.getViewport().getViewPosition());
         //b.zoomTo(board.getZoom());
         board = b;
         test.setRightComponent(b);
@@ -378,6 +379,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
         int z1 = board.getZoom();
         double z2 = ((double)z1) / 100;
         b.zoomTo(z2);
+        b.getViewport().setViewPosition(board.getViewport().getViewPosition());
         //b.zoomTo(board.getZoom());
         board = b;
         test.setRightComponent(b);
