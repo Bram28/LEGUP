@@ -90,6 +90,22 @@ public class Nurikabe extends PuzzleModule
 		}
 	}
 	
+	public String getStateName(int state)
+	{
+		if(state == 0)return "empty";
+		else if(state == 1)return "black";
+		else if(state == 2)return "white";
+		else return null;
+	}
+	
+	public int getStateNumber(String state)
+	{
+		if(state == "empty")return CELL_UNKNOWN;
+		else if(state == "black")return CELL_BLACK;
+		else if(state == "white")return CELL_WHITE;
+		else return CELL_UNKNOWN;
+	}
+	
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}
