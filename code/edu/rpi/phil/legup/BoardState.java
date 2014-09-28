@@ -1151,7 +1151,7 @@ public class BoardState implements java.io.Serializable
 			int place = -(mergeTot-1)*(int)(1.5*TreePanel.NODE_RADIUS);
 			for (BoardState B : mergeChildren)
 			{
-				B.offset.y = (1+depth)*4*TreePanel.NODE_RADIUS;
+				B.offset.y = (1+depth)*5*TreePanel.NODE_RADIUS;
 				B.offset.x = place+(B.numBranches()-1)*((int)(1.5*TreePanel.NODE_RADIUS));
 				place += B.numBranches()*3*TreePanel.NODE_RADIUS;
 			}
@@ -1969,8 +1969,8 @@ public class BoardState implements java.io.Serializable
 			if (mergeOverlord != null) // Safeguard for complex delete function
 			{	
 				//Merging increases the offset value.
-				//However, it's only neecessary to increase the offset once.
-				//This fixes a bug where the offset kept increasing and strectched the tree.
+				//However, it's only necessary to increase the offset once.
+				//This fixes a bug where the offset kept increasing and stretched the tree.
 				if (isMerged == false)
 				{
 					fixedOffset.x = offset.x;
