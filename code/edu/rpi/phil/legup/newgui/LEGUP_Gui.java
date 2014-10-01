@@ -275,8 +275,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				allowDefault.addActionListener(this);
 			proof.add(caseRuleGen);
 				caseRuleGen.addActionListener(this);
+                caseRuleGen.setState(true);
 			proof.add(imdFeedback);
 				imdFeedback.addActionListener(this);
+                imdFeedback.setState(true);
 			/*proof.add(proofMode);
 				for (int i = 0; i < PROF_FLAGS.length; i++)
 				{
