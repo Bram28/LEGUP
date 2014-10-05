@@ -159,7 +159,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		else
 		{
 			transitionsFrom = getLastCollapsed(state).getTransitionsFrom();
-			draw.y += COLLAPSED_DRAW_DELTA_Y;
+			//draw.y += COLLAPSED_DRAW_DELTA_Y;
 		}
 
 		for (int c = 0; c < transitionsFrom.size(); ++c)
@@ -183,9 +183,11 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				else
 					g.setColor(flag ? Color.black : Color.gray);
 
-				if (b.isCollapsed())
-					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
-
+				//if (b.isCollapsed())
+				//{
+					//childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
+				//}
+				
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
 				//System.out.format("%d, %d,   %d, %d\n", childPoint.x, childPoint.y, state.getLocation().x, state.getLocation().y);
 				g2D.setStroke(thin);
@@ -411,14 +413,14 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
 		g2D.setColor(Color.black);
-		g2D.drawLine(x,y+2*deltaY,x,y);
+		//g2D.drawLine(x,y+2*deltaY,x,y);
 
 		for (int c = 0; c < 3; ++c)
 		{
 			g.setColor(nodeColor);
-			g.fillOval(x - rad,y - rad + c * deltaY,diam,diam);
+			g.fillOval(x - rad,y - rad + (c - 1) * deltaY,diam,diam);
 			g.setColor(Color.black);
-			g.drawOval(x - rad,y - rad + c * deltaY,diam,diam);
+			g.drawOval(x - rad,y - rad + (c - 1) * deltaY,diam,diam);
 		}
 	}
 
