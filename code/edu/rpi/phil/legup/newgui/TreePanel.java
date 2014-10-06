@@ -90,8 +90,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	 */
 	private BoardState getLastCollapsed(BoardState s)
 	{
+		return getLastCollapsed(s, null);
+	}
+	private BoardState getLastCollapsed(BoardState s, int[] outptrNumTransitions)
+	{
 		Vector <BoardState> children = s.getTransitionsFrom();
 		BoardState rv = s;
+		int numTransitions = 0;
 
 		if (children.size() == 1)
 		{
@@ -99,10 +104,11 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 			if (child.isCollapsed())
 			{
+				++numTransitions;
 				rv = getLastCollapsed(child);
 			}
 		}
-
+		if(outptrNumTransitions != null) { outptrNumTransitions[0] = numTransitions; }
 		return rv;
 	}
 
@@ -159,14 +165,23 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			transitionsFrom = state.getTransitionsFrom();
 		else
 		{
-			transitionsFrom = getLastCollapsed(state).getTransitionsFrom();
-			draw.x += COLLAPSED_DRAW_DELTA_X;
+			int[] ptrNumTransitions = new int[1];
+			BoardState lastCollapsed = getLastCollapsed(state, ptrNumTransitions);
+			//draw.x += COLLAPSED_DRAW_DELTA_X * ptrNumTransitions[0];
+			Point nextPoint = (Point)lastCollapsed.getLocation().clone();
+			draw.x = (draw.x + nextPoint.x)/2;
+
+			transitionsFrom = lastCollapsed.getTransitionsFrom();
 		}
 
 		for (int c = 0; c < transitionsFrom.size(); ++c)
 		{
 			BoardState b = transitionsFrom.get(c);
 			Point childPoint = (Point)b.getLocation().clone();
+			if(b.isCollapsed())
+			{
+				childPoint.x = (childPoint.x + getLastCollapsed(state).getLocation().x)/2;
+			}
 
 			if (transitionsFrom.size() == 1)
 			{
