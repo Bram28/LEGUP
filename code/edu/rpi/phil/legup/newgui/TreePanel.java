@@ -38,6 +38,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	public static final Color nodeColor = new Color(255,255,155);
 	public static final int NODE_RADIUS = 10;
 	private static final int SMALL_NODE_RADIUS = 7;
+	private static final int COLLAPSED_DRAW_DELTA_X = 10;
 	private static final int COLLAPSED_DRAW_DELTA_Y = 10;
 
 	private ArrayList <Rectangle> currentStateBoxes = new ArrayList <Rectangle>();
@@ -408,6 +409,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	{
 		final int rad = SMALL_NODE_RADIUS;
 		final int diam = 2 * rad;
+		final int deltaX = -COLLAPSED_DRAW_DELTA_X;
 		final int deltaY = -COLLAPSED_DRAW_DELTA_Y;
 
 		Graphics2D g2D = (Graphics2D)g;
@@ -418,9 +420,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		for (int c = 0; c < 3; ++c)
 		{
 			g.setColor(nodeColor);
-			g.fillOval(x - rad,y - rad + (c - 1) * deltaY,diam,diam);
+			g.fillOval(x - rad + (c - 1) * deltaX,y - rad,diam,diam);
 			g.setColor(Color.black);
-			g.drawOval(x - rad,y - rad + (c - 1) * deltaY,diam,diam);
+			g.drawOval(x - rad + (c - 1) * deltaX,y - rad,diam,diam);
 		}
 	}
 
