@@ -33,6 +33,7 @@ public class ContradictionPanel extends JustificationPanel
 	protected final String toolTip = "Contradictions";
 	//MouseListener listener = new DragMouseAdapter();
 	private Vector<Contradiction> contradictions = null;
+    protected Justification getNthJustification(int n) { return contradictions.get(n); }
 
 	/**
 	 * Create a new ContradictionPanel

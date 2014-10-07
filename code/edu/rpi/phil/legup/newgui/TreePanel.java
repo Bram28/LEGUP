@@ -38,6 +38,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	public static final Color nodeColor = new Color(255,255,155);
 	public static final int NODE_RADIUS = 10;
 	private static final int SMALL_NODE_RADIUS = 7;
+	private static final int COLLAPSED_DRAW_DELTA_X = 10;
 	private static final int COLLAPSED_DRAW_DELTA_Y = 10;
 
 	private ArrayList <Rectangle> currentStateBoxes = new ArrayList <Rectangle>();
@@ -89,8 +90,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	 */
 	private BoardState getLastCollapsed(BoardState s)
 	{
+		return getLastCollapsed(s, null);
+	}
+	private BoardState getLastCollapsed(BoardState s, int[] outptrNumTransitions)
+	{
 		Vector <BoardState> children = s.getTransitionsFrom();
 		BoardState rv = s;
+		int numTransitions = 0;
 
 		if (children.size() == 1)
 		{
@@ -98,10 +104,11 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 			if (child.isCollapsed())
 			{
+				++numTransitions;
 				rv = getLastCollapsed(child);
 			}
 		}
-
+		if(outptrNumTransitions != null) { outptrNumTransitions[0] = numTransitions; }
 		return rv;
 	}
 
@@ -158,14 +165,23 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			transitionsFrom = state.getTransitionsFrom();
 		else
 		{
-			transitionsFrom = getLastCollapsed(state).getTransitionsFrom();
-			draw.y += COLLAPSED_DRAW_DELTA_Y;
+			int[] ptrNumTransitions = new int[1];
+			BoardState lastCollapsed = getLastCollapsed(state, ptrNumTransitions);
+			//draw.x += COLLAPSED_DRAW_DELTA_X * ptrNumTransitions[0];
+			Point nextPoint = (Point)lastCollapsed.getLocation().clone();
+			draw.x = (draw.x + nextPoint.x)/2;
+
+			transitionsFrom = lastCollapsed.getTransitionsFrom();
 		}
 
 		for (int c = 0; c < transitionsFrom.size(); ++c)
 		{
 			BoardState b = transitionsFrom.get(c);
 			Point childPoint = (Point)b.getLocation().clone();
+			if(b.isCollapsed())
+			{
+				childPoint.x = (childPoint.x + getLastCollapsed(state).getLocation().x)/2;
+			}
 
 			if (transitionsFrom.size() == 1)
 			{
@@ -182,10 +198,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				}
 				else
 					g.setColor(flag ? Color.black : Color.gray);
-
-				if (b.isCollapsed())
-					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
-
+				
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
 				//System.out.format("%d, %d,   %d, %d\n", childPoint.x, childPoint.y, state.getLocation().x, state.getLocation().y);
 				g2D.setStroke(thin);
@@ -235,9 +248,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 						g2D.setStroke(dotted);
 				}
 
-				if (b.isCollapsed())
-					childPoint.y -= COLLAPSED_DRAW_DELTA_Y;
-				
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
 				
 				g2D.setStroke(thin);
@@ -406,19 +416,20 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	{
 		final int rad = SMALL_NODE_RADIUS;
 		final int diam = 2 * rad;
+		final int deltaX = -COLLAPSED_DRAW_DELTA_X;
 		final int deltaY = -COLLAPSED_DRAW_DELTA_Y;
 
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
 		g2D.setColor(Color.black);
-		g2D.drawLine(x,y+2*deltaY,x,y);
+		//g2D.drawLine(x,y+2*deltaY,x,y);
 
 		for (int c = 0; c < 3; ++c)
 		{
 			g.setColor(nodeColor);
-			g.fillOval(x - rad,y - rad + c * deltaY,diam,diam);
+			g.fillOval(x - rad + (c - 1) * deltaX,y - rad,diam,diam);
 			g.setColor(Color.black);
-			g.drawOval(x - rad,y - rad + c * deltaY,diam,diam);
+			g.drawOval(x - rad + (c - 1) * deltaX,y - rad,diam,diam);
 		}
 	}
 
@@ -636,7 +647,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	 */
 	public void delChildAtCurrentState()
 	{
-		if(!Legup.getInstance().getGui().imdFeedbackFlag)BoardState.removeColorsFromTransitions();
+		if(!Legup.getInstance().getGui().checkImmediateFeedback())BoardState.removeColorsFromTransitions();
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState state = s.getState();
 		
@@ -803,6 +814,16 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		return s;
 	}
 
+	protected void highlightSelectedTransition(Point p)
+	{
+		Selection sel = getSelectionAtPoint(Legup.getInstance().getInitialBoardState(), p);
+		if(sel != null && sel.getState().isModifiable())
+		{
+			Legup.getInstance().getGui().getJustificationFrame().
+				setSelectionByJustification(sel.getState().getJustification());
+		}
+	}
+
 	protected void mousePressedAt( Point p, MouseEvent e ){
 		// left click
 		if( e.getButton() == MouseEvent.BUTTON1 ){
@@ -814,7 +835,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				toggleSelection( Legup.getInstance().getInitialBoardState(), p );
 			// make a new selection
 			else
+			{
 				newSelection( Legup.getInstance().getInitialBoardState(), p );
+				highlightSelectedTransition(p);
+			}
 		// right click
 		} else if( e.getButton() == MouseEvent.BUTTON3 ){
 			// create a new child node and select it
