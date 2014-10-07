@@ -133,7 +133,7 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 	 */
 	public void actionPerformed(ActionEvent e)
 	{
-		boolean useDefault = false;
+		boolean useDefault = Legup.getInstance().getGui().checkAllowDefault();
 		Object source = e.getSource();
 		long time = e.getWhen();
 
