@@ -248,6 +248,7 @@ public class BoardState implements java.io.Serializable
 		virtualBoard = virtual;
 	}
 	
+    // Modifiable == Transition, name "isModifiable" was there historically (unsure origin), consider changing?
 	public boolean isModifiable()
 	{
 		return modifiableState;

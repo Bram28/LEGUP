@@ -814,6 +814,16 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		return s;
 	}
 
+	protected void highlightSelectedTransition(Point p)
+	{
+		Selection sel = getSelectionAtPoint(Legup.getInstance().getInitialBoardState(), p);
+		if(sel != null && sel.getState().isModifiable())
+		{
+			Legup.getInstance().getGui().getJustificationFrame().
+				setSelectionByJustification(sel.getState().getJustification());
+		}
+	}
+
 	protected void mousePressedAt( Point p, MouseEvent e ){
 		// left click
 		if( e.getButton() == MouseEvent.BUTTON1 ){
@@ -825,7 +835,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				toggleSelection( Legup.getInstance().getInitialBoardState(), p );
 			// make a new selection
 			else
+			{
 				newSelection( Legup.getInstance().getInitialBoardState(), p );
+				highlightSelectedTransition(p);
+			}
 		// right click
 		} else if( e.getButton() == MouseEvent.BUTTON3 ){
 			// create a new child node and select it

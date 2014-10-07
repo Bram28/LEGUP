@@ -94,6 +94,12 @@ public class JustificationFrame extends JPanel implements TreeSelectionListener,
 		BoardState.addCellChangeListener(this);
 	}
 
+    public void setSelectionByJustification(Justification j)
+    {
+        basicRulePanel.setSelectionByJustification(j);
+        casePanel.setSelectionByJustification(j);
+        contradictionPanel.setSelectionByJustification(j);
+    }
 	/**
 	 * Reset the justification button and status string
 	 *

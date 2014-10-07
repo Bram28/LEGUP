@@ -42,6 +42,7 @@ public class CasePanel extends JustificationPanel
 	protected final String toolTip = "Case Rules";
 	//MouseListener listener = new DragMouseAdapter();
 	private Vector<CaseRule> caseRules = null;
+    protected Justification getNthJustification(int n) { return caseRules.get(n); }
 
 	private CaseRule defaultApplication; //NEEDED! Not yet reimplmented!
 

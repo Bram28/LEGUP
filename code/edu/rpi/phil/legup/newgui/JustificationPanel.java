@@ -63,6 +63,21 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
             buttonPressedContinuation1(j);
 		}
 	}
+
+    protected abstract Justification getNthJustification(int n);
+
+    public void setSelectionByJustification(Justification j)
+    {
+        if(buttons != null) for(int i=0; i<buttons.length; i++)
+        {
+            if(getNthJustification(i).equals(j))
+            {
+                buttons[i].setSelected(true);
+                break;
+            }
+        }
+    }
+
     protected void buttonPressedContinuation1(Justification j)
     {
         if(j != null)
