@@ -847,7 +847,7 @@ public class BoardState implements java.io.Serializable
 		else if(s.getTransitionsFrom().size() >= 1)
 		{
 			next = s.getTransitionsFrom().firstElement();
-			if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().autoGenCaseRules))
+			if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().checkCaseRuleGen()))
 			{
 				next = s.addTransitionFrom();
 			}

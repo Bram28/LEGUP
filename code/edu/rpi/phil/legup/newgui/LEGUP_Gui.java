@@ -227,10 +227,13 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	/* private JMenu view = new JMenu("View"); */
 	private JMenu proof = new JMenu("Proof");
 		private JCheckBoxMenuItem allowDefault = new JCheckBoxMenuItem("Allow Default Rule Applications",false);
+        public boolean checkAllowDefault() { return allowDefault.getState(); }
 		private JCheckBoxMenuItem caseRuleGen = new JCheckBoxMenuItem("Automatically generate cases for CaseRule",false);
-		public boolean autoGenCaseRules = false;
+        public boolean checkCaseRuleGen() { return caseRuleGen.getState(); }
+		//public boolean autoGenCaseRules = false;
 		private JCheckBoxMenuItem imdFeedback = new JCheckBoxMenuItem("Provide immediate feedback",false);
-		public boolean imdFeedbackFlag = false;
+        public boolean checkImmediateFeedback() { return imdFeedback.getState(); }
+		//public boolean imdFeedbackFlag = false;
 		private JMenu proofMode = new JMenu("Proof Mode");
 			private JCheckBoxMenuItem[] proofModeItems = new JCheckBoxMenuItem[PROF_FLAGS.length];
 	private JMenu AI = new JMenu("AI");
@@ -279,8 +282,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			proof.add(imdFeedback);
 				imdFeedback.addActionListener(this);
                 imdFeedback.setState(true);
-			autoGenCaseRules = caseRuleGen.getState();
-			imdFeedbackFlag = imdFeedback.getState();
 			/*proof.add(proofMode);
 				for (int i = 0; i < PROF_FLAGS.length; i++)
 				{
@@ -817,11 +818,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		}
 		else if (e.getSource() == caseRuleGen)
 		{
-			autoGenCaseRules = caseRuleGen.getState();
+			//autoGenCaseRules = caseRuleGen.getState();
 		}
 		else if (e.getSource() == imdFeedback)
 		{
-			imdFeedbackFlag = imdFeedback.getState();
+			//imdFeedbackFlag = imdFeedback.getState();
 			Tree.colorTransitions();
 		}
 		else if (e.getSource() == Step)

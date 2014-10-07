@@ -647,7 +647,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	 */
 	public void delChildAtCurrentState()
 	{
-		if(!Legup.getInstance().getGui().imdFeedbackFlag)BoardState.removeColorsFromTransitions();
+		if(!Legup.getInstance().getGui().checkImmediateFeedback())BoardState.removeColorsFromTransitions();
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState state = s.getState();
 		

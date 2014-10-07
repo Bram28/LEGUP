@@ -168,9 +168,9 @@ public class CasePanel extends JustificationPanel
 		
 		if (cur.getTransitionsFrom().size() > 0)
 			return null;
-		if (cur.isModifiable() && Legup.getInstance().getGui().autoGenCaseRules)
+		if (cur.isModifiable() && Legup.getInstance().getGui().checkCaseRuleGen())
 			return null;
-		if (!cur.isModifiable() && !Legup.getInstance().getGui().autoGenCaseRules)
+		if (!cur.isModifiable() && !Legup.getInstance().getGui().checkCaseRuleGen())
 			return null;
 		if (cur.getCaseRuleJustification() != null)
 			return null;
@@ -181,7 +181,7 @@ public class CasePanel extends JustificationPanel
 		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
 		if(quantityofcases < 2)quantityofcases = 2; //the user from creating 100 nodes or something
 		*/
-		if(Legup.getInstance().getGui().autoGenCaseRules)
+		if(Legup.getInstance().getGui().checkCaseRuleGen())
 		{
 			final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
 			crsh.mode = caseRules.get(button).crshMode();
