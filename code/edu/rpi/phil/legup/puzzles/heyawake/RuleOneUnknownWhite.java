@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleOneUnknownWhite extends PuzzleRule
 {	 
+	private static final long serialVersionUID = 599105921L;
 	
 	 RuleOneUnknownWhite()
 	 {

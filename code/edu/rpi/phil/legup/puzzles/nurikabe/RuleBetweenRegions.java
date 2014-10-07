@@ -9,6 +9,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleBetweenRegions extends PuzzleRule
 {	 
+	private static final long serialVersionUID = 830456717L;
 	
 	 RuleBetweenRegions()
 	 {

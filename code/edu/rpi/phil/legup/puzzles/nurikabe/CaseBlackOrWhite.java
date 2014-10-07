@@ -10,6 +10,7 @@ import edu.rpi.phil.legup.CaseRule;
 
 public class CaseBlackOrWhite extends CaseRule
 {
+	private static final long serialVersionUID = 464380135L;
 	
 	public CaseBlackOrWhite()
 	{

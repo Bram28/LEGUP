@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleNoBlackSquare extends PuzzleRule
 {	 
+	private static final long serialVersionUID = 28206759L;
 	
 	 RuleNoBlackSquare()
 	 {

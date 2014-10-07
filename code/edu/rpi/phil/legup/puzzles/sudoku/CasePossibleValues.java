@@ -17,6 +17,8 @@ import edu.rpi.phil.legup.PuzzleModule;
  */
 public class CasePossibleValues extends CaseRule
 {
+	private static final long serialVersionUID = 174002227L;
+
 	public CasePossibleValues()
 	{
 		setName("Possible Values");

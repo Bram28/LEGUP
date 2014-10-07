@@ -51,6 +51,13 @@ public class ExtraTreeTentLink implements java.io.Serializable
 		
 		return rv;
 	}
+
+	// http://stackoverflow.com/questions/2707541/why-should-i-override-hashcode-when-i-override-equals-method
+	public int hashCode()
+	{
+		return 2*pos1.x + 3*pos1.y + 5*pos2.x + 7*pos2.y;
+	}
+
 	//serializes the data for load/save proof
 	public String toString()
 	{

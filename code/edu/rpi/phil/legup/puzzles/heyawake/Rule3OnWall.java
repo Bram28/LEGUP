@@ -8,6 +8,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class Rule3OnWall extends PuzzleRule
 {
+	private static final long serialVersionUID = 350127277L;
+
 	Rule3OnWall()
 	{
 		setName("2X3 on Wall");

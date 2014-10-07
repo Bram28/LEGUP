@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionNoSolutionForCell extends Contradiction
 {
+    private static final long serialVersionUID = 593202388L;
 
 	 ContradictionNoSolutionForCell()
 	 {

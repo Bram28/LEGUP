@@ -15,6 +15,7 @@ import java.awt.Point;
  */
 public abstract class PuzzleRule extends Justification
 {
+	private static final long serialVersionUID = 640025267L;
 
 	protected RuleApplication canApplyAt(BoardState state, Point at)
 	{

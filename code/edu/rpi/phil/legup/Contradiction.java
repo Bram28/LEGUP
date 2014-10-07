@@ -6,6 +6,7 @@ package edu.rpi.phil.legup;
  */
 public abstract class Contradiction extends Justification
 {
+	private static final long serialVersionUID = 144549884L;
 
 	/**
 	 * this is how you check for contradictions using a boardstate

@@ -308,8 +308,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		double nx = nodeRadius * Math.cos(theta);
 		double ny = nodeRadius * Math.sin(theta);
 
-		int px = (int)Math.round(trans.x2);
-		int py = (int)Math.round(trans.y2);
+		int px = Math.round(trans.x2);
+		int py = Math.round(trans.y2);
 
 		Polygon arrowhead = new Polygon();
 		arrowhead.addPoint(px, py);
@@ -444,7 +444,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	{
 		BoardState B = mouseOver.getState();
 		//J contains both basic rules and contradictions
-		Justification J = (Justification)B.getJustification();
+		Justification J = B.getJustification();
 		if (J != null)
 		{
 			g.drawImage(J.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
@@ -712,7 +712,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			myBounds = new Polygon(points_x,points_y,3);*/
 			draw.x -= radius/2;
 			draw.y -= radius/2;
-			myBounds = new Ellipse2D.Float(draw.x,draw.y,(int)(3*radius),(int)(3*radius));
+			myBounds = new Ellipse2D.Float(draw.x,draw.y,(3*radius),(3*radius));
 		}
 		else
 		{

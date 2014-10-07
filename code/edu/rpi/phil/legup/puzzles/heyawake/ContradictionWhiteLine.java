@@ -7,6 +7,8 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionWhiteLine extends Contradiction
 {	 
+    private static final long serialVersionUID = 299446797L;
+
 	 ContradictionWhiteLine()
 	 {
 		setName("White Line Too Long");

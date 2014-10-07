@@ -7,6 +7,8 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionAdjacentBlacks extends Contradiction
 {	 
+    private static final long serialVersionUID = -23494650L;
+
 	 ContradictionAdjacentBlacks()
 	 {
 		setName("Adjacent Black Cells");

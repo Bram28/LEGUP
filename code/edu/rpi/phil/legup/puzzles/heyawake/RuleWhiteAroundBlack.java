@@ -17,6 +17,8 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleWhiteAroundBlack extends PuzzleRule
 {
+	private static final long serialVersionUID = 953315180L;
+
     RuleWhiteAroundBlack()
     {
     	setName("White Around Black");

@@ -9,6 +9,7 @@ import java.awt.Point;
 
 
 public class RuleOnlyOneChoice extends PuzzleRule{
+	private static final long serialVersionUID = 893555109L;
 	
 	public RuleOnlyOneChoice() {
 		setName("Only Choice");

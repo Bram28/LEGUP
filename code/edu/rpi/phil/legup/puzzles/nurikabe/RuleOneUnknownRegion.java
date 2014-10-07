@@ -9,7 +9,8 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleOneUnknownRegion extends PuzzleRule
 {	
-	
+    private static final long serialVersionUID = 450532374L;
+
 	 RuleOneUnknownRegion()
 	 {
 		setName("Continue Region");

@@ -8,6 +8,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class RuleForcedBlack extends PuzzleRule
 {
+	private static final long serialVersionUID = 843828064L;
+
 	RuleForcedBlack()
 	{
 		setName("Black Path");

@@ -107,7 +107,7 @@ public class AI implements Runnable {
 			totSteps += steps;
 			steps = 0;
 			System.out.println("Puzzle " + i + " of " + boards.size());
-			ourLegup.loadBoardFile((String) boards.get(i));
+			ourLegup.loadBoardFile(boards.get(i));
 			// Legup puzzle 119 is enormously huge, and generates out-of-memory
 			// errors
 			if (i == 119) {

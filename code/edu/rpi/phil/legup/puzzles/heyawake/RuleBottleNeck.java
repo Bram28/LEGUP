@@ -7,6 +7,8 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleBottleNeck extends PuzzleRule
 {
+	private static final long serialVersionUID = 948912953L;
+
 	RuleBottleNeck()
 	{
 		setName("Bottle Neck");
