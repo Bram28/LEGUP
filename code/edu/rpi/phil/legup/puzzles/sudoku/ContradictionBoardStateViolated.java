@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionBoardStateViolated extends Contradiction
 {
+    private static final long serialVersionUID = 500264282L;
 
 	 ContradictionBoardStateViolated()
 	 {

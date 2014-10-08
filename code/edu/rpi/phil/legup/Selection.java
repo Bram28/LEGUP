@@ -62,4 +62,11 @@ public class Selection
 
 		return false;
 	}
+
+	// http://stackoverflow.com/questions/2707541/why-should-i-override-hashcode-when-i-override-equals-method
+	// Doesn't have to be unique
+	public int hashCode()
+	{
+		return state.numEmptySpaces(0,true) + state.numEmptySpaces(0,false);
+	}
 }

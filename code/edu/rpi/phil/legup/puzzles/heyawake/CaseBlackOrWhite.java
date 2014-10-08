@@ -10,6 +10,8 @@ import edu.rpi.phil.legup.CaseRule;
 
 public class CaseBlackOrWhite extends CaseRule
 {	
+	private static final long serialVersionUID = 971363234L;
+
 	public CaseBlackOrWhite()
 	{
 		setName("Cell black or white");

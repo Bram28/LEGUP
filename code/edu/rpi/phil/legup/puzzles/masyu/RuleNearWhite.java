@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class RuleNearWhite extends PuzzleRule {
+	private static final long serialVersionUID = 327207911L;
 
 	public RuleNearWhite() {
 		setName("Near White");

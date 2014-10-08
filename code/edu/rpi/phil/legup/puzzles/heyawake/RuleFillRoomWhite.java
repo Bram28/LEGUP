@@ -18,6 +18,7 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleFillRoomWhite extends PuzzleRule{
+	private static final long serialVersionUID = 723686169L;
 
     RuleFillRoomWhite()
     {

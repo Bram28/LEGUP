@@ -8,6 +8,7 @@ import java.awt.Point;
 
 public class RuleCornerBlack extends PuzzleRule
 {
+	private static final long serialVersionUID = 889434116L;
 	
 	RuleCornerBlack()
 	{

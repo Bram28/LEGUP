@@ -8,6 +8,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class RuleOneRow extends PuzzleRule
 {
+	private static final long serialVersionUID = 480985280L;
+
 	RuleOneRow()
 	{
 		setName("One Row");

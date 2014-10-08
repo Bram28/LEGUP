@@ -42,6 +42,7 @@ public class CasePanel extends JustificationPanel
 	protected final String toolTip = "Case Rules";
 	//MouseListener listener = new DragMouseAdapter();
 	private Vector<CaseRule> caseRules = null;
+    protected Justification getNthJustification(int n) { return caseRules.get(n); }
 
 	private CaseRule defaultApplication; //NEEDED! Not yet reimplmented!
 
@@ -147,7 +148,7 @@ public class CasePanel extends JustificationPanel
             PuzzleModule pm = Legup.getInstance().getPuzzleModule();
             //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
             BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
-            if(b != null)Legup.getInstance().setCurrentState(b);
+            if(b != null) Legup.setCurrentState(b);
             if((cur.getTransitionsFrom().size() > 0) && (cur.getTransitionsFrom().get(0) != null))
             {
                 Legup.setCurrentState(cur.getTransitionsFrom().get(0));
@@ -168,9 +169,9 @@ public class CasePanel extends JustificationPanel
 		
 		if (cur.getTransitionsFrom().size() > 0)
 			return null;
-		if (cur.isModifiable() && Legup.getInstance().getGui().autoGenCaseRules)
+		if (cur.isModifiable() && Legup.getInstance().getGui().checkCaseRuleGen())
 			return null;
-		if (!cur.isModifiable() && !Legup.getInstance().getGui().autoGenCaseRules)
+		if (!cur.isModifiable() && !Legup.getInstance().getGui().checkCaseRuleGen())
 			return null;
 		if (cur.getCaseRuleJustification() != null)
 			return null;
@@ -181,7 +182,7 @@ public class CasePanel extends JustificationPanel
 		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
 		if(quantityofcases < 2)quantityofcases = 2; //the user from creating 100 nodes or something
 		*/
-		if(Legup.getInstance().getGui().autoGenCaseRules)
+		if(Legup.getInstance().getGui().checkCaseRuleGen())
 		{
 			final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
 			crsh.mode = caseRules.get(button).crshMode();

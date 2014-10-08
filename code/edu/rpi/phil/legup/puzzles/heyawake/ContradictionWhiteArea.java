@@ -7,6 +7,8 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionWhiteArea extends Contradiction
 {	 
+    private static final long serialVersionUID = 173001424L;
+
 	 ContradictionWhiteArea()
 	 {
 		setName("White Area Connected");

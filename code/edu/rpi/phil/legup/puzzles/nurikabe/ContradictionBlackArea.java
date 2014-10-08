@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionBlackArea extends Contradiction
 {	 
+    private static final long serialVersionUID = 450786104L;
 	
 	 ContradictionBlackArea()
 	 {

@@ -10,6 +10,8 @@ import java.awt.Point;
 
 public class RuleZigZagWhite extends PuzzleRule
 {
+	private static final long serialVersionUID = 8843919L;
+
 	RuleZigZagWhite()
 	{
 		setName("White forced from zigzag");

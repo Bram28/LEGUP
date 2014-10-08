@@ -7,7 +7,8 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleOneUnknownWhite extends PuzzleRule
 {	 
-	
+	private static final long serialVersionUID = 540923390L;
+
 	 RuleOneUnknownWhite()
 	 {
 		setName("Continue Numberless Region");
