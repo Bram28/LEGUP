@@ -311,7 +311,7 @@ public class Legup
 		//legup.login.promptLogin();
 		legup.gui = new LEGUP_Gui(legup);
 		
-		legup.gui.promptPuzzle();
+		//legup.gui.promptPuzzle();
 
 		// This is for the animation - Daniel P
 		if (BoardDrawingHelper.ANIMATE_SPLIT_CASE) {
