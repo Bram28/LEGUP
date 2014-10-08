@@ -357,11 +357,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		final int diam = NODE_RADIUS + NODE_RADIUS;
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
-		Polygon triangle = new Polygon();
-		for(double c1 = 0;c1 < 360;c1+=120)
-		{
-			triangle.addPoint((int)(x+1.5*NODE_RADIUS*Math.cos(Math.toRadians(c1))),(int)(y+1.5*NODE_RADIUS*Math.sin(Math.toRadians(c1))));
-		}
+		Polygon triangle = makeTriangle(x, y, 1.5*NODE_RADIUS);
 		Selection theSelection = new Selection(state,false);
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		g.setColor(state.getColor());
@@ -424,13 +420,21 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		g2D.setColor(Color.black);
 		//g2D.drawLine(x,y+2*deltaY,x,y);
 
-		for (int c = 0; c < 3; ++c)
+		/*for (int c = 0; c < 3; ++c)
 		{
 			g.setColor(nodeColor);
 			g.fillOval(x - rad + (c - 1) * deltaX,y - rad,diam,diam);
 			g.setColor(Color.black);
 			g.drawOval(x - rad + (c - 1) * deltaX,y - rad,diam,diam);
-		}
+		}*/
+        for (int c = 0; c < 3; ++c)
+        {
+            Polygon tri = makeTriangle(x - rad + (c - 1) * deltaX, y, diam/2);
+            g.setColor(nodeColor);
+            g.fillPolygon(tri);
+            g.setColor(Color.black);
+            g.drawPolygon(tri);
+        }
 	}
 
 	/**
