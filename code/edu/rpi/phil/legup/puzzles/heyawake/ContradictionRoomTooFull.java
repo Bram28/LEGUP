@@ -9,6 +9,8 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionRoomTooFull extends Contradiction
 {	 
+	private static final long serialVersionUID = 969529532L;
+
 	 ContradictionRoomTooFull()
 	 {
 		setName("Room Too Full");

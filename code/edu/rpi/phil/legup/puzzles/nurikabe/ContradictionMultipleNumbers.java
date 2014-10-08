@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionMultipleNumbers extends Contradiction
 {	 
+    private static final long serialVersionUID = 326902345L;
 	
 	 ContradictionMultipleNumbers()
 	 {

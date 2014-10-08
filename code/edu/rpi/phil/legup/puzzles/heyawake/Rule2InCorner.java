@@ -8,6 +8,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class Rule2InCorner extends PuzzleRule
 {
+	private static final long serialVersionUID = 69578365L;
+
 	Rule2InCorner()
 	{
 		setName("2X2 In Corner");

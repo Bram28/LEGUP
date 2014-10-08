@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 
 public class CaseWhiteOrBlack extends CaseRule
 {
+	static final long serialVersionUID = 779450537L;
 
 	public CaseWhiteOrBlack()
 	{

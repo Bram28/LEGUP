@@ -7,6 +7,8 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RulePreventWhiteLine extends PuzzleRule
 {
+	private static final long serialVersionUID = 407979836L;
+
 	RulePreventWhiteLine()
 	{
 		setName("Prevent White Line");

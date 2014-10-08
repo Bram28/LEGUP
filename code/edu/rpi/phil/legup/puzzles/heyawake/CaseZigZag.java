@@ -9,6 +9,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 public class CaseZigZag extends CaseRule
 {	
+	private static final long serialVersionUID = 279685258L;
+
 	public CaseZigZag()
 	{
 		setName("Region Zigzag");

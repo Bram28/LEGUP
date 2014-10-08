@@ -6,6 +6,7 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleWhiteEdge extends PuzzleRule {
+	private static final long serialVersionUID = 823753908L;
 
 	
 	public RuleWhiteEdge()

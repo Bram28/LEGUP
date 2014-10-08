@@ -8,6 +8,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionTooFewSpaces extends Contradiction
 {	 
+    private static final long serialVersionUID = 621684720L;
 	
 	 ContradictionTooFewSpaces()
 	 {

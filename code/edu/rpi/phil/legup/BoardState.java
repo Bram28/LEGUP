@@ -15,6 +15,7 @@ import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 import edu.rpi.phil.legup.newgui.TransitionChangeListener;
 import edu.rpi.phil.legup.newgui.TreePanel;
+import edu.rpi.phil.legup.newgui.Tree;
 import edu.rpi.phil.legup.saveable.SaveableProofState;
 import edu.rpi.phil.legup.saveable.SaveableProofTransition;
 import edu.rpi.phil.legup.newgui.JustificationFrame;
@@ -876,7 +877,7 @@ public class BoardState implements java.io.Serializable
 				state = null;
 			}
 		}
-		Legup.getInstance().getGui().getTree().colorTransitions();
+		Tree.colorTransitions();
 		return state;
 	}
 	

@@ -8,8 +8,9 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleSurroundRegion extends PuzzleRule
-{	 
-	
+{
+    private static final long serialVersionUID = 881143872L;
+
 	 RuleSurroundRegion()
 	 {
 		setName("Surround Black");

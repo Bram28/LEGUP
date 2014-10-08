@@ -24,6 +24,8 @@ import java.util.Vector;
 
 public class CaseRuleSelectionHelper extends Board
 {
+	static final long serialVersionUID = -489237132432L;
+
 	public int mode = MODE_TILE;
 	public static final int MODE_TILE = 0;
 	public static final int MODE_COL_ROW = 1;

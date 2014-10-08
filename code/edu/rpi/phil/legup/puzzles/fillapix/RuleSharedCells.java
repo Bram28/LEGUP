@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
  */
 public class RuleSharedCells extends PuzzleRule
 {
+	private static final long serialVersionUID = 525623582L;
 
 	public RuleSharedCells()
 	{

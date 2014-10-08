@@ -9,6 +9,8 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleUnknownSurrounded extends PuzzleRule
 {
+	private static final long serialVersionUID = 729976023L;
+
 	RuleUnknownSurrounded()
 	{
 		setName("Fill In Black");

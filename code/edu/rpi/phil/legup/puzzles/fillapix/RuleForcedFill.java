@@ -13,6 +13,7 @@ import javax.swing.ImageIcon;
  */
 public class RuleForcedFill extends PuzzleRule
 {
+	private static final long serialVersionUID = 730983709L;
 
 	public RuleForcedFill()
 	{

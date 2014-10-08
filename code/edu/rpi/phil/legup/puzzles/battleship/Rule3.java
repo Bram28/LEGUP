@@ -13,6 +13,7 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class Rule3 extends PuzzleRule{
+	static final long serialVersionUID = 617837868L;
 
     public Rule3()
     {

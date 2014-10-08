@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
  */
 public final class RuleMerge extends PuzzleRule
 {    
+    private static final long serialVersionUID = 228035121L;
     private RuleMerge()
     {
     	setName("Merge Rule");

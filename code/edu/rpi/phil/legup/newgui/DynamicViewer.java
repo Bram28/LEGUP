@@ -22,6 +22,8 @@ import javax.swing.ViewportLayout;
  * @author Colin Kuebler
  */
 public abstract class DynamicViewer extends JScrollPane {
+	private static final long serialVersionUID = 24547340L;
+
 	/*** FIELDS ***/
 	// customized JComponent provides a scalable canvas for drawing
 	private JComponent canvas = new JComponent(){

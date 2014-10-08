@@ -21,6 +21,7 @@ import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
  */
 public class RuleAdvancedDeduction extends PuzzleRule
 {
+	private static final long serialVersionUID = 423983627L;
 
 	// cell index = 9*row+col
 	private final int[][] cellToGroupRef;

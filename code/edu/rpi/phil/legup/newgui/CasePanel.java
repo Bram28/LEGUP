@@ -148,7 +148,7 @@ public class CasePanel extends JustificationPanel
             PuzzleModule pm = Legup.getInstance().getPuzzleModule();
             //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
             BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
-            if(b != null)Legup.getInstance().setCurrentState(b);
+            if(b != null) Legup.setCurrentState(b);
             if((cur.getTransitionsFrom().size() > 0) && (cur.getTransitionsFrom().get(0) != null))
             {
                 Legup.setCurrentState(cur.getTransitionsFrom().get(0));
