@@ -25,8 +25,8 @@ public class PuzzleGeneratorDialog extends JDialog
 	private String strChoice;
 	private int diffChoice;
 
-	private final JComboBox combo;
-	private final JComboBox dCombo;
+	private final JComboBox<String> combo;
+	private final JComboBox<String> dCombo;
 
 	public PuzzleGeneratorDialog(JFrame parent)
 	{
@@ -35,14 +35,14 @@ public class PuzzleGeneratorDialog extends JDialog
 		JLabel choose = new JLabel("Choose a Puzzle: ");
 		choose.setLocation(20, 20);
 		choose.setSize(choose.getPreferredSize());
-		combo = new JComboBox(PuzzleGeneration.validPuzzles);
+		combo = new JComboBox<String>(PuzzleGeneration.validPuzzles);
 		combo.setSize(combo.getPreferredSize());
 		combo.setLocation(30+choose.getWidth(), 20+(choose.getHeight()-combo.getHeight())/2);
 
 		JLabel diff = new JLabel("Difficulty Level: ");
 		diff.setLocation(20, 50);
 		diff.setSize(diff.getPreferredSize());
-		dCombo = new JComboBox(PuzzleGeneration.difficulties);
+		dCombo = new JComboBox<String>(PuzzleGeneration.difficulties);
 		dCombo.setSelectedIndex(PuzzleGeneration.NORMAL);
 		dCombo.setSize(dCombo.getPreferredSize());
 		dCombo.setLocation(30+diff.getWidth(), 50+(diff.getHeight()-dCombo.getHeight())/2);

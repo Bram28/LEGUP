@@ -23,6 +23,8 @@ import edu.rpi.phil.legup.Selection;
 
 public abstract class Board extends DynamicViewer implements BoardDataChangeListener, ActionListener
 {
+	private static final long serialVersionUID = 2272172621376357845L;
+
     protected Board() { super(); }
     protected Board(boolean b) { super(b); }
 	abstract public void actionPerformed(ActionEvent e);

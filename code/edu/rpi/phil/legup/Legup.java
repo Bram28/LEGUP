@@ -183,7 +183,7 @@ public class Legup
 			errorMessage("Error encountered loading PuzzleModule.");
 		}
 		gui.reloadGui();
-		gui.getTree().colorTransitions();
+		Tree.colorTransitions();
 	}
 
 	/*

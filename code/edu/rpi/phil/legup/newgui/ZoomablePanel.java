@@ -277,7 +277,6 @@ MouseListener, MouseMotionListener
 	//*************************
 	public void mouseClicked(MouseEvent arg0){	}
 	public void mousePressed(MouseEvent e) {
-		System.out.println("pressed");
 		boolean handled = false;
 
 		if (e.getButton() == MouseEvent.BUTTON2) {
@@ -461,7 +460,6 @@ MouseListener, MouseMotionListener
 			long lastTime = -1;
 
 			while (true) {
-				System.out.println("repaint");
 				if (Math.abs(curZoomFactor-desZoomFactor) > 0.5) {
 					long time  = new Date().getTime();
 					double scale = getScale();
