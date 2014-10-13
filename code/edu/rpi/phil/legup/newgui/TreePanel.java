@@ -198,7 +198,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				}
 				else
 					g.setColor(flag ? Color.black : Color.gray);
-				
+
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
 				//System.out.format("%d, %d,   %d, %d\n", childPoint.x, childPoint.y, state.getLocation().x, state.getLocation().y);
 				g2D.setStroke(thin);
@@ -249,10 +249,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				}
 
 				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
-				
+
 				g2D.setStroke(thin);
 			}
-			
+
 			//**********************Source of node issue*************************//
 			//if (b.getTransitionsFrom().size() > 0)
 				drawTree(g, b);
@@ -288,7 +288,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			System.err.println("zzz...");
 		}
 	}
-	
+
 	/**
 	 * Draw the current transition (will make it blue if it's part of the selection)
 	 * @param trans the line of the transition we're drawing, starting at the source
@@ -303,10 +303,10 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		Selection theSelection = new Selection(parent,true);
 		int nodeRadius = collapsedChild ? SMALL_NODE_RADIUS : NODE_RADIUS;
-		
+
 		g2d.setStroke(medium);
 		g.setColor(((sel.contains(theSelection)) ? Color.blue : Color.gray));
-		
+
 		g2d.draw(trans);
 
 		// we also want to draw the arrowhead
@@ -558,38 +558,38 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		BoardState nextState = new BoardState(s.getState());
 		BoardState originalState = s.getState();
 		originalState.revertToOriginalState();
-		
-		
+
+
 		// firstState selects the state before the transition (if any)
 		if (currentState.isModifiable()) {
 			firstState = currentState.getTransitionsTo().get(0);
 		} else {
 			firstState = currentState;
 		}
-		
+
 		nextState.addTransitionFrom(originalState,((PuzzleRule)justification));
 		nextState.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
 		originalState.setOffset(new Point(0, 0));
 		Legup.getInstance().getSelections().setSelection(new Selection(nextState, false));
 		return nextState;
-		
-		
+
+
 		// create the middle two states
 		BoardState midState = firstState.copy();
 		midState.setModifiableState(true);
 		BoardState lastState = midState.endTransition();
-		
+
 		// reposition any related states in the tree
 		BoardState.reparentChildren(firstState, lastState);
 		firstState.addTransitionFrom(midState, null);
-		
+
 		Legup.getInstance().getSelections().setSelection(new Selection(midState, false));
 		midState.setOffset(new Point(0, (int)(4.5*TreePanel.NODE_RADIUS)));
 		lastState.setOffset(new Point(0, 0));
 		return midState;
 		*/
 	}
-	
+
 	/**
 	 * Collapse / expand the view at the current state
 	 *
@@ -601,7 +601,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		BoardState state = s.getState();
 
 		state.toggleCollapse();
-		
+
 		// TODO kueblc
 		repaint();
 	}
@@ -613,15 +613,15 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	{
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState currentState = s.getState();
-		
+
 		// make sure we don't delete the initial board state
 		if (currentState.getTransitionsTo().size() == 0)
 			return;
-		
+
 		// choose the previous state and move the children from after state
 		BoardState parentState = null;
 		BoardState childState = null;
-		
+
 		if (currentState.isModifiable()) {
 			parentState = currentState.getSingleParentState();
 			childState = currentState.endTransition();
@@ -633,16 +633,16 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			parentState.getTransitionsFrom().remove(currentState.getSingleParentState());
 			currentState.getSingleParentState().getTransitionsTo().remove(parentState);
 		}
-		
+
 		BoardState.reparentChildren(childState, parentState);
-		
+
 		// delete the current state
 		if (currentState.isModifiable()) {
 			BoardState.deleteState(currentState);
 		} else {
 			BoardState.deleteState(currentState.getSingleParentState());
 		}
-		
+
 		Legup.setCurrentState(parentState);
 	}
 
@@ -654,27 +654,27 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		if(!Legup.getInstance().getGui().checkImmediateFeedback())BoardState.removeColorsFromTransitions();
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState state = s.getState();
-		
-		
+
+
 		if (s.isState())
 		{ // state
-		
+
 			// make sure we don't delete the initial board state
 			Vector<BoardState> parentStates = state.getTransitionsTo();
 			if (parentStates.size() == 0)
 				return;
-				
+
 			// use to select the previous state
 			BoardState parent = parentStates.get(0);
-			
+
 			BoardState.deleteState(state);
-			
+
 			Legup.setCurrentState(parent);
-			
+
 		}
 		else
 		{ //  transition, delete all the things we're trasitioning from
-			
+
 			// select current state
 			Legup.setCurrentState(state);
 
@@ -692,7 +692,26 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 		}
 
-		
+
+	}
+
+
+
+	/**
+	* Creates a triangle with specified x, y, and radius.
+	* @param x of center of triangle
+	* @param y of center of triangle
+	* @param radius of bounding circle of triangle (loosely)
+	* @returns a Polygon with the points of the requested triangle.
+	**/
+	private Polygon makeTriangle(int x, int y, double r)
+	{
+		//temporary solution. Can be replaced if needed. -Anthony Handwerker, 10/12/2014
+		Polygon tri = new Polygon();
+		tri.addPoint((int)(x + r), y);
+		tri.addPoint((int)(x - r * .9), (int)((y + r)*.75));
+		tri.addPoint((int)(x - r * .9), (int)((y - r)*.75));
+		return tri;
 	}
 
 	/**
@@ -733,7 +752,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		{
 			myBounds = new Ellipse2D.Float(draw.x,draw.y,2 * radius,2 * radius);
 		}
-		
+
 		boolean stateSelected = myBounds.contains(where);
 
 		if (stateSelected && isCollapsed)
@@ -758,19 +777,19 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			//the whole chunk of code below was deliberately skipping the transitions, which
 			//is no longer desireable
 			/*Vector<BoardState> transitionsFrom = state.getTransitionsFrom();
-			
+
 			for (int c = 0; c < transitionsFrom.size(); ++c)
 			{
 				BoardState b = transitionsFrom.get(c);
 				Point childCenter = b.getLocation();
-				
+
 				Line2D.Float transitionLine = new Line2D.Float(childCenter,loc);
 
 				if (transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)
 				{
 					rv = new Selection(b, false);
 				}
-				
+
 				Selection s = null;
 				// note that we may select a state after we've found select transition,
 				// which is desired
@@ -831,9 +850,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	protected void mousePressedAt( Point p, MouseEvent e ){
 		// left click
 		if( e.getButton() == MouseEvent.BUTTON1 ){
-			
+
 			lastMovePoint = new Point(p);
-			
+
 			// add to selection
 			if ( e.isControlDown() )
 				toggleSelection( Legup.getInstance().getInitialBoardState(), p );
@@ -885,14 +904,14 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			if( !prev.equals(mouseOver) )
 				Legup.getInstance().refresh();
 	}
-	
+
 	protected void mouseDraggedAt(Point p, MouseEvent e) {
 		if (lastMovePoint == null)
 			lastMovePoint = new Point(p);
-			
+
 		moveX += p.x - lastMovePoint.x;
 		moveY += p.y - lastMovePoint.y;
-		
+
 		repaint();
 	}
 
