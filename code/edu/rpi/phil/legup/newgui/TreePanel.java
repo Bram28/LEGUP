@@ -347,6 +347,23 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	}
 
 	/**
+	* Creates a triangle with specified x, y, and radius.
+	* @param x of center of triangle
+	* @param y of center of triangle
+	* @param radius of circumscribing circle of triangle
+	* @returns a Polygon with the points of the requested triangle.
+	**/
+	private Polygon makeTriangle(int x, int y, double radius)
+	{
+		Polygon triangle = new Polygon();
+		for(double c1 = 0;c1 < 360;c1+=120)
+		{
+			triangle.addPoint((int)(x+radius*Math.cos(Math.toRadians(c1))),(int)(y+radius*Math.sin(Math.toRadians(c1))));
+		}
+	    return triangle;
+	}
+
+	/**
 	 * Draw a node at a given location
 	 * @param g the graphics to draw it with
 	 * @param x the x location of the center of the node
@@ -693,25 +710,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		}
 
 
-	}
-
-
-
-	/**
-	* Creates a triangle with specified x, y, and radius.
-	* @param x of center of triangle
-	* @param y of center of triangle
-	* @param radius of bounding circle of triangle (loosely)
-	* @returns a Polygon with the points of the requested triangle.
-	**/
-	private Polygon makeTriangle(int x, int y, double r)
-	{
-		//temporary solution. Can be replaced if needed. -Anthony Handwerker, 10/12/2014
-		Polygon tri = new Polygon();
-		tri.addPoint((int)(x + r), y);
-		tri.addPoint((int)(x - r * .9), (int)((y + r)*.75));
-		tri.addPoint((int)(x - r * .9), (int)((y - r)*.75));
-		return tri;
 	}
 
 	/**
