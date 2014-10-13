@@ -23,7 +23,7 @@ public class PickGameDialog extends JDialog implements ActionListener
 
 	JLabel gameLabel = new JLabel("Game:");
 	String[] games;
-	JComboBox<String> gameBox;
+	JComboBox gameBox; // JComboBox was made generic in Java7, adding annotations is an error in Java6
 
 	JLabel puzzleLabel = new JLabel("Puzzle:");
 	String[][] puzzles;
@@ -143,7 +143,7 @@ public class PickGameDialog extends JDialog implements ActionListener
 				puzzles[x][y] = (String)o[y];
 		}
 
-		gameBox = new JComboBox<String> (games);
+		gameBox = new JComboBox (games);
 	}
 
 	public String getPuzzle()
