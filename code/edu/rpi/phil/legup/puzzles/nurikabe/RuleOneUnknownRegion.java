@@ -12,9 +12,9 @@ public class RuleOneUnknownRegion extends PuzzleRule
 	
 	 RuleOneUnknownRegion()
 	 {
-		setName("Continue Region");
+		setName("Continue White");
 		description = "If there is one unknown next to a region and the region needs more whites, the unknown must be white.";
-		image = new ImageIcon("images/nurikabe/rules/OneUnknownRegion.png");
+		image = new ImageIcon("images/nurikabe/rules/OneUnknownWhite.png");
 	 }
 	 
 	 /**
@@ -58,14 +58,11 @@ public class RuleOneUnknownRegion extends PuzzleRule
 						
 						
 						
-						if(!white[y][x])
+						if(!white[x][y])
 						{
 							error = "White cells must be placed next to a region which needs more.";
 							break;
 						}
-						
-						
-						
 					}
 				}
 			}
@@ -97,12 +94,122 @@ public class RuleOneUnknownRegion extends PuzzleRule
     				if(temp.y == 1 && temp.x > 0)
     				{
     					whites = setWhite(whites, new boolean[width][height], state, x,y,width,height);
+    					checkForMultiple(whites, x, y, -1, -1, state, width, height);
     				}
     			}
     		}
     	}
     	
     	return whites;
+    }
+    
+    /**
+     * Recursivly checks all spots around any possible white area to see if multiple spots could be considered white
+     * @param white grid of all values that could be set to white based on continue white rule
+     * @param x the current x coordinate
+     * @param y the current y coordinate
+     * @param preX the previous x coordinate
+     * @param preY the previous y coordinate
+     * @param boardState the current boardstate
+     * @param width the width of the board
+     * @param height the height of the board
+     */
+    private void checkForMultiple(boolean[][] white, int x, int y, int preX, int preY, BoardState boardState, int width, int height) {
+    	int openIndex = multLoopConnected(x, y, preX, preY, boardState, width, height);
+    	if (openIndex <= 0)
+    	{
+    		return;
+    	}
+    	
+    	if (openIndex == 1)
+    	{
+    		white[x+1][y] = true;
+    		checkForMultiple(white, x+1, y, x, y, boardState, width, height);
+    		return;
+    	}
+    	if (openIndex == 2)
+    	{
+    		white[x][y+1] = true;
+    		checkForMultiple(white, x, y+1, x, y, boardState, width, height);
+    		return;
+    	}
+    	if (openIndex == 3)
+    	{
+    		white[x-1][y] = true;
+    		checkForMultiple(white, x-1, y, x, y, boardState, width, height);
+    		return;
+    	}
+    	if (openIndex == 4)
+    	{
+    		white[x][y-1] = true;
+    		checkForMultiple(white, x, y-1, x, y, boardState, width, height);
+    		return;
+    	}
+    }
+    
+    /**
+     * helper function for check for multiple
+     * @param x the current x coordinate
+     * @param y the current y coordinate
+     * @param preX the previous x coordinate
+     * @param preY the previous y coordinate
+     * @param boardState the current boardstate
+     * @param width the width of the board
+     * @param height the height of the board
+     * @return 0 if there are no open adjacent spaces
+     * @return -1 if there are multiple open adjacent spaces
+     * @return 1 if there is a single open adjacent space to the right of the current cell
+     * @return 2 if there is a single open adjacent space below the current cell
+     * @return 3 if there is a single open adjacent space to the left of the current cell
+     * @return 4 if there is a single open adjacent space above the current cell
+     */
+    private int multLoopConnected(int x, int y, int preX, int preY, BoardState boardState, int width, int height) {
+    	int openAdjacentSpaces = 0;
+    	
+    	int openIndex = 0;
+    	if (x+1 < width)
+    	{
+        	if ((boardState.getCellContents(x+1, y) == Nurikabe.CELL_UNKNOWN)
+        			&& (x+1 != preX || y != preY))
+        		openIndex = 1;
+    	}
+    	if (y+1 < height)
+    	{
+    		if ((boardState.getCellContents(x, y+1) == Nurikabe.CELL_UNKNOWN)
+    			&& (x != preX || y+1 != preY))
+    		{
+    			if (openIndex > 0){
+    				openIndex = -1;
+    			} else {
+    				openIndex = 2;
+    			}
+    		}
+    	}
+    	if (x-1 >= 0)
+    	{
+    		if ((boardState.getCellContents(x-1, y) == Nurikabe.CELL_UNKNOWN)
+    			&& (x-1 != preX || y != preY)) 
+    		{
+    			if (openIndex > 0){
+    				openIndex = -1;
+    			} else {
+    				openIndex = 3;
+    			}
+    		}
+    	}
+    	if (y-1 >= 0){
+    		if ((boardState.getCellContents(x, y-1) == Nurikabe.CELL_UNKNOWN)
+        			&& (x != preX || y-1 != preY))
+    		{
+    			if (openIndex > 0){
+    				openIndex = -1;
+    			} else {
+    				openIndex = 4;
+    			}
+    		}
+    	}
+    		
+    	return openIndex;
     }
     
     //HACK:Uses a point to store 2 ints
