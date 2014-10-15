@@ -105,7 +105,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	}
 
 	private TreeToolbar toolbar = new TreeToolbar();
-	public TreePanel treePanel = new TreePanel();
+	public TreePanelDV treePanel = new TreePanelDV();
 	private LEGUP_Gui gui;
 	
 	private JLabel status = new JLabel();
@@ -483,9 +483,9 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		
 		// TODO snap to current selection
 		Point draw = (Point)s.get(0).getState().getLocation().clone();
-		double scale = treePanel.getScale();
-		treePanel.moveX = (treePanel.getWidth()/(scale*2))-draw.x;
-		treePanel.moveY = (treePanel.getHeight()/(scale*2))-draw.y;
+		// double scale = treePanel.getScale();
+		// treePanel.moveX = (treePanel.getWidth()/(scale*2))-draw.x;
+		// treePanel.moveY = (treePanel.getHeight()/(scale*2))-draw.y;
 		
 		treePanel.repaint();
 		Legup.getInstance().refresh();
