@@ -50,8 +50,8 @@ public class TreePanelDV extends DynamicViewer implements TransitionChangeListen
 	//Currently only classic and smiley options exist
 	private static final String NodeImgs = "images/tree/smiley/";
 
-    public TreePanelDV() { super(); System.out.println("test"); }
-    public TreePanelDV(boolean b) { super(b); }
+	public TreePanelDV() { super(); }
+	public TreePanelDV(boolean b) { super(b); }
 	public void actionPerformed(ActionEvent e) {}
 	public void initSize() {}
 	public void draw( Graphics2D g ) {}

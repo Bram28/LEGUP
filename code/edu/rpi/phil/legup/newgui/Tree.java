@@ -111,8 +111,6 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	private JLabel status = new JLabel();
 	public JLabel getStatus(){return status;}
 	Tree( LEGUP_Gui gui ){
-//		super("LEGUP");
-		
 		this.gui = gui;
 		
 		JPanel main = new JPanel();
