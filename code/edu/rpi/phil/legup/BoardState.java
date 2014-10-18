@@ -994,7 +994,7 @@ public class BoardState implements java.io.Serializable
 		for (int c = 1; c < states.size(); ++c)
 		{
 			BoardState parent = states.get(c);
-
+			
 			for (int y = 0; y < child.getHeight(); ++y)
 			{
 				for (int x = 0; x < child.getWidth(); ++x)
@@ -1045,7 +1045,7 @@ public class BoardState implements java.io.Serializable
 		
 		child.setModifiableState(true);
 		BoardState grandchild = child.addTransitionFrom(null);
-
+		
 		Legup.setCurrentState(grandchild);
 
 		_transitionsChanged();
@@ -1201,7 +1201,8 @@ public class BoardState implements java.io.Serializable
 		int tmp_max = -1;
 		for(BoardState b : transitionsFrom)
 		{
-			if(b.getDepth() > tmp_max)tmp_max = b.getDepth();
+			int boardStateDepth = b.getDepth();
+			if(boardStateDepth > tmp_max)tmp_max = boardStateDepth;
 		}
 		return tmp_max+1;
 	}
