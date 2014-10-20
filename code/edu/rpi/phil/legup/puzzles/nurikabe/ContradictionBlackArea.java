@@ -4,18 +4,66 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.puzzles.nurikabe.Nurikabe;
 
 public class ContradictionBlackArea extends Contradiction
 {	 
     private static final long serialVersionUID = 450786104L;
 	
+    
 	 ContradictionBlackArea()
 	 {
-		 setName("Black Must Connect");
+		setName("Black Must Connect");
 		description = "All black cells must be connected.";
 		image = new ImageIcon("images/nurikabe/contradictions/BlackArea.png");
 	 }
 	 
+	 /**
+	  * Recursively examines connected black squares, marking as checked as it goes along
+	  * 
+	  * @param checked[][]: array of checked squares, all false initially
+	  * @param x,y current position
+	  * @return true if touching unknown, false if already checked, or surrounded by checked or ohite
+	  */
+	 
+	 private boolean contradictionCheckerHelper(boolean checked[][], BoardState state, int x, int y, boolean first){
+		 if(!first && !checked[x][y]){
+			 return false;
+		 }else{
+			 checked[x][y] = true;
+		 }
+		 if(state.getCellContents(x, y) == Nurikabe.CELL_UNKNOWN){
+			 return true;
+		 }
+		 boolean surrounded = false;
+		 int around = 0;
+		 if(x + 1 < state.getWidth() && !checked[x+1][y] && state.getCellContents(x+1, y) != Nurikabe.CELL_WHITE){
+			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x+1, y, false);
+		 }else{ 
+			 around++;
+		 }
+		 if(y + 1 < state.getHeight() && !checked[x][y+1] && state.getCellContents(x, y+1) != Nurikabe.CELL_WHITE){
+			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x, y+1, false);
+		 }else{
+			 around++;
+		 }
+		 if(x - 1 > 0 && !checked[x-1][y] && state.getCellContents(x-1, y) != Nurikabe.CELL_WHITE){
+			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x-1, y, false);
+		 }else{
+			 around++;
+		 }
+		 if(y - 1 > 0 && !checked[x][y-1] && state.getCellContents(x+1, y-1) != Nurikabe.CELL_WHITE){
+			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x, y-1, false);
+		 }else{
+			 around++;
+		 }
+		 if(around == 4){
+			 return false;
+		 }else{
+			 return surrounded;
+		 }
+
+	 }
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -24,71 +72,26 @@ public class ContradictionBlackArea extends Contradiction
      */
     protected String checkContradictionRaw(BoardState state)
     {
-    	String error = null;
     	int height = state.getHeight();
     	int width = state.getWidth();
-
-//    	false = not checked, true = checked
-    	boolean[][] neighbors = new boolean[height][width];
-    	int startx = -1;
-    	int starty = -1;
-    	for(int x = 0; x < width; ++x)
-    	{
-    		for(int y = 0; y < height; ++y)
-    		{
-    			neighbors[y][x] = false;
-    			if((state.getCellContents(x,y) == Nurikabe.CELL_BLACK || state.getCellContents(x,y)== 0) && startx == Nurikabe.CELL_UNKNOWN)
-    			{
-    				startx = x;
-    				starty = y;
+    	boolean first = true;
+    	boolean checked[][] = new boolean[height][width];
+    	for(int i = 0; i < width; i++){
+    		for(int j = 0; j < height; j++){
+    			//recursive wrapper
+    			boolean result = false;
+    			if(state.getCellContents(i, j) == Nurikabe.CELL_BLACK){
+    				if(!first && !checked[i][j]){
+    					return null;
+    				}
+        			result = contradictionCheckerHelper(checked, state, i, j, first);
+        			first = false;
     			}
-    			else if(!(state.getCellContents(x,y) == Nurikabe.CELL_BLACK || state.getCellContents(x,y)== Nurikabe.CELL_UNKNOWN))
-    			{
-    				neighbors[y][x] = true;
+    			if(!result){
+    				return null;
     			}
     		}
     	}
-    	if(startx > -1)
-    	{
-	    	loopConnected(neighbors, state, startx, starty, width, height);
-	    	for(int x = 0; x < width; ++x)
-	    	{
-	    		for(int y = 0; y < height; ++y)
-	    		{
-	    			if(!neighbors[y][x])
-	    				return error;
-	    		}
-	    	}
-    	}
-    	
-    	error = "Black cells are not isolated.";
-
-		return error;
-    }
-    
-    private boolean[][] loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
-    {
-    	neighbors[y][x] = true;
-    	if(x+1 < width)
-    	{
-    		if(!neighbors[y][x+1])
-    			neighbors = loopConnected(neighbors, boardState, x+1, y, width, height);
-    	}
-    	if(x-1 >= 0)
-    	{
-    		if(!neighbors[y][x-1])
-    			neighbors = loopConnected(neighbors, boardState, x-1, y, width, height);
-    	}
-    	if(y+1 < height)
-    	{
-    		if(!neighbors[y+1][x])
-    			neighbors = loopConnected(neighbors, boardState, x, y+1, width, height);
-    	}
-    	if(y-1 >= 0)
-    	{
-    		if(!neighbors[y-1][x])
-    			neighbors = loopConnected(neighbors, boardState, x, y-1, width, height);
-    	}
-    	return neighbors;
+        return "ERROR";
     }
 }
