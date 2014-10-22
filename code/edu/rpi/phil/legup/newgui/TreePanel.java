@@ -167,9 +167,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		{
 			int[] ptrNumTransitions = new int[1];
 			BoardState lastCollapsed = getLastCollapsed(state, ptrNumTransitions);
-			/*//draw.x += COLLAPSED_DRAW_DELTA_X * ptrNumTransitions[0];
+			//draw.x += COLLAPSED_DRAW_DELTA_X * ptrNumTransitions[0];
 			Point nextPoint = (Point)lastCollapsed.getLocation().clone();
-			draw.x = (draw.x + nextPoint.x)/2;*/
+			draw.x = (draw.x + nextPoint.x)/2;
 
 			transitionsFrom = lastCollapsed.getTransitionsFrom();
 		}
@@ -198,10 +198,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				}
 				else
 					g.setColor(flag ? Color.black : Color.gray);
-				int temp = childPoint.x - NODE_RADIUS;
-				if (b.isCollapsed())
-					temp -= NODE_RADIUS;
-				drawTransition(new Line2D.Float(draw.x, draw.y, temp, childPoint.y), g, state, b.isCollapsed());
+
+				drawTransition(new Line2D.Float(draw.x, draw.y, childPoint.x-NODE_RADIUS, childPoint.y), g, state, b.isCollapsed());
 				//System.out.format("%d, %d,   %d, %d\n", childPoint.x, childPoint.y, state.getLocation().x, state.getLocation().y);
 				g2D.setStroke(thin);
 			}

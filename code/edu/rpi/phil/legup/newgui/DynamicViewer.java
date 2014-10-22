@@ -49,6 +49,7 @@ public abstract class DynamicViewer extends JScrollPane {
 		int x, y;
 		boolean pan = false;
 		public void mousePressed( MouseEvent e ){
+			System.out.println("click");
 			if( e.getButton() == MouseEvent.BUTTON2 ){
 				pan = true;
 				setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -78,7 +79,9 @@ public abstract class DynamicViewer extends JScrollPane {
 			}
 		}
 		public void mouseWheelMoved( MouseWheelEvent e ){
+			System.out.println("zoom was " + getZoom());
 			zoom( e.getWheelRotation(), e.getPoint() );
+			System.out.println("zoom is now " + getZoom());
 		}
 		// extra mouse events for ZoomablePanel compatibility
 		public void mouseEntered( MouseEvent e ){
