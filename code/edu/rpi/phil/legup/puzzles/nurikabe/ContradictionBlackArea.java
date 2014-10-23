@@ -23,7 +23,7 @@ public class ContradictionBlackArea extends Contradiction
 	  * 
 	  * @param checked[][]: array of checked squares, all false initially
 	  * @param x,y current position
-	  * @return true if touching unknown, false if already checked, or surrounded by checked or ohite
+	  * @return true if touching unknown, false if already checked, or surrounded by checked or white
 	  */
 	 
 	 private boolean contradictionCheckerHelper(boolean checked[][], BoardState state, int x, int y, boolean first){
@@ -38,22 +38,22 @@ public class ContradictionBlackArea extends Contradiction
 		 boolean surrounded = false;
 		 int around = 0;
 		 if(x + 1 < state.getWidth() && !checked[x+1][y] && state.getCellContents(x+1, y) != Nurikabe.CELL_WHITE){
-			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x+1, y, false);
+			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x+1, y, first);
 		 }else{ 
 			 around++;
 		 }
 		 if(y + 1 < state.getHeight() && !checked[x][y+1] && state.getCellContents(x, y+1) != Nurikabe.CELL_WHITE){
-			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x, y+1, false);
+			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x, y+1, first);
 		 }else{
 			 around++;
 		 }
 		 if(x - 1 > 0 && !checked[x-1][y] && state.getCellContents(x-1, y) != Nurikabe.CELL_WHITE){
-			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x-1, y, false);
+			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x-1, y, first);
 		 }else{
 			 around++;
-		 }
+		 }	
 		 if(y - 1 > 0 && !checked[x][y-1] && state.getCellContents(x+1, y-1) != Nurikabe.CELL_WHITE){
-			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x, y-1, false);
+			 surrounded = surrounded || contradictionCheckerHelper(checked,state,x, y-1, first);
 		 }else{
 			 around++;
 		 }
@@ -79,16 +79,10 @@ public class ContradictionBlackArea extends Contradiction
     	for(int i = 0; i < width; i++){
     		for(int j = 0; j < height; j++){
     			//recursive wrapper
-    			boolean result = false;
     			if(state.getCellContents(i, j) == Nurikabe.CELL_BLACK){
-    				if(!first && !checked[i][j]){
-    					return null;
-    				}
-        			result = contradictionCheckerHelper(checked, state, i, j, first);
+    				if(!first && !checked[i][j]) return null;
+        			contradictionCheckerHelper(checked, state, i, j, first);
         			first = false;
-    			}
-    			if(!result){
-    				return null;
     			}
     		}
     	}

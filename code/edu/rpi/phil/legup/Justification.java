@@ -25,6 +25,7 @@ public abstract class Justification implements java.io.Serializable
 	}
 	
 	public String getImageName() {return "images/unknown.gif";}
+	
 	public void loadImage()
 	{
 		image = (getImageName() != null)?new ImageIcon(ClassLoader.getSystemResource(getImageName())):null;
