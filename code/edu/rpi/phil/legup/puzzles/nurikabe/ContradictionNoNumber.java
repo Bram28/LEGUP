@@ -15,6 +15,11 @@ public class ContradictionNoNumber extends Contradiction
 		description = "All enclosed white regions must have a number.";
 		image = new ImageIcon("images/nurikabe/contradictions/NoNumber.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/contradictions/NoNumber.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

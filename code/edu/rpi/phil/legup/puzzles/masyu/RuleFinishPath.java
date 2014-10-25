@@ -9,6 +9,10 @@ public class RuleFinishPath extends PuzzleRule
 {	 
 	private static final long serialVersionUID = 246674040L;
 	
+    public String getImageName()
+    {
+    	return "images/masyu/Rules/RuleFinishPath.png";
+    }
 	
 	/**
 	 * Rule to make a path continuous between different cells.

@@ -36,6 +36,11 @@ public class RuleAdvancedDeduction extends PuzzleRule
 		groupToCellRef = Sudoku.getGroups();
 		cellToGroupRef = Sudoku.getCrossReference();
     }
+	
+	public String getImageName()
+	{
+		return "images/sudoku/AdvancedDeduction.png";
+	}
 
 	protected String checkRuleRaw(BoardState destBoardState)
     {

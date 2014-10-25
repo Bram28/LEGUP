@@ -79,6 +79,11 @@ public class Rule1 extends PuzzleRule
 	
 	
 	
+	public String getImageName()
+	{
+		return "images/unknown.gif";
+	}
+
 	protected String checkRuleRaw(BoardState state){
 	return null;
 		// Check for only one branch

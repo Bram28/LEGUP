@@ -16,6 +16,11 @@ public class RulePreventWhiteLine extends PuzzleRule
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
 	}
 	
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
+	}
+	
 	public void print()
 	{
 		System.out.print(getName());

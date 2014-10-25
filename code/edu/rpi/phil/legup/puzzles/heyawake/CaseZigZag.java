@@ -10,13 +10,18 @@ import edu.rpi.phil.legup.CaseRule;
 public class CaseZigZag extends CaseRule
 {	
 	private static final long serialVersionUID = 279685258L;
-
-	public CaseZigZag()
+	
+    public CaseZigZag()
 	{
 		setName("Region Zigzag");
 		description = "A region with 2x(n) has only two configurations";
 		image = new ImageIcon("images/heyawake/cases/BlackOrWhite.png");
 	}
+	public String getImageName()
+	{
+		return "images/heyawake/cases/BlackOrWhite.png";
+	}
+
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;

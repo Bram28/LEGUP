@@ -23,6 +23,11 @@ public final class RuleMerge extends PuzzleRule
     	image = new ImageIcon("images/MergeRule.png");
     }
     
+    public String getImageName()
+    {
+    	return "images/MergeRule.png";
+    }
+    
     /**
      * Return the error string, or null if it was applied correctly
      * @param state the state we're appling the rule

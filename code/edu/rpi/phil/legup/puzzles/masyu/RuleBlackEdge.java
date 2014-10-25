@@ -6,6 +6,11 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class RuleBlackEdge extends PuzzleRule {
 	private static final long serialVersionUID = 120937947L;
+	
+    public String getImageName()
+    {
+    	return "images/masyu/Rules/RuleBlackEdge.png";
+    }
 
 	
 	/**

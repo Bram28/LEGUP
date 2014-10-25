@@ -7,6 +7,11 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleWhiteEdge extends PuzzleRule {
 	private static final long serialVersionUID = 823753908L;
+	
+    public String getImageName()
+    {
+    	return "images/masyu/Rules/RuleWhiteEdge.png";
+    }
 
 	
 	public RuleWhiteEdge()

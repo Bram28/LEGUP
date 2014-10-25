@@ -15,6 +15,11 @@ public class ContradictionNoSolutionForCell extends Contradiction
 		description = "Process of elimination yields no valid numbers for an empty cell";
 		image = new ImageIcon("images/sudoku/NoSolution.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/sudoku/NoSolution.png";
+	}
 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

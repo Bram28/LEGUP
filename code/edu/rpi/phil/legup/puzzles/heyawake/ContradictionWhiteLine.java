@@ -9,12 +9,17 @@ public class ContradictionWhiteLine extends Contradiction
 {	 
     private static final long serialVersionUID = 299446797L;
 
-	 ContradictionWhiteLine()
-	 {
+	ContradictionWhiteLine()
+	{
 		setName("White Line Too Long");
 		description = "Line of white cells cannot exceed 2 rooms.";
 		image = new ImageIcon("images/heyawake/contradictions/WhiteLine.png");
-	 }
+	}
+	 
+	public String getImageName()
+	{
+		return "images/heyawake/contradictions/WhiteLine.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

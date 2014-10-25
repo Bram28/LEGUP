@@ -17,6 +17,11 @@ public class RuleSurroundRegion extends PuzzleRule
 		description = "All completed regions must be surrounded by black.";
 		image = new ImageIcon("images/nurikabe/rules/SurroundBlack.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/SurroundBlack.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

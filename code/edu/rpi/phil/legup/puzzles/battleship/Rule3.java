@@ -14,13 +14,18 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class Rule3 extends PuzzleRule{
 	static final long serialVersionUID = 617837868L;
-
+	
     public Rule3()
     {
     	setName("BattleShip Rule3");
         description = "Cells surrounding adjacent completed ships are water";
     }
 	
+
+	public String getImageName()
+	{
+		return "images/unknown.gif";
+	}
 
 	public boolean completedShip(BoardState boardState, int row, int col){
 		// Check if the cell is a ship segment

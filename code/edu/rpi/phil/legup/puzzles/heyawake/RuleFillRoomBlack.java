@@ -26,6 +26,11 @@ public class RuleFillRoomBlack extends PuzzleRule{
     	description = "Remaining cells are black if unknowns plus black cells equals the clue.";
     	image = new ImageIcon("images/heyawake/rules/FillRoomBlack.png");
     }
+    
+	public String getImageName()
+	{
+		return "images/heyawake/rules/FillRoomBlack.png";
+	}
 
 
     public void print(){

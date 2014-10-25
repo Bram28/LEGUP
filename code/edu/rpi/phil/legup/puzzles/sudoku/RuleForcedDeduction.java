@@ -32,6 +32,11 @@ public class RuleForcedDeduction extends PuzzleRule
 		groupToCellRef = Sudoku.getGroups();
 		cellToGroupRef = Sudoku.getCrossReference();
     }
+	
+	public String getImageName()
+	{
+		return "images/sudoku/forcedByDeduction.png";
+	}
 
 	 protected String checkRuleRaw(BoardState destBoardState)
     {

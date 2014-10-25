@@ -17,6 +17,10 @@ public class RuleUnknownSurrounded extends PuzzleRule
 		description = "If there is one unknown surrounded by black, it must be black.";
 		image = new ImageIcon("images/nurikabe/rules/FillInBlack.png");
 	}
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/FillInBlack.png";
+	}
 	protected String checkRuleRaw(BoardState destBoardState)
 	{
 		String error = null;

@@ -26,6 +26,11 @@ public class RuleFillRoomWhite extends PuzzleRule{
     	description = "Remaining cells are white if number of black cells equals the clue.";
     	image = new ImageIcon("images/heyawake/rules/FillRoomWhite.png");
     }
+    
+	public String getImageName()
+	{
+		return "images/heyawake/rules/FillRoomWhite.png";
+	}
 
 
     public void print(){

@@ -9,12 +9,17 @@ public class ContradictionBlackSquare extends Contradiction
 {	 
     private static final long serialVersionUID = 903191288L;
 	
-	 ContradictionBlackSquare()
-	 {
+	ContradictionBlackSquare()
+	{
 		setName("Black Square");
 		description = "There cannot be a 2x2 square of black.";
 		image = new ImageIcon("images/nurikabe/contradictions/BlackSquare.png");
-	 }
+	}
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/contradictions/BlackSquare.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

@@ -19,6 +19,11 @@ public class CaseBlackOrWhite extends CaseRule
 		image = new ImageIcon("images/nurikabe/cases/BlackOrWhite.png");
 	}
 	
+	public String getImageName()
+	{
+		return "images/nurikabe/cases/BlackOrWhite.png";
+	}
+	
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;

@@ -1,10 +1,12 @@
 package edu.rpi.phil.legup.puzzles.heyawake;
 
 import java.util.Vector;
+
 import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
+
 import java.util.ArrayList;
 import java.awt.Point;
 
@@ -17,6 +19,10 @@ public class RuleZigZagWhite extends PuzzleRule
 		setName("White forced from zigzag");
 		description = "Cells next to a forced zigzag are white.";
 		image = new ImageIcon("images/heyawake/rules/ZigZagWhite.png");
+	}
+	public String getImageName()
+	{
+		return "images/heyawake/rules/ZigZagWhite.png";
 	}
 	//Returns the dimensions of the region Not including white cells.
 	protected Point getRegionDimension(BoardState origState, int cellregion)

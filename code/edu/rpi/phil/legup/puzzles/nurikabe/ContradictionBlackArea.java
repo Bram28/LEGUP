@@ -11,12 +11,17 @@ public class ContradictionBlackArea extends Contradiction
     private static final long serialVersionUID = 450786104L;
 	
     
-	 ContradictionBlackArea()
-	 {
+	ContradictionBlackArea()
+	{
 		setName("Black Must Connect");
 		description = "All black cells must be connected.";
 		image = new ImageIcon("images/nurikabe/contradictions/BlackArea.png");
-	 }
+	}
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/contradictions/BlackArea.png";
+	}
 	 
 	 /**
 	  * Recursively examines connected black squares, marking as checked as it goes along

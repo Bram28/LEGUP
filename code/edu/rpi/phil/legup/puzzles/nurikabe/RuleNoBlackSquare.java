@@ -9,12 +9,17 @@ public class RuleNoBlackSquare extends PuzzleRule
 {	 
 	private static final long serialVersionUID = 28206759L;
 	
-	 RuleNoBlackSquare()
-	 {
+	RuleNoBlackSquare()
+	{
 		setName("Prevent Black Square");
 		description = "There cannot be a 2x2 square of black. (3 blacks = fill in last corner white)";
 		image = new ImageIcon("images/nurikabe/rules/NoBlackSquare.png");
-	 }
+	}
+	
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/NoBlackSquare.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

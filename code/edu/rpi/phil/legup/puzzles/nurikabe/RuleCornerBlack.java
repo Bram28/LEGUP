@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
+
 import java.awt.Point;
 
 public class RuleCornerBlack extends PuzzleRule
@@ -15,6 +16,10 @@ public class RuleCornerBlack extends PuzzleRule
 		setName("Corner Black");
 		description = "If there is only one white square connected to unkowns and one more white is needed then the angles of that white square are black";
 		image = new ImageIcon("images/nurikabe/rules/CornerBlack.png");
+	}
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/CornerBlack.png";
 	}
 	protected String checkRuleRaw(BoardState destBoardState)
 	{

@@ -1,21 +1,28 @@
 package edu.rpi.phil.legup.puzzles.battleship;
 
 import edu.rpi.phil.legup.*;
+
 import java.awt.Point;
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 
 public class WaterRowRule extends PuzzleRule
 {
 	static final long serialVersionUID = 853810334L;
-
-	private static final BattleShip battleship = new BattleShip();
+	
+    private static final BattleShip battleship = new BattleShip();
 
 	public WaterRowRule()
 	{
 		setName("Row/Column Deduction Rule");
 		description = "When all the ship/water cells have been accounted for, fill in the rest of the unknowns appropriately";
 		image = new ImageIcon("images/battleship/labelforce.png");
+	}
+
+	public String getImageName()
+	{
+		return "images/battleship/labelforce.png";
 	}
 
 	protected String checkRuleRaw(BoardState state)

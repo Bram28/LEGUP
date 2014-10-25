@@ -1,6 +1,7 @@
 package edu.rpi.phil.legup.puzzles.sudoku;
 
 import javax.swing.ImageIcon;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -26,6 +27,11 @@ public class CasePossibleValues extends CaseRule
 		image = new ImageIcon("images/sudoku/PossibleValues.png");
 
 		defaultApplicationText= "Select an unknown square.";
+	}
+	
+	public String getImageName()
+	{
+		return "images/sudoku/PossibleValues.png";
 	}
 
 	public String checkCaseRuleRaw(BoardState state)

@@ -10,15 +10,20 @@ import edu.rpi.phil.legup.Contradiction;
 public class ContradictionRoomTooFull extends Contradiction
 {	 
 	private static final long serialVersionUID = 969529532L;
-
-	 ContradictionRoomTooFull()
-	 {
+	
+    ContradictionRoomTooFull()
+	{
 		setName("Room Too Full");
 		description = "A room can't have more than its number of blacks.";
 		image = new ImageIcon("images/heyawake/contradictions/RoomTooFull.png");
-	 }
+	}
 	 
-	 /**
+	public String getImageName()
+	{
+		return "images/heyawake/contradictions/RoomTooFull.png";
+	}
+
+	/**
 	 * Checks if the contradiction was applied correctly to this board state
 	 *
 	 * @param state The board state

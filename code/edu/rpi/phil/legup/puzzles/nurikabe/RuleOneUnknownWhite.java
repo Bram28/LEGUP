@@ -15,6 +15,11 @@ public class RuleOneUnknownWhite extends PuzzleRule
 		description = "If there is one unknown next to a white region without a number, the unknown should be white.";
 		image = new ImageIcon("images/nurikabe/rules/OneUnknownWhite.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/OneUnknownWhite.png";
+	}
 	 
 	 /**
 	 * Checks if the contradiction was applied correctly to this board state

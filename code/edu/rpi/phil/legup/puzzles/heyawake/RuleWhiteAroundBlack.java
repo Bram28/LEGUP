@@ -25,7 +25,11 @@ public class RuleWhiteAroundBlack extends PuzzleRule
     	description = "Cells next to a black cell are white.";
     	image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
     }
-    
+	
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
+	}    
 
     public void print(){
 	System.out.print(getName());

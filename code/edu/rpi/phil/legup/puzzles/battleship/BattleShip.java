@@ -9,9 +9,12 @@
 
 package edu.rpi.phil.legup.puzzles.battleship;
 import edu.rpi.phil.legup.*;
+
 import java.awt.Point;
 import java.awt.Image;
+
 import javax.swing.ImageIcon;
+
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -176,6 +179,10 @@ public class BattleShip extends PuzzleModule
 		Vector<Contradiction> result = new Vector<Contradiction>();
 		result.add(new Contradiction()
 		{
+		    public String getImageName()
+		    {
+		    	return "images/unknown.gif";
+		    }
 		    static final long serialVersionUID = 532394123951L;
 			public String checkContradictionRaw(BoardState state)
 			{
@@ -190,6 +197,10 @@ public class BattleShip extends PuzzleModule
 		Vector<CaseRule> result = new Vector<CaseRule>();
 		result.add(new CaseRule()
 		{
+		    public String getImageName()
+		    {
+		    	return "images/unknown.gif";
+		    }
 		    static final long serialVersionUID = 594123951L;
 			public String checkCaseRuleRaw(BoardState state)
 			{

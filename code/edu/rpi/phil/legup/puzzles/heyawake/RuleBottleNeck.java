@@ -15,6 +15,10 @@ public class RuleBottleNeck extends PuzzleRule
 		description = "Cells that are white bottlenecks must be white.";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
 	}
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
+	}
 	protected String checkRuleRaw(BoardState destBoardState)
 	{
 		String error = null;

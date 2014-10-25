@@ -24,6 +24,11 @@ public class RuleForcedLocation extends PuzzleRule
 		groupToCellRef = Sudoku.getGroups();
 		cellToGroupRef = Sudoku.getCrossReference();
     }
+	
+	public String getImageName()
+	{
+		return "images/sudoku/forcedByElimination.png";
+	}
 
 	 protected String checkRuleRaw(BoardState destBoardState)
     {
