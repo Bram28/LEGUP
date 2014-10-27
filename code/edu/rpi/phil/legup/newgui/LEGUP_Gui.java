@@ -886,19 +886,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		getJustificationFrame().setStatus(true, "Proof mode "+PROFILES[index]+" has been activated");
 	}
 
-	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void windowClosed(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void windowClosing(WindowEvent e) {
 		// TODO Auto-generated method stub
 		if(Legup.getInstance().getInitialBoardState() != null)
@@ -910,19 +907,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 	}
-	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void windowIconified(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
