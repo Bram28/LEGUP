@@ -30,12 +30,6 @@ public class RuleOneUnknownBlack extends PuzzleRule
     	BoardState origBoardState = destBoardState.getSingleParentState();
     	
     	boolean[][] black = determineBlack(origBoardState);
-		System.out.println("black[0][9] = " + black[0][9]);
-		System.out.println("black[0][8] = " + black[0][8]);
-		System.out.println("black[0][7] = " + black[0][7]);
-		System.out.println("black[0][6] = " + black[0][6]);
-		System.out.println("black[1][6] = " + black[1][6]);
-		System.out.println("black[2][2] = " + black[2][2]);
     	
     	// Check for only one branch
 		if (destBoardState.getTransitionsTo().size() != 1)
@@ -58,7 +52,6 @@ public class RuleOneUnknownBlack extends PuzzleRule
 					
 					if (origState != newState)
 					{
-						System.out.println("changed board cell: (" + x + ", " + y + ")");
 						changed = true;
 						
 						if (newState != Nurikabe.CELL_BLACK || origState != 0)
@@ -71,8 +64,6 @@ public class RuleOneUnknownBlack extends PuzzleRule
 						//error if rule is applied to multiple moves at one time
 						if(black[x][y] == false)
 						{
-							System.out.println("black value at (" + x + ", " + y + ") = " + black[x][y]);
-							System.out.println("Black cells must be placed next to a black region which needs more.");
 							error = "Black cells must be placed next to a black region which needs more.";
 							break;
 						}
@@ -117,7 +108,7 @@ public class RuleOneUnknownBlack extends PuzzleRule
     		for(int y = 0; y < height; ++y)
     		{
     			//If the cell is black and we haven't visited it we need to loop through it and check it out
-    			if(state.getCellContents(x,y) == Nurikabe.CELL_BLACK && visited[y][x] == 0)
+    			if(state.getCellContents(x,y) == Nurikabe.CELL_BLACK && visited[x][y] == 0)
     			{
     				//Since we have found a black region previously unvisited, add one to the region count
     				++regioncount;
@@ -271,11 +262,11 @@ public class RuleOneUnknownBlack extends PuzzleRule
     private int loopConnected(int[][] visited,BoardState boardState, int x, int y, int width, int height, int regioncount)
     {
     	//If we have been here before return nothing
-    	if(visited[y][x] == 1 || visited[y][x] == -regioncount)
+    	if(visited[x][y] == 1 || visited[x][y] == -regioncount)
     		return 0;
     	
     	//Set the cell to visited but not black
-    	visited[y][x] = -regioncount;
+    	visited[x][y] = -regioncount;
     	
     	//If the cell is unknown return that we found 1
     	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
@@ -286,7 +277,7 @@ public class RuleOneUnknownBlack extends PuzzleRule
     		return 0;
     	
     	//At this point we know the cell is black so set the cell to visited and black
-    	visited[y][x] = 1;
+    	visited[x][y] = 1;
     	
     	//A counter of how many unknowns we have found
     	int ret = 0;
@@ -317,39 +308,30 @@ public class RuleOneUnknownBlack extends PuzzleRule
     /**
      * 
      */
-    private void setBlack(boolean[][] black, boolean[][] visited, BoardState boardState, int x, int y, int width, int height)
-    {
-    	if(visited[y][x] == true)
-    		return;
-    	
-    	visited[y][x] = true;
-    	
-    	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
-    	{
-    		black[y][x] = true;
-    		return;
-    	}
-    	if(boardState.getCellContents(x,y) != Nurikabe.CELL_BLACK)
-    		return;
-
-    	
-    	if(x+1 < width)
-    	{
-    		setBlack(black, visited, boardState, x+1, y, width, height);
-    	}
-    	if(x-1 >= 0)
-    	{
-    		setBlack(black, visited, boardState, x-1, y, width, height);
-    	}
-    	if(y+1 < height)
-    	{
-    		setBlack(black, visited, boardState, x, y+1, width, height);
-    	}
-    	if(y-1 >= 0)
-    	{
-    		setBlack(black, visited, boardState, x, y-1, width, height);
-    	}
-    }
+	private void setBlack(boolean[][] black, boolean[][] visited,
+			BoardState boardState, int x, int y, int width, int height) {
+		if (visited[x][y] == true)
+			return;
+		visited[x][y] = true;
+		if (boardState.getCellContents(x, y) == Nurikabe.CELL_UNKNOWN) {
+			black[x][y] = true;
+			return;
+		}
+		if (boardState.getCellContents(x, y) != Nurikabe.CELL_BLACK)
+			return;
+		if (x + 1 < width) {
+			setBlack(black, visited, boardState, x + 1, y, width, height);
+		}
+		if (x - 1 >= 0) {
+			setBlack(black, visited, boardState, x - 1, y, width, height);
+		}
+		if (y + 1 < height) {
+			setBlack(black, visited, boardState, x, y + 1, width, height);
+		}
+		if (y - 1 >= 0) {
+			setBlack(black, visited, boardState, x, y - 1, width, height);
+		}
+	}
     
     
     protected boolean doDefaultApplicationRaw(BoardState destBoardState)
@@ -369,7 +351,7 @@ public class RuleOneUnknownBlack extends PuzzleRule
 	        	{
 	        		for(int y = 0; y < height; ++y)
 	        		{
-	        			if(black[y][x])
+	        			if(black[x][y])
 	        				destBoardState.setCellContents(x,y,Nurikabe.CELL_BLACK);   				
 	        		}
 	        	}

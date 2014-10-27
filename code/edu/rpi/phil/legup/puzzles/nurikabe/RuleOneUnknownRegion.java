@@ -218,9 +218,9 @@ public class RuleOneUnknownRegion extends PuzzleRule
     	//x == how many desired whites - actual
     	//y == how many surrounding unknowns
     	Point ret = new Point(0,0);
-    	if(neighbors[y][x] == true)
+    	if(neighbors[x][y] == true)
     		return ret;
-    	neighbors[y][x] = true;
+    	neighbors[x][y] = true;
     	if(boardState.getCellContents(x,y) == Nurikabe.CELL_BLACK)
     		return ret;
     	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
@@ -263,13 +263,13 @@ public class RuleOneUnknownRegion extends PuzzleRule
 
     private boolean[][] setWhite(boolean[][] white, boolean[][] neighbors ,BoardState boardState, int x, int y, int width, int height)
     {
-    	if(neighbors[y][x] == true)
+    	if(neighbors[x][y] == true)
     		return white;
-    	neighbors[y][x] = true;
+    	neighbors[x][y] = true;
     	
     	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
     	{
-    		white[y][x] = true;
+    		white[x][y] = true;
     		return white;
     	}
     	if(boardState.getCellContents(x,y) == Nurikabe.CELL_BLACK)
@@ -312,7 +312,7 @@ public class RuleOneUnknownRegion extends PuzzleRule
         	{
         		for(int y = 0; y < height; ++y)
         		{
-        			if(white[y][x])
+        			if(white[x][y])
         				destBoardState.setCellContents(x,y,Nurikabe.CELL_WHITE);   				
         		}
         	}
