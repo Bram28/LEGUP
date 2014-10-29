@@ -682,6 +682,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 		// show them all
 		showAll();
+		getTree().treePanel.updateTreeSize();
 	}
 
 
