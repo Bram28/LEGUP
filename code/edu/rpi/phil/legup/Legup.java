@@ -302,7 +302,6 @@ public class Legup
 	 */
 	public static void main(String[] args)
 	{
-		System.out.println("mitchell error fix test13");
 		Legup legup = Legup.getInstance();
 		
 		// TODO system look & feel
