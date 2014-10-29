@@ -269,6 +269,7 @@ public abstract class DynamicViewer extends JScrollPane {
 	}
 
 	public void setSize( Dimension size ){
+		// System.out.println("setSize");
 		this.size = size;
 		updateSize();
 	}
@@ -277,7 +278,7 @@ public abstract class DynamicViewer extends JScrollPane {
 
 	protected static void draw(DynamicViewer dv, Graphics2D g)
 	{
-		System.out.printf("In static DynamicViewer::draw, dynamic class of dv is \"%s\"\n", dv.getClass());
+		// System.out.printf("In static DynamicViewer::draw, dynamic class of dv is \"%s\"\n", dv.getClass());
 		dv.draw(g);
 	}
 	abstract protected void draw( Graphics2D g );

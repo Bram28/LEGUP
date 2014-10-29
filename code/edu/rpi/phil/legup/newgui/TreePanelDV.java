@@ -56,6 +56,14 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	private static final Stroke medium = new BasicStroke(2);
 	private static final Stroke thin = new BasicStroke(1);
 
+	private Rectangle bounds = new Rectangle(0,0,0,0);
+
+	private int xOffset = 0;
+	private int yOffset = 0;
+
+	private Point mousePoint;
+	private static Selection mouseOver;
+
 	//Path for node images
 	//Currently only classic and smiley options exist
 	private static final String NodeImgs = "images/tree/smiley/";
@@ -89,6 +97,12 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		//zoom(0, new Point(-60, 80));
 	}
 
+	public TreePanelDV(boolean b) { super(b); }
+	public void actionPerformed(ActionEvent e)
+	{
+		System.out.println("actionPerformed");
+	}
+
 	/**
 	 * Get the most distant (grand) child of this state that is still collapsed
 	 * @param s the state we're finding child of
@@ -120,7 +134,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 
 	// recursively computes the bounding rectangle of the tree
 	private Rectangle getTreeBounds( BoardState state ){
-		System.out.println("getTreeBounds");
+		// System.out.println("getTreeBounds");
 		// get the position of the current node and add padding
 		Rectangle bounds = new Rectangle( state.getLocation() );
 		bounds.grow( 2*NODE_RADIUS, 2*NODE_RADIUS );
@@ -136,6 +150,13 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		return bounds;
 	}
 
+	public void updateTreeSize()
+	{
+		// System.out.println("updateTreeSize");
+		bounds = getTreeBounds(Legup.getInstance().getInitialBoardState());
+		setSize(bounds.getSize());
+	}
+
 	public void draw( Graphics2D g )
 	{
 		currentStateBoxes.clear();
@@ -147,8 +168,8 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			// the tree changes size (add/remove nodes/transitions)
 			// updating the size during drawing leads to a loop
 			// as updating the size triggers another redrawing
-			Rectangle bounds = getTreeBounds( state );
-			System.out.printf("Tree Bounds x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
+			// Rectangle bounds = getTreeBounds( state );
+			// System.out.printf("Tree Bounds x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
 			setSize( bounds.getSize() );
 			// TODO FIXME
 			// adjust the position of the root node so it is centered
@@ -156,6 +177,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			{
 				state.setOffset( new Point( -bounds.x, -bounds.y ) );
 			}
+			// updateTreeSize();
+			// state.setOffset( new Point( -xOffset, -yOffset ) );
+			//state.setOffset( new Point(20, 20) );
 			// set high quality rendering
 			g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 			g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
@@ -224,35 +248,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				Selection s = getSelectionAtPoint(b,where);
 				if(s != null)rv = s;
 			}
-			//the whole chunk of code below was deliberately skipping the transitions, which
-			//is no longer desireable
-			/*Vector<BoardState> transitionsFrom = state.getTransitionsFrom();
-			
-			for (int c = 0; c < transitionsFrom.size(); ++c)
-			{
-				BoardState b = transitionsFrom.get(c);
-				Point childCenter = b.getLocation();
-				
-				Line2D.Float transitionLine = new Line2D.Float(childCenter,loc);
-
-				if (transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)
-				{
-					rv = new Selection(b, false);
-				}
-				
-				Selection s = null;
-				// note that we may select a state after we've found select transition,
-				// which is desired
-				if (b.getTransitionsFrom().size() > 0)
-					s = getSelectionAtPoint(b.getTransitionsFrom().get(0), where);
-
-				if (s != null)
-					rv = s;
-
-			}*/
-			// note that we may select a state after we've found select transition,
-			// rv = new Selection(state,true);
-			// transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)
 		}
 
 		return rv;
@@ -286,6 +281,33 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	{
 		System.out.println("mousePressedAt");
 	}
+
+	protected void mouseMovedAt(Point p, MouseEvent e)
+	{
+		Selection prev = mouseOver;
+		mouseOver = getSelectionAtPoint(Legup.getInstance().getInitialBoardState(), p);
+		mousePoint = p;
+
+		if( prev != null || mouseOver != null )
+			repaint();
+		if( prev != null ^ mouseOver != null )
+			Legup.getInstance().refresh();
+		if( prev != null && mouseOver != null )
+			if( !prev.equals(mouseOver) )
+				Legup.getInstance().refresh();
+	}
+
+	public static Selection getMouseOver()
+	{
+		return mouseOver;
+	}
+
+	protected void mouseDraggedAt(Point p, MouseEvent e) {
+		if (lastMovePoint == null)
+			lastMovePoint = new Point(p);
+//		repaint();
+	}
+
 	public void mouseReleasedAt(Point p, MouseEvent e)
 	{
 		if( e.getButton() == MouseEvent.BUTTON1 )
@@ -306,18 +328,6 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			//Legup.getInstance().getSelections().setSelection( s );
 		}
 	}
-	public void boardDataChanged(BoardState state)
-	{
-		System.out.println("boardDataChanged");
-	}
-
-	// protected void paintComponent(Graphics g)
-	// {
-	// 	//draw((Graphics2D)g);
-	// 	super.paintComponent(g);
-	// 	g.setColor(Color.black);
-	// 	g.fillRect(-10,-10,100,100);
-	// }
 
 	public BoardState addChildAtCurrentState(Object justification)
 	{
@@ -334,46 +344,166 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 				Legup.setCurrentState(cur.endTransition());
 			}
 		}
+		updateTreeSize();
 		return cur;
-	}
-
-	public void delChildAtCurrentState()
-	{
-		System.out.println("delChildAtCurrentState");
-	}
-
-	public void delCurrentState()
-	{
-		System.out.println("delCurrentState");
 	}
 
 	public void collapseCurrentState()
 	{
 		System.out.println("collapseCurrentState");
+		Selection s = Legup.getInstance().getSelections().getFirstSelection();
+
+		BoardState state = s.getState();
+
+		state.toggleCollapse();
+		
+		// TODO kueblc
+		updateTreeSize();
+		repaint();
 	}
 
+	/**
+	 * Delete the current state and associated transition then fix the children
+	 */
+	public void delCurrentState()
+	{
+		System.out.println("delCurrentState");
+		Selection s = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState currentState = s.getState();
+		
+		// make sure we don't delete the initial board state
+		if (currentState.getTransitionsTo().size() == 0)
+			return;
+		
+		// choose the previous state and move the children from after state
+		BoardState parentState = null;
+		BoardState childState = null;
+		
+		if (currentState.isModifiable()) {
+			parentState = currentState.getSingleParentState();
+			childState = currentState.endTransition();
+			parentState.getTransitionsFrom().remove(currentState);
+			currentState.getTransitionsTo().remove(parentState);
+		} else {
+			parentState = currentState.getSingleParentState().getSingleParentState();
+			childState = currentState;
+			parentState.getTransitionsFrom().remove(currentState.getSingleParentState());
+			currentState.getSingleParentState().getTransitionsTo().remove(parentState);
+		}
+		
+		BoardState.reparentChildren(childState, parentState);
+		
+		// delete the current state
+		if (currentState.isModifiable()) {
+			BoardState.deleteState(currentState);
+		} else {
+			BoardState.deleteState(currentState.getSingleParentState());
+		}
+		
+		Legup.getInstance().getSelections().setSelection(new Selection(parentState, false));
+		updateTreeSize();
+	}
+
+	/**
+	 * Delete the child and child's subtree starting at the current state
+	 */
+	public void delChildAtCurrentState()
+	{
+		System.out.println("delChildAtCurrentState");
+		if(!Legup.getInstance().getGui().checkImmediateFeedback())BoardState.removeColorsFromTransitions();
+		Selection s = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState state = s.getState();
+		
+		
+		if (s.isState())
+		{ // state
+		
+			// make sure we don't delete the initial board state
+			Vector<BoardState> parentStates = state.getTransitionsTo();
+			if (parentStates.size() == 0)
+				return;
+				
+			// use to select the previous state
+			BoardState parent = parentStates.get(0);
+			
+			BoardState.deleteState(state);
+			
+			Legup.getInstance().getSelections().setSelection(new Selection(parent, false));
+		}
+		else
+		{ //  transition, delete all the things we're trasitioning from
+			
+			// select current state
+			Legup.getInstance().getSelections().setSelection(new Selection(state, false));
+
+			// delete children states
+			Vector <BoardState> children = state.getTransitionsFrom();
+
+			while (children.size() > 0)
+			{
+				BoardState child = children.get(0);
+
+				BoardState.deleteState(child);
+
+				children.remove(0);
+			}
+		}
+		updateTreeSize();
+	}
+
+	/**
+	 * Merge the two or more selected states
+	 * TODO: add elegant error handling
+	 */
 	public void mergeStates()
 	{
 		System.out.println("mergeStates");
-	}
+		ArrayList <Selection> selected = Legup.getInstance().getSelections().getCurrentSelection();
 
+		if (selected.size() > 1)
+		{
+			boolean allStates = true;
+
+			for (int x = 0; x < selected.size(); ++x)
+			{
+				if (selected.get(x).isTransition())
+				{
+					allStates = false;
+					break;
+				}
+				else if (selected.get(x).getState().isModifiable())
+				{
+					allStates = false;
+					break;
+				}
+			}
+
+			if (allStates)
+			{
+				ArrayList <BoardState> parents = new ArrayList <BoardState>();
+
+				for (int x = 0; x < selected.size(); ++x)
+					parents.add(selected.get(x).getState());
+
+				BoardState.merge(parents, false);
+			}
+			else
+				System.out.println("not all states");
+		}
+		else
+			System.out.println("< 2 selected");
+		updateTreeSize();
+	}
 	public void transitionChanged()
 	{
 		System.out.println("transitionChanged");
-		repaint();
+		updateTreeSize();
+		//repaint();
 	}
 
 	public void treeSelectionChanged(ArrayList <Selection> newSelection)
 	{
-		System.out.println("treeSelectionChanged");
 	}
-
-	public void repaint()
-	{
-		System.out.println("repainting treepanel");
-		super.repaint();
-	}
-
 
 	/**
 	 * Recursively renders the tree below <code>state</code>.
