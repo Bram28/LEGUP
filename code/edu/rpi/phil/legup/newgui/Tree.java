@@ -134,7 +134,6 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		JustificationFrame.addJustificationAppliedListener(this);
 		gui.legupMain.getSelections().addTreeSelectionListener(this);
 		BoardState.addCellChangeListener(this);
-		setupKeyEvents();
 		undoStack = new Stack<byte[]>();
 		undoStackState = new Stack<ArrayList<Integer>>();
 		redoStack = new Stack<byte[]>();
@@ -185,46 +184,6 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			tempSuppressUndoPushing = false;
 		}
 	}
-	
-	/**
-	 * Initializes key receptors on this and children components
-	 */
-	private void setupKeyEvents()
-	{
-		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0);
-		this.getInputMap(javax.swing.JComponent.WHEN_FOCUSED).put(stroke, "KeyEvent.VK_UP");
-		this.getActionMap().put("KeyEvent.VK_UP", new AbstractAction() {private static final long serialVersionUID = -2304281047341398965L; public void actionPerformed(ActionEvent event) {navigateTree(KeyEvent.VK_UP);}});
-		
-		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0);
-		this.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).put(stroke, "KeyEvent.VK_DOWN");
-		this.getActionMap().put("KeyEvent.VK_DOWN", new AbstractAction() {private static final long serialVersionUID = -2304281047341398965L; public void actionPerformed(ActionEvent event) {navigateTree(KeyEvent.VK_DOWN);}});
-		
-		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0);
-		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, "KeyEvent.VK_LEFT");
-		this.getActionMap().put("KeyEvent.VK_LEFT", new AbstractAction() {private static final long serialVersionUID = -2304281047341398965L; public void actionPerformed(ActionEvent event) {navigateTree(KeyEvent.VK_LEFT);}});
-		
-		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0);
-		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, "KeyEvent.VK_RIGHT");
-		this.getActionMap().put("KeyEvent.VK_RIGHT", new AbstractAction() {private static final long serialVersionUID = -2304281047341398965L; public void actionPerformed(ActionEvent event) {navigateTree(KeyEvent.VK_RIGHT);}});
-		/*
-		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_UP, 2);
-		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke,"Ctrl-KeyEvent.VK_UP");
-		this.getActionMap().put("Ctrl-KeyEvent.VK_UP",new AbstractAction(){});
-		
-		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 2);
-		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke,"Ctrl-KeyEvent.VK_DOWN");
-		this.getActionMap().put("Ctrl-KeyEvent.VK_DOWN",new AbstractAction(){});
-		
-		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 2);
-		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke,"Ctrl-KeyEvent.VK_LEFT");
-		this.getActionMap().put("Ctrl-KeyEvent.VK_LEFT",new AbstractAction(){});
-		
-		stroke = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 2);
-		this.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke,"Ctrl-KeyEvent.VK_RIGHT");
-		this.getActionMap().put("Ctrl-KeyEvent.VK_RIGHT",new AbstractAction(){});*/
-		
-	}
-	
 	
 	/**
 	 * Add a child to the sate that is currently selected
@@ -363,7 +322,6 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	
 	public void boardDataChanged(BoardState state)
 	{
-		//System.out.println("board data changed");
 		modifiedSinceSave = true;
 		modifiedSinceUndoPush = true;
 		updateStatus();
@@ -374,120 +332,6 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 	{
 		updateStatusTimer = ((updateStatusTimer-1) > 0)?(updateStatusTimer-1):0;
 		if(updateStatusTimer > 0)return;
-		/*ArrayList <Selection> newSelectionList = gui.legupMain.getSelections().getCurrentSelection();
-		
-		if (newSelectionList != null && newSelectionList.size() == 1 
-				&& newSelectionList.get(0).isState())
-		{
-			Selection newSelection = newSelectionList.get(0);
-			BoardState newState = newSelection.getState();
-			this.status.setText("States: " + newState.countStates() + " Branches: " + newState.countLeaves() + " Max Depth: " + newState.countDepth());
-		}
-		else
-		{
-			this.status.setText("");
-		}*/
-		//this.status.setText((modifiedSinceUndoPush?"The board has been modified since the selection was changed. ":"")+(modifiedSinceSave?"The proof has been modified since the last save.":""));
 		this.status.setText("");
-	}
-	
-	
-	private long keyPressTime = 0;
-	private int lastKeyDirection = -1;
-	private void navigateTree(int direction)
-	{
-		Date now = new Date();
-		if(now.getTime() < keyPressTime + 200 && lastKeyDirection == direction)
-		{
-			return;
-		}
-		keyPressTime = now.getTime();
-		lastKeyDirection = direction;
-		
-		ArrayList<Selection> s = gui.legupMain.getSelections().getCurrentSelection();
-		if(s == null)
-		{
-			return;
-		}
-		
-		if(s.size() != 1 || s.get(0).isTransition())
-		{
-			return;
-		}
-		BoardState state = s.get(0).getState();
-		
-		if(direction == KeyEvent.VK_UP)
-		{
-			BoardState parent = state.getSingleParentState();
-			if(parent != null)
-			{
-				gui.legupMain.getSelections().setSelection(new Selection(parent, false));
-			}
-		}
-		else if(direction == KeyEvent.VK_DOWN)
-		{
-			if(state.getTransitionsFrom().size() > 0)
-			{
-				BoardState child = state.getTransitionsFrom().get(0);
-				if(child != null)
-				{
-					gui.legupMain.getSelections().setSelection(new Selection(child, false));
-				}
-			}
-		}
-		else if(direction == KeyEvent.VK_RIGHT)
-		{
-			BoardState parent = state.getSingleParentState();
-			if(parent != null)
-
-			{
-				if(parent.getTransitionsFrom().size() > 1)
-				{
-					for(int x = 0; x < parent.getTransitionsFrom().size() - 1; ++x)
-					{
-						if(parent.getTransitionsFrom().get(x) == state)
-						{
-							BoardState sib = parent.getTransitionsFrom().get(x + 1);
-							if(sib != null)
-							{
-								gui.legupMain.getSelections().setSelection(new Selection(sib, false));
-							}
-						}
-					}
-				}
-			}
-		}
-		else if(direction == KeyEvent.VK_LEFT)
-		{
-			BoardState parent = state.getSingleParentState();
-			if(parent != null)
-			{
-				if(parent.getTransitionsFrom().size() > 1)
-				{
-					for(int x = parent.getTransitionsFrom().size() - 1; x > 0; --x)
-					{
-						if(parent.getTransitionsFrom().get(x) == state)
-						{
-							BoardState sib = parent.getTransitionsFrom().get(x - 1);
-							if(sib != null)
-							{
-								gui.legupMain.getSelections().setSelection(new Selection(sib, false));
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		// TODO snap to current selection
-		// Point draw = (Point)s.get(0).getState().getLocation().clone();
-		// double scale = treePanel.getScale();
-		// treePanel.moveX = (treePanel.getWidth()/(scale*2))-draw.x;
-		// treePanel.moveY = (treePanel.getHeight()/(scale*2))-draw.y;
-		
-		// treePanel.repaint();
-		Legup.getInstance().refresh();
-		
-	
 	}
 }

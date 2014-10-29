@@ -12,6 +12,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -163,16 +164,148 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 			if (mouseOver != null) drawMouseOver(g);
 		}
 	}
-
-	public void paint( Graphics2D g )
+	/**
+	 * Get the boardstate / transition at a point in the tree
+	 * @param state the state to check now (starts at root)
+	 * @param where the point where the user clicked
+	 * @return the node or transition the user selected, or null if he or she missed
+	 */
+	private Selection getSelectionAtPoint(BoardState state, Point where)
 	{
-		System.out.println("paint");
+		if(state == null)return null;
+		Selection rv = null;
+		Point loc = state.getLocation();
+		boolean isCollapsed = state.isCollapsed();
+		final int radius = isCollapsed ? (2 * NODE_RADIUS) : NODE_RADIUS;
+
+		Point draw = new Point(loc.x - radius, loc.y - radius);
+		// distance from a transition which is considered clicking on it, squared
+		final int MAX_CLICK_DISTANCE_SQ = 5*5;
+		Shape myBounds;
+		//System.out.println("getSelectionAtPoint called for (" + where.x + "," + where.y + ") on node at point (" + state.getLocation().x + "," + state.getLocation().y + ")");
+		if(state.isModifiable())
+		{
+			/*draw.x += 128;
+			int[] points_x = new int[3];
+			int[] points_y = new int[3];
+			for(int c1 = 0;c1 < 3;c1+=1)
+			{
+				points_x[c1] = (int)(draw.x+radius*Math.cos(Math.toRadians(c1*120)));
+				points_y[c1] = (int)(draw.y+radius*Math.sin(Math.toRadians(c1*120)));
+			}
+			myBounds = new Polygon(points_x,points_y,3);*/
+			draw.x -= radius/2;
+			draw.y -= radius/2;
+			myBounds = new Ellipse2D.Float(draw.x,draw.y,3*radius,3*radius);
+		}
+		else
+		{
+			myBounds = new Ellipse2D.Float(draw.x,draw.y,2 * radius,2 * radius);
+		}
+		
+		boolean stateSelected = myBounds.contains(where);
+
+		if (stateSelected && isCollapsed)
+		{
+			Vector <BoardState> parents = state.getTransitionsTo();
+
+			if (parents.size() == 1 && parents.get(0).isCollapsed())
+				stateSelected = false; // can't select a collapsed state
+		}
+
+		if (stateSelected)
+		{
+			rv = new Selection(state,false);
+		}
+		else
+		{
+			for(BoardState b : state.getTransitionsFrom())
+			{
+				Selection s = getSelectionAtPoint(b,where);
+				if(s != null)rv = s;
+			}
+			//the whole chunk of code below was deliberately skipping the transitions, which
+			//is no longer desireable
+			/*Vector<BoardState> transitionsFrom = state.getTransitionsFrom();
+			
+			for (int c = 0; c < transitionsFrom.size(); ++c)
+			{
+				BoardState b = transitionsFrom.get(c);
+				Point childCenter = b.getLocation();
+				
+				Line2D.Float transitionLine = new Line2D.Float(childCenter,loc);
+
+				if (transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)
+				{
+					rv = new Selection(b, false);
+				}
+				
+				Selection s = null;
+				// note that we may select a state after we've found select transition,
+				// which is desired
+				if (b.getTransitionsFrom().size() > 0)
+					s = getSelectionAtPoint(b.getTransitionsFrom().get(0), where);
+
+				if (s != null)
+					rv = s;
+
+			}*/
+			// note that we may select a state after we've found select transition,
+			// rv = new Selection(state,true);
+			// transitionLine.ptSegDistSq(where) < MAX_CLICK_DISTANCE_SQ)
+		}
+
+		return rv;
 	}
+	/**
+	* Toggle a state in a selection (something was ctrl + clicked)
+	* @param state the state to check now (starts at root)
+	* @param bounds the bounds of the state and all it's children
+	* @param where the point where the user ctrl + clicked
+	*/
+	private void toggleSelection(BoardState state, Point where)
+	{
+		Selection s = getSelectionAtPoint(state, where);
+		Legup.getInstance().getSelections().toggleSelection(s);
+	}
+	/**
+	* Select a new state or transition that the user clicked on
+	* @param state the state we're at
+	* @param bounds the bounds of the state and all it's children
+	* @param where the point where the user clicked
+	* @return the new Selection
+	*/
+	private Selection newSelection(BoardState state, Point where)
+	{
+		Selection s = getSelectionAtPoint(state, where);
+		Legup.getInstance().getSelections().setSelection(s);
+		return s;
+	}
+
 	public void mousePressedAt(Point p, MouseEvent e)
 	{
 		System.out.println("mousePressedAt");
 	}
-	public void mouseReleasedAt(Point p, MouseEvent e) {}
+	public void mouseReleasedAt(Point p, MouseEvent e)
+	{
+		if( e.getButton() == MouseEvent.BUTTON1 )
+		{
+			lastMovePoint = new Point(p);
+			// add to selection
+			if ( e.isControlDown() )
+			toggleSelection( Legup.getInstance().getInitialBoardState(), p );
+			// make a new selection
+			else
+			newSelection( Legup.getInstance().getInitialBoardState(), p );
+			// right click
+		}
+		else if( e.getButton() == MouseEvent.BUTTON3 )
+		{
+			// create a new child node and select it
+			//Selection s = new Selection( addChildAtCurrentState(), false );
+			//Legup.getInstance().getSelections().setSelection( s );
+		}
+	}
 	public void boardDataChanged(BoardState state)
 	{
 		System.out.println("boardDataChanged");
