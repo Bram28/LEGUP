@@ -15,6 +15,7 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -80,7 +81,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 
 		//setDefaultPosition(-60,-80);
-		setSize(new Dimension(200, 200));
+		setSize(new Dimension(100, 200));
 		setPreferredSize(new Dimension(640, 160));
 		//zoomTo(1);
 		//System.out.println("scale is " + getZoom());
@@ -116,16 +117,130 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		return rv;
 	}
 
-	protected void draw(Graphics2D g)
+	// recursively computes the bounding rectangle of the tree
+	private Rectangle getTreeBounds( BoardState state ){
+		System.out.println("getTreeBounds");
+		// get the position of the current node and add padding
+		Rectangle bounds = new Rectangle( state.getLocation() );
+		bounds.grow( 2*NODE_RADIUS, 2*NODE_RADIUS );
+		// get the relevant child nodes
+		Vector <BoardState> children = state.isCollapsed()
+			? getLastCollapsed(state).getTransitionsFrom()
+			: state.getTransitionsFrom();
+		// compute the union of the child bounding boxes recursively
+		for (int c = 0; c < children.size(); c++)
+		{
+			bounds = bounds.union( getTreeBounds( children.get(c) ) );
+		}
+		return bounds;
+	}
+
+	public void draw( Graphics2D g )
 	{
 		currentStateBoxes.clear();
 		BoardState state = Legup.getInstance().getInitialBoardState();
-		if( state != null ){
+		if(state != null)
+		{
+			// TODO FIXME
+			// we should update the size using setSize() as soon as
+			// the tree changes size (add/remove nodes/transitions)
+			// updating the size during drawing leads to a loop
+			// as updating the size triggers another redrawing
+			Rectangle bounds = getTreeBounds( state );
+			System.out.printf("Tree Bounds x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
+			setSize( bounds.getSize() );
+			// TODO FIXME
+			// adjust the position of the root node so it is centered
+			if( bounds.x != 0 || bounds.y != 0 )
+			{
+				state.setOffset( new Point( -bounds.x, -bounds.y ) );
+			}
+			// set high quality rendering
+			g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+			g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 			drawTree(g,state);
 			drawCurrentStateBoxes(g);
 			if (mouseOver != null) drawMouseOver(g);
 		}
 	}
+
+	public void paint( Graphics2D g )
+	{
+		System.out.println("paint");
+	}
+	public void mousePressedAt(Point p, MouseEvent e)
+	{
+		System.out.println("mousePressedAt");
+	}
+	public void mouseReleasedAt(Point p, MouseEvent e) {}
+	public void boardDataChanged(BoardState state)
+	{
+		System.out.println("boardDataChanged");
+	}
+
+	// protected void paintComponent(Graphics g)
+	// {
+	// 	//draw((Graphics2D)g);
+	// 	super.paintComponent(g);
+	// 	g.setColor(Color.black);
+	// 	g.fillRect(-10,-10,100,100);
+	// }
+
+	public BoardState addChildAtCurrentState(Object justification)
+	{
+		System.out.println("addChildAtCurrentState");
+		//this was what was in the rightclick before the menu - Avi
+		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState cur = selection.getState();
+		if((cur.getChangedCells().size() > 0)||(cur.extraDataChanged()))
+		{
+			if (cur.isModifiable() && selection.isState())
+			{
+				//cur.setModifiableState(false);
+				//cur.finalize_cells();
+				Legup.setCurrentState(cur.endTransition());
+			}
+		}
+		return cur;
+	}
+
+	public void delChildAtCurrentState()
+	{
+		System.out.println("delChildAtCurrentState");
+	}
+
+	public void delCurrentState()
+	{
+		System.out.println("delCurrentState");
+	}
+
+	public void collapseCurrentState()
+	{
+		System.out.println("collapseCurrentState");
+	}
+
+	public void mergeStates()
+	{
+		System.out.println("mergeStates");
+	}
+
+	public void transitionChanged()
+	{
+		System.out.println("transitionChanged");
+		repaint();
+	}
+
+	public void treeSelectionChanged(ArrayList <Selection> newSelection)
+	{
+		System.out.println("treeSelectionChanged");
+	}
+
+	public void repaint()
+	{
+		System.out.println("repainting treepanel");
+		super.repaint();
+	}
+
 
 	/**
 	 * Recursively renders the tree below <code>state</code>.
@@ -135,6 +250,7 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 	 */
 	private void drawTree(Graphics g, BoardState state)
 	{
+		// System.out.println("Board dimensions are " + state.getWidth() + "x" + state.getHeight());
 		Graphics2D g2D = (Graphics2D)g;
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		boolean isCollapsed = state.isCollapsed();
@@ -143,25 +259,27 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
 		if(mouseOver != null)
-		if((mouseOver.getState().getJustification() != null)||(mouseOver.getState().getCaseRuleJustification() != null))
 		{
-			draw = mousePoint;
-			if((mouseOver.getState().justificationText != null)&&(mouseOver.getState().getColor() != TreePanel.nodeColor))
+			if((mouseOver.getState().getJustification() != null)||(mouseOver.getState().getCaseRuleJustification() != null))
 			{
-				g.setColor(Color.black);
-				String[] tmp = mouseOver.getState().justificationText.split("\n");
-				for(int c1=0;c1<tmp.length;c1++)
+				draw = mousePoint;
+				if((mouseOver.getState().justificationText != null)&&(mouseOver.getState().getColor() != TreePanel.nodeColor))
 				{
-					g2D.drawString(tmp[c1],draw.x,draw.y-10*(3+tmp.length)+10*c1);
+					g.setColor(Color.black);
+					String[] tmp = mouseOver.getState().justificationText.split("\n");
+					for(int c1=0;c1<tmp.length;c1++)
+					{
+						g2D.drawString(tmp[c1],draw.x,draw.y-10*(3+tmp.length)+10*c1);
+					}
 				}
+				//g2D.drawString("color:"+mouseOver.getState().getColor().toString(),draw.x,draw.y-30);
+				//g2D.drawString("status:"+mouseOver.getState().getStatus(),draw.x-50,draw.y-30);
+				//g2D.drawString("lTC:"+mouseOver.getState().leadsToContradiction(),draw.x,draw.y-20);
+				//g2D.drawString("Depth:"+mouseOver.getState().getDepth(),draw.x,draw.y-30);
+				//g2D.drawString("dnltc:"+(mouseOver.getState().doesNotLeadToContradiction() == null),draw.x,draw.y-30);
+				g.setColor(Color.gray);
+				g2D.drawRect(draw.x+30,draw.y-30,100,100);
 			}
-			//g2D.drawString("color:"+mouseOver.getState().getColor().toString(),draw.x,draw.y-30);
-			//g2D.drawString("status:"+mouseOver.getState().getStatus(),draw.x-50,draw.y-30);
-			//g2D.drawString("lTC:"+mouseOver.getState().leadsToContradiction(),draw.x,draw.y-20);
-			//g2D.drawString("Depth:"+mouseOver.getState().getDepth(),draw.x,draw.y-30);
-			//g2D.drawString("dnltc:"+(mouseOver.getState().doesNotLeadToContradiction() == null),draw.x,draw.y-30);
-			g.setColor(Color.gray);
-			g2D.drawRect(draw.x+30,draw.y-30,100,100);
 		}
 		g.setColor(Color.black);
 		draw = (Point)state.getLocation().clone();
