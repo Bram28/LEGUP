@@ -79,8 +79,12 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		BoardState.addTransitionChangeListener(this);
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 
-		setDefaultPosition(-60,-80);
-		setPreferredSize(new Dimension(640,160));
+		//setDefaultPosition(-60,-80);
+		setSize(new Dimension(200, 200));
+		setPreferredSize(new Dimension(640, 160));
+		//zoomTo(1);
+		//System.out.println("scale is " + getZoom());
+		//zoom(0, new Point(-60, 80));
 	}
 
 	/**

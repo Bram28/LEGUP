@@ -480,12 +480,12 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		}
 		
 		// TODO snap to current selection
-		Point draw = (Point)s.get(0).getState().getLocation().clone();
+		// Point draw = (Point)s.get(0).getState().getLocation().clone();
 		// double scale = treePanel.getScale();
 		// treePanel.moveX = (treePanel.getWidth()/(scale*2))-draw.x;
 		// treePanel.moveY = (treePanel.getHeight()/(scale*2))-draw.y;
 		
-		treePanel.repaint();
+		// treePanel.repaint();
 		Legup.getInstance().refresh();
 		
 	
