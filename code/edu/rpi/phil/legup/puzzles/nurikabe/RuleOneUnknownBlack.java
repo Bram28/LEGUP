@@ -152,7 +152,7 @@ public class RuleOneUnknownBlack extends PuzzleRule
      * @param height the height of the board
      */
     private void checkForMultiple(boolean[][] black, int x, int y, int preX, int preY, BoardState boardState, int width, int height) {
-    	int openIndex = multLoopConnected(x, y, preX, preY, boardState, width, height);
+    	int openIndex = multLoopConnected(x, y, preX, preY, boardState, width, height, black);
     	if (openIndex <= 0)
     	{
     		return;
@@ -200,15 +200,21 @@ public class RuleOneUnknownBlack extends PuzzleRule
      * @return 3 if there is a single open adjacent space to the left of the current cell
      * @return 4 if there is a single open adjacent space above the current cell
      */
-    private int multLoopConnected(int x, int y, int preX, int preY, BoardState boardState, int width, int height) {
+    private int multLoopConnected(int x, int y, int preX, int preY, BoardState boardState, int width, int height, boolean[][] black) {
     	int openAdjacentSpaces = 0;
+    	int adjBlackCount = 0;
     	
     	int openIndex = 0;
     	if (x+1 < width)
     	{
         	if ((boardState.getCellContents(x+1, y) == Nurikabe.CELL_UNKNOWN)
-        			&& (x+1 != preX || y != preY))
+        			&& (x+1 != preX || y != preY)) {
         		openIndex = 1;
+        	}
+        	if ((boardState.getCellContents(x+1, y) == Nurikabe.CELL_BLACK || black[x+1][y])
+        			&& (x+1 != preX || y != preY)) {
+        		adjBlackCount++;
+        	}
     	}
     	if (y+1 < height)
     	{
@@ -216,11 +222,15 @@ public class RuleOneUnknownBlack extends PuzzleRule
     			&& (x != preX || y+1 != preY))
     		{
     			if (openIndex > 0){
-    				openIndex = -1;
+    				return -1;
     			} else {
     				openIndex = 2;
     			}
     		}
+        	if ((boardState.getCellContents(x, y+1) == Nurikabe.CELL_BLACK || black[x][y+1])
+        			&& (x != preX || y+1 != preY)) {
+        		adjBlackCount++;
+        	}
     	}
     	if (x-1 >= 0)
     	{
@@ -228,24 +238,36 @@ public class RuleOneUnknownBlack extends PuzzleRule
     			&& (x-1 != preX || y != preY)) 
     		{
     			if (openIndex > 0){
-    				openIndex = -1;
+    				return -1;
     			} else {
     				openIndex = 3;
     			}
     		}
+        	if ((boardState.getCellContents(x-1, y) == Nurikabe.CELL_BLACK || black[x-1][y])
+        			&& (x-1 != preX || y != preY)) {
+        		adjBlackCount++;
+        	}
     	}
     	if (y-1 >= 0){
     		if ((boardState.getCellContents(x, y-1) == Nurikabe.CELL_UNKNOWN)
         			&& (x != preX || y-1 != preY))
     		{
     			if (openIndex > 0){
-    				openIndex = -1;
+    				return -1;
     			} else {
     				openIndex = 4;
     			}
     		}
+        	if ((boardState.getCellContents(x, y-1) == Nurikabe.CELL_BLACK || black[x][y-1])
+        			&& (x != preX || y-1 != preY)) {
+        		adjBlackCount++;
+        	}
     	}
-    		
+    	System.out.println("adjBlackCount: " + adjBlackCount);
+    	if (adjBlackCount > 1) {
+    		return -2;
+    	}
+    	
     	return openIndex;
     }
     
