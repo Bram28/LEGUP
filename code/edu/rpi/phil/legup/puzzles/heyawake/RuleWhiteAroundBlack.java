@@ -17,13 +17,19 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleWhiteAroundBlack extends PuzzleRule
 {
+	private static final long serialVersionUID = 953315180L;
+
     RuleWhiteAroundBlack()
     {
     	setName("White Around Black");
     	description = "Cells next to a black cell are white.";
     	image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
     }
-    
+	
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
+	}    
 
     public void print(){
 	System.out.print(getName());

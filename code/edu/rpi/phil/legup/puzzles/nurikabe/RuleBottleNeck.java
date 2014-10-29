@@ -7,11 +7,17 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleBottleNeck extends PuzzleRule
 {
+	private static final long serialVersionUID = 787962510L;
+
 	RuleBottleNeck()
 	{
 		setName("Bottle Neck");
 		description = "Cells that are white bottlenecks must be white.";
 		image = new ImageIcon("images/nurikabe/rules/NoBlackSquare.png");
+	}
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/NoBlackSquare.png";
 	}
 	protected String checkRuleRaw(BoardState destBoardState)
 	{

@@ -6,6 +6,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 import java.awt.Point;
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 
 /**
@@ -14,15 +15,21 @@ import javax.swing.ImageIcon;
  */
 public class RuleSharedCells extends PuzzleRule
 {
-
-	public RuleSharedCells()
+	private static final long serialVersionUID = 525623582L;
+	
+    public RuleSharedCells()
 	{
 		setName("Deduce shared cells");
 		description = "Two neighboring numbers dictate the state of their shared adjacency cells";
 		image = new ImageIcon("images/fillapix/rulesharedcells.png");
 	}
 
-	 protected String checkRuleRaw(BoardState destBoardState)
+	 public String getImageName()
+	{
+		return "images/fillapix/rulesharedcells.png";
+	}
+
+	protected String checkRuleRaw(BoardState destBoardState)
     {
     	String error = null;
     	BoardState origBoardState = destBoardState.getSingleParentState();

@@ -7,14 +7,21 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionAdjacentBlacks extends Contradiction
 {	 
-	 ContradictionAdjacentBlacks()
+    private static final long serialVersionUID = -23494650L;
+	
+    ContradictionAdjacentBlacks()
 	 {
 		setName("Adjacent Black Cells");
 		description = "No two blacks can be adjacent.";
 		image = new ImageIcon("images/heyawake/contradictions/adjacentBlacks.png");
 	 }
 	 
-	 /**
+	 public String getImageName()
+	{
+		return "images/heyawake/contradictions/adjacentBlacks.png";
+	}
+
+	/**
      * Checks if the contradiction was applied correctly to this board state
      *
      * @param state The board state

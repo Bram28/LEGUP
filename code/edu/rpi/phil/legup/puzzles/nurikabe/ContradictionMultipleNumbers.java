@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionMultipleNumbers extends Contradiction
 {	 
+    private static final long serialVersionUID = 326902345L;
 	
 	 ContradictionMultipleNumbers()
 	 {
@@ -14,6 +15,11 @@ public class ContradictionMultipleNumbers extends Contradiction
 		description = "All white regions cannot have more than one number.";
 		image = new ImageIcon("images/nurikabe/contradictions/MultipleNumbers.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/contradictions/MultipleNumbers.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

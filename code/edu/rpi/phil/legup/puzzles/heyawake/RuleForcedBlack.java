@@ -2,17 +2,26 @@ package edu.rpi.phil.legup.puzzles.heyawake;
 
 import java.util.Vector;
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
+
 import java.awt.Point;
+
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class RuleForcedBlack extends PuzzleRule
 {
+	private static final long serialVersionUID = 843828064L;
+
 	RuleForcedBlack()
 	{
 		setName("Black Path");
 		description = "A path of length 2*n-1 has only one configuration.";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
+	}
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
 	}
 	protected boolean checkRegionHasClue(BoardState state, int cellregion)
 	{

@@ -13,6 +13,7 @@ public class RuleForcedLocation extends PuzzleRule
 	// cell index = 9*row+col
 	private final int[][] cellToGroupRef;
 	private final int[][] groupToCellRef;
+	private static final long serialVersionUID = 206709517L;
 
 	RuleForcedLocation()
     {
@@ -23,6 +24,11 @@ public class RuleForcedLocation extends PuzzleRule
 		groupToCellRef = Sudoku.getGroups();
 		cellToGroupRef = Sudoku.getCrossReference();
     }
+	
+	public String getImageName()
+	{
+		return "images/sudoku/forcedByElimination.png";
+	}
 
 	 protected String checkRuleRaw(BoardState destBoardState)
     {

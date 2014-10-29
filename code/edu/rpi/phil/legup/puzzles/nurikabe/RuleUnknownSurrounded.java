@@ -9,11 +9,17 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleUnknownSurrounded extends PuzzleRule
 {
+	private static final long serialVersionUID = 729976023L;
+
 	RuleUnknownSurrounded()
 	{
 		setName("Fill In Black");
-		description = "If there is one unknown surrounded by black, it must be black.";
+		description = "If there an unknown region surrounded by black, it must be black.";
 		image = new ImageIcon("images/nurikabe/rules/FillInBlack.png");
+	}
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/FillInBlack.png";
 	}
 	protected String checkRuleRaw(BoardState destBoardState)
 	{
@@ -62,7 +68,7 @@ public class RuleUnknownSurrounded extends PuzzleRule
 								if((dy+y>=height) || (dy+y<0))
 									continue;
 								
-								if(origBoardState.getCellContents(x+dx,y+dy)!=Nurikabe.CELL_BLACK)
+								if(destBoardState.getCellContents(x+dx,y+dy)!=Nurikabe.CELL_BLACK)
 								{
 									error="Black cells must be placed inside of a region of black cells.";
 								}

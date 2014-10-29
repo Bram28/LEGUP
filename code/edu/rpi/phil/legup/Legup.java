@@ -183,7 +183,7 @@ public class Legup
 			errorMessage("Error encountered loading PuzzleModule.");
 		}
 		gui.reloadGui();
-		gui.getTree().colorTransitions();
+		Tree.colorTransitions();
 	}
 
 	/*
@@ -298,6 +298,7 @@ public class Legup
 	 */
 	public static void main(String[] args)
 	{
+		GlobalPopupExceptionHandler.registerExceptionHandler();
 		Legup legup = Legup.getInstance();
 		
 		// TODO system look & feel
@@ -310,7 +311,7 @@ public class Legup
 		//legup.login.promptLogin();
 		legup.gui = new LEGUP_Gui(legup);
 		
-		legup.gui.promptPuzzle();
+		//legup.gui.promptPuzzle();
 
 		// This is for the animation - Daniel P
 		if (BoardDrawingHelper.ANIMATE_SPLIT_CASE) {

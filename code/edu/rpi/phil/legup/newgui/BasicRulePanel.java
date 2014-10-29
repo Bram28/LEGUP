@@ -44,6 +44,7 @@ public class BasicRulePanel extends JustificationPanel
 	//MouseListener listener = new DragMouseAdapter();
 	
 	private Vector<PuzzleRule> rules = null;
+    protected Justification getNthJustification(int n) { return rules.get(n); }
 
 	/**
 	 * Create a new RulePanel

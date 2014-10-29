@@ -7,15 +7,21 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionBoardStateViolated extends Contradiction
 {
-
-	 ContradictionBoardStateViolated()
+    private static final long serialVersionUID = 855439484L;
+	
+    ContradictionBoardStateViolated()
 	 {
 		setName("Board State Violated");
 		description = "There exists a pixel number that cannot be satisfied";
 		image = new ImageIcon("images/fillapix/BoardStateViolated.png");
 	 }
 
-	 /**
+	 public String getImageName()
+	{
+		return "images/fillapix/BoardStateViolated.png";
+	}
+
+	/**
      * Checks if the contradiction was applied correctly to this board state
      *
      * @param state The board state

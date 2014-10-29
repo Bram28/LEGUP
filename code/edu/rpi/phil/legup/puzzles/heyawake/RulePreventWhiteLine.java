@@ -7,11 +7,18 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RulePreventWhiteLine extends PuzzleRule
 {
+	private static final long serialVersionUID = 407979836L;
+
 	RulePreventWhiteLine()
 	{
 		setName("Prevent White Line");
 		description = "Cells that will cause a white line across three regions must be black.";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
+	}
+	
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
 	}
 	
 	public void print()

@@ -25,6 +25,7 @@ public class PuzzleGeneratorDialog extends JDialog
 	private String strChoice;
 	private int diffChoice;
 
+	// JComboBox was made generic in Java7, adding annotations is an error in Java6
 	private final JComboBox combo;
 	private final JComboBox dCombo;
 

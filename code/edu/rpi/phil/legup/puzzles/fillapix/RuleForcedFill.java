@@ -5,6 +5,7 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleRule;
 
 import java.awt.Point;
+
 import javax.swing.ImageIcon;
 
 /**
@@ -13,15 +14,21 @@ import javax.swing.ImageIcon;
  */
 public class RuleForcedFill extends PuzzleRule
 {
-
-	public RuleForcedFill()
+	private static final long serialVersionUID = 730983709L;
+	
+    public RuleForcedFill()
 	{
 		setName("Forced Black or White");
 		description = "Numbers in the grid force square(s) to be black or white";
 		image = new ImageIcon("images/fillapix/ruleforcedfill.png");
 	}
 
-	 protected String checkRuleRaw(BoardState destBoardState)
+	 public String getImageName()
+	{
+		return "images/fillapix/ruleforcedfill.png";
+	}
+
+	protected String checkRuleRaw(BoardState destBoardState)
     {
     	String error = null;
     	BoardState origBoardState = destBoardState.getSingleParentState();

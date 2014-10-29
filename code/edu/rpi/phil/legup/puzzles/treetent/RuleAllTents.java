@@ -195,7 +195,7 @@ public class RuleAllTents extends PuzzleRule
 	        	for(int y = 0; y < height; ++y)
 	        	{
 	        		int num_empty = 0;
-	    			int total = TreeTent.translateNumTents(destBoardState.getLabel(destBoardState.LABEL_RIGHT, y));
+	    			int total = TreeTent.translateNumTents(destBoardState.getLabel(BoardState.LABEL_RIGHT, y));
 	        		for(int x = 0; x < width; ++x)
 	    			{
 	    				if(destBoardState.getCellContents(x, y)==TreeTent.CELL_UNKNOWN || destBoardState.getCellContents(x, y)==TreeTent.CELL_TENT)

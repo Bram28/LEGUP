@@ -2,17 +2,27 @@ package edu.rpi.phil.legup.puzzles.heyawake;
 
 import java.util.Vector;
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
+
 import java.awt.Point;
+
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class Rule2InCorner extends PuzzleRule
 {
+	private static final long serialVersionUID = 69578365L;
+
 	Rule2InCorner()
 	{
 		setName("2X2 In Corner");
 		description = "A 2X2 region in a corner with a value of 2 has one configuration";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
+	}
+	 
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
 	}
 	protected boolean checkRegionHasClue(BoardState state, int cellregion)
 	{

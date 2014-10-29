@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleOneUnknownBlack extends PuzzleRule
 {	 
+    private static final long serialVersionUID = -71586809L;
 	
 	 RuleOneUnknownBlack()
 	 {
@@ -14,6 +15,11 @@ public class RuleOneUnknownBlack extends PuzzleRule
 		description = "If there is one unknown next to a black region, the unknown should also be black.";
 		image = new ImageIcon("images/nurikabe/rules/OneUnknownBlack.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/OneUnknownBlack.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

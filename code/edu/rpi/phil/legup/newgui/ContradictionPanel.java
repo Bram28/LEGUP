@@ -33,6 +33,7 @@ public class ContradictionPanel extends JustificationPanel
 	protected final String toolTip = "Contradictions";
 	//MouseListener listener = new DragMouseAdapter();
 	private Vector<Contradiction> contradictions = null;
+    protected Justification getNthJustification(int n) { return contradictions.get(n); }
 
 	/**
 	 * Create a new ContradictionPanel
@@ -127,7 +128,7 @@ public class ContradictionPanel extends JustificationPanel
 		}
 		else
 		{
-			BoardState next = cur.addTransition();
+			BoardState next = BoardState.addTransition();
 			if(next == null)return null;
 			next.setJustification(contradictions.get(button));
 			Legup.setCurrentState(next);

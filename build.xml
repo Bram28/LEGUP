@@ -2,7 +2,7 @@
 	<description>ANT file to compile and run LEGUP code</description>
 
 	<target name="compile" description="Generates executable java code from source">
-		<javac srcdir="code/edu" destdir="run">
+		<javac includeantruntime="false" srcdir="code" destdir="run">
 			<compilerarg value="-Xlint"/>
 		</javac>
 	</target>
@@ -16,7 +16,7 @@
 	</target>
 
 	<target name="test-legup" description="Compiles and runs the LEGUP main program">
-		<javac srcdir="code/edu" destdir="run"/>
+		<javac includeantruntime="false" srcdir="code" destdir="run"/>
 		<java classname="edu.rpi.phil.legup.Legup" fork="true" dir="run"/>
 	</target>
 

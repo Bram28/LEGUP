@@ -8,18 +8,25 @@ import edu.rpi.phil.legup.PuzzleModule;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Vector;
+
 import javax.swing.ImageIcon;
 
 public class CaseWhiteOrBlack extends CaseRule
 {
-
-	public CaseWhiteOrBlack()
+	static final long serialVersionUID = 779450537L;
+	
+    public CaseWhiteOrBlack()
 	{
 		setName("White or Black");
 		description = "An unknown cell can only be white or black";
 		image = new ImageIcon("images/fillapix/whiteorblack.png");
 
 		defaultApplicationText= "Select an unknown square.";
+	}
+
+	public String getImageName()
+	{
+		return "images/fillapix/whiteorblack.png";
 	}
 
 	public String checkCaseRuleRaw(BoardState state)

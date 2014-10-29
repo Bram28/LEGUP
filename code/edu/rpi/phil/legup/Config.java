@@ -28,7 +28,8 @@ import org.xml.sax.SAXException;
  */
 public class Config
 {
-
+	// TODO: Make this data structure more robust, rather than 
+	//       depending on type erasure and casting
 	private Hashtable<String, Hashtable<String, Object>> puzzles;
 
 	/**
@@ -59,6 +60,7 @@ public class Config
 	 *            Puzzle name to look for
 	 * @return Vector of Board names which are Strings
 	 */
+	@SuppressWarnings("unchecked")
 	public Vector<String> getBoardsForPuzzle(String puzzleName)
 	{
 		Vector<String> boards = (Vector<String>) puzzles.get(puzzleName).get("boards");
