@@ -9,8 +9,12 @@
 package edu.rpi.phil.legup.puzzles.nurikabe;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Vector;
 import java.awt.Point;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
@@ -25,7 +29,10 @@ public class Nurikabe extends PuzzleModule
 	public static int CELL_BLACK = 1;
 	public static int CELL_WHITE = 2;
 
-	public int numAcceptableStates(){ return 3; }
+    public List<String> getCellNames()
+    { return Arrays.asList(new String[] {"blank", "black", "white"}); }
+    public Set<Integer> getUnselectableCells()
+    { return new HashSet(Arrays.asList(new Integer[] {})); }
 	
 	//0 - 9 on the board are represented internally as 10 - 19
 	//int CELL_BLOCK0 = 10, CELL_BLOCK1 = 11, etc...
@@ -42,7 +49,7 @@ public class Nurikabe extends PuzzleModule
 		}
 	}
 
-	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
+	/*public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
 	{
 		int contents = boardState.getCellContents(x,y);
 		int rv = CELL_UNKNOWN;
@@ -66,45 +73,7 @@ public class Nurikabe extends PuzzleModule
 		}
 
 		return rv;
-	}
-	
-	public int getNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		
-		if (contents == CELL_UNKNOWN)
-		{
-			return CELL_BLACK;
-		}
-		else if (contents == CELL_BLACK)
-		{
-			return CELL_WHITE;
-		}
-		else if (contents == CELL_WHITE)
-		{
-			return CELL_UNKNOWN;
-		}
-		else
-		{
-			return contents;
-		}
-	}
-	
-	public String getStateName(int state)
-	{
-		if(state == 0)return "empty";
-		else if(state == 1)return "black";
-		else if(state == 2)return "white";
-		else return null;
-	}
-	
-	public int getStateNumber(String state)
-	{
-		if(state == "empty")return CELL_UNKNOWN;
-		else if(state == "black")return CELL_BLACK;
-		else if(state == "white")return CELL_WHITE;
-		else return CELL_UNKNOWN;
-	}
+	}*/
 	
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);

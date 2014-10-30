@@ -16,6 +16,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -39,8 +43,13 @@ public class TreeTent extends PuzzleModule
 	public static int CELL_TENT = 2;
 	public static int CELL_GRASS = 3;
 	public static int CELL_UNKNOWN = 0;
-	public int numAcceptableStates(){return 3;}
-	public int getNonunknownBlank() {return 2;} //the index into getStateName for grass
+
+    public List<String> getCellNames()
+    { return Arrays.asList(new String[] {"blank", "tree", "tent", "grass"}); }
+    public Set<Integer> getUnselectableCells()
+    { return new HashSet(Arrays.asList(new Integer[] {1})); }
+	public int getNonunknownBlank() { return 2; } //the index into getStateName for grass
+
 	public boolean hasLabels(){return true;}
 	private static Stroke med = new BasicStroke(2);
 
@@ -628,62 +637,6 @@ public class TreeTent extends PuzzleModule
 		return (curValue + 1 <= 39 ? curValue + 1 : 10);
 	} 
 
-	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		int rv = CELL_UNKNOWN;
-
-		if (contents == CELL_UNKNOWN)
-		{
-			rv = CELL_TREE;
-		}
-		else if (contents == CELL_TREE)
-		{
-			rv = CELL_GRASS;
-		}
-		else if (contents == CELL_GRASS)
-		{
-			rv = CELL_TENT;
-		}
-
-		return rv;
-	}
-
-	public int getNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-
-		if (contents == CELL_UNKNOWN)
-		{
-			return CELL_TENT;
-		}
-		else if (contents == CELL_TENT)
-		{
-			return CELL_GRASS;
-		}
-		else if (contents == CELL_GRASS)
-		{
-			return CELL_UNKNOWN;
-		}
-		else
-		{
-			return contents;
-		}
-	}
-	public String getStateName(int state)
-	{
-		if(state == 0)return "blank";
-		else if(state == 1)return "tent";
-		else if(state == 2)return "grass";
-		else return null;
-	}
-	public int getStateNumber(String state)
-	{
-		if(state == "blank")return CELL_UNKNOWN;
-		else if(state == "tent")return CELL_TENT;
-		else if(state == "grass")return CELL_GRASS;
-		else return CELL_UNKNOWN;
-	}
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}

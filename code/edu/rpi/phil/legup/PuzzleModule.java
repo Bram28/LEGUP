@@ -169,20 +169,15 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
     /**
      * Get a list of all cell names (e.g. for TreeTent: ["blank", "tree", "tent", "grass"]).
      */
-    // TODO: make these abstract, fix all puzzles
-    public List<String> getCellNames()
-    {
-        return Arrays.asList(new String[] {"false", "true"});
-    }
+    public abstract List<String> getCellNames();
+    //{ return Arrays.asList(new String[] {"false", "true"}); }
     /**
      * Get the set of cells (as indices into the cellnames 
      *  list) that should not be toggleable (e.g. {"tree"} for 
      *  TreeTent).
      */
-    public Set<Integer> getUnselectableCells()
-    {
-        return new HashSet(Arrays.asList());
-    }
+    public abstract Set<Integer> getUnselectableCells();
+    //{ return new HashSet(Arrays.asList()); }
 
 	/**
 	 * Get the next call value of all of them (so if we're editing tree tent, for example, we can
@@ -193,8 +188,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	 * @param boardState BoardState that the cell should be looked up in
 	 * @return The next cell value
 	 */
-    //TODO: make final, update puzzles
-	public /*final*/ int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
+	public final int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
 	{
 		return (boardState.getCellContents(x,y) + 1) % getCellNames().size();
 	}
@@ -207,8 +201,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	 * @param boardState BoardState that the cell should be looked up in
 	 * @return The next cell value
 	 */
-    //TODO: make final, update puzzles
-	public /*final*/ int getNextCellValue(int x, int y, BoardState boardState)
+	public final int getNextCellValue(int x, int y, BoardState boardState)
 	{
         int len = getCellNames().size();
         Set<Integer> unselectable = getUnselectableCells();
@@ -219,35 +212,29 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	}
 	//Helper function for user-enterable tile types, for indexing with 0->n
 	//defined in the abstract class to be consistent with getNextCellValue()
-    //TODO: make final, update puzzles
-	public /*final*/ String getStateName(int state)
+	public final String getStateName(int state)
 	{
         Set<Integer> unselectable = getUnselectableCells();
         int idx = 0;
         int countdown = state;
-        while(countdown > 0)
+        while(countdown > 0 || unselectable.contains(idx))
         {
             if(!unselectable.contains(idx)) { countdown--; }
             idx++;
         }
-        return getCellNames().get(idx);
+        String rv = getCellNames().get(idx);
+        //System.out.printf("getStateName(%d) -> \"%s\"\n", state, rv);
+        return rv;
 	}
 	//inverse function needed to reliably map 0->n to arbitrary puzzle-defined values
-    //TODO: make final, update puzzles
-	public /*final*/ int getStateNumber(String state)
+	public final int getStateNumber(String state)
 	{
         int tmp = getCellNames().indexOf(state);
         if(tmp < 0) { return CELL_UNKNOWN; }
-        int offset = 0;
-        for(Integer i : getUnselectableCells())
-        {
-            if(tmp > i) { offset--; }
-        }
-        return tmp - offset;
+        return tmp;
 	}
 
-    //TODO: make final, update puzzles
-	public /*final*/ int numAcceptableStates() { return getCellNames().size(); }
+	public final int numAcceptableStates() { return getCellNames().size() - getUnselectableCells().size(); }
     // This one might need to be manually overridden (is 
     //  currently only used by the permutation case rule for 
     //  TreeTent, where it's used to treat "grass" as the 

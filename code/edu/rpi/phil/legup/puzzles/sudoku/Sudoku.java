@@ -16,8 +16,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
@@ -36,7 +39,10 @@ import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 public class Sudoku extends PuzzleModule
 {
 	public static int CELL_UNKNOWN = 0;
-	public int numAcceptableStates(){return 10;}
+    public List<String> getCellNames()
+    { return Arrays.asList(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}); }
+    public Set<Integer> getUnselectableCells()
+    { return new HashSet(Arrays.asList(new Integer[] {})); }
 	public boolean hasLabels(){return false;}
 	Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 	Vector <Contradiction> contraList = new Vector <Contradiction>();
@@ -321,49 +327,6 @@ public class Sudoku extends PuzzleModule
 		return tot;
 	}
 
-	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		int rv = (contents + 1) % 10;
-
-		return rv;
-	}
-
-	public int getNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		int rv = (contents + 1) % 10;
-
-		return rv;
-	}
-	public String getStateName(int state)
-	{
-		if(state == CELL_UNKNOWN)return "";
-		else if(state == 1)return "1";
-		else if(state == 2)return "2";
-		else if(state == 3)return "3";
-		else if(state == 4)return "4";
-		else if(state == 5)return "5";
-		else if(state == 6)return "6";
-		else if(state == 7)return "7";
-		else if(state == 8)return "8";
-		else if(state == 9)return "9";
-		else return null;
-	}
-	public int getStateNumber(String state)
-	{
-		if(state == "")return CELL_UNKNOWN;
-		else if(state == "1")return 1;
-		else if(state == "2")return 2;
-		else if(state == "3")return 3;
-		else if(state == "4")return 4;
-		else if(state == "5")return 5;
-		else if(state == "6")return 6;
-		else if(state == "7")return 7;
-		else if(state == "8")return 8;
-		else if(state == "9")return 9;
-		else return CELL_UNKNOWN;
-	}
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard)
 	{
 		return currentBoard.compareBoard(goalBoard);

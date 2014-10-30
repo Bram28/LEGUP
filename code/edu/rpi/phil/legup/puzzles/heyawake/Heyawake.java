@@ -12,6 +12,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -34,6 +38,11 @@ public class Heyawake extends PuzzleModule
 	public static int CELL_WHITE = 1;
 	public static int CELL_BLACK = 2;
 	
+    public List<String> getCellNames()
+    { return Arrays.asList(new String[] {"blank", "white", "black"}); }
+    public Set<Integer> getUnselectableCells()
+    { return new HashSet(Arrays.asList(new Integer[] {})); }
+
 	HeyawakeEditorBoardFrame boardEditor;
 	
 	public Heyawake(){
@@ -186,49 +195,6 @@ public class Heyawake extends PuzzleModule
 		}
 	}
 
-	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		int rv = CELL_UNKNOWN;
-		
-		if (contents == CELL_UNKNOWN)
-		{
-			rv = CELL_WHITE;
-		}
-		else if (contents == CELL_WHITE)
-		{
-			rv = CELL_BLACK;
-		}
-		else if (contents == CELL_BLACK)
-		{
-			rv = CELL_UNKNOWN;
-		}
-		
-		return rv;
-	}
-	
-	public int getNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		
-		if (contents == CELL_UNKNOWN)
-		{
-			return CELL_WHITE;
-		}
-		else if (contents == CELL_WHITE)
-		{
-			return CELL_BLACK;
-		}
-		else if (contents == CELL_BLACK)
-		{
-			return CELL_UNKNOWN;
-		}
-		else
-		{
-			return CELL_UNKNOWN;
-		}
-	}
-	
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}

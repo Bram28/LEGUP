@@ -10,14 +10,17 @@
 package edu.rpi.phil.legup.puzzles.battleship;
 import edu.rpi.phil.legup.*;
 
-import java.awt.Point;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
-
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Vector;
 
 public class BattleShip extends PuzzleModule
 {
@@ -31,7 +34,6 @@ public class BattleShip extends PuzzleModule
 	public static final int CELL_UNKNOWN = 0;
 	public static final int CELL_WATER = 1;
 	public static final int CELL_SHIP = 2;
-	public static final int CELL_FIXED_UNKNOWN = 26;
 	public static final int CELL_LEFT_CAP = 10;
 	public static final int CELL_TOP_CAP = 11;
 	public static final int CELL_BOTTOM_CAP = 12;
@@ -44,7 +46,26 @@ public class BattleShip extends PuzzleModule
 	public static final int FIXED_RIGHT_CAP = 23;
 	public static final int FIXED_CENTER = 24;
 	public static final int FIXED_MIDDLE = 25;
+	public static final int CELL_FIXED_UNKNOWN = 26;
 	
+    public List<String> getCellNames()
+    {
+        // this is quite hacky, maybe the mechanism should be changed to use Map<String, Integer>?
+        List<String> tmp = new ArrayList<String>();
+        tmp.add("blank"); tmp.add("water"); tmp.add("ship");
+        for(int i=3; i<10; i++) { tmp.add(null); }
+        tmp.add("left cap"); tmp.add("top cap"); tmp.add("bottom cap"); tmp.add("right cap"); tmp.add("center");
+        for(int i=16; i<20; i++) { tmp.add(null); }
+        tmp.add("fixed_left"); tmp.add("fixed_top"); tmp.add("fixed_bottom"); tmp.add("fixed_right"); tmp.add("fixed_center"); tmp.add("fixed_middle"); tmp.add("fixed_unknown");
+        return tmp;
+    }
+    public Set<Integer> getUnselectableCells()
+    {
+        Set<Integer> tmp = new HashSet<Integer>();
+        for(int i=3; i<10; i++) { tmp.add(i); }
+        for(int i=16; i<27; i++) { tmp.add(i); }
+        return tmp;
+    }
 
 	public BattleShip()
 	{
@@ -156,7 +177,7 @@ public class BattleShip extends PuzzleModule
 		drawText(g,x, y, String.valueOf(val - 40));
 	}
 
-	public int getNextCellValue(int x, int y, BoardState boardState)
+	/*public int getNextCellValue(int x, int y, BoardState boardState)
 			throws IndexOutOfBoundsException
 	{
 		int val = Math.abs(boardState.getCellContents(x,y));
@@ -166,7 +187,7 @@ public class BattleShip extends PuzzleModule
 		else if (val == 15) return 0;
 		else if (val == 26) return 20;
 		else return 0;
-	}
+	}*/
 
 	public Vector <PuzzleRule> getRules(){
 		Vector<PuzzleRule> ruleList = new Vector<PuzzleRule>();
