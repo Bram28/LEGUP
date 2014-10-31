@@ -215,10 +215,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	// menubar related fields
 	private JMenuBar bar = new JMenuBar();
 	private JMenu file = new JMenu("File");
-		private JMenuItem newPuzzle = new JMenuItem("New Puzzle");
+		private JMenuItem newPuzzle = new JMenuItem("Open Puzzle");
 		private JMenuItem genPuzzle = new JMenuItem("Puzzle Generators");
-		private JMenuItem openProof = new JMenuItem("Open LEGUP Proof");
-		private JMenuItem saveProof = new JMenuItem("Save LEGUP Proof");
+		private JMenuItem openProof = new JMenuItem("Open Proof");
+		private JMenuItem saveProof = new JMenuItem("Save Proof");
 		private JMenuItem exit = new JMenuItem("Exit");
 	private JMenu edit = new JMenu("Edit");
 		private JMenuItem undo = new JMenuItem("Undo");
