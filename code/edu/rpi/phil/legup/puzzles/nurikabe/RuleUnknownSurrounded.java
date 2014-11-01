@@ -1,6 +1,7 @@
 package edu.rpi.phil.legup.puzzles.nurikabe;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -29,6 +30,8 @@ public class RuleUnknownSurrounded extends PuzzleRule
 		int width = origBoardState.getWidth();
 		int height = origBoardState.getHeight();
 		
+		int[][] filled = determineRegions(origBoardState);
+		
 		// Check for only one branch
 		if (destBoardState.getTransitionsTo().size() != 1)
 		{
@@ -53,27 +56,16 @@ public class RuleUnknownSurrounded extends PuzzleRule
 							error = "This rule only involves adding black cells!";
 							break;
 						}
-						
-						
-						for(int dx = -1;dx<2;dx++)
+					
+						if(filled[y][x] == -1 && destBoardState.getCellContents(x,y) != Nurikabe.CELL_BLACK)
 						{
-							for(int dy = -1; dy<2;dy++)
-							{
-								if(dx!=0 && dy!=0)
-									continue;
-								if(dx==0 && dy==0)
-									continue;
-								if((dx+x>=width) || (dx+x<0))
-									continue;
-								if((dy+y>=height) || (dy+y<0))
-									continue;
-								
-								if(destBoardState.getCellContents(x+dx,y+dy)!=Nurikabe.CELL_BLACK)
-								{
-									error="Black cells must be placed inside of a region of black cells.";
-								}
-							}
+							error="Black cells must be placed inside of a region of black cells.";
 						}
+						else if (filled[y][x] != -1)
+						{
+							error = "Cannot place cells outside a region of black cells";
+						}
+							
 					}
 				}
 			}
@@ -86,6 +78,109 @@ public class RuleUnknownSurrounded extends PuzzleRule
 		
 		return error;
 	}
+	
+	private int[][] determineRegions(BoardState state)
+	{
+		int width = state.getWidth();
+    	int height = state.getHeight();
+    	boolean[][] visited = new boolean[width][height];
+    	int[][] filled = new int[width][height];
+    	
+    	ArrayList<Point> regions = new ArrayList<Point>();
+    	
+    	for(int x = 0; x < width; ++x)
+    	{
+    		for(int y = 0; y < height; ++y)
+    		{
+    			filled[y][x] = 0;
+    			
+    			if(state.getCellContents(x,y) == Nurikabe.CELL_BLACK)
+    			{
+    				visited[y][x] = true;
+    				filled[y][x] = Nurikabe.CELL_BLACK;
+    			}
+    		}
+    	}
+    	
+    	for(int x = 0; x < width; ++x)
+    	{
+    		for(int y = 0; y < height; ++y)
+    		{
+    			if(!visited[y][x])
+    			{
+    				getRegionSize(visited, state, x, y, width, height, regions);
+    				
+    				//check if the region contains any white cells
+    				boolean hasWhiteCells = false;
+    				for (int i = 0; i < regions.size(); i++)
+    				{
+    					int regionX = regions.get(i).x;
+    					int regionY = regions.get(i).y;
+    					if (state.getCellContents(regionX , regionY) == Nurikabe.CELL_WHITE ||
+    							state.getCellContents(regionX, regionY) > 10)
+    					{
+    						hasWhiteCells = true;
+    						break;
+    					}
+    				}
+    				
+    				//If the region has no white cells, then this region can be filled with black cells
+    				if (hasWhiteCells == false)
+    				{
+	    				for (int i = 0; i < regions.size(); i++)
+	    				{
+	    					filled[regions.get(i).y][regions.get(i).x] = -1;
+	    				}
+    				}
+    				
+    				//erase all the contents
+    				regions.clear();
+    			}
+    		}
+    	}
+    		
+    	return filled;
+	}
+	private int getRegionSize(boolean[][] visited, BoardState boardState, int x, int y, int width, int height, ArrayList<Point> regions)
+    {
+    	int numcount = 0;
+    	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
+    		numcount += 1;
+    
+    	visited[y][x] = true;
+    	regions.add(new Point(x, y));
+    	
+    	if(x+1 < width)
+    	{
+    		if(!visited[y][x+1])
+    		{
+    			numcount += getRegionSize(visited, boardState, x+1, y, width, height, regions);
+    		}
+    	}
+    	if(x-1 >= 0)
+    	{
+    		if(!visited[y][x-1])
+    		{
+    			numcount += getRegionSize(visited, boardState, x-1, y, width, height, regions);
+    		}
+    	}
+    	if(y+1 < height)
+    	{
+    		if(!visited[y+1][x])
+    		{
+    			numcount += getRegionSize(visited, boardState, x, y+1, width, height, regions);
+    		}
+    	}
+    	if(y-1 >= 0)
+    	{
+    		if(!visited[y-1][x])
+    		{
+    			numcount += getRegionSize(visited, boardState, x, y-1, width, height, regions);
+    		}
+    	}
+    	return numcount;
+    }
+	
 	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
 	{
 		BoardState origBoardState = destBoardState.getSingleParentState();
