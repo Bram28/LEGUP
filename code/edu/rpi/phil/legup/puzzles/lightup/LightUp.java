@@ -13,7 +13,9 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -39,11 +41,25 @@ public class LightUp extends PuzzleModule
 	public static int CELL_BLOCK4 = 14;
 	public static int CELL_BLOCK = 15; //the blank black block
 
-    public List<String> getCellNames()
-    { return Arrays.asList(new String[] {"blank", "light", "empty"}); }
-    public Set<Integer> getUnselectableCells()
-    { return new HashSet(Arrays.asList(new Integer[] {})); }
-
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("light", CELL_LIGHT);
+        tmp.put("empty", CELL_EMPTY);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("CELL_BLOCK0", CELL_BLOCK0);
+        tmp.put("CELL_BLOCK1", CELL_BLOCK1);
+        tmp.put("CELL_BLOCK2", CELL_BLOCK2);
+        tmp.put("CELL_BLOCK3", CELL_BLOCK3);
+        tmp.put("CELL_BLOCK4", CELL_BLOCK4);
+        tmp.put("CELL_BLOCK", CELL_BLOCK);
+        return tmp;
+    }
 	public int getNonunknownBlank() {return 2;} //the index into getStateName of empty
 	
 	public LightUp(){

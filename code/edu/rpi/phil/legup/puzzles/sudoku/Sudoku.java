@@ -18,10 +18,12 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.LinkedList;
 
 import javax.swing.JFrame;
 import javax.swing.JDialog;
@@ -39,10 +41,14 @@ import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 public class Sudoku extends PuzzleModule
 {
 	public static int CELL_UNKNOWN = 0;
-    public List<String> getCellNames()
-    { return Arrays.asList(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}); }
-    public Set<Integer> getUnselectableCells()
-    { return new HashSet(Arrays.asList(new Integer[] {})); }
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        for(int i=0; i<=9; i++) { tmp.put(String.format("%d", i), i); }
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
 	public boolean hasLabels(){return false;}
 	Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 	Vector <Contradiction> contraList = new Vector <Contradiction>();

@@ -18,7 +18,9 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -44,10 +46,20 @@ public class TreeTent extends PuzzleModule
 	public static int CELL_GRASS = 3;
 	public static int CELL_UNKNOWN = 0;
 
-    public List<String> getCellNames()
-    { return Arrays.asList(new String[] {"blank", "tree", "tent", "grass"}); }
-    public Set<Integer> getUnselectableCells()
-    { return new HashSet(Arrays.asList(new Integer[] {1})); }
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("tent", CELL_TENT);
+        tmp.put("grass", CELL_GRASS);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("tree", CELL_TREE);
+        return tmp;
+    }
 	public int getNonunknownBlank() { return 2; } //the index into getStateName for grass
 
 	public boolean hasLabels(){return true;}

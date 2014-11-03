@@ -14,7 +14,9 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -38,10 +40,16 @@ public class Heyawake extends PuzzleModule
 	public static int CELL_WHITE = 1;
 	public static int CELL_BLACK = 2;
 	
-    public List<String> getCellNames()
-    { return Arrays.asList(new String[] {"blank", "white", "black"}); }
-    public Set<Integer> getUnselectableCells()
-    { return new HashSet(Arrays.asList(new Integer[] {})); }
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("black", CELL_BLACK);
+        tmp.put("white", CELL_WHITE);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
 
 	HeyawakeEditorBoardFrame boardEditor;
 	

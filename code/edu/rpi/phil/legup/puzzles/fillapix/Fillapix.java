@@ -12,7 +12,9 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import javax.swing.ImageIcon;
@@ -30,12 +32,20 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class Fillapix extends PuzzleModule
 {
+    // should these be prefixed with "CELL_", and "UNKNOWN" removed, to be consistant with others?
 	public static int UNKNOWN = 0, FILLED = 1, EMPTY = 2;
 
-    public List<String> getCellNames()
-    { return Arrays.asList(new String[] {"blank", "filled", "empty"}); }
-    public Set<Integer> getUnselectableCells()
-    { return new HashSet(Arrays.asList(new Integer[] {})); }
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("filled", FILLED);
+        tmp.put("empty", EMPTY);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
+
 
 	Vector <PuzzleRule> ruleList;
 	Vector <Contradiction> contraList;

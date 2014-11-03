@@ -16,7 +16,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -48,22 +50,30 @@ public class BattleShip extends PuzzleModule
 	public static final int FIXED_MIDDLE = 25;
 	public static final int CELL_FIXED_UNKNOWN = 26;
 	
-    public List<String> getCellNames()
+    public Map<String, Integer> getSelectableCells()
     {
-        // this is quite hacky, maybe the mechanism should be changed to use Map<String, Integer>?
-        List<String> tmp = new ArrayList<String>();
-        tmp.add("blank"); tmp.add("water"); tmp.add("ship");
-        for(int i=3; i<10; i++) { tmp.add(null); }
-        tmp.add("left cap"); tmp.add("top cap"); tmp.add("bottom cap"); tmp.add("right cap"); tmp.add("center");
-        for(int i=16; i<20; i++) { tmp.add(null); }
-        tmp.add("fixed_left"); tmp.add("fixed_top"); tmp.add("fixed_bottom"); tmp.add("fixed_right"); tmp.add("fixed_center"); tmp.add("fixed_middle"); tmp.add("fixed_unknown");
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("water", CELL_WATER);
+        tmp.put("ship", CELL_SHIP);
+        tmp.put("left cap", CELL_LEFT_CAP);
+        tmp.put("top cap", CELL_TOP_CAP);
+        tmp.put("bottom cap", CELL_BOTTOM_CAP);
+        tmp.put("right cap", CELL_RIGHT_CAP);
+        tmp.put("center", CELL_CENTER);
+        tmp.put("middle", CELL_MIDDLE);
         return tmp;
     }
-    public Set<Integer> getUnselectableCells()
+    public Map<String, Integer> getUnselectableCells()
     {
-        Set<Integer> tmp = new HashSet<Integer>();
-        for(int i=3; i<10; i++) { tmp.add(i); }
-        for(int i=16; i<27; i++) { tmp.add(i); }
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("FIXED_LEFT_CAP", FIXED_LEFT_CAP);
+        tmp.put("FIXED_TOP_CAP", FIXED_TOP_CAP);
+        tmp.put("FIXED_BOTTOM_CAP", FIXED_BOTTOM_CAP);
+        tmp.put("FIXED_RIGHT_CAP", FIXED_RIGHT_CAP);
+        tmp.put("FIXED_CENTER", FIXED_CENTER);
+        tmp.put("FIXED_MIDDLE", FIXED_MIDDLE);
+        tmp.put("CELL_FIXED_UNKNOWN", CELL_FIXED_UNKNOWN);
         return tmp;
     }
 

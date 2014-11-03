@@ -12,7 +12,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -29,10 +31,16 @@ public class Nurikabe extends PuzzleModule
 	public static int CELL_BLACK = 1;
 	public static int CELL_WHITE = 2;
 
-    public List<String> getCellNames()
-    { return Arrays.asList(new String[] {"blank", "black", "white"}); }
-    public Set<Integer> getUnselectableCells()
-    { return new HashSet(Arrays.asList(new Integer[] {})); }
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("black", CELL_BLACK);
+        tmp.put("white", CELL_WHITE);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
 	
 	//0 - 9 on the board are represented internally as 10 - 19
 	//int CELL_BLOCK0 = 10, CELL_BLOCK1 = 11, etc...

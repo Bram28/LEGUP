@@ -10,7 +10,9 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -35,15 +37,22 @@ public class Masyu extends PuzzleModule
     {
     }
     // Constant values for Board
+    // should these be prefixed with "CELL_"?
     static final int BLANK = 0;
     static final int WHITE = 1;
     static final int BLACK = 2;
     private BasicStroke medium = new BasicStroke(2);
 
-    public List<String> getCellNames()
-    { return Arrays.asList(new String[] {"blank", "black", "white"}); }
-    public Set<Integer> getUnselectableCells()
-    { return new HashSet(Arrays.asList(new Integer[] {})); }
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", BLANK);
+        tmp.put("black", BLACK);
+        tmp.put("white", WHITE);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
 
     /**
      * Take an action when the left mouse button is pressed.
