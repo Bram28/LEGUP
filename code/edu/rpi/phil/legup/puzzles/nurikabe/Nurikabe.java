@@ -134,7 +134,8 @@ public class Nurikabe extends PuzzleModule
 	public Vector <Contradiction> getContradictions()
 	{
 		Vector <Contradiction>contradictionList = new Vector <Contradiction>();
-		contradictionList.add(new ContradictionBlackArea());
+		//contradictionList.add(new ContradictionBlackArea());
+		contradictionList.add(new ContradictionIsolatedBlack());
 		contradictionList.add(new ContradictionBlackSquare());
 		contradictionList.add(new ContradictionNoNumber());
 		contradictionList.add(new ContradictionMultipleNumbers());
