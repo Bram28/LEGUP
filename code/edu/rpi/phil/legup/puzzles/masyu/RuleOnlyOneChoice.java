@@ -4,11 +4,18 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
+
 import java.util.ArrayList;
 import java.awt.Point;
 
 
 public class RuleOnlyOneChoice extends PuzzleRule{
+	private static final long serialVersionUID = 893555109L;
+	
+    public String getImageName()
+    {
+    	return "images/masyu/Rules/RuleOnlyOneChoice.png";
+    }
 	
 	public RuleOnlyOneChoice() {
 		setName("Only Choice");

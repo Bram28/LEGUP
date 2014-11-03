@@ -15,7 +15,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class Rule1 extends PuzzleRule
 {
-
+	static final long serialVersionUID = 133809047L;
 	
     public Rule1()
     {
@@ -79,6 +79,11 @@ public class Rule1 extends PuzzleRule
 	
 	
 	
+	public String getImageName()
+	{
+		return "images/unknown.gif";
+	}
+
 	protected String checkRuleRaw(BoardState state){
 	return null;
 		// Check for only one branch

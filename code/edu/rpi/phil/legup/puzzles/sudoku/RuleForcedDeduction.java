@@ -17,6 +17,7 @@ import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
  */
 public class RuleForcedDeduction extends PuzzleRule
 {
+	private static final long serialVersionUID = 712640204L;
 
 	// cell index = 9*row+col
 	private final int[][] cellToGroupRef;
@@ -31,6 +32,11 @@ public class RuleForcedDeduction extends PuzzleRule
 		groupToCellRef = Sudoku.getGroups();
 		cellToGroupRef = Sudoku.getCrossReference();
     }
+	
+	public String getImageName()
+	{
+		return "images/sudoku/forcedByDeduction.png";
+	}
 
 	 protected String checkRuleRaw(BoardState destBoardState)
     {

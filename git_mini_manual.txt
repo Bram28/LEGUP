@@ -1,0 +1,15 @@
+vocab:
+remote - location where repository is stored
+	ex) "origin" is github for LEGUP repository
+
+git add <filename> //adds a file to the staging area for the next commit
+git commit -m "some message" //appends changes since last commit to LOCAL history tree (you must also push to github)
+git push origin <branch_name> //pushes the local history to the specified branch on the remote named origin (github), you must commit first
+git pull //gets most recent changes from github on the current branch
+git checkout <branch_name> //changes branch, make sure it is a branch name, not a file name
+git status //shows how many commits ahead/behind of the origin your local repository is and shows what filenames have been modified since last commit
+git branch //lists branches
+git branch <new_branch_name> //creates a new branch
+git log //displays a list of commits
+
+For further info read manual pages or google

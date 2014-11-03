@@ -21,6 +21,7 @@ import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
  */
 public class RuleAdvancedDeduction extends PuzzleRule
 {
+	private static final long serialVersionUID = 423983627L;
 
 	// cell index = 9*row+col
 	private final int[][] cellToGroupRef;
@@ -35,6 +36,11 @@ public class RuleAdvancedDeduction extends PuzzleRule
 		groupToCellRef = Sudoku.getGroups();
 		cellToGroupRef = Sudoku.getCrossReference();
     }
+	
+	public String getImageName()
+	{
+		return "images/sudoku/AdvancedDeduction.png";
+	}
 
 	protected String checkRuleRaw(BoardState destBoardState)
     {

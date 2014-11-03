@@ -15,7 +15,8 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class Rule2 extends PuzzleRule{
-
+	static final long serialVersionUID = 356702229L;
+	
     public Rule2()
     {
     	setName("Battleship Rule2");
@@ -88,7 +89,12 @@ public class Rule2 extends PuzzleRule{
 
 
     
-    protected String checkRuleRaw(BoardState state){
+    public String getImageName()
+	{
+		return "images/unknown.gif";
+	}
+
+	protected String checkRuleRaw(BoardState state){
 	
     	return null;
     	

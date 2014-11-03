@@ -263,6 +263,7 @@ MouseListener, MouseMotionListener
 	//MouseWheelListener Method
 	//*************************
 	public void mouseWheelMoved(MouseWheelEvent e) {
+		System.out.println("wheel");
 		int num = e.getWheelRotation();
 
 		//desZoomFactor -= num;
@@ -455,6 +456,7 @@ MouseListener, MouseMotionListener
 
 	class PaintThread extends Thread {
 		public void run() {
+			System.out.println("paint start");
 			long lastTime = -1;
 
 			while (true) {

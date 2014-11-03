@@ -7,12 +7,19 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionWhiteArea extends Contradiction
 {	 
-	 ContradictionWhiteArea()
-	 {
+    private static final long serialVersionUID = 173001424L;
+
+	ContradictionWhiteArea()
+	{
 		setName("White Area Connected");
 		description = "All whites must be connected together.";
 		image = new ImageIcon("images/heyawake/contradictions/WhiteArea.png");
-	 }
+	}
+	 
+	public String getImageName()
+	{
+		return "images/heyawake/contradictions/WhiteArea.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

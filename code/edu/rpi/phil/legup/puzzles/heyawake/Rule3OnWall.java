@@ -2,17 +2,26 @@ package edu.rpi.phil.legup.puzzles.heyawake;
 
 import java.util.Vector;
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
+
 import java.awt.Point;
+
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class Rule3OnWall extends PuzzleRule
 {
+	private static final long serialVersionUID = 350127277L;
+
 	Rule3OnWall()
 	{
 		setName("2X3 on Wall");
 		description = "A 2X3 region on a wall with a value of 3 has one configuration";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
+	}
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
 	}
 	protected boolean checkRegionHasClue(BoardState state, int cellregion)
 	{

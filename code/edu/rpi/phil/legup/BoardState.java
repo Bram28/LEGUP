@@ -15,6 +15,7 @@ import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 import edu.rpi.phil.legup.newgui.TransitionChangeListener;
 import edu.rpi.phil.legup.newgui.TreePanel;
+import edu.rpi.phil.legup.newgui.Tree;
 import edu.rpi.phil.legup.saveable.SaveableProofState;
 import edu.rpi.phil.legup.saveable.SaveableProofTransition;
 import edu.rpi.phil.legup.newgui.JustificationFrame;
@@ -248,6 +249,7 @@ public class BoardState implements java.io.Serializable
 		virtualBoard = virtual;
 	}
 	
+    // Modifiable == Transition, name "isModifiable" was there historically (unsure origin), consider changing?
 	public boolean isModifiable()
 	{
 		return modifiableState;
@@ -847,7 +849,7 @@ public class BoardState implements java.io.Serializable
 		else if(s.getTransitionsFrom().size() >= 1)
 		{
 			next = s.getTransitionsFrom().firstElement();
-			if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().autoGenCaseRules))
+			if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().checkCaseRuleGen()))
 			{
 				next = s.addTransitionFrom();
 			}
@@ -875,7 +877,7 @@ public class BoardState implements java.io.Serializable
 				state = null;
 			}
 		}
-		Legup.getInstance().getGui().getTree().colorTransitions();
+		Tree.colorTransitions();
 		return state;
 	}
 	
@@ -992,7 +994,7 @@ public class BoardState implements java.io.Serializable
 		for (int c = 1; c < states.size(); ++c)
 		{
 			BoardState parent = states.get(c);
-
+			
 			for (int y = 0; y < child.getHeight(); ++y)
 			{
 				for (int x = 0; x < child.getWidth(); ++x)
@@ -1043,7 +1045,7 @@ public class BoardState implements java.io.Serializable
 		
 		child.setModifiableState(true);
 		BoardState grandchild = child.addTransitionFrom(null);
-
+		
 		Legup.setCurrentState(grandchild);
 
 		_transitionsChanged();
@@ -1151,7 +1153,7 @@ public class BoardState implements java.io.Serializable
 			int place = -(mergeTot-1)*(int)(1.5*TreePanel.NODE_RADIUS);
 			for (BoardState B : mergeChildren)
 			{
-				B.offset.y = (1+depth)*4*TreePanel.NODE_RADIUS;
+				B.offset.y = (1+depth)*5*TreePanel.NODE_RADIUS;
 				B.offset.x = place+(B.numBranches()-1)*((int)(1.5*TreePanel.NODE_RADIUS));
 				place += B.numBranches()*3*TreePanel.NODE_RADIUS;
 			}
@@ -1199,7 +1201,8 @@ public class BoardState implements java.io.Serializable
 		int tmp_max = -1;
 		for(BoardState b : transitionsFrom)
 		{
-			if(b.getDepth() > tmp_max)tmp_max = b.getDepth();
+			int boardStateDepth = b.getDepth();
+			if(boardStateDepth > tmp_max)tmp_max = boardStateDepth;
 		}
 		return tmp_max+1;
 	}
@@ -1969,8 +1972,8 @@ public class BoardState implements java.io.Serializable
 			if (mergeOverlord != null) // Safeguard for complex delete function
 			{	
 				//Merging increases the offset value.
-				//However, it's only neecessary to increase the offset once.
-				//This fixes a bug where the offset kept increasing and strectched the tree.
+				//However, it's only necessary to increase the offset once.
+				//This fixes a bug where the offset kept increasing and stretched the tree.
 				if (isMerged == false)
 				{
 					fixedOffset.x = offset.x;

@@ -9,6 +9,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleBetweenRegions extends PuzzleRule
 {	 
+	private static final long serialVersionUID = 830456717L;
 	
 	 RuleBetweenRegions()
 	 {
@@ -16,6 +17,11 @@ public class RuleBetweenRegions extends PuzzleRule
 		description = "Any unknowns between two regions must be black.";
 		image = new ImageIcon("images/nurikabe/rules/BetweenRegions.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/BetweenRegions.png";
+	}
 	 
 	 /**
 	 * Checks if the contradiction was applied correctly to this board state

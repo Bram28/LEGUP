@@ -18,6 +18,7 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleFillRoomWhite extends PuzzleRule{
+	private static final long serialVersionUID = 723686169L;
 
     RuleFillRoomWhite()
     {
@@ -25,6 +26,11 @@ public class RuleFillRoomWhite extends PuzzleRule{
     	description = "Remaining cells are white if number of black cells equals the clue.";
     	image = new ImageIcon("images/heyawake/rules/FillRoomWhite.png");
     }
+    
+	public String getImageName()
+	{
+		return "images/heyawake/rules/FillRoomWhite.png";
+	}
 
 
     public void print(){

@@ -63,12 +63,27 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
             buttonPressedContinuation1(j);
 		}
 	}
+
+    protected abstract Justification getNthJustification(int n);
+
+    public void setSelectionByJustification(Justification j)
+    {
+        if(buttons != null) for(int i=0; i<buttons.length; i++)
+        {
+            if(getNthJustification(i).equals(j))
+            {
+                buttons[i].setSelected(true);
+                break;
+            }
+        }
+    }
+
     protected void buttonPressedContinuation1(Justification j)
     {
         if(j != null)
         {
             Legup.getInstance().getGui().getTree().addChildAtCurrentState();
-            if((j instanceof CaseRule) && (!Legup.getInstance().getGui().autoGenCaseRules))
+            if((j instanceof CaseRule) && (!Legup.getInstance().getGui().checkCaseRuleGen()))
             for(int c1=0;c1<2;c1++)
             {
                 Legup.setCurrentState(Legup.getCurrentState().getSingleParentState());
@@ -133,7 +148,7 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 	 */
 	public void actionPerformed(ActionEvent e)
 	{
-		boolean useDefault = false;
+		boolean useDefault = Legup.getInstance().getGui().checkAllowDefault();
 		Object source = e.getSource();
 		long time = e.getWhen();
 

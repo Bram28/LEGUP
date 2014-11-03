@@ -8,14 +8,20 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleSurroundRegion extends PuzzleRule
-{	 
-	
+{
+    private static final long serialVersionUID = 881143872L;
+
 	 RuleSurroundRegion()
 	 {
 		setName("Surround Black");
 		description = "All completed regions must be surrounded by black.";
 		image = new ImageIcon("images/nurikabe/rules/SurroundBlack.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/rules/SurroundBlack.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

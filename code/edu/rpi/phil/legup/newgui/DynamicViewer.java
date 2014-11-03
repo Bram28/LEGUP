@@ -22,14 +22,17 @@ import javax.swing.ViewportLayout;
  * @author Colin Kuebler
  */
 public abstract class DynamicViewer extends JScrollPane {
+	private static final long serialVersionUID = 24547340L;
+
 	/*** FIELDS ***/
 	// customized JComponent provides a scalable canvas for drawing
+	private DynamicViewer outerThis = this;
 	private JComponent canvas = new JComponent(){
 		private static final long serialVersionUID = -6592350784886799360L;
 		public void paint( Graphics g ){
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.scale(scale,scale);
-			draw(g2d);
+			DynamicViewer.draw(outerThis, g2d);
 		}
 	};
 	private Dimension size = new Dimension();
@@ -269,6 +272,11 @@ public abstract class DynamicViewer extends JScrollPane {
 
 	/*** SUBCLASS METHODS ***/
 
+	protected static void draw(DynamicViewer dv, Graphics2D g)
+	{
+		System.out.printf("In static DynamicViewer::draw, dynamic class of dv is \"%s\"\n", dv.getClass());
+		dv.draw(g);
+	}
 	abstract protected void draw( Graphics2D g );
 
 	// mouse events compatible with ZoomablePanel

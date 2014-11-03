@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionNoSolutionForCell extends Contradiction
 {
+    private static final long serialVersionUID = 593202388L;
 
 	 ContradictionNoSolutionForCell()
 	 {
@@ -14,6 +15,11 @@ public class ContradictionNoSolutionForCell extends Contradiction
 		description = "Process of elimination yields no valid numbers for an empty cell";
 		image = new ImageIcon("images/sudoku/NoSolution.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/sudoku/NoSolution.png";
+	}
 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

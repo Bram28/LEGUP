@@ -9,15 +9,19 @@
 
 package edu.rpi.phil.legup.puzzles.battleship;
 import edu.rpi.phil.legup.*;
+
 import java.awt.Point;
 import java.awt.Image;
+
 import javax.swing.ImageIcon;
+
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Vector;
 
 public class BattleShip extends PuzzleModule
 {
+    static final long serialVersionUID = 532393951L;
 
 	public static int NUM_SHIPS_SIZE4 = 1;
 	public static int NUM_SHIPS_SIZE3 = 2;
@@ -40,6 +44,7 @@ public class BattleShip extends PuzzleModule
 	public static final int FIXED_RIGHT_CAP = 23;
 	public static final int FIXED_CENTER = 24;
 	public static final int FIXED_MIDDLE = 25;
+	
 
 	public BattleShip()
 	{
@@ -164,16 +169,21 @@ public class BattleShip extends PuzzleModule
 	}
 
 	public Vector <PuzzleRule> getRules(){
-		Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
+		Vector<PuzzleRule> ruleList = new Vector<PuzzleRule>();
 		ruleList.add(new WaterRowRule());
 		return ruleList;
 	}
 
 	public Vector<Contradiction> getContradictions()
 	{
-		Vector result = new Vector<Contradiction>();
+		Vector<Contradiction> result = new Vector<Contradiction>();
 		result.add(new Contradiction()
 		{
+		    public String getImageName()
+		    {
+		    	return "images/unknown.gif";
+		    }
+		    static final long serialVersionUID = 532394123951L;
 			public String checkContradictionRaw(BoardState state)
 			{
 				return null;
@@ -184,9 +194,14 @@ public class BattleShip extends PuzzleModule
 
 	public Vector<CaseRule> getCaseRules()
 	{
-		Vector result = new Vector<CaseRule>();
+		Vector<CaseRule> result = new Vector<CaseRule>();
 		result.add(new CaseRule()
 		{
+		    public String getImageName()
+		    {
+		    	return "images/unknown.gif";
+		    }
+		    static final long serialVersionUID = 594123951L;
 			public String checkCaseRuleRaw(BoardState state)
 			{
 				return null;

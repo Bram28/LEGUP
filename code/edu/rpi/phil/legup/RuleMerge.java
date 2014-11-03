@@ -15,11 +15,17 @@ import javax.swing.ImageIcon;
  */
 public final class RuleMerge extends PuzzleRule
 {    
+    private static final long serialVersionUID = 228035121L;
     private RuleMerge()
     {
     	setName("Merge Rule");
     	description = "Merge two or more states' common information.";
     	image = new ImageIcon("images/MergeRule.png");
+    }
+    
+    public String getImageName()
+    {
+    	return "images/MergeRule.png";
     }
     
     /**

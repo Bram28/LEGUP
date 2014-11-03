@@ -7,13 +7,19 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class RuleOneUnknownWhite extends PuzzleRule
 {	 
+	private static final long serialVersionUID = 599105921L;
 	
-	 RuleOneUnknownWhite()
-	 {
+	RuleOneUnknownWhite()
+	{
 		setName("White Escape");
 		description = "If there is one unknown next to a white region the unknown should be white.";
 		image = new ImageIcon("images/heyawake/rules/WhiteAroundBlack.png");
-	 }
+	}
+	
+	public String getImageName()
+	{
+		return "images/heyawake/rules/WhiteAroundBlack.png";
+	}
 	 
 	 /**
 	 * Checks if the contradiction was applied correctly to this board state

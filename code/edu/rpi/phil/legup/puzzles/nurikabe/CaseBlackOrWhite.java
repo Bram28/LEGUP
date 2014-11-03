@@ -10,12 +10,18 @@ import edu.rpi.phil.legup.CaseRule;
 
 public class CaseBlackOrWhite extends CaseRule
 {
+	private static final long serialVersionUID = 464380135L;
 	
 	public CaseBlackOrWhite()
 	{
 		setName("Black or White Edge");
 		description = "Each blank cell is either black or white.";
 		image = new ImageIcon("images/nurikabe/cases/BlackOrWhite.png");
+	}
+	
+	public String getImageName()
+	{
+		return "images/nurikabe/cases/BlackOrWhite.png";
 	}
 	
 	public String checkCaseRuleRaw(BoardState state)

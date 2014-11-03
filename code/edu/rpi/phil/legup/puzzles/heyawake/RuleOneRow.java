@@ -2,17 +2,26 @@ package edu.rpi.phil.legup.puzzles.heyawake;
 
 import java.util.Vector;
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
+
 import java.awt.Point;
+
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 public class RuleOneRow extends PuzzleRule
 {
+	private static final long serialVersionUID = 480985280L;
+
 	RuleOneRow()
 	{
 		setName("One Row");
 		description = "One possible combination in a region 1x(n+1)";
 		image = new ImageIcon("images/heyawake/rules/FillRoomBlack.png");
+	}
+	public String getImageName()
+	{
+		return "images/heyawake/rules/FillRoomBlack.png";
 	}
 	protected boolean checkRegionHasClue(BoardState state, int cellregion)
 	{

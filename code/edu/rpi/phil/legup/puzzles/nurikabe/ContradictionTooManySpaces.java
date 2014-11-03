@@ -1,6 +1,7 @@
 package edu.rpi.phil.legup.puzzles.nurikabe;
 
 import javax.swing.ImageIcon;
+
 import java.awt.Point;
 
 import edu.rpi.phil.legup.BoardState;
@@ -8,6 +9,7 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionTooManySpaces extends Contradiction
 {	 
+    private static final long serialVersionUID = 657974076L;
 	
 	 ContradictionTooManySpaces()
 	 {
@@ -15,6 +17,11 @@ public class ContradictionTooManySpaces extends Contradiction
 		description = "A region cannot contain more spaces than its number.";
 		image = new ImageIcon("images/nurikabe/contradictions/TooManySpaces.png");
 	 }
+		
+	public String getImageName()
+	{
+		return "images/nurikabe/contradictions/TooManySpaces.png";
+	}
 	 
 	 /**
      * Checks if the contradiction was applied correctly to this board state

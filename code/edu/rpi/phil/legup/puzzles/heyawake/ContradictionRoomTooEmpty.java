@@ -9,14 +9,21 @@ import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionRoomTooEmpty extends Contradiction
 {	 
-	 ContradictionRoomTooEmpty()
+	private static final long serialVersionUID = 230073837L;
+	
+    ContradictionRoomTooEmpty()
 	 {
 		setName("Room Too Empty");
 		description = "A room can't have less than its number of blacks.";
 		image = new ImageIcon("images/heyawake/contradictions/RoomTooEmpty.png");
 	 }
 	 
-	 /**
+	 public String getImageName()
+	{
+		return "images/heyawake/contradictions/RoomTooEmpty.png";
+	}
+
+	/**
 	 * Checks if the contradiction was applied correctly to this board state
 	 *
 	 * @param state The board state
