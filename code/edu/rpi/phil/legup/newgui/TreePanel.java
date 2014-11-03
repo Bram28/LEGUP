@@ -167,9 +167,9 @@ public class TreePanel extends ZoomablePanel implements TransitionChangeListener
 		{
 			int[] ptrNumTransitions = new int[1];
 			BoardState lastCollapsed = getLastCollapsed(state, ptrNumTransitions);
-			//draw.x += COLLAPSED_DRAW_DELTA_X * ptrNumTransitions[0];
+			/*//draw.x += COLLAPSED_DRAW_DELTA_X * ptrNumTransitions[0];
 			Point nextPoint = (Point)lastCollapsed.getLocation().clone();
-			draw.x = (draw.x + nextPoint.x)/2;
+			draw.x = (draw.x + nextPoint.x)/2;*/
 
 			transitionsFrom = lastCollapsed.getTransitionsFrom();
 		}
