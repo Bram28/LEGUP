@@ -278,9 +278,9 @@ public class BoardState implements java.io.Serializable
 		if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
 		{
 			if (!collapsed)
-				location.y += TreePanel.NODE_RADIUS;
+				offset.y += TreePanel.NODE_RADIUS;
 			else
-				location.y -= TreePanel.NODE_RADIUS;
+				offset.y -= TreePanel.NODE_RADIUS;
 			
 			toggleCollapseRecursive(location.x,location.y, true);
 			recalculateLocation();
