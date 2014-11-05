@@ -119,6 +119,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		// get the position of the current node and add padding
 		Rectangle b = new Rectangle( state.getLocation() );
 		b.grow( 2*NODE_RADIUS, 2*NODE_RADIUS );
+		b.setBounds((int)b.getX()-60, (int)b.getY(), (int)b.getWidth()+80, (int)b.getHeight()+120);
 		// get the relevant child nodes
 		Vector <BoardState> children = state.isCollapsed()
 			? getLastCollapsed(state).getTransitionsFrom()
