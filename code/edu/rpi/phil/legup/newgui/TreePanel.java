@@ -98,7 +98,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		Vector <BoardState> children = s.getTransitionsFrom();
 		BoardState rv = s;
 		int numTransitions = 0;
-
+;
 		if (children.size() == 1)
 		{
 			BoardState child = children.get(0);
@@ -141,6 +141,16 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 	}
 
+	public void reset()
+	{
+		BoardState state = Legup.getInstance().getInitialBoardState();
+		if( bounds.x != 0 || bounds.y != 0 )
+		{
+			state.setOffset( new Point( state.getOffset().x-bounds.x, state.getOffset().y-bounds.y ) );
+			updateTreeSize();
+		}
+	}
+
 	public void draw( Graphics2D g )
 	{
 		currentStateBoxes.clear();
@@ -154,18 +164,24 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			// as updating the size triggers another redrawing
 			// Rectangle bounds = getTreeBounds( state );
 			System.out.printf("Tree Bounds x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
+			if( bounds.y != 0 )
+			{
+				// state.setOffsetRaw(new Point(0, 0));
+				updateTreeSize();
+			}
 			setSize( bounds.getSize() );
+			System.out.printf("Tree Bounds are now x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
 			// TODO FIXME
 			// adjust the position of the root node so it is centered
-			if( bounds.x != 0 || bounds.y != 0 )
-			{
-				System.out.println("Current offset: " + state.getOffset().toString());
-				state.setOffset( new Point( state.getOffset().x-bounds.x, state.getOffset().y-bounds.y ) );
-				System.out.println("Setting offset to " + (state.getOffset().x-bounds.x) + "," + (state.getOffset().y-bounds.y));
-				System.out.println("Current offset: " + state.getOffset().toString());
-				updateTreeSize();
-				System.out.printf("Tree Bounds updated! x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
-			}
+			// if( bounds.x != 0 || bounds.y != 0 )
+			// {
+			// 	System.out.println("Current offset: " + state.getOffset().toString());
+			// 	state.setOffset( new Point( state.getOffset().x-bounds.x, state.getOffset().y-bounds.y ) );
+			// 	System.out.println("Setting offset to " + (state.getOffset().x-bounds.x) + "," + (state.getOffset().y-bounds.y));
+			// 	System.out.println("Current offset: " + state.getOffset().toString());
+			// 	updateTreeSize();
+			// 	System.out.printf("Tree Bounds updated! x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
+			// }
 			// state.setOffset( new Point( -xOffset, -yOffset ) );
 			//state.setOffset( new Point(20, 20) );
 			// set high quality rendering
