@@ -119,6 +119,8 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		// get the position of the current node and add padding
 		Rectangle b = new Rectangle( state.getLocation() );
 		b.grow( 2*NODE_RADIUS, 2*NODE_RADIUS );
+		// Adjust the rectangle so that rule popups aren't cut off
+		// TODO: When implementing popup scaling during zoom, adjust these numbers (they'll need to be bigger when zoomed out)
 		b.setBounds((int)b.getX()-60, (int)b.getY(), (int)b.getWidth()+80, (int)b.getHeight()+120);
 		// get the relevant child nodes
 		Vector <BoardState> children = state.isCollapsed()
@@ -134,12 +136,19 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 	public void updateTreeSize()
 	{
-		System.out.println("updateTreeSize");
+		// System.out.println("updateTreeSize");
 		bounds = getTreeBounds(Legup.getInstance().getInitialBoardState());
 
 		setSize(bounds.getSize());
+		// Point p = Legup.getInstance().getInitialBoardState().getLocation();
 		// setSize(500,500);
-
+		BoardState state = Legup.getInstance().getInitialBoardState();
+		// state.adjustOffset(new Point(1,1));
+		// System.out.printf("Initial board state is at %d, %d\n", p.x, p.y);
+		if( bounds.y != 60 )
+		{
+			state.adjustOffset( new Point( 60-bounds.y, 0 ) );
+		}
 	}
 
 	public void reset()
@@ -156,6 +165,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	{
 		currentStateBoxes.clear();
 		BoardState state = Legup.getInstance().getInitialBoardState();
+		// Point p = Legup.getInstance().getInitialBoardState().getLocation();
 		if(state != null)
 		{
 			// TODO FIXME
@@ -164,14 +174,15 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			// updating the size during drawing leads to a loop
 			// as updating the size triggers another redrawing
 			// Rectangle bounds = getTreeBounds( state );
-			System.out.printf("Tree Bounds x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
-			if( bounds.y != 0 )
-			{
-				// state.setOffsetRaw(new Point(0, 0));
-				updateTreeSize();
-			}
+			// System.out.printf("Tree Bounds x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
+			// System.out.printf("Initial board state is at %d, %d\n", p.x, p.y);
+			// if( bounds.y != 0 )
+			// {
+			// 	// state.setOffsetRaw(new Point(0, 0));
+			// 	updateTreeSize();
+			// }
 			setSize( bounds.getSize() );
-			System.out.printf("Tree Bounds are now x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
+			// System.out.printf("Tree Bounds are now x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
 			// TODO FIXME
 			// adjust the position of the root node so it is centered
 			// if( bounds.x != 0 || bounds.y != 0 )
