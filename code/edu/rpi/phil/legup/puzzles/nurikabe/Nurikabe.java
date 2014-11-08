@@ -98,6 +98,7 @@ public class Nurikabe extends PuzzleModule
 		ruleList.add(new RuleOneUnknownBlack());
 		ruleList.add(new RuleBetweenRegions());
 		ruleList.add(new RuleUnknownSurrounded());
+		ruleList.add(new RuleFillInWhite());
 		ruleList.add(new RuleBottleNeck());
 		return ruleList;
 	}
