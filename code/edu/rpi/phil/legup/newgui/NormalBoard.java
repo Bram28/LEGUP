@@ -5,18 +5,10 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.List;
 import java.util.Vector;
-import javax.swing.JPopupMenu;
 import javax.swing.JComponent;
-import javax.swing.event.PopupMenuListener;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
-import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Selection;
@@ -29,28 +21,6 @@ public class NormalBoard extends Board
 	private Point lastRightMousePoint = null;
 	private int count = 0;
 	
-	class PopupListener extends MouseAdapter {
-		JPopupMenu pop;
- 
-		PopupListener(JPopupMenu popupMenu) {
-			pop = popupMenu;
-		}
- 
-		public void mousePressed(MouseEvent e) {
-			maybeShowPopup(e);
-		}
- 
-		public void mouseReleased(MouseEvent e) {
-			maybeShowPopup(e);
-		}
- 
-		private void maybeShowPopup(MouseEvent e) {
-			if (e.isPopupTrigger()) {
-				pop.show(e.getComponent(),
-						   e.getX(), e.getY());
-			}
-		}
-	}
 	NormalBoard(LEGUP_Gui gui)
 	{
 		parent = gui;
