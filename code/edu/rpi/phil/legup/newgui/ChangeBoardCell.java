@@ -1,5 +1,6 @@
 package edu.rpi.phil.legup.newgui;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,26 +40,20 @@ public class ChangeBoardCell implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		List<String> menuoptions = pm.getSelectableCellsList();
-		// linearly search through the states to find which popup item was clicked (TODO: find better way or confirm none exists)
-		for(int a=0; a < menuoptions.size(); a++)
+		int optionchosen = storedMenu.getComponentIndex((Component)e.getSource());
+		if(optionchosen == -1) { throw new Error("A menu option was selected that doesn't exist."); }
+
+		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
+		BoardState state = selection.getState();
+
+		BoardState next = state.conditionalAddTransition();
+		if(next != null)
 		{
-			if(e.getSource() == storedMenu.getComponent(a))
-			{
-				Selection selection = Legup.getInstance().getSelections().getFirstSelection();
-				BoardState state = selection.getState();
+			next.setCellContents(toChange.x, toChange.y,
+				pm.getStateNumber(menuoptions.get(optionchosen)));
 
-				int optionchosen = a;
-
-				BoardState next = state.conditionalAddTransition();
-				if(next != null)
-				{
-					next.setCellContents(toChange.x, toChange.y,
-						pm.getStateNumber(menuoptions.get(optionchosen)));
-
-					//make sure annotations don't cover the final result
-					pm.disableAnnotationsForCell(toChange.x,toChange.y); 
-				}
-			}
+			//make sure annotations don't cover the final result
+			pm.disableAnnotationsForCell(toChange.x,toChange.y); 
 		}
 	}
 }
