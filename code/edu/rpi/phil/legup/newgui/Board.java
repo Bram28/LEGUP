@@ -21,13 +21,12 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Selection;
 
-public abstract class Board extends DynamicViewer implements BoardDataChangeListener, ActionListener
+public abstract class Board extends DynamicViewer implements BoardDataChangeListener
 {
 	private static final long serialVersionUID = 2272172621376357845L;
 
     protected Board() { super(); }
     protected Board(boolean b) { super(b); }
-	abstract public void actionPerformed(ActionEvent e);
 	abstract public void initSize();
 	abstract protected void draw( Graphics2D g );
 	abstract protected void mousePressedAt(Point p, MouseEvent e);
