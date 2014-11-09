@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -30,7 +31,7 @@ public class NormalBoard extends Board
 	private Point lastRightMousePoint = null;
 	private int count = 0;
 	JPopupMenu storedMenu = new JPopupMenu();
-	String storedMenuOptions[];
+	List<String> storedMenuOptions;
 	
 	public void actionPerformed(ActionEvent e)
 	{ 
@@ -47,7 +48,8 @@ public class NormalBoard extends Board
 				BoardState next = state.conditionalAddTransition();
 				if(next != null)
 				{
-					next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
+					next.setCellContents(lastRightMousePoint.x, lastRightMousePoint.y,
+						pm.getStateNumber(storedMenuOptions.get(optionchosen)));
 					
 					//make sure annotations don't cover the final result
 					pm.disableAnnotationsForCell(lastRightMousePoint.x,lastRightMousePoint.y); 
@@ -181,18 +183,11 @@ public class NormalBoard extends Board
 						if (state.isModifiableCell(p.x,p.y))
 						{
 							JPopupMenu pop = new JPopupMenu();
-							String[] menuoptions = new String[pm.numAcceptableStates()];
-
-							for(int c1=0;c1<pm.numAcceptableStates();c1++)
+							List<String> menuoptions = pm.getSelectableCellsList();
+							for(String option : menuoptions)
 							{
-								menuoptions[c1] = pm.getStateName(c1);
-								//System.out.println("numAcceptableStates: "+ pm.numAcceptableStates());
-								//System.out.println("menuoptions["+c1+"]: "+ menuoptions[c1]);
-							}
-							for(int a = 0; a < pm.numAcceptableStates(); a++)
-							{
-								if(menuoptions[a] == null)continue;
-								JMenuItem item = new JMenuItem(menuoptions[a]);
+								if(option == null)continue;
+								JMenuItem item = new JMenuItem(option);
 
 								item.addActionListener(this);
 								pop.add(item);

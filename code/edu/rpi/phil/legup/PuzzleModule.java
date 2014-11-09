@@ -203,6 +203,21 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
         return selectableCellsRevCache;
     }
 
+    protected List<String> selectableCellsListCache = null;
+    public List<String> getSelectableCellsList()
+    {
+        if(selectableCellsListCache == null)
+        {
+            selectableCellsListCache = new ArrayList<String>();
+            for(Map.Entry<Integer, String> e : getSelectableCellsRev().entrySet())
+            {
+                selectableCellsListCache.add(e.getValue());
+            }
+        }
+        return selectableCellsListCache;
+    }
+
+
     protected NavigableMap<Integer, String> unselectableCellsRevCache = null;
     public NavigableMap<Integer, String> getUnselectableCellsRev()
     {
