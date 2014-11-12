@@ -1,10 +1,12 @@
 package edu.rpi.phil.legup.puzzles.nurikabe;
 
 import javax.swing.ImageIcon;
-
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.puzzles.nurikabe.Nurikabe;
+import java.awt.Point;
+import java.util.Vector;
+
 
 public class ContradictionIsolatedBlack extends Contradiction
 {	 
@@ -22,95 +24,77 @@ public class ContradictionIsolatedBlack extends Contradiction
 	{
 		return "images/nurikabe/contradictions/BlackArea.png";
 	}
-	 
-	 /**
-	  * @return true if the black cell is isolated
-	  */
-//	private boolean contradictionCheckerHelper(BoardState state, boolean[][] visited, int x, int y, int width, int height) {
-//		int blackCount = 0;
-//		for(int dx = -1;dx<2;dx++){
-//			{
-//				for(int dy = -1; dy<2;dy++)
-//				{
-//					if(dx!=0 && dy!=0)
-//						continue;
-//					if((dx+x>=width) || (dx+x<0))
-//						continue;
-//					if((dy+y>=height) || (dy+y<0))
-//						continue;
-//					if(state.getCellContents(x+dx,y+dy)==Nurikabe.CELL_WHITE)
-//						blackCount++;
-//				}
-//			}
-//			if(blackCount == 4)
-//			{
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
 	
 	/**
-	 * Basically, this will recursively check all possible paths for black from the initial (x, y), if it runs into
-	 * a white than it is considered a barrier, running into 4 whites would mean that this black is isolated
+	 * Checks if the black square at start can connect with the black square at end
+	 * @param start A Point where the first black square is, or where the path should start
+	 * @param end A Point where the second black square is, or where the path should end 
+	 * @param width The width of the board
+	 * @param height The height of the board
+	 * @param state The current BoardState
+	 * @param visited A list of all spaces that have been previously visited
+	 * @return true if a path exists between the two points, false otherwise
 	 */
-	private int countWhiteBounds(BoardState state, boolean[][] visited, int x, int y, int width, int height) {
-		int whiteCount = 0;
-		if(state.getCellContents(x, y) == Nurikabe.CELL_BLACK && !visited[x][y]){
-			return 0;
+	private boolean path(Point start, Point end, int width, int height, BoardState state, boolean[][] visited) {
+		//if the distance from point start to point end is only 1.0 we know they are adjacent and there is a path
+		if (start.distance(end) == 1.0) {
+			return true;
 		}
-		visited[x][y] = true;
-		if(state.getCellContents(x, y) == Nurikabe.CELL_WHITE) {
-			//base case
-			return 1;
+		
+		//set this point as visited
+		visited[start.x][start.y] = true;
+		
+		/*If a point adjacent to start is (1) in bounds, (2) either black or unknown, and
+		 * (3) not yet visited, then we recursively check to see if a path exists from that point
+		 * to the end point, if a path exists we return true. Otherwise we move on to the next
+		 * adjecent point. If all options are exhausted and no path is found, we know the two points
+		 * are isolated and can return false
+		 */
+		
+		//check right
+		if (start.x + 1 < width 
+				&& (state.getCellContents(start.x+1, start.y) == Nurikabe.CELL_BLACK
+					|| state.getCellContents(start.x+1, start.y) == Nurikabe.CELL_UNKNOWN)
+				&& !visited[start.x+1][start.y]) {
+			Point right = new Point(start.x+1, start.y);
+			if(path(right, end, width, height, state, visited))
+				return true;
 		}
-		if(x+1 < width) {
-			whiteCount += countWhiteBounds(state, visited, x+1, y, width, height);
+		
+		//check left
+		if (start.x - 1 > 0 
+				&& (state.getCellContents(start.x-1, start.y) == Nurikabe.CELL_BLACK
+					|| state.getCellContents(start.x-1, start.y) == Nurikabe.CELL_UNKNOWN)
+				&& !visited[start.x-1][start.y]) {
+			Point left = new Point(start.x-1, start.y);
+			if(path(left, end, width, height, state, visited))
+				return true;
 		}
-		if(x-1 > 0){
-			whiteCount += countWhiteBounds(state, visited, x-1, y, width, height);
+		
+		//check up
+		if (start.y + 1 < height 
+				&& (state.getCellContents(start.x, start.y+1) == Nurikabe.CELL_BLACK
+					|| state.getCellContents(start.x, start.y+1) == Nurikabe.CELL_UNKNOWN)
+				&& !visited[start.x][start.y+1]) {
+			Point up = new Point(start.x, start.y+1);
+			if(path(up, end, width, height, state, visited))
+				return true;
 		}
-		if(y+1 < height){
-			whiteCount += countWhiteBounds(state, visited, x, y+1, width, height);
+		
+		//check down
+		if (start.y - 1 > 0 
+				&& (state.getCellContents(start.x, start.y-1) == Nurikabe.CELL_BLACK
+					|| state.getCellContents(start.x, start.y-1) == Nurikabe.CELL_UNKNOWN)
+				&& !visited[start.x][start.y-1]) {
+			Point down = new Point(start.x, start.y-1);
+			if(path(down, end, width, height, state, visited))
+				return true;
 		}
-		if(y-1 > 0){
-			whiteCount += countWhiteBounds(state, visited, x, y-1, width, height);
-		}
-		return whiteCount;
+		
+		//if no paths exist then return false
+		return false;
 	}
-	
-	
-	/*
-	 * All of the following helper functions will return a false if white (blocked), or true if black (there is a path)
-	 */
-//	private boolean checkAbove(BoardState state, boolean[][] visited, int x, int y, int width, int height) {
-//		if (y < 0) {
-//			//if it is at the upper bound than return false (the path is blocked going up)
-//			return false;
-//		}
-//		if (state.getCellContents(x, y) == Nurikabe.CELL_WHITE) {
-//			//if the cell is white than the path is blocked (return false)
-//			visited[x][y] = true;
-//			return false;
-//		} else if (state.getCellContents(x, y) == Nurikabe.CELL_BLACK) {
-//			//if the cell is black then there is a path, however we say that this black cell is not visited
-//			//so that we can check it for paths to other black cells
-//			return true;
-//		} else {
-//			//getting here means the cell is unknown, meaning there could still be a path up so we recursively check that.
-//			visited[x][y] = true;
-//			checkAbove(state, visited, x, y-1, width, height);
-//		}
-//	}
-//	private boolean checkBelow(BoardState state, boolean[][] visited, int x, int y, int width, int height) {
-//		if (state.getCellContents == )
-//	}
-//	private boolean checkRight(BoardState state, boolean[][] visited, int x, int y, int width, int height) {
-//		
-//	}
-//	private boolean checkLeft(BoardState state, boolean[][] visited, int x, int y, int width, int height) {
-//		
-//	}
+
 	
 	 /**
      * Checks if the contradiction was applied correctly to this board state
@@ -122,22 +106,25 @@ public class ContradictionIsolatedBlack extends Contradiction
     {
     	int height = state.getHeight();
     	int width = state.getWidth();
-    	boolean first = true;
-    	boolean checked[][] = new boolean[height][width];
-    	boolean visited[][] = new boolean[width][height];
-    	for(int i = 0; i < width; i++){
-    		for(int j = 0; j < height; j++){
-    			//recursive wrapper
-    			if (state.getCellContents(i, j) == Nurikabe.CELL_BLACK){
-    				visited[i][j] = true;
-    				int numBarriers = countWhiteBounds(state, visited, i, j, width, height);
-    				System.out.println("numBarriers = at (" + i + ", " + j + ") = " + numBarriers);
-    				if (numBarriers > 3){
-    					return null;
-    				}
+    	Vector<Point> blacks = new Vector<Point>();
+    	
+    	//find all blacks currently on the board
+    	for (int x = 0; x < height; x++) {
+    		for (int y = 0; y < width; y++) {
+    			if (state.getCellContents(x, y) == Nurikabe.CELL_BLACK) {
+    				blacks.add(new Point(x, y));
     			}
     		}
     	}
-        return "ERROR";
+    	
+    	//go through all blacks and check if one does not connect
+    	for (int i = 0; i < blacks.size()-1; i++) {
+    		System.out.println("call with (" + blacks.get(i).x + ", " + blacks.get(i).y + ")");
+    		//if some connection cannot be made then a black cell is isolated and the contradiction was applied correctly
+    		if (!path(blacks.get(i), blacks.get(i+1), width, height, state, new boolean[width][height]))
+    			return null;
+    	}
+    	//if all black cells connect then there are no isolated cells and the contradiction was not applied correctly
+    	return "ERROR";
     }
 }
