@@ -278,12 +278,12 @@ public class BoardState implements java.io.Serializable
 		if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
 		{
 			if (!collapsed)
-				location.y += TreePanel.NODE_RADIUS;
+				offset.y += TreePanel.NODE_RADIUS;
 			else
-				location.y -= TreePanel.NODE_RADIUS;
-
-			toggleCollapseRecursive(location.x,location.y);
-
+				offset.y -= TreePanel.NODE_RADIUS;
+			
+			toggleCollapseRecursive(location.x,location.y, true);
+			recalculateLocation();
 			transitionsChanged();
 		}
 		else
@@ -297,16 +297,27 @@ public class BoardState implements java.io.Serializable
 	 * @param x: the x coordinate of the collapsed but selectable (grand)parent
 	 * @param y: the y coordinate of the collapsed but selectable (grand)parent
 	 */
-	public void toggleCollapseRecursive(int x, int y)
+	//Initial refers to whether or not the state is the first state in the collapse or uncollapse chain.
+	public void toggleCollapseRecursive(int x, int y, boolean initial)
 	{
 		if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
 		{
 			BoardState child = transitionsFrom.get(0);
 			collapsed = !collapsed;
-
+			if(!initial) {
+				if (collapsed) {
+					offset.y = 0;
+				}
+				else {
+					offset.y = 5 * TreePanel.NODE_RADIUS;
+				}
+			}
 			// collapse the child too
 			if (collapsed != child.collapsed)
-				child.toggleCollapseRecursive(x,y);
+				child.toggleCollapseRecursive(x,y, false);
+			else if (collapsed) {
+				child.offset.y = 0;
+			}
 		}
 		else // TODO: fix positioning of children
 		{

@@ -312,6 +312,5 @@ public class CaseRuleSelectionHelper extends Board
     {
         while(notifyOnSelection != null) {}
     }
-	public void actionPerformed(ActionEvent e) {}
     public void boardDataChanged(BoardState state) {}
 }

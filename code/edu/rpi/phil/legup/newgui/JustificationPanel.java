@@ -55,12 +55,17 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 	 */
 	protected void buttonPressed(int button, boolean defaultApplication)
 	{
-		if( defaultApplication )
-			startDefaultApplication(button);
-		else
+		if(Legup.getInstance().getGui().getBoard() instanceof NormalBoard)
 		{
-			Justification j = addJustification(button); 
-            buttonPressedContinuation1(j);
+			if(defaultApplication)
+			{
+				startDefaultApplication(button);
+			}
+			else
+			{
+				Justification j = addJustification(button);
+				buttonPressedContinuation1(j);
+			}
 		}
 	}
 

@@ -3,18 +3,23 @@ package edu.rpi.phil.legup.puzzles.fillapix;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 import edu.rpi.phil.legup.AI;
 import edu.rpi.phil.legup.BoardImage;
@@ -27,7 +32,20 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 public class Fillapix extends PuzzleModule
 {
+    // should these be prefixed with "CELL_", and "UNKNOWN" removed, to be consistant with others?
 	public static int UNKNOWN = 0, FILLED = 1, EMPTY = 2;
+
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("filled", FILLED);
+        tmp.put("empty", EMPTY);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
+
 
 	Vector <PuzzleRule> ruleList;
 	Vector <Contradiction> contraList;
@@ -306,14 +324,6 @@ public class Fillapix extends PuzzleModule
 		return 0;
 	}
 
-	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		int rv = (contents + 1) % 3;
-
-		return rv;
-	}
-
 	public void directModify(int x, int y, BoardState state)
 	{
 		ExtraCellNumber ecn = getECNAt(new Point(x, y), state);
@@ -357,13 +367,6 @@ public class Fillapix extends PuzzleModule
 		
 	}
         
-	public int getNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		int rv = (contents + 1) % 3;
-		return rv;
-	}
-
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard)
 	{
 		return currentBoard.compareBoard(goalBoard);

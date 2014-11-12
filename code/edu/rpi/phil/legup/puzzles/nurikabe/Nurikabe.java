@@ -9,8 +9,14 @@
 package edu.rpi.phil.legup.puzzles.nurikabe;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Vector;
 import java.awt.Point;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
@@ -25,7 +31,16 @@ public class Nurikabe extends PuzzleModule
 	public static int CELL_BLACK = 1;
 	public static int CELL_WHITE = 2;
 
-	public int numAcceptableStates(){ return 3; }
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("black", CELL_BLACK);
+        tmp.put("white", CELL_WHITE);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
 	
 	//0 - 9 on the board are represented internally as 10 - 19
 	//int CELL_BLOCK0 = 10, CELL_BLOCK1 = 11, etc...
@@ -42,7 +57,7 @@ public class Nurikabe extends PuzzleModule
 		}
 	}
 
-	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
+	/*public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
 	{
 		int contents = boardState.getCellContents(x,y);
 		int rv = CELL_UNKNOWN;
@@ -66,45 +81,7 @@ public class Nurikabe extends PuzzleModule
 		}
 
 		return rv;
-	}
-	
-	public int getNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-		
-		if (contents == CELL_UNKNOWN)
-		{
-			return CELL_BLACK;
-		}
-		else if (contents == CELL_BLACK)
-		{
-			return CELL_WHITE;
-		}
-		else if (contents == CELL_WHITE)
-		{
-			return CELL_UNKNOWN;
-		}
-		else
-		{
-			return contents;
-		}
-	}
-	
-	public String getStateName(int state)
-	{
-		if(state == 0)return "empty";
-		else if(state == 1)return "black";
-		else if(state == 2)return "white";
-		else return null;
-	}
-	
-	public int getStateNumber(String state)
-	{
-		if(state == "empty")return CELL_UNKNOWN;
-		else if(state == "black")return CELL_BLACK;
-		else if(state == "white")return CELL_WHITE;
-		else return CELL_UNKNOWN;
-	}
+	}*/
 	
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
@@ -119,9 +96,13 @@ public class Nurikabe extends PuzzleModule
 		ruleList.add(new RuleCornerBlack());
 		ruleList.add(new RuleOneUnknownRegion());//Same as one unknown white make it one rule.
 		ruleList.add(new RuleOneUnknownBlack());
+<<<<<<< HEAD
 //		ruleList.add(new RuleOneUnknownWhite());
+=======
+>>>>>>> 60db16008c3a0dcc49b98c2dfa9f5b7f0077713e
 		ruleList.add(new RuleBetweenRegions());
 		ruleList.add(new RuleUnknownSurrounded());
+		ruleList.add(new RuleFillInWhite());
 		ruleList.add(new RuleBottleNeck());
 		return ruleList;
 	}

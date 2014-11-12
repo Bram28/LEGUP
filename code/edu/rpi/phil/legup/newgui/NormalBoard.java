@@ -5,18 +5,10 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.util.Vector;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JComponent;
-import javax.swing.event.PopupMenuListener;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
-import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Selection;
@@ -24,61 +16,11 @@ import edu.rpi.phil.legup.Selection;
 public class NormalBoard extends Board
 {
 	private static final long serialVersionUID = -2304281047341398965L;
-	private int optionchosen;
 	private LEGUP_Gui parent = null;
 	private Point lastMousePoint = null; // the last left click mouse location
 	private Point lastRightMousePoint = null;
 	private int count = 0;
-	JPopupMenu storedMenu = new JPopupMenu();
-	String storedMenuOptions[];
 	
-	public void actionPerformed(ActionEvent e)
-	{ 
-		for(int a=0;a<Legup.getInstance().getPuzzleModule().numAcceptableStates();a++)
-		{
-			if(e.getSource() == storedMenu.getComponent(a))
-			{
-				Selection selection = Legup.getInstance().getSelections().getFirstSelection();
-				BoardState state = selection.getState();
-				PuzzleModule pm = Legup.getInstance().getPuzzleModule();
-
-				optionchosen = a;
-				
-				BoardState next = state.conditionalAddTransition();
-				if(next != null)
-				{
-					next.setCellContents(lastRightMousePoint.x,lastRightMousePoint.y,pm.getStateNumber(storedMenuOptions[optionchosen]));
-					
-					//make sure annotations don't cover the final result
-					pm.disableAnnotationsForCell(lastRightMousePoint.x,lastRightMousePoint.y); 
-				}
-			}
-		}
-	}
-
-	
-	class PopupListener extends MouseAdapter {
-	        JPopupMenu pop;
-	 
-	        PopupListener(JPopupMenu popupMenu) {
-	            pop = popupMenu;
-	        }
-	 
-	        public void mousePressed(MouseEvent e) {
-	            maybeShowPopup(e);
-	        }
-	 
-	        public void mouseReleased(MouseEvent e) {
-	            maybeShowPopup(e);
-	        }
-	 
-	        private void maybeShowPopup(MouseEvent e) {
-	            if (e.isPopupTrigger()) {
-	                pop.show(e.getComponent(),
-	                           e.getX(), e.getY());
-	            }
-	        }
-	    }
 	NormalBoard(LEGUP_Gui gui)
 	{
 		parent = gui;
@@ -180,32 +122,11 @@ public class NormalBoard extends Board
 
 						if (state.isModifiableCell(p.x,p.y))
 						{
-							JPopupMenu pop = new JPopupMenu();
-							String[] menuoptions = new String[pm.numAcceptableStates()];
-
-							for(int c1=0;c1<pm.numAcceptableStates();c1++)
-							{
-								menuoptions[c1] = pm.getStateName(c1);
-								//System.out.println("numAcceptableStates: "+ pm.numAcceptableStates());
-								//System.out.println("menuoptions["+c1+"]: "+ menuoptions[c1]);
-							}
-							for(int a = 0; a < pm.numAcceptableStates(); a++)
-							{
-								if(menuoptions[a] == null)continue;
-								JMenuItem item = new JMenuItem(menuoptions[a]);
-
-								item.addActionListener(this);
-								pop.add(item);
-							}
-							pop.show(this,e.getX()+ ((JComponent)e.getSource()).getX(), e.getY()+((JComponent)e.getSource()).getY());
-							//pop.show(this,temp.x, temp.y);
-							storedMenu = pop;
-							storedMenuOptions = menuoptions;
+							new ChangeBoardCell(p).getPopupMenu().show(this,
+								e.getX() + ((JComponent)e.getSource()).getX(),
+								e.getY() + ((JComponent)e.getSource()).getY()
+							);
 							lastRightMousePoint = p;
-							
-							// This is unnecessary, board is repainted on
-							// boardstate change anyway
-							//repaint();
 						}
 						else
 							parent.showStatus("You are not allowed to change that cell.", true);

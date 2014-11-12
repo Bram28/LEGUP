@@ -26,8 +26,11 @@ public class ContradictionBlackArea extends Contradiction
 	 /**
 	  * Recursively examines connected black squares, marking as checked as it goes along
 	  * 
-	  * @param checked[][]: array of checked squares, all false initially
-	  * @param x,y current position
+	  * @param checked array of checked squares, all false initially
+	  * @param x current position
+	  * @param y current position
+	  * @param state Board state
+	  * @param first True if first call of this function
 	  * @return true if touching unknown, false if already checked, or surrounded by checked or white
 	  */
 	 

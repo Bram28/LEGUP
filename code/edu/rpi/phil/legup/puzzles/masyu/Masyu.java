@@ -1,14 +1,20 @@
 package edu.rpi.phil.legup.puzzles.masyu;
 
 import java.awt.BasicStroke;
-import java.awt.Stroke;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.Point;
-import java.util.Vector;
-import java.util.ArrayList;
 import java.awt.Rectangle;
+import java.awt.Stroke;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
@@ -31,10 +37,22 @@ public class Masyu extends PuzzleModule
     {
     }
     // Constant values for Board
+    // should these be prefixed with "CELL_"?
     static final int BLANK = 0;
     static final int WHITE = 1;
     static final int BLACK = 2;
     private BasicStroke medium = new BasicStroke(2);
+
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", BLANK);
+        tmp.put("black", BLACK);
+        tmp.put("white", WHITE);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
 
     /**
      * Take an action when the left mouse button is pressed.
@@ -216,7 +234,7 @@ public class Masyu extends PuzzleModule
      *
      * @see edu.rpi.phil.legup.PuzzleModule#getAbsoluteNextCellValue(int, int, edu.rpi.phil.legup.BoardState)
      */
-    public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
+    /*public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
     {
         //TODO: Break apart, comment, figure out perhaps how to optimize
         //also, perhaps if in the previous cell already have a line prevent removal
@@ -228,7 +246,7 @@ public class Masyu extends PuzzleModule
     {
         int contents = boardState.getCellContents(x, y);
         return BLACK;
-    }
+    }*/
 
     /**
      * Checks to see if the current board can result in the goal.

@@ -8,27 +8,27 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleUnknownSurrounded extends PuzzleRule
+public class RuleFillInWhite extends PuzzleRule
 {
-	private static final long serialVersionUID = 729976023L;
+	private static final long serialVersionUID = -2761216044763518050L;
 
-	RuleUnknownSurrounded()
+	RuleFillInWhite()
 	{
-		setName("Fill In Black");
-		description = "If there an unknown region surrounded by black, it must be black.";
-		image = new ImageIcon("images/nurikabe/rules/FillInBlack.png");
+		setName("Fill In White");
+		description = "If there an unknown region surrounded by white, it must be white.";
+		image = new ImageIcon("images/nurikabe/rules/FillInWhite.png");
 	}
+	
 	public String getImageName()
 	{
-		return "images/nurikabe/rules/FillInBlack.png";
+		return "images/nurikabe/rules/FillInWhite.png";
 	}
+	
 	protected String checkRuleRaw(BoardState destBoardState)
 	{
 		String error = null;
 		boolean changed = false;
 		BoardState origBoardState = destBoardState.getSingleParentState();
-		int width = origBoardState.getWidth();
-		int height = origBoardState.getHeight();
 		
 		int[][] filled = determineRegions(origBoardState);
 		
@@ -51,19 +51,19 @@ public class RuleUnknownSurrounded extends PuzzleRule
 					{
 						changed = true;
 						
-						if (newState != Nurikabe.CELL_BLACK || origState != 0)
+						if (newState != Nurikabe.CELL_WHITE || origState != 0)
 						{
-							error = "This rule only involves adding black cells!";
+							error = "This rule only involves adding white cells!";
 							break;
 						}
 					
-						if(filled[y][x] == -1 && destBoardState.getCellContents(x,y) != Nurikabe.CELL_BLACK)
+						if(filled[y][x] == -1 && destBoardState.getCellContents(x,y) != Nurikabe.CELL_WHITE)
 						{
-							error="Black cells must be placed inside of a region of black cells.";
+							error="White cells must be placed inside of a region of white cells.";
 						}
 						else if (filled[y][x] != -1)
 						{
-							error = "Cannot place cells outside a region of black cells";
+							error = "Cannot place cells outside a region of white cells";
 						}
 							
 					}
@@ -72,7 +72,7 @@ public class RuleUnknownSurrounded extends PuzzleRule
 			
 			if (error == null && !changed)
 			{
-				error = "You must add a black cell to use this rule!";
+				error = "You must add a white cell to use this rule!";
 			}
 		}
 		
@@ -94,10 +94,10 @@ public class RuleUnknownSurrounded extends PuzzleRule
     		{
     			filled[y][x] = 0;
     			
-    			if(state.getCellContents(x,y) == Nurikabe.CELL_BLACK)
+    			if(state.getCellContents(x,y) == Nurikabe.CELL_WHITE || state.getCellContents(x,y) > 10)
     			{
     				visited[y][x] = true;
-    				filled[y][x] = Nurikabe.CELL_BLACK;
+    				filled[y][x] = Nurikabe.CELL_WHITE;
     			}
     		}
     	}
@@ -110,22 +110,21 @@ public class RuleUnknownSurrounded extends PuzzleRule
     			{
     				getRegionSize(visited, state, x, y, width, height, regions);
     				
-    				//check if the region contains any white cells
-    				boolean hasWhiteCells = false;
+    				//check if the region contains any black cells
+    				boolean hasBlackCells = false;
     				for (int i = 0; i < regions.size(); i++)
     				{
     					int regionX = regions.get(i).x;
     					int regionY = regions.get(i).y;
-    					if (state.getCellContents(regionX , regionY) == Nurikabe.CELL_WHITE ||
-    							state.getCellContents(regionX, regionY) > 10)
+    					if (state.getCellContents(regionX , regionY) == Nurikabe.CELL_BLACK)
     					{
-    						hasWhiteCells = true;
+    						hasBlackCells = true;
     						break;
     					}
     				}
     				
-    				//If the region has no white cells, then this region can be filled with black cells
-    				if (hasWhiteCells == false)
+    				//If the region has no black cells, then this region can be filled with white cells
+    				if (hasBlackCells == false)
     				{
 	    				for (int i = 0; i < regions.size(); i++)
 	    				{
@@ -187,7 +186,7 @@ public class RuleUnknownSurrounded extends PuzzleRule
 		boolean changed = false;
 		int width = destBoardState.getWidth();
 		int height = destBoardState.getHeight();
-		int blackCount;
+		int whiteCount;
 		
 		if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
 		{
@@ -196,7 +195,7 @@ public class RuleUnknownSurrounded extends PuzzleRule
 			{
 				for(int y = 0; y < height; ++y)
 				{
-					blackCount = 0;
+					whiteCount = 0;
 					if(origBoardState.getCellContents(x,y)!=Nurikabe.CELL_UNKNOWN)
 						continue;
 					for(int dx = -1;dx<2;dx++)
@@ -209,14 +208,14 @@ public class RuleUnknownSurrounded extends PuzzleRule
 								continue;
 							if((dy+y>=height) || (dy+y<0))
 								continue;
-							if(origBoardState.getCellContents(x+dx,y+dy)==Nurikabe.CELL_BLACK)
-								blackCount++;
+							if(origBoardState.getCellContents(x+dx,y+dy)==Nurikabe.CELL_WHITE)
+								whiteCount++;
 						}
 					}
-					if(blackCount==4)
+					if(whiteCount==4)
 					{
 						changed = true;
-						destBoardState.setCellContents(x,y,Nurikabe.CELL_BLACK);
+						destBoardState.setCellContents(x,y,Nurikabe.CELL_WHITE);
 					}		
 				}
 			}

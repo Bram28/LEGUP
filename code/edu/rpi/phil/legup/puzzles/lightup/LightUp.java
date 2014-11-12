@@ -3,13 +3,20 @@
 //  LEGUP
 
 package edu.rpi.phil.legup.puzzles.lightup;
+
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import edu.rpi.phil.legup.BoardImage;
@@ -33,7 +40,26 @@ public class LightUp extends PuzzleModule
 	public static int CELL_BLOCK3 = 13;
 	public static int CELL_BLOCK4 = 14;
 	public static int CELL_BLOCK = 15; //the blank black block
-	public int numAcceptableStates(){return 3;}
+
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("light", CELL_LIGHT);
+        tmp.put("empty", CELL_EMPTY);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("CELL_BLOCK0", CELL_BLOCK0);
+        tmp.put("CELL_BLOCK1", CELL_BLOCK1);
+        tmp.put("CELL_BLOCK2", CELL_BLOCK2);
+        tmp.put("CELL_BLOCK3", CELL_BLOCK3);
+        tmp.put("CELL_BLOCK4", CELL_BLOCK4);
+        tmp.put("CELL_BLOCK", CELL_BLOCK);
+        return tmp;
+    }
 	public int getNonunknownBlank() {return 2;} //the index into getStateName of empty
 	
 	public LightUp(){
@@ -116,7 +142,7 @@ public class LightUp extends PuzzleModule
 		return 0;
 	}
 
-	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
+	/*public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
 	{
 		int contents = boardState.getCellContents(x,y);
 		int rv = CELL_UNKNOWN;
@@ -155,43 +181,8 @@ public class LightUp extends PuzzleModule
 		}
 
 		return rv;
-	}
+	}*/
 
-	public int getNextCellValue(int x, int y, BoardState boardState)
-	{
-		int contents = boardState.getCellContents(x,y);
-
-		if (contents == CELL_UNKNOWN)
-		{
-			return CELL_LIGHT;
-		}
-		else if (contents == CELL_LIGHT)
-		{
-			return CELL_EMPTY;
-		}
-		else if (contents == CELL_EMPTY)
-		{
-			return CELL_UNKNOWN;
-		}
-		else
-		{
-			return contents;
-		}
-	}
-	public String getStateName(int state)
-	{
-		if(state == 0)return "blank";
-		else if(state == 1)return "light";
-		else if(state == 2)return "empty";
-		else return null;
-	}
-	public int getStateNumber(String state)
-	{
-		if(state == "blank")return CELL_UNKNOWN;
-		else if(state == "light")return CELL_LIGHT;
-		else if(state == "empty")return CELL_EMPTY;
-		else return CELL_UNKNOWN;
-	}
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}

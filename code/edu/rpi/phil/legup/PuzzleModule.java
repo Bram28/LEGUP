@@ -15,6 +15,15 @@ import java.awt.Rectangle;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -39,8 +48,6 @@ import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 public abstract class PuzzleModule implements TreeSelectionListener, BoardDataChangeListener
 {
 	public static int CELL_UNKNOWN = 0;
-	public int numAcceptableStates() {return 2;} //defined to be consistent with getNextCellValue()
-	public int getNonunknownBlank() {return 1;}
 	public boolean hasLabels(){return false;}
 	protected static final Dimension cellSize = new Dimension(32,32);
 	static final Color clear = new Color(0,0,0,0);
@@ -164,6 +171,79 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 		return 0;
 	}
 
+    /**
+     * Get a map of cellnames -> integers (e.g. for TreeTent: {"blank": 0, "tent": 2, "grass": 3}).
+     */
+    public abstract Map<String, Integer> getSelectableCells();
+    /*{
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("false", 0); tmp.put("true", 1);
+        return tmp;
+    }*/
+    /**
+     * Get the name->int map of cells that should not be toggleable (e.g. {"tree": 1} for TreeTent).
+     */
+    public abstract Map<String, Integer> getUnselectableCells();
+    /*{
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        return tmp;
+    }*/
+
+    public static <K, V> NavigableMap<V, K> transposeMap(Map<K, V> m)
+    {
+        NavigableMap<V, K> ret = new TreeMap<V, K>();
+        for(Map.Entry<K, V> e : m.entrySet()) { ret.put(e.getValue(), e.getKey()); }
+        return ret;
+    }
+
+    protected NavigableMap<Integer, String> selectableCellsRevCache = null;
+    public NavigableMap<Integer, String> getSelectableCellsRev()
+    {
+        if(selectableCellsRevCache == null) { selectableCellsRevCache = transposeMap(getSelectableCells()); }
+        return selectableCellsRevCache;
+    }
+
+    protected List<String> selectableCellsListCache = null;
+    public List<String> getSelectableCellsList()
+    {
+        if(selectableCellsListCache == null)
+        {
+            selectableCellsListCache = new ArrayList<String>();
+            for(Map.Entry<Integer, String> e : getSelectableCellsRev().entrySet())
+            {
+                selectableCellsListCache.add(e.getValue());
+            }
+        }
+        return selectableCellsListCache;
+    }
+
+
+    protected NavigableMap<Integer, String> unselectableCellsRevCache = null;
+    public NavigableMap<Integer, String> getUnselectableCellsRev()
+    {
+        if(unselectableCellsRevCache == null) { unselectableCellsRevCache = transposeMap(getUnselectableCells()); }
+        return unselectableCellsRevCache;
+    }
+
+    protected Map<String, Integer> allCellsCache = null;
+    public final Map<String, Integer> getAllCells()
+    {
+        if(allCellsCache == null)
+        {
+            allCellsCache = new LinkedHashMap<String, Integer>();
+            allCellsCache.putAll(getSelectableCells());
+            allCellsCache.putAll(getUnselectableCells());
+        }
+        return allCellsCache;
+    }
+
+    protected NavigableMap<Integer, String> allCellsRevCache = null;
+    public NavigableMap<Integer, String> getAllCellsRev()
+    {
+        if(allCellsRevCache == null) { allCellsRevCache = transposeMap(getAllCells()); }
+        return allCellsRevCache;
+    }
+
 	/**
 	 * Get the next call value of all of them (so if we're editing tree tent, for example, we can
 	 * change to and from trees)
@@ -173,14 +253,11 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	 * @param boardState BoardState that the cell should be looked up in
 	 * @return The next cell value
 	 */
-	public int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
+	public final int getAbsoluteNextCellValue(int x, int y, BoardState boardState)
 	{
-		int rv = 0;
-
-		if (boardState.getCellContents(x,y) == 0)
-			rv = 1;
-
-		return rv;
+        int cell = boardState.getCellContents(x,y);
+        Integer next = getAllCellsRev().higherKey(cell);
+        return (next != null) ? next : getAllCellsRev().firstEntry().getKey();
 	}
 
 	/**
@@ -191,29 +268,44 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	 * @param boardState BoardState that the cell should be looked up in
 	 * @return The next cell value
 	 */
-	public int getNextCellValue(int x, int y, BoardState boardState)
+	public final int getNextCellValue(int x, int y, BoardState boardState)
 	{
-		int rv = 0;
-		
-		if (boardState.getCellContents(x,y) == 0)
-		   rv = 1;
-		return rv;
+        int cell = boardState.getCellContents(x,y);
+        Integer next = getSelectableCellsRev().higherKey(cell);
+        return (next != null) ? next : getSelectableCellsRev().firstEntry().getKey();
 	}
 	//Helper function for user-enterable tile types, for indexing with 0->n
 	//defined in the abstract class to be consistent with getNextCellValue()
-	public /*abstract*/ String getStateName(int state)
+	public final String getStateName(int state)
 	{
-		if(state == 0)return "false";
-		else if(state == 1)return "true";
-		else return null;
+        Iterator<Map.Entry<Integer, String>> selectable = getSelectableCellsRev().entrySet().iterator();
+        int idx = 0;
+        int countdown = state+1;
+        while(countdown > 0 && selectable.hasNext())
+        {
+            Map.Entry<Integer, String> e = selectable.next();
+            countdown--;
+            idx = e.getKey();
+        }
+        String rv = getSelectableCellsRev().get(idx);
+        //System.out.printf("getStateName(%d) -> \"%s\"\n", state, rv);
+        return rv;
 	}
 	//inverse function needed to reliably map 0->n to arbitrary puzzle-defined values
-	public /*abstract*/ int getStateNumber(String state)
+	public final int getStateNumber(String state)
 	{
-		if(state == "false")return 0;
-		else if(state == "true")return 1;
-		else return CELL_UNKNOWN;
+        Integer tmp = getSelectableCells().get(state);
+        if(tmp == null) { return CELL_UNKNOWN; }
+        return tmp;
 	}
+
+	public final int numAcceptableStates() { return getSelectableCells().size(); }
+    // This one might need to be manually overridden (is 
+    //  currently only used by the permutation case rule for 
+    //  TreeTent, where it's used to treat "grass" as the 
+    //  nonunknown-blank, will the permutation case rule be useful 
+    //  in general?)
+	public int getNonunknownBlank() {return 1;}
 	
 	public void boardDataChanged(BoardState state)
 	{

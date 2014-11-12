@@ -10,14 +10,19 @@
 package edu.rpi.phil.legup.puzzles.battleship;
 import edu.rpi.phil.legup.*;
 
-import java.awt.Point;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
-
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Vector;
 
 public class BattleShip extends PuzzleModule
 {
@@ -31,7 +36,6 @@ public class BattleShip extends PuzzleModule
 	public static final int CELL_UNKNOWN = 0;
 	public static final int CELL_WATER = 1;
 	public static final int CELL_SHIP = 2;
-	public static final int CELL_FIXED_UNKNOWN = 26;
 	public static final int CELL_LEFT_CAP = 10;
 	public static final int CELL_TOP_CAP = 11;
 	public static final int CELL_BOTTOM_CAP = 12;
@@ -44,7 +48,34 @@ public class BattleShip extends PuzzleModule
 	public static final int FIXED_RIGHT_CAP = 23;
 	public static final int FIXED_CENTER = 24;
 	public static final int FIXED_MIDDLE = 25;
+	public static final int CELL_FIXED_UNKNOWN = 26;
 	
+    public Map<String, Integer> getSelectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("blank", CELL_UNKNOWN);
+        tmp.put("water", CELL_WATER);
+        tmp.put("ship", CELL_SHIP);
+        tmp.put("left cap", CELL_LEFT_CAP);
+        tmp.put("top cap", CELL_TOP_CAP);
+        tmp.put("bottom cap", CELL_BOTTOM_CAP);
+        tmp.put("right cap", CELL_RIGHT_CAP);
+        tmp.put("center", CELL_CENTER);
+        tmp.put("middle", CELL_MIDDLE);
+        return tmp;
+    }
+    public Map<String, Integer> getUnselectableCells()
+    {
+        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+        tmp.put("FIXED_LEFT_CAP", FIXED_LEFT_CAP);
+        tmp.put("FIXED_TOP_CAP", FIXED_TOP_CAP);
+        tmp.put("FIXED_BOTTOM_CAP", FIXED_BOTTOM_CAP);
+        tmp.put("FIXED_RIGHT_CAP", FIXED_RIGHT_CAP);
+        tmp.put("FIXED_CENTER", FIXED_CENTER);
+        tmp.put("FIXED_MIDDLE", FIXED_MIDDLE);
+        tmp.put("CELL_FIXED_UNKNOWN", CELL_FIXED_UNKNOWN);
+        return tmp;
+    }
 
 	public BattleShip()
 	{
@@ -156,7 +187,7 @@ public class BattleShip extends PuzzleModule
 		drawText(g,x, y, String.valueOf(val - 40));
 	}
 
-	public int getNextCellValue(int x, int y, BoardState boardState)
+	/*public int getNextCellValue(int x, int y, BoardState boardState)
 			throws IndexOutOfBoundsException
 	{
 		int val = Math.abs(boardState.getCellContents(x,y));
@@ -166,7 +197,7 @@ public class BattleShip extends PuzzleModule
 		else if (val == 15) return 0;
 		else if (val == 26) return 20;
 		else return 0;
-	}
+	}*/
 
 	public Vector <PuzzleRule> getRules(){
 		Vector<PuzzleRule> ruleList = new Vector<PuzzleRule>();
