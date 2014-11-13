@@ -53,9 +53,12 @@ public class ConnectedRegions
 (define cr edu.rpi.phil.legup.ConnectedRegions)
 (define testcells (int[][]
 	(int[] 0 1 0 0)
-	(int[] 0 0 1 0)
+	(int[] 2 0 1 0)
 	(int[] 0 1 0 0)
 	(int[] 1 0 0 0)
 ))
 (define regions (cr:getConnectedRegions 1 testcells 4 4))
+regions
+(map (cut cr:regionContains 2 testcells <>) (list (regions 0) (regions 1)))
+
 */
