@@ -121,8 +121,10 @@ public class ContradictionIsolatedBlack extends Contradiction
     	for (int i = 0; i < blacks.size()-1; i++) {
     		System.out.println("call with (" + blacks.get(i).x + ", " + blacks.get(i).y + ")");
     		//if some connection cannot be made then a black cell is isolated and the contradiction was applied correctly
-    		if (!path(blacks.get(i), blacks.get(i+1), width, height, state, new boolean[width][height]))
+    		if (!path(blacks.get(i), blacks.get(i+1), width, height, state, new boolean[width][height])) {
+    			System.out.println("No Connection from " + blacks.get(i) + " to " + blacks.get(i+1));
     			return null;
+    		}
     	}
     	//if all black cells connect then there are no isolated cells and the contradiction was not applied correctly
     	return "ERROR";
