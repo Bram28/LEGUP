@@ -39,7 +39,7 @@ public class RuleFillInWhite extends PuzzleRule
 		}
 		else
 		{
-			
+			boolean hasBlackCells = false;
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
 			{
 				for (int x = 0; x < origBoardState.getWidth(); ++x)
@@ -67,7 +67,14 @@ public class RuleFillInWhite extends PuzzleRule
 						}
 							
 					}
+					else if (origState == Nurikabe.CELL_BLACK)
+						hasBlackCells = true;
 				}
+			}
+			
+			if (hasBlackCells == false)
+			{
+				error = "There must be at least one black cell placed outside a region of white cells.";
 			}
 			
 			if (error == null && !changed)
