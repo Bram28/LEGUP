@@ -5,6 +5,8 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
+import java.util.Vector;
+
 public class RuleOneUnknownBlack extends PuzzleRule
 {	 
     private static final long serialVersionUID = -71586809L;
@@ -65,8 +67,8 @@ public class RuleOneUnknownBlack extends PuzzleRule
 						}
 						
 						
-						
-						if(!black[y][x])
+						//error if rule is applied to multiple moves at one time
+						if(black[x][y] == false)
 						{
 							error = "Black cells must be placed next to a black region which needs more.";
 							break;
@@ -112,32 +114,167 @@ public class RuleOneUnknownBlack extends PuzzleRule
     		for(int y = 0; y < height; ++y)
     		{
     			//If the cell is black and we haven't visited it we need to loop through it and check it out
-    			if(state.getCellContents(x,y) == Nurikabe.CELL_BLACK && visited[y][x] == 0)
+    			if(state.getCellContents(x,y) == Nurikabe.CELL_BLACK && visited[x][y] == 0)
     			{
     				//Since we have found a black region previously unvisited, add one to the region count
     				++regioncount;
     				//This loops through and returns the number of unknowns surrounding the region
     				//Since visited is by reference it should get updated
-    				temp = loopConnected(visited, state,x,y,width,height,regioncount);
+    				temp = loopConnected(visited, state, x, y, width, height, regioncount);
     				//If there is only 1 unknown around the region than it must be black
     				if(temp == 1)
     				{
     					//This finds that unknown and sets it to be valid for the application
-    					setBlack(black, new boolean[width][height], state, x,y,width,height);
+    					setBlack(black, new boolean[width][height], state, x, y, width, height);
+    					checkForMultiple(black, x, y, -1, -1, state, width, height);
     				}
     			}
     		}
     	}
     	//If we found more than one black region, the cells we found are valid for appplication
     	if(regioncount > 1)
+    	{
     		//So return our results
     		return black;
+    	}
+
     	//If there is zero or one black regions than our findings are not valid
     	//This is because the goal of this rule is to make it so that all regions must not be prevented from connecting to eachother
     	//With one region there may not be any other cells that it must connect to(i.e. the region spans the entire board
     	//So we return a null
     	else
     		return null;
+    }
+    
+    /**
+     * Recursivly checks all spots around any possible black area to see if multiple spots could be considered black
+     * @param black grid of all values that could be set to black based on continue black rule
+     * @param x the current x coordinate
+     * @param y the current y coordinate
+     * @param preX the previous x coordinate
+     * @param preY the previous y coordinate
+     * @param boardState the current boardstate
+     * @param width the width of the board
+     * @param height the height of the board
+     */
+    private void checkForMultiple(boolean[][] black, int x, int y, int preX, int preY, BoardState boardState, int width, int height) {
+    	int openIndex = multLoopConnected(x, y, preX, preY, boardState, width, height, black);
+    	if (openIndex <= 0)
+    	{
+    		return;
+    	}
+    	
+    	if (openIndex == 1)
+    	{
+    		black[x+1][y] = true;
+    		checkForMultiple(black, x+1, y, x, y, boardState, width, height);
+    		return;
+    	}
+    	if (openIndex == 2)
+    	{
+    		black[x][y+1] = true;
+    		checkForMultiple(black, x, y+1, x, y, boardState, width, height);
+    		return;
+    	}
+    	if (openIndex == 3)
+    	{
+    		black[x-1][y] = true;
+    		checkForMultiple(black, x-1, y, x, y, boardState, width, height);
+    		return;
+    	}
+    	if (openIndex == 4)
+    	{
+    		black[x][y-1] = true;
+    		checkForMultiple(black, x, y-1, x, y, boardState, width, height);
+    		return;
+    	}
+    }
+    
+    /**
+     * helper function for check for multiple
+     * @param x the current x coordinate
+     * @param y the current y coordinate
+     * @param preX the previous x coordinate
+     * @param preY the previous y coordinate
+     * @param boardState the current boardstate
+     * @param width the width of the board
+     * @param height the height of the board
+     * @return 0 if there are no open adjacent spaces
+     * @return -1 if there are multiple open adjacent spaces
+     * @return 1 if there is a single open adjacent space to the right of the current cell
+     * @return 2 if there is a single open adjacent space below the current cell
+     * @return 3 if there is a single open adjacent space to the left of the current cell
+     * @return 4 if there is a single open adjacent space above the current cell
+     */
+    private int multLoopConnected(int x, int y, int preX, int preY, BoardState boardState, int width, int height, boolean[][] black) {
+    	int openAdjacentSpaces = 0;
+    	int adjBlackCount = 0;
+    	
+    	int openIndex = 0;
+    	if (x+1 < width)
+    	{
+        	if ((boardState.getCellContents(x+1, y) == Nurikabe.CELL_UNKNOWN)
+        			&& (x+1 != preX || y != preY)) {
+        		openIndex = 1;
+        	}
+        	if ((boardState.getCellContents(x+1, y) == Nurikabe.CELL_BLACK || black[x+1][y])
+        			&& (x+1 != preX || y != preY)) {
+        		adjBlackCount++;
+        	}
+    	}
+    	if (y+1 < height)
+    	{
+    		if ((boardState.getCellContents(x, y+1) == Nurikabe.CELL_UNKNOWN)
+    			&& (x != preX || y+1 != preY))
+    		{
+    			if (openIndex > 0){
+    				return -1;
+    			} else {
+    				openIndex = 2;
+    			}
+    		}
+        	if ((boardState.getCellContents(x, y+1) == Nurikabe.CELL_BLACK || black[x][y+1])
+        			&& (x != preX || y+1 != preY)) {
+        		adjBlackCount++;
+        	}
+    	}
+    	if (x-1 >= 0)
+    	{
+    		if ((boardState.getCellContents(x-1, y) == Nurikabe.CELL_UNKNOWN)
+    			&& (x-1 != preX || y != preY)) 
+    		{
+    			if (openIndex > 0){
+    				return -1;
+    			} else {
+    				openIndex = 3;
+    			}
+    		}
+        	if ((boardState.getCellContents(x-1, y) == Nurikabe.CELL_BLACK || black[x-1][y])
+        			&& (x-1 != preX || y != preY)) {
+        		adjBlackCount++;
+        	}
+    	}
+    	if (y-1 >= 0){
+    		if ((boardState.getCellContents(x, y-1) == Nurikabe.CELL_UNKNOWN)
+        			&& (x != preX || y-1 != preY))
+    		{
+    			if (openIndex > 0){
+    				return -1;
+    			} else {
+    				openIndex = 4;
+    			}
+    		}
+        	if ((boardState.getCellContents(x, y-1) == Nurikabe.CELL_BLACK || black[x][y-1])
+        			&& (x != preX || y-1 != preY)) {
+        		adjBlackCount++;
+        	}
+    	}
+    	System.out.println("adjBlackCount: " + adjBlackCount);
+    	if (adjBlackCount > 1) {
+    		return -2;
+    	}
+    	
+    	return openIndex;
     }
     
     /**
@@ -153,11 +290,11 @@ public class RuleOneUnknownBlack extends PuzzleRule
     private int loopConnected(int[][] visited,BoardState boardState, int x, int y, int width, int height, int regioncount)
     {
     	//If we have been here before return nothing
-    	if(visited[y][x] == 1 || visited[y][x] == -regioncount)
+    	if(visited[x][y] == 1 || visited[x][y] == -regioncount)
     		return 0;
     	
     	//Set the cell to visited but not black
-    	visited[y][x] = -regioncount;
+    	visited[x][y] = -regioncount;
     	
     	//If the cell is unknown return that we found 1
     	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
@@ -168,7 +305,7 @@ public class RuleOneUnknownBlack extends PuzzleRule
     		return 0;
     	
     	//At this point we know the cell is black so set the cell to visited and black
-    	visited[y][x] = 1;
+    	visited[x][y] = 1;
     	
     	//A counter of how many unknowns we have found
     	int ret = 0;
@@ -193,39 +330,36 @@ public class RuleOneUnknownBlack extends PuzzleRule
     	}
     	return ret;
     }
+    
+    
 
-    private void setBlack(boolean[][] black, boolean[][] visited ,BoardState boardState, int x, int y, int width, int height)
-    {
-    	if(visited[y][x] == true)
-    		return;
-    	visited[y][x] = true;
-    	
-    	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
-    	{
-    		black[y][x] = true;
-    		return;
-    	}
-    	if(boardState.getCellContents(x,y) != Nurikabe.CELL_BLACK)
-    		return;
-
-    	
-    	if(x+1 < width)
-    	{
-    		setBlack(black, visited, boardState, x+1, y, width, height);
-    	}
-    	if(x-1 >= 0)
-    	{
-    		setBlack(black, visited, boardState, x-1, y, width, height);
-    	}
-    	if(y+1 < height)
-    	{
-    		setBlack(black, visited, boardState, x, y+1, width, height);
-    	}
-    	if(y-1 >= 0)
-    	{
-    		setBlack(black, visited, boardState, x, y-1, width, height);
-    	}
-    }
+    /**
+     * 
+     */
+	private void setBlack(boolean[][] black, boolean[][] visited,
+			BoardState boardState, int x, int y, int width, int height) {
+		if (visited[x][y] == true)
+			return;
+		visited[x][y] = true;
+		if (boardState.getCellContents(x, y) == Nurikabe.CELL_UNKNOWN) {
+			black[x][y] = true;
+			return;
+		}
+		if (boardState.getCellContents(x, y) != Nurikabe.CELL_BLACK)
+			return;
+		if (x + 1 < width) {
+			setBlack(black, visited, boardState, x + 1, y, width, height);
+		}
+		if (x - 1 >= 0) {
+			setBlack(black, visited, boardState, x - 1, y, width, height);
+		}
+		if (y + 1 < height) {
+			setBlack(black, visited, boardState, x, y + 1, width, height);
+		}
+		if (y - 1 >= 0) {
+			setBlack(black, visited, boardState, x, y - 1, width, height);
+		}
+	}
     
     
     protected boolean doDefaultApplicationRaw(BoardState destBoardState)
@@ -245,7 +379,7 @@ public class RuleOneUnknownBlack extends PuzzleRule
 	        	{
 	        		for(int y = 0; y < height; ++y)
 	        		{
-	        			if(black[y][x])
+	        			if(black[x][y])
 	        				destBoardState.setCellContents(x,y,Nurikabe.CELL_BLACK);   				
 	        		}
 	        	}

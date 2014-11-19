@@ -7,7 +7,9 @@ package edu.rpi.phil.legup;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
+
 import javax.swing.JOptionPane;
+
 import edu.rpi.phil.legup.editor.SaveableBoardState;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.newgui.Tree;
@@ -15,7 +17,9 @@ import edu.rpi.phil.legup.newgui.TreeSelectionListener;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 import edu.rpi.phil.legup.newgui.TransitionChangeListener;
 import edu.rpi.phil.legup.saveable.SaveableProof;
+
 import java.awt.Image;
+
 
 //TODO system l&f
 import javax.swing.UnsupportedLookAndFeelException;
