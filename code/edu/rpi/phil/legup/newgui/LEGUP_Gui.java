@@ -162,6 +162,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	AbstractButton[] toolBarButtons =
 	{
+		// Consider rewriting as loop?... (and maybe less implicit filenames?)
 		new JButton(toolBarNames[0], new ImageIcon("images/" + toolBarNames[0] + ".png")),
 		new JButton(toolBarNames[1], new ImageIcon("images/" + toolBarNames[1] + ".png")),
 		new JButton(toolBarNames[2], new ImageIcon("images/" + toolBarNames[2] + ".png")),
