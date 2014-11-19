@@ -44,12 +44,17 @@ public class Sudoku extends PuzzleModule
     public Map<String, Integer> getSelectableCells()
     {
         Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
-        for(int i=0; i<=9; i++) { tmp.put(String.format("%d", i), i); }
+        for(int i=0; i<=9; i++) {
+        	tmp.put(String.format("%d", i), i);
+        }
         return tmp;
     }
-    public Map<String, Integer> getUnselectableCells()
-    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
+    public Map<String, Integer> getUnselectableCells(){
+    	Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); 
+    	return tmp; 
+    }
 	public boolean hasLabels(){return false;}
+	
 	Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 	Vector <Contradiction> contraList = new Vector <Contradiction>();
 	Vector <CaseRule> caseList = new Vector <CaseRule>();
