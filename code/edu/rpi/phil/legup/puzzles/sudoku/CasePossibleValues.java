@@ -36,10 +36,11 @@ public class CasePossibleValues extends CaseRule
 
 	public String checkCaseRuleRaw(BoardState state)
 	{
-		if (state.getTransitionsFrom().size() < 2){
+		BoardState parent = state.getSingleParentState();
+		if (parent != null && parent.getTransitionsFrom().size() <= 2){
 			return "This case rule can only be applied on a split transition";
 		}
-		Vector<BoardState> states = state.getTransitionsFrom();
+		Vector<BoardState> states = parent.getTransitionsFrom();
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
 		if (dif.size() != 1){
 			return "Case rule only applies to a split transition of one cell";
@@ -54,29 +55,31 @@ public class CasePossibleValues extends CaseRule
 			}
 		}
 
-		if (state.getCellContents(difPoint.x, difPoint.y) != Sudoku.CELL_UNKNOWN){
+		if (parent.getCellContents(difPoint.x, difPoint.y) != Sudoku.CELL_UNKNOWN){
 			return "Case rule does not apply to changing values in a split, only making new ones";
 		}
-		boolean[][][] possMatrix = Sudoku.getPossMatrix(state);
+		boolean[][][] possMatrix = Sudoku.getPossMatrix(parent);
 		LinkedList<Integer> values = new LinkedList<Integer>();
 		for (int i = 0; i < 9; i++){
-			if (possMatrix[difPoint.x][difPoint.y][i]) values.add(new Integer(i+1));
+			if (possMatrix[difPoint.x][difPoint.y][i]){
+				values.add(new Integer(i+1));
+			}
 		}
 		if (values.size() == 0){
 			return "Cannot apply case rule to an invalid board state";
 		}
 
-		for (BoardState B : states)
-		{
-			Integer val = new Integer(B.getCellContents(difPoint.x, difPoint.y));
-			if (!values.remove(val)){
-				return "Case rule does not apply to invalid possibilities";
-			}
-		}
-
-		if (values.size() > 0){
-			return "Case rule invalid - not all possibilities have been accounted for";
-		}
+//		for (BoardState B : states)
+//		{
+//			Integer val = new Integer(B.getCellContents(difPoint.x, difPoint.y));
+////			if (!values.remove(val)){
+////				return "Case rule does not apply to invalid possibilities";
+////			}
+//		}
+//
+//		if (values.size() > 0){
+//			return "Case rule invalid - not all possibilities have been accounted for";
+//		}
 		return null;
 	}
 
@@ -87,8 +90,10 @@ public class CasePossibleValues extends CaseRule
 
 	public boolean doDefaultApplicationRaw(BoardState state, PuzzleModule pm ,Point location)
 	{
-		if(location.x < 0 || location.y < 0 || location.x >= state.getWidth( ) || location.y >= state.getHeight( ))
+		if(location.x < 0 || location.y < 0 || location.x >= state.getWidth( ) || location.y >= state.getHeight( )){
 			return false;
+		}
+		
 		if(state.getCellContents(location.x, location.y) == Sudoku.CELL_UNKNOWN)
 		{
 			Vector<Integer> states = new Vector<Integer>();
