@@ -36,39 +36,47 @@ public class CasePossibleValues extends CaseRule
 
 	public String checkCaseRuleRaw(BoardState state)
 	{
-		if (state.getTransitionsFrom().size() < 2)
+		if (state.getTransitionsFrom().size() < 2){
 			return "This case rule can only be applied on a split transition";
-
+		}
 		Vector<BoardState> states = state.getTransitionsFrom();
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
-		if (dif.size() != 1)
+		if (dif.size() != 1){
 			return "Case rule only applies to a split transition of one cell";
+		}
 		Point difPoint = dif.get(0);
 
 		for (int i = 1; i < states.size()-1; i++)
 		{
 			dif = BoardState.getDifferenceLocations(states.get(i), states.get(i+1));
-			if (dif.size() != 1 || !difPoint.equals(dif.get(0)))
+			if (dif.size() != 1 || !difPoint.equals(dif.get(0))){
 				return "Case rule only applies to a split transition of one cell";
+			}
 		}
 
-		if (state.getCellContents(difPoint.x, difPoint.y) != Sudoku.CELL_UNKNOWN)
+		if (state.getCellContents(difPoint.x, difPoint.y) != Sudoku.CELL_UNKNOWN){
 			return "Case rule does not apply to changing values in a split, only making new ones";
-
+		}
 		boolean[][][] possMatrix = Sudoku.getPossMatrix(state);
 		LinkedList<Integer> values = new LinkedList<Integer>();
-		for (int i = 0; i < 9; i++) if (possMatrix[difPoint.x][difPoint.y][i]) values.add(new Integer(i+1));
-		if (values.size() == 0) return "Cannot apply case rule to an invalid board state";
+		for (int i = 0; i < 9; i++){
+			if (possMatrix[difPoint.x][difPoint.y][i]) values.add(new Integer(i+1));
+		}
+		if (values.size() == 0){
+			return "Cannot apply case rule to an invalid board state";
+		}
 
 		for (BoardState B : states)
 		{
 			Integer val = new Integer(B.getCellContents(difPoint.x, difPoint.y));
-			if (!values.remove(val)) return "Case rule does not apply to invalid possibilities";
+			if (!values.remove(val)){
+				return "Case rule does not apply to invalid possibilities";
+			}
 		}
 
-		if (values.size() > 0)
+		if (values.size() > 0){
 			return "Case rule invalid - not all possibilities have been accounted for";
-
+		}
 		return null;
 	}
 
