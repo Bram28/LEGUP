@@ -12,13 +12,19 @@ public class ConnectedRegions
 {
 	public static List<Set<Point>> getConnectedRegions(int boundryCell, int[][] cells, int width, int height)
 	{
+		Set<Integer> boundryCells = new HashSet<Integer>();
+		boundryCells.add(boundryCell);
+		return getConnectedRegions(boundryCells, cells, width, height);
+	}
+	public static List<Set<Point>> getConnectedRegions(Set<Integer> boundryCells, int[][] cells, int width, int height)
+	{
 		boolean[][] visited = new boolean[height][width];
 		List<Set<Point>> results = new ArrayList<Set<Point>>();
 		for(int y=0; y<height; y++)
 		{
 			for(int x=0; x<width; x++)
 			{
-				Set<Point> region = floodfill(boundryCell, cells, visited, width, height, x, y);
+				Set<Point> region = floodfill(boundryCells, cells, visited, width, height, x, y);
 				if(region.size() > 0) { results.add(region); }
 			}
 		}
@@ -29,19 +35,19 @@ public class ConnectedRegions
 		for(Point p : region) { if(cells[p.y][p.x] == toFind) { return true; } }
 		return false;
 	}
-	private static Set<Point> floodfill(int boundryCell, int[][] cells, boolean[][] visited, int w, int h, int x, int y)
+	private static Set<Point> floodfill(Set<Integer> boundryCells, int[][] cells, boolean[][] visited, int w, int h, int x, int y)
 	{
 		HashSet<Point> result = new HashSet<Point>();
 		if((x < 0) || (x >= w)) { return result; }
 		if((y < 0) || (y >= h)) { return result; }
-		if(!visited[y][x] && (cells[y][x] != boundryCell))
+		if(!visited[y][x] && (!boundryCells.contains(cells[y][x])))
 		{
 			result.add(new Point(x, y));
 			visited[y][x] = true;
 			for(int delta=-1; delta<2; delta+=2)
 			{
-				result.addAll(floodfill(boundryCell, cells, visited, w, h, x+delta, y));
-				result.addAll(floodfill(boundryCell, cells, visited, w, h, x, y+delta));
+				result.addAll(floodfill(boundryCells, cells, visited, w, h, x+delta, y));
+				result.addAll(floodfill(boundryCells, cells, visited, w, h, x, y+delta));
 			}
 		}
 		return result;
