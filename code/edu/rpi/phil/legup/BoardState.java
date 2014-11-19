@@ -2068,8 +2068,7 @@ public class BoardState implements java.io.Serializable
 	{
 		this.isSolution = true;
 	}
-
-
+	
 	//*******************
 	//Hint cell methods
 	//*******************

@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.io.ObjectStreamException;
+import java.net.URL;
 
 /**
  * An abstract class representing all types of Justifications
@@ -28,7 +29,16 @@ public abstract class Justification implements java.io.Serializable
 	
 	public void loadImage()
 	{
-		image = (getImageName() != null)?new ImageIcon(ClassLoader.getSystemResource(getImageName())):null;
+		String imageName = getImageName();
+		if(imageName != null)
+		{
+			URL res = ClassLoader.getSystemResource(imageName);
+			if(res == null)
+			{
+				throw new Error(String.format("Image \"%s\" does not exist (needed for \"%s\")", imageName, this.getClass()));
+			}
+			image = new ImageIcon(res);
+		}
 	}
 	
 	public String getName()
