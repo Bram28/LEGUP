@@ -8,11 +8,11 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleUnknownSurrounded extends PuzzleRule
+public class RuleFillInBlack extends PuzzleRule
 {
 	private static final long serialVersionUID = 729976023L;
 
-	RuleUnknownSurrounded()
+	RuleFillInBlack()
 	{
 		setName("Fill In Black");
 		description = "If there an unknown region surrounded by black, it must be black.";
