@@ -11,6 +11,7 @@ import java.awt.Polygon;
 import java.awt.Stroke;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
@@ -18,6 +19,11 @@ import java.awt.event.ActionEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+
+// import java.awt.Font;
+// import javax.swing.UIManager;
+
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JMenuItem;
@@ -26,6 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.JViewport;
 import javax.swing.ViewportLayout;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
@@ -71,7 +78,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	public TreePanel()
 	{
 		super();
-		System.out.println("TreePanel created");
+		// System.out.println("TreePanel created");
 		BoardState.addTransitionChangeListener(this);
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 
@@ -85,7 +92,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	public TreePanel(boolean b) { super(b); }
 	public void actionPerformed(ActionEvent e)
 	{
-		System.out.println("actionPerformed");
+		// System.out.println("actionPerformed");
 	}
 
 	private BoardState getLastCollapsed(BoardState s)
@@ -121,7 +128,8 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		b.grow( 2*NODE_RADIUS, 2*NODE_RADIUS );
 		// Adjust the rectangle so that rule popups aren't cut off
 		// TODO: When implementing popup scaling during zoom, adjust these numbers (they'll need to be bigger when zoomed out)
-		b.setBounds((int)b.getX()-60, (int)b.getY(), (int)b.getWidth()+80, (int)b.getHeight()+120);
+		float scale = (100/(float)getZoom());
+		b.setBounds((int)b.getX()-(int)(60*scale), (int)b.getY(), (int)b.getWidth()+(int)(400*scale), (int)b.getHeight()+(int)(120*scale));
 		// get the relevant child nodes
 		Vector <BoardState> children = state.isCollapsed()
 			? getLastCollapsed(state).getTransitionsFrom()
@@ -168,35 +176,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		// Point p = Legup.getInstance().getInitialBoardState().getLocation();
 		if(state != null)
 		{
-			// TODO FIXME
-			// we should update the size using setSize() as soon as
-			// the tree changes size (add/remove nodes/transitions)
-			// updating the size during drawing leads to a loop
-			// as updating the size triggers another redrawing
-			// Rectangle bounds = getTreeBounds( state );
-			// System.out.printf("Tree Bounds x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
-			// System.out.printf("Initial board state is at %d, %d\n", p.x, p.y);
-			// if( bounds.y != 0 )
-			// {
-			// 	// state.setOffsetRaw(new Point(0, 0));
-			// 	updateTreeSize();
-			// }
 			setSize( bounds.getSize() );
-			// System.out.printf("Tree Bounds are now x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
-			// TODO FIXME
-			// adjust the position of the root node so it is centered
-			// if( bounds.x != 0 || bounds.y != 0 )
-			// {
-			// 	System.out.println("Current offset: " + state.getOffset().toString());
-			// 	state.setOffset( new Point( state.getOffset().x-bounds.x, state.getOffset().y-bounds.y ) );
-			// 	System.out.println("Setting offset to " + (state.getOffset().x-bounds.x) + "," + (state.getOffset().y-bounds.y));
-			// 	System.out.println("Current offset: " + state.getOffset().toString());
-			// 	updateTreeSize();
-			// 	System.out.printf("Tree Bounds updated! x: %d y: %d w: %d h: %d\n", bounds.x, bounds.y, bounds.width, bounds.height);
-			// }
-			// state.setOffset( new Point( -xOffset, -yOffset ) );
-			//state.setOffset( new Point(20, 20) );
-			// set high quality rendering
 			g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 			g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 			drawTree(g,state);
@@ -295,7 +275,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 	public void mousePressedAt(Point p, MouseEvent e)
 	{
-		System.out.println("mousePressedAt");
+		// System.out.println("mousePressedAt");
 	}
 
 	protected void mouseMovedAt(Point p, MouseEvent e)
@@ -344,10 +324,14 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			//Legup.getInstance().getSelections().setSelection( s );
 		}
 	}
+	public void mouseWheelMovedAt( MouseWheelEvent e )
+	{
+		updateTreeSize();
+	}
 
 	public BoardState addChildAtCurrentState(Object justification)
 	{
-		System.out.println("addChildAtCurrentState");
+		// System.out.println("addChildAtCurrentState");
 		//this was what was in the rightclick before the menu - Avi
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
@@ -366,7 +350,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 	public void collapseCurrentState()
 	{
-		System.out.println("collapseCurrentState");
+		// System.out.println("collapseCurrentState");
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 
 		BoardState state = s.getState();
@@ -383,7 +367,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	 */
 	public void delCurrentState()
 	{
-		System.out.println("delCurrentState");
+		// System.out.println("delCurrentState");
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState currentState = s.getState();
 		
@@ -425,7 +409,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	 */
 	public void delChildAtCurrentState()
 	{
-		System.out.println("delChildAtCurrentState");
+		// System.out.println("delChildAtCurrentState");
 		if(!Legup.getInstance().getGui().checkImmediateFeedback())BoardState.removeColorsFromTransitions();
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState state = s.getState();
@@ -473,7 +457,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	 */
 	public void mergeStates()
 	{
-		System.out.println("mergeStates");
+		// System.out.println("mergeStates");
 		ArrayList <Selection> selected = Legup.getInstance().getSelections().getCurrentSelection();
 
 		if (selected.size() > 1)
@@ -512,7 +496,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	}
 	public void transitionChanged()
 	{
-		System.out.println("transitionChanged");
+		// System.out.println("transitionChanged");
 		updateTreeSize();
 		//repaint();
 	}
@@ -538,29 +522,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> transitionsFrom = null;
 		Point draw;
-		if(mouseOver != null)
-		{
-			if((mouseOver.getState().getJustification() != null)||(mouseOver.getState().getCaseRuleJustification() != null))
-			{
-				draw = mousePoint;
-				if((mouseOver.getState().justificationText != null)&&(mouseOver.getState().getColor() != TreePanel.nodeColor))
-				{
-					g.setColor(Color.black);
-					String[] tmp = mouseOver.getState().justificationText.split("\n");
-					for(int c1=0;c1<tmp.length;c1++)
-					{
-						g2D.drawString(tmp[c1],draw.x,draw.y-10*(3+tmp.length)+10*c1);
-					}
-				}
-				//g2D.drawString("color:"+mouseOver.getState().getColor().toString(),draw.x,draw.y-30);
-				//g2D.drawString("status:"+mouseOver.getState().getStatus(),draw.x-50,draw.y-30);
-				//g2D.drawString("lTC:"+mouseOver.getState().leadsToContradiction(),draw.x,draw.y-20);
-				//g2D.drawString("Depth:"+mouseOver.getState().getDepth(),draw.x,draw.y-30);
-				//g2D.drawString("dnltc:"+(mouseOver.getState().doesNotLeadToContradiction() == null),draw.x,draw.y-30);
-				g.setColor(Color.gray);
-				g2D.drawRect(draw.x+30,draw.y-30,100,100);
-			}
-		}
+
 		g.setColor(Color.black);
 		draw = (Point)state.getLocation().clone();
 		if (!isCollapsed)
@@ -879,15 +841,55 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		BoardState B = mouseOver.getState();
 		//J contains both basic rules and contradictions
 		Justification J = B.getJustification();
+		int w, h;
+		g.setStroke(thin);
+
+		// Just in case
+		w = (int)(100 * (100/(float)getZoom()));
+		h = (int)(100 * (100/(float)getZoom()));
+		float scale = (100/(float)getZoom());
+		int offset = (int)(scale*30);
+
+		JViewport vp = getViewport();
+		BufferedImage image = new BufferedImage(vp.getWidth(), vp.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g_tmp = image.createGraphics();
+		int v_offset = 0;
+
+		if((mouseOver.getState().getJustification() != null)||(mouseOver.getState().getCaseRuleJustification() != null))
+		{
+			if((mouseOver.getState().justificationText != null)&&(mouseOver.getState().getColor() != TreePanel.nodeColor))
+			{
+				g_tmp.setColor(Color.black);
+				String[] tmp = mouseOver.getState().justificationText.split("\n");
+				v_offset = 10+tmp.length*14;
+				for(int c1=0;c1<tmp.length;c1++)
+				{
+					g_tmp.drawString(tmp[c1],0,(14*c1)+10);
+				}
+			}
+			//g_tmp.drawString("color:"+mouseOver.getState().getColor().toString(),mousePoint.x,mousePoint.y-30);
+			//g_tmp.drawString("status:"+mouseOver.getState().getStatus(),mousePoint.x-50,mousePoint.y-30);
+			//g_tmp.drawString("lTC:"+mouseOver.getState().leadsToContradiction(),mousePoint.x,mousePoint.y-20);
+			//g_tmp.drawString("Depth:"+mouseOver.getState().getDepth(),mousePoint.x,mousePoint.y-30);
+			//g_tmp.drawString("dnltc:"+(mouseOver.getState().doesNotLeadToContradiction() == null),mousePoint.x,mousePoint.y-30);
+			g_tmp.setColor(Color.gray);
+			g_tmp.drawRect(0,v_offset,100,100);
+		}
+
+
 		if (J != null)
 		{
-			g.drawImage(J.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
+			g_tmp.drawImage(J.getImageIcon().getImage(), 0, v_offset, null);
 		}
 		CaseRule CR = B.getCaseSplitJustification();
 		if (CR != null)
 		{
-			g.drawImage(CR.getImageIcon().getImage(), mousePoint.x+30, mousePoint.y-30, null);
+			g_tmp.drawImage(CR.getImageIcon().getImage(), 0, v_offset, null);
 			return;
 		}
+
+
+
+		g.drawImage(image, mousePoint.x+(int)(scale*30), mousePoint.y-(int)(scale*30), (int)(scale*vp.getWidth()), (int)(scale*vp.getHeight()), null);
 	}
 }

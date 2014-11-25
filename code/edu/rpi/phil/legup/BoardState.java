@@ -1946,9 +1946,7 @@ public class BoardState implements java.io.Serializable
 
 	public void adjustOffset(Point adjustment)
 	{
-		System.out.printf("offset was %d, %d\n", this.offset.x, this.offset.y);
 		this.offset = new Point(this.offset.x + adjustment.x, this.offset.y + adjustment.y);
-		System.out.printf("offset is now %d, %d\n", this.offset.x, this.offset.y);
 		this.recalculateLocation();
 	}
 	
