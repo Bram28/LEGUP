@@ -184,6 +184,23 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			if (mouseOver != null) drawMouseOver(g);
 		}
 	}
+
+	public void zoomFit()
+	{
+		// find the ideal width and height scale
+		double fitwidth = (viewport.getWidth()-8.0) / (getSize().width - 200);
+		double fitheight = (viewport.getHeight()-8.0) / (getSize().height - 120);
+		// choose the smaller of the two and zoom
+		zoomTo( (fitwidth < fitheight) ? fitwidth : fitheight );
+		viewport.setViewPosition(new Point(0,0));
+	}
+
+	public void zoomReset()
+	{
+		zoomTo(1.0);
+		viewport.setViewPosition(new Point(0,0));
+	}
+
 	/**
 	 * Get the boardstate / transition at a point in the tree
 	 * @param state the state to check now (starts at root)

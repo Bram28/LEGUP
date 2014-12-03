@@ -56,25 +56,48 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 		JButton delChild = new JButton(new ImageIcon("images/DelChild.png"));
 		JButton merge = new JButton(new ImageIcon("images/Merge.png"));
 		JButton collapse = new JButton(new ImageIcon("images/Collapse.png"));
+
+		JButton zoomIn = new JButton(new ImageIcon("images/Zoom In.png"));
+		JButton zoomOut = new JButton(new ImageIcon("images/Zoom Out.png"));
+		JButton zoomReset = new JButton(new ImageIcon("images/Normal Zoom.png"));
+		JButton zoomFit = new JButton(new ImageIcon("images/Best Fit.png"));
 		
 		TreeToolbar()
 		{
-			this.setLayout(new GridLayout(2,2));
+			this.setLayout(new GridLayout(4,2));
+
 			add(addChild);
 			addChild.addActionListener(this);
 			addChild.setEnabled(false);
 			addChild.setToolTipText("Finalize CaseRule");
-			//addChild.setEnabled(false);
-			//addChild.setToolTipText("Add node (select justification first)");
+
 			add(delChild);
 			delChild.addActionListener(this);
 			delChild.setToolTipText("Remove currently selected node");
+
 			add(merge);
 			merge.addActionListener(this);
 			merge.setToolTipText("Merge nodes");
+
 			add(collapse);
 			collapse.addActionListener(this);
 			collapse.setToolTipText("Collapse nodes");
+
+			add(zoomIn);
+			zoomIn.addActionListener(this);
+			zoomIn.setToolTipText("Zoom In");
+
+			add(zoomOut);
+			zoomOut.addActionListener(this);
+			zoomOut.setToolTipText("Zoom Out");
+
+			add(zoomReset);
+			zoomReset.addActionListener(this);
+			zoomReset.setToolTipText("Reset Zoom");
+
+			add(zoomFit);
+			zoomFit.addActionListener(this);
+			zoomFit.setToolTipText("Best Fit");
 		}
 
 		public void actionPerformed(ActionEvent e)
@@ -96,9 +119,23 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			}
 			else if( e.getSource() == collapse )
 			{
-				//there was some sort of oddity around here during a merge - Avi
-				//delCurrentState();
 				collapseStates();
+			}
+			else if( e.getSource() == zoomIn )
+			{
+				treePanel.zoomIn();
+			}
+			else if( e.getSource() == zoomOut )
+			{
+				treePanel.zoomOut();
+			}
+			else if( e.getSource() == zoomReset )
+			{
+				treePanel.zoomReset();
+			}
+			else if( e.getSource() == zoomFit )
+			{
+				treePanel.zoomFit();
 			}
 		}
 

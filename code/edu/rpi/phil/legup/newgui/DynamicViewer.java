@@ -166,7 +166,7 @@ public abstract class DynamicViewer extends JScrollPane {
 	}
 
 	// updates view position to account for zooming
-	private void updatePosition( Point p, double mag ){
+	public void updatePosition( Point p, double mag ){
 		Point m = viewport.getViewPosition();
 		m.x = (int)( (double) (p.x + m.x) * mag - p.x + 0.0 );
 		m.y = (int)( (double) (p.y + m.y) * mag - p.y + 0.0 );
@@ -273,6 +273,10 @@ public abstract class DynamicViewer extends JScrollPane {
 		// System.out.println("setSize");
 		this.size = size;
 		updateSize();
+	}
+
+	public Dimension getSize() {
+		return size;
 	}
 
 	/*** SUBCLASS METHODS ***/
