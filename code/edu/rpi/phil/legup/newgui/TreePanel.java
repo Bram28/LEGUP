@@ -129,7 +129,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		// Adjust the rectangle so that rule popups aren't cut off
 		// TODO: When implementing popup scaling during zoom, adjust these numbers (they'll need to be bigger when zoomed out)
 		float scale = (100/(float)getZoom());
-		b.setBounds((int)b.getX()-(int)(60*scale), (int)b.getY(), (int)b.getWidth()+(int)(400*scale), (int)b.getHeight()+(int)(120*scale));
+		b.setBounds((int)b.getX()-(int)(100*scale), (int)b.getY(), (int)b.getWidth()+(int)(400*scale), (int)b.getHeight()+(int)(200*scale));
 		// get the relevant child nodes
 		Vector <BoardState> children = state.isCollapsed()
 			? getLastCollapsed(state).getTransitionsFrom()
