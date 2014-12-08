@@ -26,9 +26,12 @@ public class PuzzleGeneratorDialog extends JDialog
 	private int diffChoice;
 
 	// JComboBox was made generic in Java7, adding annotations is an error in Java6
+	@SuppressWarnings("rawtypes")
 	private final JComboBox combo;
+	@SuppressWarnings("rawtypes")
 	private final JComboBox dCombo;
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public PuzzleGeneratorDialog(JFrame parent)
 	{
 		super(parent, "Puzzle Generation Chooser", true);
@@ -43,6 +46,7 @@ public class PuzzleGeneratorDialog extends JDialog
 		JLabel diff = new JLabel("Difficulty Level: ");
 		diff.setLocation(20, 50);
 		diff.setSize(diff.getPreferredSize());
+
 		dCombo = new JComboBox(PuzzleGeneration.difficulties);
 		dCombo.setSelectedIndex(PuzzleGeneration.NORMAL);
 		dCombo.setSize(dCombo.getPreferredSize());

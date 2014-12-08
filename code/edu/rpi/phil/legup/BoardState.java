@@ -1943,6 +1943,12 @@ public class BoardState implements java.io.Serializable
 		this.offset = offset;
 		this.recalculateLocation();
 	}
+
+	public void adjustOffset(Point adjustment)
+	{
+		this.offset = new Point(this.offset.x + adjustment.x, this.offset.y + adjustment.y);
+		this.recalculateLocation();
+	}
 	
 	public void setOffsetRaw(Point offset)
 	{

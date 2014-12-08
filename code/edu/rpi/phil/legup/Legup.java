@@ -154,6 +154,7 @@ public class Legup
 		}
 
 		gui.reloadGui();
+		getGui().getTree().treePanel.reset();
 	}
 
 	public void loadAssignmentFile(String filename)

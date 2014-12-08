@@ -357,14 +357,14 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private Console console;
 	private Board board;
     private TitledBorder boardBorder;
-	private JSplitPane test, test2;
+	private JSplitPane topHalfPanel, mainPanel;
 	public JustificationFrame getJustificationFrame()
 	{
-		return justificationFrame;//((JustificationFrame)test.getLeftComponent());
+		return justificationFrame;//((JustificationFrame)topHalfPanel.getLeftComponent());
 	}
 	public Board getBoard()
 	{
-		return board;//((Board)test.getRightComponent());
+		return board;//((Board)topHalfPanel.getRightComponent());
 	}
     private LinkedList<Board> boardStack = new LinkedList<Board>();
     public void pushBoard(Board b)
@@ -377,7 +377,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
         b.getViewport().setViewPosition(board.getViewport().getViewPosition());
         //b.zoomTo(board.getZoom());
         board = b;
-        test.setRightComponent(b);
+        topHalfPanel.setRightComponent(b);
     }
     public void popBoard()// throws java.util.NoSuchElementException
     {
@@ -388,7 +388,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
         b.getViewport().setViewPosition(board.getViewport().getViewPosition());
         //b.zoomTo(board.getZoom());
         board = b;
-        test.setRightComponent(b);
+        topHalfPanel.setRightComponent(b);
     }
 	// contains all the code to setup the main content
 	private void setupContent(){
@@ -407,9 +407,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		//((BasicToolBarUI) console.getUI()).setFloating(true, new Point(500,500));
 		
 		
-		// TODO
 		tree = new Tree( this );
-		//treeBox.add( tree, BorderLayout.SOUTH );
 		
 		justificationFrame = new JustificationFrame( this );
 		//ruleBox.add( justificationFrame, BorderLayout.WEST );
@@ -418,16 +416,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		board.setPreferredSize( new Dimension( 600, 400 ) );
 		
 		JPanel boardPanel = new JPanel( new BorderLayout() );
-		//boardPanel.add(board.pop);
-		//boardPanel.add( board );
-		//split pane fun :)
-		test = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, justificationFrame, board);
-		test2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, test, tree);
-		test.setPreferredSize(new Dimension(600, 400));
-		test2.setPreferredSize(new Dimension(600, 600));
-		//boardPanel.add(test);
-		boardPanel.add(test2);
-		//no more fun :(
+		topHalfPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, justificationFrame, board);
+		mainPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, topHalfPanel, tree);
+		topHalfPanel.setPreferredSize(new Dimension(600, 400));
+		mainPanel.setPreferredSize(new Dimension(600, 600));
+		boardPanel.add(mainPanel);
 		boardBorder = BorderFactory.createTitledBorder("Board");
 		boardBorder.setTitleJustification(TitledBorder.CENTER);
 		board.setBorder(boardBorder);
@@ -436,53 +429,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		treeBox.add( ruleBox );
 		consoleBox.add( treeBox );
 		add( consoleBox );
-		
-		//JLabel placeholder = new JLabel( "Nothing." );
-		//placeholder.setPreferredSize( new Dimension( 600, 400 ) );
-		//add( placeholder );
-		
-		
-		/*JPanel panel = new JPanel();
-		GroupLayout layout = new GroupLayout(panel);
-		panel.setLayout(layout);
-		
-		tree = new Tree( this );
-		panel.add(tree);
-		
-		justificationFrame = new JustificationFrame( this );
-		panel.add(tree);
-		
-		board = new Board( this );
-		board.setPreferredSize( new Dimension( 600, 400 ) );
-		
-		//JPanel boardPanel = new JPanel( new BorderLayout() );
 
-		//test = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, justificationFrame, board);
-		//test2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, test, tree);
-		//test.setPreferredSize(new Dimension(600, 400));
-		//test2.setPreferredSize(new Dimension(600, 600));
-		//boardPanel.add(test2);
-		TitledBorder title = BorderFactory.createTitledBorder("Board");
-		title.setTitleJustification(TitledBorder.CENTER);
-		board.setBorder(title);
-		panel.add(board);
-		
-		layout.setHorizontalGroup(	layout.createParallelGroup()
-										.addGroup(layout.createSequentialGroup()
-											.addComponent(justificationFrame)
-											.addComponent(board)
-										)
-										.addComponent(tree)
-									);
-		layout.setVerticalGroup(	layout.createSequentialGroup()
-										.addGroup(layout.createParallelGroup()
-											.addComponent(justificationFrame)
-											.addComponent(board)
-										)
-										.addComponent(tree)
-									);
-		
-		add(panel);*/
+		mainPanel.setDividerLocation(mainPanel.getMaximumDividerLocation()+100);
 	}
 	class proofFilter implements FilenameFilter
 	{
@@ -682,6 +630,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 		// show them all
 		showAll();
+		getTree().treePanel.updateTreeSize();
 	}
 
 
