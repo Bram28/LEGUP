@@ -188,6 +188,8 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	public void zoomFit()
 	{
 		// find the ideal width and height scale
+		zoomTo(1.0);
+		updateTreeSize();
 		double fitwidth = (viewport.getWidth()-8.0) / (getSize().width - 200);
 		double fitheight = (viewport.getHeight()-8.0) / (getSize().height - 120);
 		// choose the smaller of the two and zoom
