@@ -6,28 +6,27 @@ import edu.rpi.phil.legup.ConnectedRegions;
 import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.puzzles.nurikabe.Nurikabe;
 import java.awt.Point;
-import java.util.Vector;
 import java.util.List;
 import java.util.Set;
 
 
 public class ContradictionIsolatedBlack extends Contradiction
-{	 
+{
     private static final long serialVersionUID = 450786104L;
-	
-    
+
+
 	ContradictionIsolatedBlack()
 	{
 		setName("Black cells cannot be isolated");
 		description = "There must still be a possibility to connect every Black cell";
 		image = new ImageIcon("images/nurikabe/contradictions/BlackArea.png");
 	}
-		
+
 	public String getImageName()
 	{
 		return "images/nurikabe/contradictions/BlackArea.png";
 	}
-	
+
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -38,7 +37,7 @@ public class ContradictionIsolatedBlack extends Contradiction
     {
     	int height = state.getHeight();
     	int width = state.getWidth();
-    	
+
     	//Put all cells into array for connected regions method
     	int[][] cells = new int[width][height];
     	for (int x = 0; x < width; x++) {
@@ -50,14 +49,14 @@ public class ContradictionIsolatedBlack extends Contradiction
     			}
     		}
     	}
-    	
+
     	//Find all regions
-    	List<Set<Point>> regions = ConnectedRegions.getConnectedRegions(Nurikabe.CELL_WHITE, cells, width, height);
-    	
+    	List<Set<Point>> regions = ConnectedRegions.getConnectedRegions(Nurikabe.CELL_WHITE, cells, width, height)
+
     	//If there are 2 sepearate regions both containing black then the contradiction was applied correctly
     	int numRegionsWithBlack = 0;
-    	for(Set<Point> region: regions) { 
-    		if (ConnectedRegions.regionContains(Nurikabe.CELL_BLACK, cells, region)) { 
+    	for(Set<Point> region: regions) {
+    		if (ConnectedRegions.regionContains(Nurikabe.CELL_BLACK, cells, region)) {
     			numRegionsWithBlack++;
     		}
     	}

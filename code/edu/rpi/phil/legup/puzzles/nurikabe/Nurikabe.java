@@ -95,7 +95,7 @@ public class Nurikabe extends PuzzleModule
 		ruleList.add(new RuleSurroundRegion());
 		ruleList.add(new RuleCornerBlack());
 		ruleList.add(new RuleOneUnknownRegion());//Same as one unknown white make it one rule.
-		ruleList.add(new RuleOneUnknownBlack());
+//		ruleList.add(new RuleOneUnknownBlack());
 //		ruleList.add(new RuleOneUnknownWhite());
 		ruleList.add(new RuleBetweenRegions());
 		ruleList.add(new RuleFillInBlack());
