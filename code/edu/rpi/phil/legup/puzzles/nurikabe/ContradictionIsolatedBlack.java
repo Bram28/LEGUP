@@ -51,7 +51,7 @@ public class ContradictionIsolatedBlack extends Contradiction
     	}
 
     	//Find all regions
-    	List<Set<Point>> regions = ConnectedRegions.getConnectedRegions(Nurikabe.CELL_WHITE, cells, width, height)
+    	List<Set<Point>> regions = ConnectedRegions.getConnectedRegions(Nurikabe.CELL_WHITE, cells, width, height);
 
     	//If there are 2 sepearate regions both containing black then the contradiction was applied correctly
     	int numRegionsWithBlack = 0;
