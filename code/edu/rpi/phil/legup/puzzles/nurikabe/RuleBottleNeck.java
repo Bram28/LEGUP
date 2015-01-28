@@ -4,6 +4,8 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.ConnectedRegions;
+import edu.rpi.phil.legup.Contradiction;
+import java.util.LinkedHashSet;
 import java.awt.Point;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +27,35 @@ public class RuleBottleNeck extends PuzzleRule
 	}
 	protected String checkRuleRaw(BoardState destBoardState)
 	{
-		String error = null;
+		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
+		contras.add(new ContradictionIsolatedBlack());
+		//contras.add(new ContradictionNoNumber());
+		
+		BoardState origBoardState = destBoardState.getSingleParentState();
+		int width = origBoardState.getWidth();
+		int height = origBoardState.getHeight();
+		
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (destBoardState.getCellContents(x, y) != 
+						origBoardState.getCellContents(x, y)) {
+					if (destBoardState.getCellContents(x, y) != Nurikabe.CELL_BLACK) {
+						return "Only black cells are allowed for this rule!";
+					}
+					BoardState modified = origBoardState.copy();
+					//modified.setCellContents(x, y, Nurikabe.CELL_WHITE);
+					modified.getBoardCells()[y][x]=Nurikabe.CELL_WHITE;
+					for (Contradiction c : contras) {
+						if (c.checkContradictionRaw(modified) != null)
+							return "Error";
+					}
+				}
+			}
+		}
+		
+		return null;
+		
+		/*String error = null;
 		boolean changed = false;
 		BoardState origBoardState = destBoardState.getSingleParentState();
 		BoardState altBoard = destBoardState.copy();
@@ -72,6 +102,7 @@ public class RuleBottleNeck extends PuzzleRule
 			}
 		}
 		return error;
+		*/
 	}
 
 	//returns true if the rule is applied correctly, false otherwise
@@ -102,7 +133,6 @@ public class RuleBottleNeck extends PuzzleRule
     			numRegionsWithBlack++;
     		}
     	}
-    	if (numRegionsWithBlack > 1) return true;
-    	else return false;
+    	return (numRegionsWithBlack > 1);
 	}
 }

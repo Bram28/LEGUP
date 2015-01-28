@@ -25,7 +25,7 @@ public class ContradictionNoTents extends Contradiction
      * @param state The board state
      * @return null if the contradiction was applied correctly, the error String otherwise
      */
-    protected String checkContradictionRaw(BoardState state)
+    public String checkContradictionRaw(BoardState state)
     {
     	String error = "No tree is surrounding by only grass and tree squares.";
     	int height = state.getHeight();

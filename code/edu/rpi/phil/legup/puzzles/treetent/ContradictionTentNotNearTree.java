@@ -24,7 +24,7 @@ public class ContradictionTentNotNearTree extends Contradiction
      * @param state The board state
      * @return null if the contradiction was applied correctly, the error String otherwise
      */
-    protected String checkContradictionRaw(BoardState state)
+    public String checkContradictionRaw(BoardState state)
     {
     	String error = "No unlinked tent is not adjacent to an unlinked tree.";
     	int height = state.getHeight();

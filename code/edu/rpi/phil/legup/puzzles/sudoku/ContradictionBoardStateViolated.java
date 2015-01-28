@@ -28,7 +28,7 @@ public class ContradictionBoardStateViolated extends Contradiction
      * @param state The board state
      * @return null if the contradiction was applied correctly, the error String otherwise
      */
-    protected String checkContradictionRaw(BoardState state)
+    public String checkContradictionRaw(BoardState state)
     {
     	if (Sudoku.s_checkValidBoardState(state))
     		return "Contradiction does not apply, Sudoku is valid";

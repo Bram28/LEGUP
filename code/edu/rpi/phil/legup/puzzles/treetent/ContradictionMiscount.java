@@ -67,7 +67,7 @@ public class ContradictionMiscount extends Contradiction
      * @param state The board state
      * @return null if the contradiction was applied correctly, the error String otherwise
      */
-    protected String checkContradictionRaw(BoardState state)
+    public String checkContradictionRaw(BoardState state)
     {
     	String error = "No rows or columns have impossible number labels.";
     	int height = state.getHeight();

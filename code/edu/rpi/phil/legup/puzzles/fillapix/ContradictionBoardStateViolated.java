@@ -27,7 +27,7 @@ public class ContradictionBoardStateViolated extends Contradiction
      * @param state The board state
      * @return null if the contradiction was applied correctly, the error String otherwise
      */
-    protected String checkContradictionRaw(BoardState state)
+    public String checkContradictionRaw(BoardState state)
     {
     	if (Fillapix.s_checkValidBoardState(state))
     		return "Contradiction does not apply, Fillapix is valid";

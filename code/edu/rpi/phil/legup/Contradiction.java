@@ -51,6 +51,6 @@ public abstract class Contradiction extends Justification
 	 * @param state The board state
 	 * @return null if the contradiction was applied correctly, the error String otherwise
 	 */
-	protected abstract String checkContradictionRaw(BoardState state);
+	public abstract String checkContradictionRaw(BoardState state);
 
 }

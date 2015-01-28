@@ -26,14 +26,14 @@ public class ContradictionIsolatedBlack extends Contradiction
 	{
 		return "images/nurikabe/contradictions/BlackArea.png";
 	}
-
+	
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
      * @param state The board state
      * @return null if the contradiction was applied correctly, the error String otherwise
      */
-    protected String checkContradictionRaw(BoardState state)
+    public String checkContradictionRaw(BoardState state)
     {
     	int height = state.getHeight();
     	int width = state.getWidth();

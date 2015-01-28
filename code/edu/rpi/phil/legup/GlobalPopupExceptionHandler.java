@@ -17,8 +17,8 @@ public class GlobalPopupExceptionHandler implements Thread.UncaughtExceptionHand
     {
         try
         {
-            //String message = "Exception in thread " + t.toString() + " " + throwableToString(e);
-            String message = "Exception in thread " + t.toString() + " " + e.toString();
+            String message = "Exception in thread " + t.toString() + " " + throwableToString(e);
+//            String message = "Exception in thread " + t.toString() + " " + e.toString();
             System.err.println(message);
             JOptionPane.showMessageDialog(null, message);
         }
