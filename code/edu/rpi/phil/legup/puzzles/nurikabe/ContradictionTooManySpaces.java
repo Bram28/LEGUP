@@ -8,21 +8,21 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionTooManySpaces extends Contradiction
-{	 
+{
     private static final long serialVersionUID = 657974076L;
-	
+
 	 ContradictionTooManySpaces()
 	 {
-		setName("Too Big");
+		setName("Too Many Spaces");
 		description = "A region cannot contain more spaces than its number.";
 		image = new ImageIcon("images/nurikabe/contradictions/TooManySpaces.png");
 	 }
-		
+
 	public String getImageName()
 	{
 		return "images/nurikabe/contradictions/TooManySpaces.png";
 	}
-	 
+
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -61,19 +61,19 @@ public class ContradictionTooManySpaces extends Contradiction
     				}
     				else if(temp.y == -1)
     				{
-    					return "Different contradiction found. Too many numbers in a region"; 
+    					return "Different contradiction found. Too many numbers in a region";
     				}
     				else if(temp.y < temp.x)
     					return null;
     			}
     		}
     	}
-    	
+
     	error = "There are not too many spaces in a region.";
 
 		return error;
     }
-    
+
     //HACK: This uses a point in order to return 2 ints
     private Point loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
     {

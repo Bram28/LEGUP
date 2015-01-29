@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-public class RuleBottleNeck extends PuzzleRule
+public class RuleBlackBottleNeck extends PuzzleRule
 {
 	private static final long serialVersionUID = 787962510L;
 
-	RuleBottleNeck()
+	RuleBlackBottleNeck()
 	{
 		setName("Black Bottle Neck");
 		description = "If there is only one path for a black square to continue than follow that path.";
@@ -30,14 +30,14 @@ public class RuleBottleNeck extends PuzzleRule
 		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
 		contras.add(new ContradictionIsolatedBlack());
 		//contras.add(new ContradictionNoNumber());
-		
+
 		BoardState origBoardState = destBoardState.getSingleParentState();
 		int width = origBoardState.getWidth();
 		int height = origBoardState.getHeight();
-		
+
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				if (destBoardState.getCellContents(x, y) != 
+				if (destBoardState.getCellContents(x, y) !=
 						origBoardState.getCellContents(x, y)) {
 					if (destBoardState.getCellContents(x, y) != Nurikabe.CELL_BLACK) {
 						return "Only black cells are allowed for this rule!";
@@ -52,9 +52,9 @@ public class RuleBottleNeck extends PuzzleRule
 				}
 			}
 		}
-		
+
 		return null;
-		
+
 		/*String error = null;
 		boolean changed = false;
 		BoardState origBoardState = destBoardState.getSingleParentState();
@@ -122,7 +122,7 @@ public class RuleBottleNeck extends PuzzleRule
     	//The target cell is where we are checking for a bottle neck
     	//We mark it as white, and if that creates 2 discrete regions we know there is a bottle neck
     	cells[target.x][target.y] = Nurikabe.CELL_WHITE;
-    	
+
     	//Find all regions
     	List<Set<Point>> regions = ConnectedRegions.getConnectedRegions(Nurikabe.CELL_WHITE, cells, width, height);
 

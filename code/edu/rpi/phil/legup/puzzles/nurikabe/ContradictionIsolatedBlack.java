@@ -17,7 +17,7 @@ public class ContradictionIsolatedBlack extends Contradiction
 
 	ContradictionIsolatedBlack()
 	{
-		setName("Black cells cannot be isolated");
+		setName("Isolated Black");
 		description = "There must still be a possibility to connect every Black cell";
 		image = new ImageIcon("images/nurikabe/contradictions/BlackArea.png");
 	}

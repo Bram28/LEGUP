@@ -13,16 +13,16 @@ public class RuleSurroundRegion extends PuzzleRule
 
 	 RuleSurroundRegion()
 	 {
-		setName("Surround Black");
-		description = "All completed regions must be surrounded by black.";
+		setName("Surround Region");
+		description = "All completed white regions must be surrounded by black.";
 		image = new ImageIcon("images/nurikabe/rules/SurroundBlack.png");
 	 }
-		
+
 	public String getImageName()
 	{
 		return "images/nurikabe/rules/SurroundBlack.png";
 	}
-	 
+
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -34,9 +34,9 @@ public class RuleSurroundRegion extends PuzzleRule
     	String error = null;
     	boolean changed = false;
     	BoardState origBoardState = destBoardState.getSingleParentState();
-    	
+
     	int[][] surrounding = determineSurrounding(origBoardState);
-    	
+
     	// Check for only one branch
 		if (destBoardState.getTransitionsTo().size() != 1)
 		{
@@ -44,47 +44,47 @@ public class RuleSurroundRegion extends PuzzleRule
 		}
 		else
 		{
-			
+
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
 			{
 				for (int x = 0; x < origBoardState.getWidth(); ++x)
 				{
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
-					
+
 					if (origState != newState)
 					{
 						changed = true;
-						
+
 						if (newState != Nurikabe.CELL_BLACK || origState != 0)
 						{
 							error = "This rule only involves adding black cells!";
 							break;
 						}
-						
-						
-						
+
+
+
 						if(surrounding[y][x] != Nurikabe.CELL_BLACK && destBoardState.getCellContents(x,y) == Nurikabe.CELL_BLACK)
 						{
 							error = "Black cells must be placed around a completed region.";
 							break;
 						}
-						
-						
-						
+
+
+
 					}
 				}
 			}
-			
+
 			if (error == null && !changed)
 			{
 				error = "You must add a black cell to use this rule!";
 			}
 		}
-		
+
 		return error;
     }
-    
+
     private int[][] determineSurrounding(BoardState state)
     {
     	int width = state.getWidth();
@@ -92,7 +92,7 @@ public class RuleSurroundRegion extends PuzzleRule
     	int[][] surrounding = new int[width][height];
     	boolean[][] neighbors = new boolean[width][height];
     	boolean[][]surrounded = new boolean[width][height];
-    	
+
     	for(int x = 0; x < width; ++x)
     	{
     		for(int y = 0; y < height; ++y)
@@ -106,7 +106,7 @@ public class RuleSurroundRegion extends PuzzleRule
     			}
     		}
     	}
-    	
+
     	Point temp = new Point();
     	for(int x = 0; x < width; ++x)
     	{
@@ -121,17 +121,17 @@ public class RuleSurroundRegion extends PuzzleRule
     				}
     				else if(temp.y == -1)
     				{
-    					;//return "Different contradiction found. Too many numbers in a region"; 
+    					;//return "Different contradiction found. Too many numbers in a region";
     				}
     				else if(temp.y == temp.x)
     					surroundRegion(surrounding,surrounded, state, x,y, width, height);
     			}
     		}
     	}
-    	
+
     	return surrounding;
     }
-    
+
     //HACK: This uses a point in order to return 2 ints
     private Point loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
     {
@@ -267,41 +267,41 @@ public class RuleSurroundRegion extends PuzzleRule
     		}
     	}
     }
-    
+
     protected boolean doDefaultApplicationRaw(BoardState destBoardState)
     {
 		BoardState origBoardState = destBoardState.getSingleParentState();
     	boolean changed = false;
     	int width = destBoardState.getWidth();
     	int height = destBoardState.getHeight();
-    	
-    	
+
+
     	if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
     	{
     		int[][] surround = determineSurrounding(destBoardState);
-    		
+
         	for(int x = 0; x < width; ++x)
         	{
         		for(int y = 0; y < height; ++y)
         		{
         			if(surround[y][x] == Nurikabe.CELL_BLACK)
-        				destBoardState.setCellContents(x,y,Nurikabe.CELL_BLACK);   				
+        				destBoardState.setCellContents(x,y,Nurikabe.CELL_BLACK);
         		}
         	}
 	    	String error = checkRuleRaw(destBoardState);
-	    	
+
 			if (error == null)
 			{
 				changed = true;
 				// valid change
 			}
     	}
-    	
+
     	if(!changed)
     	{
     		destBoardState = origBoardState.copy();
     	}
-	    	
+
 	    return changed;
     }
 }
