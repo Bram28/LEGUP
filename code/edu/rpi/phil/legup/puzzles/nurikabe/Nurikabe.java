@@ -27,7 +27,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 
 
 public class Nurikabe extends PuzzleModule
-{	
+{
 	public static int CELL_BLACK = 1;
 	public static int CELL_WHITE = 2;
 
@@ -41,10 +41,10 @@ public class Nurikabe extends PuzzleModule
     }
     public Map<String, Integer> getUnselectableCells()
     { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
-	
+
 	//0 - 9 on the board are represented internally as 10 - 19
 	//int CELL_BLOCK0 = 10, CELL_BLOCK1 = 11, etc...
-	
+
 	public Nurikabe(){
 	}
 
@@ -61,7 +61,7 @@ public class Nurikabe extends PuzzleModule
 	{
 		int contents = boardState.getCellContents(x,y);
 		int rv = CELL_UNKNOWN;
-		
+
 		if (contents == CELL_UNKNOWN)
 		{
 			return CELL_BLACK;
@@ -82,33 +82,35 @@ public class Nurikabe extends PuzzleModule
 
 		return rv;
 	}*/
-	
+
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}
-	
+
 	public Vector<PuzzleRule> getRules(){
 		Vector<PuzzleRule>ruleList = new Vector<PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
-		
-		ruleList.add(new RuleNoBlackSquare());
+
+		ruleList.add(new RulePreventBlackSquare());
 		ruleList.add(new RuleSurroundRegion());
 		ruleList.add(new RuleCornerBlack());
-		ruleList.add(new RuleOneUnknownRegion());//Same as one unknown white make it one rule.
+//		ruleList.add(new RuleOneUnknownRegion());//Same as one unknown white make it one rule.
 //		ruleList.add(new RuleOneUnknownBlack());
 //		ruleList.add(new RuleOneUnknownWhite());
-		ruleList.add(new RuleBetweenRegions());
+		ruleList.add(new RuleWhiteBottleNeck());
+		ruleList.add(new RuleBlackBottleNeck());
+		ruleList.add(new RuleBlackBetweenRegions());
 		ruleList.add(new RuleFillInBlack());
 		ruleList.add(new RuleFillInWhite());
-		ruleList.add(new RuleBottleNeck());
+
 		return ruleList;
 	}
-	
+
 	 /**
 	 * Gets a list of Contradictions associated with this puzzle
 	 *
 	 * @return A Vector of Contradictions
-	 */   
+	 */
 	public Vector<Contradiction> getContradictions()
 	{
 		Vector<Contradiction> contradictionList = new Vector<Contradiction>();
@@ -119,15 +121,15 @@ public class Nurikabe extends PuzzleModule
 		contradictionList.add(new ContradictionMultipleNumbers());
 		contradictionList.add(new ContradictionTooManySpaces());
 		contradictionList.add(new ContradictionTooFewSpaces());
-		
+
 		return contradictionList;
 	}
-	
+
 	public Vector <CaseRule> getCaseRules()
 	{
 		Vector <CaseRule> caseRules = new Vector <CaseRule>();
 		caseRules.add(new CaseBlackOrWhite());
-		
+
 		return caseRules;
 	}
 
@@ -171,7 +173,7 @@ public class Nurikabe extends PuzzleModule
 		int width = Board.getWidth();
 		double currentOff = Double.POSITIVE_INFINITY;
 		double BESTPROB = .25;
-		
+
 		//Create a counter that will hold the number of white regions found
 		int regioncount = 0;
 		//Holds whether or not a cell has been visited
@@ -181,7 +183,7 @@ public class Nurikabe extends PuzzleModule
 		boolean[][] visited = new boolean[width][height];
 		//Booleans which hold whether or not a cell is valid for the rule
 		boolean[][]white = new boolean[width][height];
-		
+
 		Point temp;
 		//For each cell
 		for(int x = 0; x < width; ++x)
@@ -203,7 +205,7 @@ public class Nurikabe extends PuzzleModule
 					double myProb = temp.x/temp.y;
 					//System.out.println("Square "+r+","+c+" prob: "+myProb);
 					double myOff = Math.abs(BESTPROB-myProb);
-					if (myOff < currentOff) 
+					if (myOff < currentOff)
 					{
 						setWhite(white, new boolean[width][height] ,Board,x,y,width,height);
 						for(int r =0;r<width;r++)
@@ -242,11 +244,11 @@ public class Nurikabe extends PuzzleModule
 			++ret.y;
 			return ret;
 		}
-		
+
 		--ret.x;
 		if(boardState.getCellContents(x,y) > 0)
 			ret.x += boardState.getCellContents(x,y);
-		
+
 		Point temp;
 		if(x+1 < width)
 		{
@@ -279,7 +281,7 @@ public class Nurikabe extends PuzzleModule
 		if(neighbors[y][x] == true)
 			return white;
 		neighbors[y][x] = true;
-		
+
 		if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
 		{
 			white[y][x] = true;
@@ -288,7 +290,7 @@ public class Nurikabe extends PuzzleModule
 		if(boardState.getCellContents(x,y) == Nurikabe.CELL_BLACK)
 			return white;
 
-		
+
 		if(x+1 < width)
 		{
 			white = setWhite(white, neighbors, boardState, x+1, y, width, height);
@@ -307,5 +309,5 @@ public class Nurikabe extends PuzzleModule
 		}
 		return white;
 	}
-	
+
 }
