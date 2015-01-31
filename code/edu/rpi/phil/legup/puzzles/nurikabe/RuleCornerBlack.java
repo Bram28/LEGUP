@@ -88,19 +88,19 @@ public class RuleCornerBlack extends PuzzleRule
 	{
 		Set<Point> targets = new LinkedHashSet<Point>();
 
-		if (black.x-1 > 0 && black.y-1 > 0)
+		if (black.x-1 >= 0 && black.y-1 >= 0)
 		{
 			if (board.getCellContents(black.x-1, black.y-1) == 12)
 				targets.add(new Point(black.x-1, black.y-1));
 		}
 
-		if (black.x+1 < width && black.y-1 > 0)
+		if (black.x+1 < width && black.y-1 >= 0)
 		{
 			if (board.getCellContents(black.x+1, black.y-1) == 12)
 				targets.add(new Point(black.x+1, black.y-1));
 		}
 
-		if (black.x-1 > 0 && black.y+1 < height)
+		if (black.x-1 >= 0 && black.y+1 < height)
 		{
 			if (board.getCellContents(black.x-1, black.y+1) == 12)
 				targets.add(new Point(black.x-1, black.y+1));
@@ -122,7 +122,7 @@ public class RuleCornerBlack extends PuzzleRule
 	{
 		Set<Point> targets = new LinkedHashSet<Point>();
 
-		if (white.x-1 > 0)
+		if (white.x-1 >= 0)
 		{
 			if (board.getCellContents(white.x-1, white.y) == Nurikabe.CELL_UNKNOWN)
 				targets.add(new Point(white.x-1, white.y));
@@ -146,7 +146,7 @@ public class RuleCornerBlack extends PuzzleRule
 				return null;
 		}
 
-		if (white.y-1 > 0)
+		if (white.y-1 >= 0)
 		{
 			if (board.getCellContents(white.x, white.y-1) == Nurikabe.CELL_UNKNOWN)
 				targets.add(new Point(white.x, white.y-1));
