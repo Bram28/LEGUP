@@ -131,14 +131,14 @@ public class CaseLinkTent extends CaseRule
 	{
 		String rv = null;
 		BoardState parent = state.getSingleParentState();  
-		if(parent.getTransitionsFrom().size() > 4)
+		if(parent.getChildren().size() > 4)
 		{
 			rv = "Only the trees adjacent to a single tent should be\nlinked to in one step using this rule.";
 		}
 		else
 		{ 
-			int num_children = parent.getTransitionsFrom().size();
-			Point p = findOnlyCommonTile(parent.getTransitionsFrom(),TreeTent.CELL_TENT);
+			int num_children = parent.getChildren().size();
+			Point p = findOnlyCommonTile(parent.getChildren(),TreeTent.CELL_TENT);
 			int num_adj_trees = calcAdjacentTiles(parent,p,TreeTent.CELL_TREE);
 			num_adj_trees -= calcAdjacentLinkedTiles(parent,p);
 			if(p == null)
@@ -150,25 +150,25 @@ public class CaseLinkTent extends CaseRule
 				rv = "There should be one branch for each unlinked tree that\nis adjacent to the chosen tent.";
 			}
 			Vector<Point> trees = new Vector<Point>(); //location of tree in each branch
-			for(BoardState b : parent.getTransitionsFrom())
+			for(BoardState b : parent.getChildren())
 			{
 				if(b.extraDataDelta.size() != 1)
 				{
-					rv = "Each branch must contain exactly one link, which is\nnot the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1); 
+					rv = "Each branch must contain exactly one link, which is\nnot the case for branch "+(parent.getChildren().indexOf(b)+1); 
 					break;
 				}
 				ExtraTreeTentLink link = (ExtraTreeTentLink)b.extraDataDelta.get(0);
 				Point p1 = (pointEquals(p,link.pos1))?link.pos2:link.pos1;
 				if(b.getCellContents(p1.x,p1.y) != TreeTent.CELL_TREE)
 				{
-					rv = "The link must link a tent and a tree, which is\nnot the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					rv = "The link must link a tent and a tree, which is\nnot the case for branch "+(parent.getChildren().indexOf(b)+1);
 					break;
 				}
 				else
 				{
 					if(trees.contains(p1))
 					{
-						rv = "Branch "+(trees.indexOf(p1)+1)+" is the same as branch "+(parent.getTransitionsFrom().indexOf(b)+1)+".\nNot all cases are covered.";
+						rv = "Branch "+(trees.indexOf(p1)+1)+" is the same as branch "+(parent.getChildren().indexOf(b)+1)+".\nNot all cases are covered.";
 						break;
 					}
 					trees.add(p1);
@@ -176,7 +176,7 @@ public class CaseLinkTent extends CaseRule
 				ArrayList<Point> dif = BoardState.getDifferenceLocations(b,parent);
 				if(dif.size() != 0)
 				{
-					rv = "As this is a linking rule, no cells should be modified,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					rv = "As this is a linking rule, no cells should be modified,\nwhich is not the case for branch "+(parent.getChildren().indexOf(b)+1);
 					break;
 				}
 			}

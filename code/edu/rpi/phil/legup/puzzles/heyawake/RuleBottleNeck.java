@@ -28,7 +28,7 @@ public class RuleBottleNeck extends PuzzleRule
 		boolean split;
 		ContradictionWhiteLine contradiction = new ContradictionWhiteLine();
 		// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -156,7 +156,7 @@ public class RuleBottleNeck extends PuzzleRule
 		BoardState altBoard = destBoardState.copy();
 		boolean split=false;
 		String error = null;
-		if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+		if (origBoardState != null && destBoardState.getParents().size() == 1)
 		{
 			for(int x= 0; x<width;x++)
 			{

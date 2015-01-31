@@ -143,12 +143,12 @@ public class Rule3 extends PuzzleRule{
 
 
 		// Get the cells that transitioned from the origBoardState
-		Vector transitionsFrom = origBoardState.getTransitionsFrom();
+		Vector children = origBoardState.getChildren();
 
 
 		// Check if each cell is a water cell
-		for (int i=0;i<transitionsFrom.size();i++){
-			if (((TransitionCell)transitionsFrom.get(i)).getValue() != 1){
+		for (int i=0;i<children.size();i++){
+			if (((TransitionCell)children.get(i)).getValue() != 1){
 				System.out.println("Not all the transition cells are water");
 				return false;
 			}
@@ -156,9 +156,9 @@ public class Rule3 extends PuzzleRule{
 
 	
 		// For each cell, check if there is an adjacent completed ship
-		for (int i=0;i<transitionsFrom.size();i++){
-			int row = ((TransitionCell)transitionsFrom.get(i)).getX();
-			int col = ((TransitionCell)transitionsFrom.get(i)).getY();
+		for (int i=0;i<children.size();i++){
+			int row = ((TransitionCell)children.get(i)).getX();
+			int col = ((TransitionCell)children.get(i)).getY();
 	    
 			if (!checkAdjacentShip(origBoardState, row, col)){
 				System.out.println("The row ["+row+"] and column ["+col+"] doesn't have an adjacent completed ship");

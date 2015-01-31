@@ -240,12 +240,12 @@ public class Fillapix extends PuzzleModule
 		int lastShared = 5;
 		while (test != null)
 		{
-			if (test.getTransitionsFrom().size() == 0) test = null;
-			else if (test.getTransitionsFrom().size() >= 2) return PuzzleGeneration.OPTIMAL;
+			if (test.getChildren().size() == 0) test = null;
+			else if (test.getChildren().size() >= 2) return PuzzleGeneration.OPTIMAL;
 			else
 			{
 				BoardState prev = test;
-				test = test.getTransitionsFrom().get(0);
+				test = test.getChildren().get(0);
 				if (runningDifficulty == PuzzleGeneration.EASY)
 				{
 					Object just = test.getJustification();

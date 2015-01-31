@@ -34,7 +34,7 @@ public class RulePreventWhiteLine extends PuzzleRule
 		String conError=null;
 		ContradictionWhiteLine contradiction = new ContradictionWhiteLine();
 		// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -88,7 +88,7 @@ public class RulePreventWhiteLine extends PuzzleRule
 		boolean changed = false;
 		String error = null;
 		
-		if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+		if (origBoardState != null && destBoardState.getParents().size() == 1)
 		{
 			int width = destBoardState.getWidth();
 			int height = destBoardState.getHeight();			

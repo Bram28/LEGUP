@@ -89,7 +89,7 @@ public class RuleZigZagWhite extends PuzzleRule
 		int height = destBoardState.getHeight();
 		int width = destBoardState.getWidth();
 		boolean changed = false;
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -161,7 +161,7 @@ public class RuleZigZagWhite extends PuzzleRule
 		int width = destBoardState.getWidth();
 		
 		
-		if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+		if (origBoardState != null && destBoardState.getParents().size() == 1)
 		{
 			int regioncount = ((Integer)origBoardState.getExtraData().get(1)).intValue();
 			for( int r = 0; r< regioncount; r++)//loop through all the regions.

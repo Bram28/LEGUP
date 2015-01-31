@@ -363,7 +363,7 @@ public class AI implements Runnable {
 				 */
 				 System.out.println("Searching...");
 				 System.out.println(Board);
-				while (Search != null && Search.getTransitionsFrom().size() < 2) {
+				while (Search != null && Search.getChildren().size() < 2) {
 					Search = Search.getSingleParentState();
 				}
 				if (Search == null)
@@ -372,7 +372,7 @@ public class AI implements Runnable {
 
 				// hunt down the first child that does not lead to a
 				// contradiction
-				Vector<BoardState> Children = Search.getTransitionsFrom();
+				Vector<BoardState> Children = Search.getChildren();
 				boolean found = false;
 				for (int i = 0; i < Children.size(); i++) {
 					BoardState child = Children.get(i);
@@ -477,8 +477,8 @@ public class AI implements Runnable {
 
 		while (true)
 		{
-			if (choice.getTransitionsFrom().size() == 1) choice = choice.getTransitionsFrom().get(0);
-			else if (choice.getTransitionsFrom().size() == 0)
+			if (choice.getChildren().size() == 1) choice = choice.getChildren().get(0);
+			else if (choice.getChildren().size() == 0)
 			{
 				if (ourPM.checkBoardComplete(choice)) return (choice == uniqueSolution);
 				else if (contradiction(choice)) return true;
@@ -486,7 +486,7 @@ public class AI implements Runnable {
 			}
 			else
 			{
-				for (BoardState B : choice.getTransitionsFrom()) if (!scanCompleteness(B, uniqueSolution)) return false;
+				for (BoardState B : choice.getChildren()) if (!scanCompleteness(B, uniqueSolution)) return false;
 				return true;
 			}
 		}
@@ -533,11 +533,11 @@ public class AI implements Runnable {
 			contra = (error == null);
 			if (contra) {
 				//System.out.println("Contradiction!");
-				board.getSingleParentState().getTransitionsFrom().clear();
+				board.getSingleParentState().getChildren().clear();
 				return true;
 			}
 		}
-		board.getSingleParentState().getTransitionsFrom().clear();
+		board.getSingleParentState().getChildren().clear();
 		return false;
 	}
 

@@ -93,21 +93,21 @@ public class Rule1 extends PuzzleRule
 	}
 
 	// Get the cells that transitioned from the origBoardState
-	Vector transitionsFrom = origBoardState.getTransitionsFrom();
+	Vector children = origBoardState.getChildren();
 
 
 	// Check if each cell is a water cell
-	for (int i=0;i<transitionsFrom.size();i++){
-	    if (((TransitionCell)transitionsFrom.get(i)).getValue() != 3){
+	for (int i=0;i<children.size();i++){
+	    if (((TransitionCell)children.get(i)).getValue() != 3){
 		System.out.println("Not all the transition cells are water");
 		return false;
 	    }
 	}
 	
 	// For each cell, check if the row or column has a sufficient number of ship segments in it
-	for (int i=0;i<transitionsFrom.size();i++){
-	    int row = ((TransitionCell)transitionsFrom.get(i)).getX();
-	    int col = ((TransitionCell)transitionsFrom.get(i)).getY();
+	for (int i=0;i<children.size();i++){
+	    int row = ((TransitionCell)children.get(i)).getX();
+	    int col = ((TransitionCell)children.get(i)).getY();
 	    
 	    if (!checkRow(destBoardState, row) && !checkCol(destBoardState, col)){
 		System.out.println("The row ["+row+"] and column ["+col+"] have too many or too few ship segments");

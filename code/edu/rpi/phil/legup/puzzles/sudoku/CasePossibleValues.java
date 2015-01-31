@@ -37,10 +37,10 @@ public class CasePossibleValues extends CaseRule
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		BoardState parent = state.getSingleParentState();
-		if (parent != null && parent.getTransitionsFrom().size() <= 2){
+		if (parent != null && parent.getChildren().size() <= 2){
 			return "This case rule can only be applied on a split transition";
 		}
-		Vector<BoardState> states = parent.getTransitionsFrom();
+		Vector<BoardState> states = parent.getChildren();
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
 		if (dif.size() != 1){
 			return "Case rule only applies to a split transition of one cell";

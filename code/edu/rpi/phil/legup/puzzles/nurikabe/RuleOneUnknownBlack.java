@@ -38,7 +38,7 @@ public class RuleOneUnknownBlack extends PuzzleRule
     	boolean[][] black = determineBlack(origBoardState);
     	
     	// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -370,7 +370,7 @@ public class RuleOneUnknownBlack extends PuzzleRule
     	int height = destBoardState.getHeight();
     	
     	
-    	if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+    	if (origBoardState != null && destBoardState.getParents().size() == 1)
     	{
     		boolean[][] black = determineBlack(destBoardState);
     		if(black != null)

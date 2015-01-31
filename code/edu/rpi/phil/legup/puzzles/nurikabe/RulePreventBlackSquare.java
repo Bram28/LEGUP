@@ -34,7 +34,7 @@ public class RulePreventBlackSquare extends PuzzleRule
     	BoardState origBoardState = destBoardState.getSingleParentState();
 
     	// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -87,7 +87,7 @@ public class RulePreventBlackSquare extends PuzzleRule
 	    	int height = destBoardState.getHeight();
 
 
-	    	if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
 	    	{
 	        	for(int x = 0; x < width - 1; ++x)
 	        	{

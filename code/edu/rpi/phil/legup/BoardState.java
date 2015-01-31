@@ -76,10 +76,10 @@ public class BoardState implements java.io.Serializable
 	private Point location = new Point(0,0);
 
 	// parents
-	private Vector<BoardState> transitionsTo = new Vector<BoardState>();
+	private Vector<BoardState> parents = new Vector<BoardState>();
 
 	// children
-	private Vector<BoardState> transitionsFrom = new Vector<BoardState>();
+	private Vector<BoardState> children = new Vector<BoardState>();
 	
 	// a PuzzleRule or Contradiction
 	private Justification justification = null;
@@ -211,15 +211,15 @@ public class BoardState implements java.io.Serializable
 		justificationText = null;
 		changedCells = copy.getChangedCells();
 		
-		transitionsTo.clear();
-		for (int i=0;i<copy.transitionsTo.size();i++)
+		parents.clear();
+		for (int i=0;i<copy.parents.size();i++)
 		{
-			transitionsTo.add(copy.transitionsTo.get(i));
+			parents.add(copy.parents.get(i));
 		}
-		transitionsFrom.clear();
-		for (int i=0;i<copy.transitionsFrom.size();i++)
+		children.clear();
+		for (int i=0;i<copy.children.size();i++)
 		{
-			transitionsFrom.add(copy.transitionsFrom.get(i));
+			children.add(copy.children.get(i));
 		}
 		
 		if (makeOriginalState)
@@ -275,7 +275,7 @@ public class BoardState implements java.io.Serializable
 	public void toggleCollapse()
 	{
 		// if we can collapse it legally
-		if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
+		if (children.size() == 1 && parents.size() < 2)
 		{
 			if (!collapsed)
 				offset.y += TreePanel.NODE_RADIUS;
@@ -300,9 +300,9 @@ public class BoardState implements java.io.Serializable
 	//Initial refers to whether or not the state is the first state in the collapse or uncollapse chain.
 	public void toggleCollapseRecursive(int x, int y, boolean initial)
 	{
-		if (transitionsFrom.size() == 1 && transitionsTo.size() < 2)
+		if (children.size() == 1 && parents.size() < 2)
 		{
-			BoardState child = transitionsFrom.get(0);
+			BoardState child = children.get(0);
 			collapsed = !collapsed;
 			if(!initial) {
 				if (collapsed) {
@@ -388,8 +388,8 @@ public class BoardState implements java.io.Serializable
 		delayStatus = STATUS_UNJUSTIFIED;
 		modifyStatus();
 		evalDelayStatus();
-		for (BoardState B : transitionsTo) B.modifyStatus();
-		for (BoardState B : transitionsFrom) B.modifyStatus();
+		for (BoardState B : parents) B.modifyStatus();
+		for (BoardState B : children) B.modifyStatus();
 		for (int a = 0; a < Legup.boardDataChangeListeners.size(); ++a)
 		{
 			BoardDataChangeListener c = Legup.boardDataChangeListeners.get(a);
@@ -474,7 +474,7 @@ public class BoardState implements java.io.Serializable
 			}
 		}
 		
-		for (BoardState child : transitionsFrom) {
+		for (BoardState child : children) {
 			child.propagateChange(x, y, value);
 		}
 		
@@ -498,7 +498,7 @@ public class BoardState implements java.io.Serializable
 		
 		Legup.getInstance().getPuzzleModule().updateState(this);
 		
-		for (BoardState child : transitionsFrom)
+		for (BoardState child : children)
 		{
 			child.propagateChange(x, y, value);
 		}
@@ -512,7 +512,7 @@ public class BoardState implements java.io.Serializable
 		if(ex == null)return;
 		if(!present)if(extraData.contains(ex))extraData.remove(ex);
 		if(present)if(!extraData.contains(ex))extraData.add(ex);
-		for(BoardState child : transitionsFrom)
+		for(BoardState child : children)
 		{
 			if(!child.extraDataDelta.contains(ex))
 			{
@@ -719,9 +719,9 @@ public class BoardState implements java.io.Serializable
 	 *
 	 * @return A Vector of the Transitions to this board state which are BoardStates
 	 */
-	public Vector<BoardState> getTransitionsTo()
+	public Vector<BoardState> getParents()
 	{
-		return transitionsTo;
+		return parents;
 	}
 
 	/**
@@ -729,32 +729,32 @@ public class BoardState implements java.io.Serializable
 	 *
 	 * @return A Vector of the Transitions from this board state which are BoardStates
 	 */
-	public Vector<BoardState> getTransitionsFrom(){
-		return transitionsFrom;
+	public Vector<BoardState> getChildren(){
+		return children;
 	}
 	
 	/**
 	 * Sets the transitions to this BoardState
-	 * @param to Vector<BoardState> containing new transitionsTo
+	 * @param to Vector<BoardState> containing new parents
 	 */
 	public void setTransitionsTo(Vector<BoardState> to) {
-		transitionsTo = to;
+		parents = to;
 	}
 	
 	/**
 	 * Sets the transitions from this BoardState
-	 * @param from Vector<BoardState> containing new transitionsFrom
+	 * @param from Vector<BoardState> containing new children
 	 */
 	public void setTransitionsFrom(Vector<BoardState> from) {
-		transitionsFrom = from;
+		children = from;
 	}
 	
 	public ArrayList<Integer> getPathToNode()
 	{
 		ArrayList<Integer> retval = new ArrayList<Integer>();
-		BoardState back1 = (this.getTransitionsTo().size()>0)?this.getTransitionsTo().get(0):null;
+		BoardState back1 = (this.getParents().size()>0)?this.getParents().get(0):null;
 		if(back1 == null)return retval; //if there's no previous node, we're at the root, return an empty list (no steps to take to get to the root from the root)
-		retval.add(back1.getTransitionsFrom().indexOf(this));
+		retval.add(back1.getChildren().indexOf(this));
 		retval.addAll(0,back1.getPathToNode()); //recursively prepend the rest of the path
 		return retval;
 	}
@@ -764,7 +764,7 @@ public class BoardState implements java.io.Serializable
 		BoardState state = Legup.getInstance().getInitialBoardState();
 		for(int c1=0;c1<path.size();c1++)
 		{
-			state = state.getTransitionsFrom().get(path.get(c1));
+			state = state.getChildren().get(path.get(c1));
 		}
 		return state;
 	}
@@ -793,7 +793,7 @@ public class BoardState implements java.io.Serializable
 		{
 			current_color = new Color(255,128,128);
 		}
-		for (BoardState B : transitionsFrom)
+		for (BoardState B : children)
 		{
 			if(!B.evalDelayStatus())
 			{
@@ -811,9 +811,9 @@ public class BoardState implements java.io.Serializable
 		getStatus();
 
 		if ((leadSolution != prev1) || (leadContradiction != prev2))
-			for (BoardState B : transitionsTo) B.modifyStatus();
+			for (BoardState B : parents) B.modifyStatus();
 		if (status != prevStat)
-			for (BoardState B : transitionsFrom) B.modifyStatus();
+			for (BoardState B : children) B.modifyStatus();
 	}
 
 	/**
@@ -823,8 +823,8 @@ public class BoardState implements java.io.Serializable
 	{
 		delayStatus = STATUS_UNJUSTIFIED;
 		modifyStatus();
-		for (BoardState B : transitionsTo) B.modifyStatus();
-		for (BoardState B : transitionsFrom) B.modifyStatus();
+		for (BoardState B : parents) B.modifyStatus();
+		for (BoardState B : children) B.modifyStatus();
 		modifyStatus();
 	}
 
@@ -846,20 +846,20 @@ public class BoardState implements java.io.Serializable
 	private static void removeColorsFromTransitions(BoardState state)
 	{
 		/*if(state.isModifiable())*/state.setColor(TreePanel.nodeColor);
-		for(BoardState b : state.transitionsFrom)removeColorsFromTransitions(b);
+		for(BoardState b : state.children)removeColorsFromTransitions(b);
 	}
 	
 	public static BoardState addTransition()
 	{
 		BoardState s = Legup.getCurrentState();
 		BoardState next = s;
-		if(s.getTransitionsFrom().size() == 0)
+		if(s.getChildren().size() == 0)
 		{
 			next = s.addTransitionFrom();
 		}
-		else if(s.getTransitionsFrom().size() >= 1)
+		else if(s.getChildren().size() >= 1)
 		{
-			next = s.getTransitionsFrom().firstElement();
+			next = s.getChildren().firstElement();
 			if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().checkCaseRuleGen()))
 			{
 				next = s.addTransitionFrom();
@@ -903,7 +903,7 @@ public class BoardState implements java.io.Serializable
 
 	public boolean parents(BoardState child)
 	{
-		for (BoardState B : transitionsFrom) if (B == child || B.parents(child)) return true;
+		for (BoardState B : children) if (B == child || B.parents(child)) return true;
 		return false;
 	}
 
@@ -932,13 +932,13 @@ public class BoardState implements java.io.Serializable
 				do
 				{
 					keepgoing = false;
-					if (states.get(i).transitionsTo.size() == 0) return states.get(i);
-					if (states.get(i).transitionsFrom.size() < 2)
+					if (states.get(i).parents.size() == 0) return states.get(i);
+					if (states.get(i).children.size() < 2)
 					{
 						keepgoing = true;
-						if (states.get(i).transitionsTo.size() >= 2) states.set(i, states.get(i).mergeOverlord);
-						else states.set(i, states.get(i).transitionsTo.get(0));
-						if (states.get(i).transitionsTo.size() == 0) return states.get(i);
+						if (states.get(i).parents.size() >= 2) states.set(i, states.get(i).mergeOverlord);
+						else states.set(i, states.get(i).parents.get(0));
+						if (states.get(i).parents.size() == 0) return states.get(i);
 					}
 				}
 				while (keepgoing);
@@ -962,8 +962,8 @@ public class BoardState implements java.io.Serializable
 
 			// Step 4: move each node up one level
 			for (int i = 0; i < states.size(); i++)
-				if (states.get(i).transitionsTo.size() == 1) states.set(i, states.get(i).transitionsTo.get(0));
-				else if (states.get(i).transitionsTo.size() >= 2) states.set(i, states.get(i).mergeOverlord);
+				if (states.get(i).parents.size() == 1) states.set(i, states.get(i).parents.get(0));
+				else if (states.get(i).parents.size() >= 2) states.set(i, states.get(i).mergeOverlord);
 				else return states.get(i);
 		}
 
@@ -995,7 +995,7 @@ public class BoardState implements java.io.Serializable
 		// make sure that all states are leaves (very general and removes needing to check for ancestors)
 		for (BoardState s1 : states)
 		{
-			if (s1.getTransitionsFrom().size() > 0)
+			if (s1.getChildren().size() > 0)
 				return;
 		}
 		
@@ -1043,8 +1043,8 @@ public class BoardState implements java.io.Serializable
 		for (int c = 0; c < states.size(); ++c)
 		{
 			BoardState parent = states.get(c);
-			parent.transitionsFrom.add(child);
-			child.transitionsTo.add(parent);
+			parent.children.add(child);
+			child.parents.add(parent);
 		}
 
 		child.justification = RuleMerge.getInstance();
@@ -1069,16 +1069,16 @@ public class BoardState implements java.io.Serializable
 	 */
 	public boolean isMergeTransition()
 	{
-		return transitionsTo.size() > 1;
+		return parents.size() > 1;
 	}
 
 	//Expand collapsed nodes?
 	private void expandXSpace(BoardState child)
 	{
-		if (transitionsFrom.size() > 1 && child != null)
+		if (children.size() > 1 && child != null)
 		{
 			boolean foundChild = false;
-			for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1)
+			for (BoardState B : children) if (B.parents.size() == 1)
 			{
 				if (B == child)
 					foundChild = true;
@@ -1089,9 +1089,9 @@ public class BoardState implements java.io.Serializable
 			}
 		}
 
-		if (transitionsTo.size() == 1)
-			transitionsTo.get(0).expandXSpace(this);
-		else if (transitionsTo.size() >= 2)
+		if (parents.size() == 1)
+			parents.get(0).expandXSpace(this);
+		else if (parents.size() >= 2)
 			mergeOverlord.evalMerge(1);
 		else
 			recalculateLocation();
@@ -1100,10 +1100,10 @@ public class BoardState implements java.io.Serializable
 	//collapse nodes
 	private void contractXSpace(BoardState child)
 	{
-		if (transitionsFrom.size() > 1 && child != null)
+		if (children.size() > 1 && child != null)
 		{
 			boolean foundChild = false;
-			for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1)
+			for (BoardState B : children) if (B.parents.size() == 1)
 			{
 				if (B == child)
 					foundChild = true;
@@ -1114,9 +1114,9 @@ public class BoardState implements java.io.Serializable
 			}
 		}
 
-		if (transitionsTo.size() == 1)
-			transitionsTo.get(0).contractXSpace(this);
-		else if (transitionsTo.size() >= 2)
+		if (parents.size() == 1)
+			parents.get(0).contractXSpace(this);
+		else if (parents.size() >= 2)
 			mergeOverlord.evalMerge(-1);
 		else
 			recalculateLocation();
@@ -1145,7 +1145,7 @@ public class BoardState implements java.io.Serializable
 	private int numDirectBranches()
 	{
 		ArrayList<BoardState> valid = new ArrayList<BoardState>();
-		for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1) valid.add(B);
+		for (BoardState B : children) if (B.parents.size() == 1) valid.add(B);
 
 		if (valid.size() == 0)
 			return 1;
@@ -1172,9 +1172,9 @@ public class BoardState implements java.io.Serializable
 			recalculateLocation();
 		}
 
-		if (transitionsTo.size() == 1)
-			transitionsTo.get(0).evalMergeY();
-		else if (transitionsTo.size() == 0)
+		if (parents.size() == 1)
+			parents.get(0).evalMergeY();
+		else if (parents.size() == 0)
 			recalculateLocation();
 		else
 			mergeOverlord.evalMergeY();
@@ -1183,7 +1183,7 @@ public class BoardState implements java.io.Serializable
 	private int getDirectDepth()
 	{
 		int maxDirect = 0; boolean isMax = false;
-		for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1)
+		for (BoardState B : children) if (B.parents.size() == 1)
 		{
 			isMax = true;
 			int pot = B.getDepth();
@@ -1210,7 +1210,7 @@ public class BoardState implements java.io.Serializable
 	{
 		//return getDirectDepth()+getMergeDepth();
 		int tmp_max = -1;
-		for(BoardState b : transitionsFrom)
+		for(BoardState b : children)
 		{
 			int boardStateDepth = b.getDepth();
 			if(boardStateDepth > tmp_max)tmp_max = boardStateDepth;
@@ -1226,15 +1226,15 @@ public class BoardState implements java.io.Serializable
 	 */
 	private int numBranches()
 	{
-		if (transitionsFrom.size() == 0)
+		if (children.size() == 0)
 			return 1;
-		else if (transitionsFrom.size() == 1)
-			return transitionsFrom.get(0).numBranches();
+		else if (children.size() == 1)
+			return children.get(0).numBranches();
 		else
 		{
 			int mergeTot = 0, directTot = 0;
 			for (BoardState B : mergeChildren) mergeTot += B.numBranches();
-			for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1) directTot += B.numBranches();
+			for (BoardState B : children) if (B.parents.size() == 1) directTot += B.numBranches();
 			return Math.max(mergeTot, directTot);
 		}
 	}
@@ -1256,8 +1256,8 @@ public class BoardState implements java.io.Serializable
 	{
 		BoardState b = copy();
 		b.setModifiableState(!modifiableState);
-		transitionsFrom.add(b);
-		b.transitionsTo.add(this);
+		children.add(b);
+		b.parents.add(this);
 		
 		return b;
 	}*/
@@ -1269,15 +1269,15 @@ public class BoardState implements java.io.Serializable
 	public void addTransitionFrom(BoardState b, PuzzleRule rule)
 	{
 		Legup.getInstance().getGui().getTree().pushUndo();
-		transitionsFrom.add(b);
-		 b.transitionsTo.add(this);
+		children.add(b);
+		 b.parents.add(this);
 		 b.justification = rule;
 
 		b.offset.x = 0;
 		b.offset.y = TreePanel.NODE_RADIUS * 5;
 
 		ArrayList<BoardState> valid = new ArrayList<BoardState>();
-		for (BoardState B : transitionsFrom) if (B.transitionsTo.size() == 1) valid.add(B);
+		for (BoardState B : children) if (B.parents.size() == 1) valid.add(B);
 
 		if (valid.size() != 1) // if there are other children
 		{
@@ -1291,18 +1291,18 @@ public class BoardState implements java.io.Serializable
 			if (valid.size() >= 2)
 				b.offset.x = valid.get(valid.size()-2).offset.x+(valid.get(valid.size()-2).numBranches()+1)*(int)(1.5*TreePanel.NODE_RADIUS);
 
-			if (transitionsTo.size() >= 2)
+			if (parents.size() >= 2)
 				mergeOverlord.evalMerge(1);
-			else if (transitionsTo.size() == 1)
-				transitionsTo.get(0).expandXSpace(this);
+			else if (parents.size() == 1)
+				parents.get(0).expandXSpace(this);
 		}
 
-		if (transitionsTo.size() == 0)
+		if (parents.size() == 0)
 			recalculateLocation();
-		else if (transitionsTo.size() >= 2)
+		else if (parents.size() >= 2)
 			mergeOverlord.evalMergeY();
 		else
-			transitionsTo.get(0).evalMergeY();
+			parents.get(0).evalMergeY();
 		
 		if (!virtualBoard)
 		{
@@ -1317,8 +1317,8 @@ public class BoardState implements java.io.Serializable
 	 */
 	public void addTransitionFrom(BoardState child, String justification, boolean isCase)
 	{
-		transitionsFrom.add(child);
-		child.transitionsTo.add(this);
+		children.add(child);
+		child.parents.add(this);
 		if(isCase)
 		{
 			this.setCaseRuleJustification(Legup.getInstance().getPuzzleModule().getCaseRuleByName(justification));
@@ -1341,8 +1341,8 @@ public class BoardState implements java.io.Serializable
 		//
 		if (!modifiableState)
 			return null;
-		else if (transitionsFrom.size() > 0)
-			return transitionsFrom.get(0);
+		else if (children.size() > 0)
+			return children.get(0);
 		
 		BoardState child = addTransitionFrom();
 		child.editedToModifiable();
@@ -1356,12 +1356,12 @@ public class BoardState implements java.io.Serializable
 	@Deprecated // As of 10-09-08
 	public void arrangeChildren()
 	{
-		int size = transitionsFrom.size();
+		int size = children.size();
 		if (size != 0)
 		{
 			for (int x = 0; x < size; ++x)
 			{
-				BoardState child = transitionsFrom.get(x);
+				BoardState child = children.get(x);
 				child.offset.x = (int)(3 * TreePanel.NODE_RADIUS * (x-((size-1)/2.0)));
 				child.offset.y = TreePanel.NODE_RADIUS * 3;
 			}
@@ -1377,7 +1377,7 @@ public class BoardState implements java.io.Serializable
 	{
 		BoardState rv = null;
 
-		Vector<BoardState> parents = getTransitionsTo();
+		Vector<BoardState> parents = getParents();
 
 		if (parents.size() == 1)
 			rv = parents.get(0);
@@ -1387,7 +1387,7 @@ public class BoardState implements java.io.Serializable
 	
 	public BoardState getFirstChild()
 	{
-		return getTransitionsFrom().firstElement();
+		return getChildren().firstElement();
 	}
 
 	/**
@@ -1568,9 +1568,9 @@ public class BoardState implements java.io.Serializable
 		if(this == root) { return true; }
 		if(this.getStatus() == STATUS_RULE_CORRECT)
 		{
-			for (int x = 0; x < this.transitionsTo.size(); ++x)
+			for (int x = 0; x < this.parents.size(); ++x)
 			{
-				if(this.transitionsTo.get(x).followsFromRoot()) { return true; }
+				if(this.parents.get(x).followsFromRoot()) { return true; }
 			}
 		}
 
@@ -1679,17 +1679,17 @@ public class BoardState implements java.io.Serializable
 	public boolean leadsToContradiction()
 	{
 		if(leadsToInvalidInference())return false; //since a contradiction obtained after an invalid inference doesn't reflect poorly on the states before
-		if(transitionsFrom.size() > 0)
+		if(children.size() > 0)
 		{
 			BoardState next;
-			if(transitionsFrom.get(0).getCaseRuleJustification() != null)
+			if(children.get(0).getCaseRuleJustification() != null)
 			{
 				if(numNonContradictoryChildren() == 0)return true;
 				next = doesNotLeadToContradiction();
 			}
 			else
 			{
-				next = transitionsFrom.get(0);
+				next = children.get(0);
 			}
 			return (next != null) ? next.leadsToContradiction() : (getJustification() instanceof Contradiction);
 		}
@@ -1704,7 +1704,7 @@ public class BoardState implements java.io.Serializable
 		}
 
 		// does this boardstate lead to a contradiction?
-		Vector <BoardState> children = this.getTransitionsFrom();
+		Vector <BoardState> children = this.getChildren();
 		boolean rv = false;
 
 		if (children.size() == 1)
@@ -1745,7 +1745,7 @@ public class BoardState implements java.io.Serializable
 	{
 		BoardState rv = null;
 		int numNonContradictions = 0;
-		for(BoardState child : transitionsFrom)
+		for(BoardState child : children)
 		{
 			if(!child.leadsToContradiction())
 			{
@@ -1759,7 +1759,7 @@ public class BoardState implements java.io.Serializable
 	public int numNonContradictoryChildren()
 	{
 		int numNonContradictions = 0;
-		for(BoardState child : transitionsFrom)
+		for(BoardState child : children)
 		{
 			if(!child.leadsToContradiction())numNonContradictions++;
 		}
@@ -1772,7 +1772,7 @@ public class BoardState implements java.io.Serializable
 		{
 			return true;
 		}
-		for(BoardState b : transitionsFrom)
+		for(BoardState b : children)
 		{
 			if(b.leadsToInvalidInference())return true;
 		}
@@ -1793,7 +1793,7 @@ public class BoardState implements java.io.Serializable
 		if(this.isSolution)
 			return (leadSolution = true);
 
-		Vector <BoardState> children = this.getTransitionsFrom();
+		Vector <BoardState> children = this.getChildren();
 
 		if (children.size() == 1)
 		{
@@ -1824,15 +1824,15 @@ public class BoardState implements java.io.Serializable
 	private void removeLeaf(BoardState B)
 	{
 		boolean onlyRegChild = true;
-		for (BoardState BS : transitionsFrom) {
-			if (BS != B && BS.transitionsTo.size() == 1) {
+		for (BoardState BS : children) {
+			if (BS != B && BS.parents.size() == 1) {
 				onlyRegChild = false;
 				break;
 			}
 		}
 
 		if (!onlyRegChild) contractXSpace(B);
-		transitionsFrom.remove(B);
+		children.remove(B);
 
 		if (!virtualBoard) transitionsChanged();
 	}
@@ -1859,23 +1859,23 @@ public class BoardState implements java.io.Serializable
 	private void subDelete()
 	{
 		while (mergeChildren.size() > 0) mergeChildren.get(0).subDelete();
-		while (transitionsFrom.size() > 0) transitionsFrom.get(0).subDelete();
+		while (children.size() > 0) children.get(0).subDelete();
 
 		if (mergeOverlord != null) { mergeOverlord.removeUnderling(this); mergeOverlord = null; }
-		for (BoardState B : transitionsTo) B.removeLeaf(this);
-		transitionsTo.clear();
+		for (BoardState B : parents) B.removeLeaf(this);
+		parents.clear();
 	}
 
 	/**public static void deleteState(BoardState s, boolean saveChildren)
 	{
 		if(saveChildren)
 		{
-			for(BoardState parent : s.getTransitionsTo())
+			for(BoardState parent : s.getParents())
 			{
-				for(BoardState child : s.getTransitionsFrom())
+				for(BoardState child : s.getChildren())
 				{
-					parent.transitionsFrom.add(child);
-					child.transitionsTo.add(parent);
+					parent.children.add(child);
+					child.parents.add(parent);
 				}
 			}
 		}
@@ -1886,21 +1886,21 @@ public class BoardState implements java.io.Serializable
 	{
 		
 		if (oldParent.getCaseRuleJustification() != null) {
-			if (newParent.getCaseRuleJustification() != oldParent.getCaseRuleJustification() && newParent.getTransitionsFrom().size() == 0)
+			if (newParent.getCaseRuleJustification() != oldParent.getCaseRuleJustification() && newParent.getChildren().size() == 0)
 				newParent.setCaseRuleJustification(oldParent.getCaseRuleJustification());
 			oldParent.setCaseRuleJustification((CaseRule)null);
 		}
 		
-		for(BoardState child : oldParent.getTransitionsFrom())
+		for(BoardState child : oldParent.getChildren())
 		{
-			child.transitionsTo.clear();
-			newParent.transitionsFrom.add(child);
-			child.transitionsTo.add(newParent);
+			child.parents.clear();
+			newParent.children.add(child);
+			child.parents.add(newParent);
 			//newParent.expandXSpace(child);
 		}
 		
-		while (oldParent.getTransitionsFrom().size() > 0)
-			oldParent.getTransitionsFrom().remove(0);
+		while (oldParent.getChildren().size() > 0)
+			oldParent.getChildren().remove(0);
 		
 		if (!oldParent.virtualBoard)
 			oldParent.transitionsChanged();
@@ -1943,7 +1943,7 @@ public class BoardState implements java.io.Serializable
 	public void setOffsetRaw(Point offset)
 	{
 		this.offset = offset;
-		BoardState parent = (transitionsTo.size() > 0) ? transitionsTo.get(0) : null;
+		BoardState parent = (parents.size() > 0) ? parents.get(0) : null;
 		if(parent != null)parent.setOffsetRaw(parent.offset);
 		this.location = (parent != null) ? new Point(parent.location.x+offset.x,parent.location.y+offset.y) : offset;
 	}
@@ -1953,14 +1953,14 @@ public class BoardState implements java.io.Serializable
 	 */
 	public void recalculateLocation()
 	{
-		if (this.getTransitionsTo().size() == 1)
+		if (this.getParents().size() == 1)
 		{
 			BoardState parentState = this.getSingleParentState();
 			Point p = new Point(parentState.getLocation().y, parentState.getLocation().x);
 			this.location.x = p.x + offset.x;
 			this.location.y = p.y + offset.y;
 			
-			//this.location.x = this.transitionsTo.lastElement().getLocation().x + this.offset.x;
+			//this.location.x = this.parents.lastElement().getLocation().x + this.offset.x;
 
 			//If this and its parent are collapsed, their locations are ontop of each other
 			//Places this over where the previous actual state is if it functions as a transition (isModifiable)
@@ -1969,7 +1969,7 @@ public class BoardState implements java.io.Serializable
 			else
 				this.location.x = p.x + offset.x;
 		}
-		else if(this.getTransitionsTo().size() == 0)
+		else if(this.getParents().size() == 0)
 		{
 			this.location.x = offset.x;
 			this.location.y = offset.y;
@@ -1993,7 +1993,7 @@ public class BoardState implements java.io.Serializable
 			}
 		}
 
-		for (BoardState s : transitionsFrom) s.recalculateLocation();
+		for (BoardState s : children) s.recalculateLocation();
 		for (BoardState s : mergeChildren) s.recalculateLocation();
 	}
 
@@ -2019,7 +2019,7 @@ public class BoardState implements java.io.Serializable
 	public int countStates()
 	{
 		int count = 1;
-		for(BoardState s : this.transitionsFrom)
+		for(BoardState s : this.children)
 		{
 			count += s.countStates();
 		}
@@ -2029,11 +2029,11 @@ public class BoardState implements java.io.Serializable
 	public int countLeaves()
 	{
 		int count = 0;
-		if(this.transitionsFrom.size() == 0)
+		if(this.children.size() == 0)
 			return 1;
 		else
 		{
-			for(BoardState s : this.transitionsFrom)
+			for(BoardState s : this.children)
 			{
 				count += s.countLeaves();
 			}
@@ -2044,7 +2044,7 @@ public class BoardState implements java.io.Serializable
 	public int countDepth()
 	{
 		int count = 0;
-		for(BoardState s : this.transitionsFrom)
+		for(BoardState s : this.children)
 		{
 			count = Math.max(s.countDepth(), count);
 		}
@@ -2055,8 +2055,8 @@ public class BoardState implements java.io.Serializable
 	public BoardState getFinalState()
 	{
 		if(this.leadsToContradiction())return null;
-		else if(this.transitionsFrom.size() == 0)return this; //leaf node
-		else if(this.transitionsFrom.size() == 1)return this.transitionsFrom.lastElement().getFinalState();
+		else if(this.children.size() == 0)return this; //leaf node
+		else if(this.children.size() == 1)return this.children.lastElement().getFinalState();
 		else return (doesNotLeadToContradiction() != null)?doesNotLeadToContradiction().getFinalState():null;
 	}
 
@@ -2198,7 +2198,7 @@ public class BoardState implements java.io.Serializable
 	private void resetID()
 	{
 		this.id = 0;
-		for(BoardState b : transitionsFrom)
+		for(BoardState b : children)
 		{
 			b.resetID();
 		}
@@ -2210,7 +2210,7 @@ public class BoardState implements java.io.Serializable
 			return lastID;
 		this.id = lastID;
 		++lastID;
-		for(BoardState b : transitionsFrom)
+		for(BoardState b : children)
 		{
 			lastID = b.calcID(lastID);
 		}
@@ -2220,18 +2220,18 @@ public class BoardState implements java.io.Serializable
 	public void makeSaveableProof(SaveableProofState[] states, Vector<SaveableProofTransition> transitions)
 	{
 		states[this.id] = this.toSaveableProofState();
-		if(this.transitionsFrom.size() == 1)
+		if(this.children.size() == 1)
 		{
-			BoardState child = this.transitionsFrom.get(0);
+			BoardState child = this.children.get(0);
 			if( PuzzleRule.class.isInstance(child.justification))
 				transitions.add(new SaveableProofTransition(this.id, child.id, ((PuzzleRule)child.justification).getName(), false));
 			else if( Contradiction.class.isInstance(child.justification))
 				transitions.add(new SaveableProofTransition(this.id, child.id, ((Contradiction)child.justification).getName(), false));
 			child.makeSaveableProof(states, transitions);
 		}
-		else if(this.transitionsFrom.size() > 1)
+		else if(this.children.size() > 1)
 		{
-			for(BoardState b : this.transitionsFrom)
+			for(BoardState b : this.children)
 			{
 				transitions.add(new SaveableProofTransition(this.id, b.id, this.getCaseRuleJustification().getName(), true));
 				b.makeSaveableProof(states, transitions);

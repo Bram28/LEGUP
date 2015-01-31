@@ -43,7 +43,7 @@ public class RuleBlackBetweenRegions extends PuzzleRule
 		int height = origBoardState.getHeight();
 
 		// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			return "This rule only involves having a single branch!";
 		}

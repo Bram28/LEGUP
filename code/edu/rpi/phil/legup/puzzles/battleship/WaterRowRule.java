@@ -27,7 +27,7 @@ public class WaterRowRule extends PuzzleRule
 
 	protected String checkRuleRaw(BoardState state)
 	{
-		if (state.getTransitionsFrom().size() > 1)
+		if (state.getChildren().size() > 1)
 			return "Rule does not apply to Merge cases";
 
 		BoardState parent = state.getSingleParentState();

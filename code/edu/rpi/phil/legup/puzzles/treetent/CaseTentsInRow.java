@@ -149,10 +149,10 @@ public class CaseTentsInRow extends CaseRule
 		String rv = null;
 		int affectedRow = -1; // a value of -1 indicates that a column is being affected, not a row
 		int affectedColumn = -1;
-		int numChildStates = parent.getTransitionsFrom().size();  // how many branches do we have?
+		int numChildStates = parent.getChildren().size();  // how many branches do we have?
 		// we will first check one state to see which row/column we are working with 
 		// (we still will need to check the rest of the states to make sure they are also changing this row/col)
-		BoardState one = parent.getTransitionsFrom().get(0);
+		BoardState one = parent.getChildren().get(0);
 		ArrayList<Point> pointsChangedInFirstNewState = BoardState.getDifferenceLocations(parent,one);
 		if(pointsChangedInFirstNewState.size() < 2)
 		{
@@ -201,7 +201,7 @@ public class CaseTentsInRow extends CaseRule
 		if(numChildStates != numCombinations){
 			return "The number of branches must be equal to the number of possible\nconfigurations for "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces";
 		}
-		Vector<BoardState> allChildStates = parent.getTransitionsFrom();
+		Vector<BoardState> allChildStates = parent.getChildren();
 		for(int i = 0; i < allChildStates.size(); i++){
 			BoardState currentChildState = allChildStates.get(i);
 			ArrayList<Point> pointsChanged = BoardState.getDifferenceLocations(parent,currentChildState);

@@ -141,7 +141,7 @@ public class BasicRulePanel extends JustificationPanel
 	{
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
-		if(cur.getSingleParentState() != null)if(cur.getSingleParentState().getTransitionsFrom().size() > 1)return null;
+		if(cur.getSingleParentState() != null)if(cur.getSingleParentState().getChildren().size() > 1)return null;
 		if (cur.isModifiable()) {
 			if (cur.getSingleParentState().getCaseRuleJustification() != null)
 				return null;
@@ -153,13 +153,13 @@ public class BasicRulePanel extends JustificationPanel
 			
 			//add new transition (if the state has no children)
 			BoardState next;
-			if(cur.getTransitionsFrom().size() == 0) //add new node with justification
+			if(cur.getChildren().size() == 0) //add new node with justification
 			{
 				next = cur.addTransitionFrom();
 			}
-			else if (cur.getTransitionsFrom().size() == 1) //change justification on existing node
+			else if (cur.getChildren().size() == 1) //change justification on existing node
 			{
-				next = cur.getTransitionsFrom().lastElement();
+				next = cur.getChildren().lastElement();
 			}
 			else return null; //don't do anything if there's already a split (since this is a basic rule)
 			next.setJustification(rules.get(button));

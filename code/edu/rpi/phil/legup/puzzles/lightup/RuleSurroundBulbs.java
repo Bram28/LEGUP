@@ -39,7 +39,7 @@ public class RuleSurroundBulbs extends PuzzleRule
     	LightUp.determineLight(origBoardState, litup);
     	
     	// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -106,7 +106,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 	    	boolean[][] litup = new boolean[origBoardState.getHeight()][origBoardState.getWidth()];
 	    	LightUp.determineLight(origBoardState, litup);
 	    	
-	    	if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
 	    	{
 	    		for (int y = 0; y < origBoardState.getHeight(); ++y)
 				{

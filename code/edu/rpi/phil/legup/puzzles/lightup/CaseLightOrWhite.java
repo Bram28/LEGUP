@@ -28,14 +28,14 @@ public class CaseLightOrWhite extends CaseRule
 	{
 		String rv = null;
 		BoardState parent = state.getSingleParentState();
-		if (parent.getTransitionsFrom().size() != 2)
+		if (parent.getChildren().size() != 2)
 		{
 			rv = "This case rule can only be applied on a two-way split.";
 		}
 		else
 		{
-			BoardState one = parent.getTransitionsFrom().get(0);
-			BoardState two = parent.getTransitionsFrom().get(1);
+			BoardState one = parent.getChildren().get(0);
+			BoardState two = parent.getChildren().get(1);
 						
 			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
 			
@@ -86,9 +86,9 @@ public class CaseLightOrWhite extends CaseRule
 			
 			Permutations.permutationCell( state, location, states );
 			
-			for(int i = 0; i < state.getTransitionsFrom( ).size( ); ++i)
+			for(int i = 0; i < state.getChildren( ).size( ); ++i)
 			{
-				LightUp.fillLight(state.getTransitionsFrom( ).get( i ));
+				LightUp.fillLight(state.getChildren( ).get( i ));
 			}
 			
 			state.setCaseSplitJustification(this);
