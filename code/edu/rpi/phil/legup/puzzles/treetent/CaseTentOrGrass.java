@@ -23,14 +23,14 @@ public class CaseTentOrGrass extends CaseRule
 	{
 		String rv = null;
 		BoardState parent = state.getSingleParentState();
-		if (parent.getTransitionsFrom().size() != 2)
+		if (parent.getChildren().size() != 2)
 		{
 			rv = "This case rule can only be applied on a two-way split.";
 		}
 		else
 		{
-			BoardState one = parent.getTransitionsFrom().get(0);
-			BoardState two = parent.getTransitionsFrom().get(1);
+			BoardState one = parent.getChildren().get(0);
+			BoardState two = parent.getChildren().get(1);
 			
 			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
 			

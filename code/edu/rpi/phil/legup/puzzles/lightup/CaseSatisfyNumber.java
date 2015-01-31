@@ -72,7 +72,7 @@ public class CaseSatisfyNumber extends CaseRule
 		String rv = null;
 		BoardState parent = state.getSingleParentState();
 		{
-			int num_children = parent.getTransitionsFrom().size();
+			int num_children = parent.getChildren().size();
 			Vector<Point> points = findCommonTile(parent,state,crshTileType());
 			Point p = (points.size()==1)?points.get(0):null;
 			int block_value = (p != null)?getBlockValue(parent.getCellContents(p.x,p.y)):-2;
@@ -93,30 +93,30 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			if(rv != null)return rv; //ensures that the conditions checked above are not overwritten
 			Vector<Point> lights = new Vector<Point>(); //location of light in each branch
-			for(BoardState b : parent.getTransitionsFrom())
+			for(BoardState b : parent.getChildren())
 			{
 				if(CaseLinkTree.calcAdjacentTiles(b,p,LightUp.CELL_UNKNOWN) != 0)
 				{
-					rv = "All tiles adjacent to the block must be filled, which\nis not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					rv = "All tiles adjacent to the block must be filled, which\nis not the case for branch "+(parent.getChildren().indexOf(b)+1);
 					break;
 				}
 				ArrayList<Point> dif = BoardState.getDifferenceLocations(b,parent);
 				if(dif.size() != num_adj_blanks)
 				{
-					rv = "Only cells adjacent to the block should be modified,\nwhich is not the case for branch "+(parent.getTransitionsFrom().indexOf(b)+1);
+					rv = "Only cells adjacent to the block should be modified,\nwhich is not the case for branch "+(parent.getChildren().indexOf(b)+1);
 					break;
 				}
 				if(CaseLinkTree.calcAdjacentTiles(b,p,LightUp.CELL_LIGHT) != block_value)
 				{
-					rv = "Branch "+(parent.getTransitionsFrom().indexOf(b)+1)+" does not have the correct amount of lights.";
+					rv = "Branch "+(parent.getChildren().indexOf(b)+1)+" does not have the correct amount of lights.";
 					break;
 				}
-				for(BoardState b2 : parent.getTransitionsFrom()) //check sibling equivalence
+				for(BoardState b2 : parent.getChildren()) //check sibling equivalence
 				{
 					if(b==b2)continue;
 					if(BoardState.getDifferenceLocations(b,b2).size()==0)
 					{
-						rv = "Branch "+(parent.getTransitionsFrom().indexOf(b)+1)+" is the same as branch "+(parent.getTransitionsFrom().indexOf(b2)+1)+".";
+						rv = "Branch "+(parent.getChildren().indexOf(b)+1)+" is the same as branch "+(parent.getChildren().indexOf(b2)+1)+".";
 					}
 				}
 			}

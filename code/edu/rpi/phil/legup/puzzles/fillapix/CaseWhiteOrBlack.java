@@ -31,10 +31,10 @@ public class CaseWhiteOrBlack extends CaseRule
 
 	public String checkCaseRuleRaw(BoardState state)
 	{
-		if (state.getTransitionsFrom().size() < 2)
+		if (state.getChildren().size() < 2)
 			return "This case rule can only be applied on a split transition";
 
-		Vector<BoardState> states = state.getTransitionsFrom();
+		Vector<BoardState> states = state.getChildren();
 		if (states.size() != 2) return "This case rule can only be applied to two child states";
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
 		if (dif.size() != 1)

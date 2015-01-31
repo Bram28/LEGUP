@@ -82,7 +82,7 @@ public class NormalBoard extends Board
 		}
 
 		BoardState state = selection.getState();
-		Vector<BoardState> parentStates = state.getTransitionsTo();
+		Vector<BoardState> parentStates = state.getParents();
 
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 
@@ -109,7 +109,7 @@ public class NormalBoard extends Board
 				pm.defaultApplication.doDefaultApplication(state,pm,p);
 				pm.defaultApplication = null;
 			}
-			else if (state.getTransitionsFrom().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
+			else if (state.getChildren().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
 			{
 				parent.showStatus("You cannot modify internal nodes in this proof mode", true);
 			}
@@ -160,7 +160,7 @@ public class NormalBoard extends Board
 				// can't add to the root state, print an error
 				//parent.showStatus("You can not change the initial state.", true);
 			}*/
-			else if (state.getTransitionsFrom().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
+			else if (state.getChildren().size() > 0 && LEGUP_Gui.profFlag(LEGUP_Gui.INTERN_RO))
 			{
 				parent.showStatus("You cannot modify internal nodes in this proof mode", true);
 			}
@@ -215,7 +215,7 @@ public class NormalBoard extends Board
 		else if (e.getButton() == MouseEvent.BUTTON1)
 		{
 			BoardState state = selection.getState();
-			Vector<BoardState> parentStates = state.getTransitionsTo();
+			Vector<BoardState> parentStates = state.getParents();
 
 			if (lastMousePoint != null && parentStates.size() > 0) // not root state
 			{

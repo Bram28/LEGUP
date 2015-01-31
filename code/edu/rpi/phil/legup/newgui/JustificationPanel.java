@@ -106,7 +106,7 @@ public abstract class JustificationPanel extends JPanel implements ActionListene
 		
 		BoardState state = sel.getState();
 		
-		if(!sel.isState() || state.getTransitionsFrom().size() != 0)
+		if(!sel.isState() || state.getChildren().size() != 0)
 		{
 			//Must select a state with no children
 			parentFrame.setStatus(false, "Default application of case rules must be applied to a state with no children!");

@@ -36,7 +36,7 @@ public class RuleWhiteCorners extends PuzzleRule
     	int blanks;
     	
     	// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -93,7 +93,7 @@ public class RuleWhiteCorners extends PuzzleRule
 	    	boolean[][] litup = new boolean[height][width];
 	    	LightUp.determineLight(destBoardState, litup);
 	    	
-	    	if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
 	    	{
 	    		for (int y = 0; y < origBoardState.getHeight(); ++y)
 				{

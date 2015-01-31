@@ -113,7 +113,7 @@ public class RuleOnlySelfLit extends PuzzleRule
 		LightUp.determineLight(origBoardState, litup);
 
 		// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			return "This rule only involves having a single branch!";
 		}
@@ -179,7 +179,7 @@ public class RuleOnlySelfLit extends PuzzleRule
 		LightUp.determineLight(origBoardState, litup);
 
 		if (origBoardState != null
-				&& destBoardState.getTransitionsTo().size() == 1)
+				&& destBoardState.getParents().size() == 1)
 		{
 			ArrayList<Point> points = findAllOneSources(destBoardState, litup);
 			if(points.size() == 0)

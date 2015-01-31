@@ -37,7 +37,7 @@ public class RuleForcedLocation extends PuzzleRule
 
 		boolean anychange = false;
 //    	 Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}

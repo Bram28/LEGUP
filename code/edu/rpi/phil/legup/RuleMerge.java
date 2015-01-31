@@ -35,19 +35,19 @@ public final class RuleMerge extends PuzzleRule
      */
     protected String checkRuleRaw(BoardState state)
     {
-    	if (state.getTransitionsTo().size() < 2)
+    	if (state.getParents().size() < 2)
     	{
     		return "To merge states correctly, there must be at least two parent states.";
     	}
     	else
     	{
-    		Vector <BoardState> parents = state.getTransitionsTo();
+    		Vector <BoardState> parents = state.getParents();
     		
     		// make sure all of our information is in the parent
     		for (int i = 0; i < parents.size(); ++i)
     		{
     			BoardState parent = parents.get(i);
-    			if(parent.getTransitionsFrom().size() > 1)
+    			if(parent.getChildren().size() > 1)
     				return "Parent nodes have other children!";
     			int w = state.getWidth();
     			int h = state.getHeight();

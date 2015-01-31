@@ -94,7 +94,7 @@ public class Rule3x3 extends PuzzleRule
 		Region curRegion;
 		Point tempPoint;
 		// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -156,7 +156,7 @@ public class Rule3x3 extends PuzzleRule
 		ArrayList<Object> extraData = origBoardState.getExtraData();
 		Region curRegion;
 		
-		if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+		if (origBoardState != null && destBoardState.getParents().size() == 1)
 		{
 			int regioncount = ((Integer)origBoardState.getExtraData().get(1)).intValue();
 			for( int r = 0; r< regioncount; r++)

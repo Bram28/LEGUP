@@ -98,7 +98,7 @@ public class Rule2InCorner extends PuzzleRule
 		Point dimPoint;
 		Point locPoint;
 		// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -168,7 +168,7 @@ public class Rule2InCorner extends PuzzleRule
 		Region curRegion;
 		int height = origBoardState.getHeight();
 		int width = origBoardState.getWidth();
-		if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+		if (origBoardState != null && destBoardState.getParents().size() == 1)
 		{
 			int regioncount = ((Integer)origBoardState.getExtraData().get(1)).intValue();
 			for( int r = 0; r< regioncount; r++)

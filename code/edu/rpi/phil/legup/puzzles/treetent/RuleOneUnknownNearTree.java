@@ -176,7 +176,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
     	int numTentsAdded = 0;
     	
     	// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -243,7 +243,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 		int empty_cells= 0;
 		ArrayList <Object> destExtra = destBoardState.getExtraData();
 		ArrayList <Object> origExtra = origBoardState.getExtraData();
-		if (origBoardState != null && origBoardState.getTransitionsTo().size() == 1)
+		if (origBoardState != null && origBoardState.getParents().size() == 1)
 		{
 			for(int x = 0; x < width; ++x)
 			{

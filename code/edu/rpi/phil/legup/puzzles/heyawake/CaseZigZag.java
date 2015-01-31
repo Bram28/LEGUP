@@ -29,14 +29,14 @@ public class CaseZigZag extends CaseRule
 		int regionNum;
 		int height = state.getHeight();
     	int width = state.getWidth();
-		if (state.getTransitionsFrom().size() != 2)
+		if (state.getChildren().size() != 2)
 		{
 			rv = "This case rule can only be applied on a two-way split.";
 		}
 		else
 		{
-			BoardState one = state.getTransitionsFrom().get(0);
-			BoardState two = state.getTransitionsFrom().get(1);
+			BoardState one = state.getChildren().get(0);
+			BoardState two = state.getChildren().get(1);
 						
 			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
 			Point p = dif.get(0);

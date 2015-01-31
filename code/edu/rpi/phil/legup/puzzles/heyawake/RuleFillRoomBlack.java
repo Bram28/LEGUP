@@ -98,7 +98,7 @@ public class RuleFillRoomBlack extends PuzzleRule{
     	BoardState origBoardState = destBoardState.getSingleParentState();
     	
     	// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			error = "This rule only involves having a single branch!";
 		}
@@ -153,7 +153,7 @@ public class RuleFillRoomBlack extends PuzzleRule{
     	BoardState origBoardState = destBoardState.getSingleParentState();
     	boolean changed = false;
     	
-    	if (origBoardState != null && destBoardState.getTransitionsTo().size() == 1)
+    	if (origBoardState != null && destBoardState.getParents().size() == 1)
     	{
 	    	int regioncount = ((Integer)origBoardState.getExtraData().get(1)).intValue();
 	    	for( int x = 0; x< regioncount; ++x)

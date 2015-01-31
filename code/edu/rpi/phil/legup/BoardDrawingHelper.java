@@ -54,8 +54,8 @@ public abstract class BoardDrawingHelper
 		int height = state.getHeight();
 
 		BoardState origState = null, newState = state;
-		if (state.getTransitionsTo().size() == 1)
-			origState = state.getTransitionsTo().get(0);
+		if (state.getParents().size() == 1)
+			origState = state.getParents().get(0);
 		boolean showOrange = false;
 
 		if( TreePanel.getMouseOver() != null )
@@ -66,16 +66,16 @@ public abstract class BoardDrawingHelper
 				newState = selection.getState();
 				origState = newState.getSingleParentState();
 			}
-			else newState = (origState = selection.getState()).getTransitionsFrom().get(0);
+			else newState = (origState = selection.getState()).getChildren().get(0);
 			//showOrange = true;
 		}
 
 		//only gets redrawn intermittently, enable when an elegent way to force redraws is found (and possibly change base)
 		/*if (ANIMATE_SPLIT_CASE && origState != null)
 		{
-			int whichChild = (int)((System.currentTimeMillis()/1000)%origState.getTransitionsFrom().size());
-			//System.out.format("%d,%d\n",whichChild,origState.getTransitionsFrom().size());
-			newState = origState.getTransitionsFrom().get(whichChild);
+			int whichChild = (int)((System.currentTimeMillis()/1000)%origState.getChildren().size());
+			//System.out.format("%d,%d\n",whichChild,origState.getChildren().size());
+			newState = origState.getChildren().get(whichChild);
 		}*/
 
 		// Draw each cell
@@ -173,20 +173,20 @@ public abstract class BoardDrawingHelper
 		int curVal = newState.getCellContents(x, y);
 		int prevVal = ((oldState == null) ? curVal : oldState.getCellContents(x, y));
 		
-		if(oldState != null)if(oldState.getTransitionsFrom().size() > 0)
-		if(oldState.getTransitionsFrom().get(0).getCaseRuleJustification() != null) 
+		if(oldState != null)if(oldState.getChildren().size() > 0)
+		if(oldState.getChildren().get(0).getCaseRuleJustification() != null) 
 		{
-			for(BoardState b : oldState.getTransitionsFrom())
+			for(BoardState b : oldState.getChildren())
 			{
 				if(b == newState)continue;
 				if((b.getCellContents(x,y) != prevVal) && (curVal == prevVal))return caseRuleSiblingColor;
 			}
 		}
 		
-		if(newState.getTransitionsFrom().size() > 0)
-		if(newState.getTransitionsFrom().get(0).getCaseRuleJustification() != null) 
+		if(newState.getChildren().size() > 0)
+		if(newState.getChildren().get(0).getCaseRuleJustification() != null) 
 		{
-			for(BoardState b : newState.getTransitionsFrom())
+			for(BoardState b : newState.getChildren())
 			{
 				if(b.getCellContents(x,y) != curVal)return caseRuleSiblingColor;
 			}
@@ -202,10 +202,10 @@ public abstract class BoardDrawingHelper
 		}
 		else if( prevVal != PuzzleModule.CELL_UNKNOWN && prevVal != curVal )
 			return redFilter;
-		else if( oldState == null && newState.getTransitionsTo().size() > 1 ){
+		else if( oldState == null && newState.getParents().size() > 1 ){
 			//Transition
 			// check if it's identical in all children if not draw orange
-			for( BoardState parent : newState.getTransitionsTo() ){
+			for( BoardState parent : newState.getParents() ){
 				if( parent.getCellContents(x,y) != curVal )
 					return orangeSquare;
 			}

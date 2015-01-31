@@ -169,7 +169,7 @@ public class Legup
 			initialBoardState = SaveableProof.loadProof(filename);
 			selections = new Selections();
 			BoardState b = initialBoardState;
-			if(b!=null)while(b.getTransitionsFrom().size() > 0)b = b.getTransitionsFrom().lastElement();
+			if(b!=null)while(b.getChildren().size() > 0)b = b.getChildren().lastElement();
 			setCurrentState(b);
 		}
 		//catch (NullPointerException e1) {}

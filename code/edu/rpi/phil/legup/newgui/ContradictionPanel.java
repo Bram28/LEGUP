@@ -122,7 +122,7 @@ public class ContradictionPanel extends JustificationPanel
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		BoardState cur = selection.getState();
 		
-		if(cur.isModifiable() || (cur.getTransitionsFrom().size() != 0))
+		if(cur.isModifiable() || (cur.getChildren().size() != 0))
 		{
 			return null;
 		}

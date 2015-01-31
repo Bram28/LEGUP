@@ -31,7 +31,7 @@ public class RuleCornerBlack extends PuzzleRule
 		BoardState origBoardState = destBoardState.getSingleParentState();
 
 		// Check for only one branch
-		if (destBoardState.getTransitionsTo().size() != 1)
+		if (destBoardState.getParents().size() != 1)
 		{
 			return "This rule only involves having a single branch!";
 		}

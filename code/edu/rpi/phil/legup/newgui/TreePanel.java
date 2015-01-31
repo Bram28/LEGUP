@@ -98,7 +98,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 	private BoardState getLastCollapsed(BoardState s, int[] outptrNumTransitions)
 	{
-		Vector <BoardState> children = s.getTransitionsFrom();
+		Vector <BoardState> children = s.getChildren();
 		BoardState rv = s;
 		int numTransitions = 0;
 ;
@@ -126,8 +126,8 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		b.setBounds((int)b.getX()-(int)(100*scale), (int)b.getY(), (int)b.getWidth()+(int)(400*scale), (int)b.getHeight()+(int)(200*scale));
 		// get the relevant child nodes
 		Vector <BoardState> children = state.isCollapsed()
-			? getLastCollapsed(state).getTransitionsFrom()
-			: state.getTransitionsFrom();
+			? getLastCollapsed(state).getChildren()
+			: state.getChildren();
 		// compute the union of the child bounding boxes recursively
 		for (int c = 0; c < children.size(); c++)
 		{
@@ -233,7 +233,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 		if (stateSelected && isCollapsed)
 		{
-			Vector <BoardState> parents = state.getTransitionsTo();
+			Vector <BoardState> parents = state.getParents();
 
 			if (parents.size() == 1 && parents.get(0).isCollapsed())
 				stateSelected = false; // can't select a collapsed state
@@ -245,7 +245,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		}
 		else
 		{
-			for(BoardState b : state.getTransitionsFrom())
+			for(BoardState b : state.getChildren())
 			{
 				Selection s = getSelectionAtPoint(b,where);
 				if(s != null)rv = s;
@@ -361,7 +361,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		BoardState currentState = s.getState();
 		
 		// make sure we don't delete the initial board state
-		if (currentState.getTransitionsTo().size() == 0)
+		if (currentState.getParents().size() == 0)
 			return;
 		
 		// choose the previous state and move the children from after state
@@ -371,22 +371,22 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		if (currentState.isModifiable()) {
 			parentState = currentState.getSingleParentState();
 			childState = currentState.endTransition();
-			parentState.getTransitionsFrom().remove(currentState);
-			currentState.getTransitionsTo().remove(parentState);
+			parentState.getChildren().remove(currentState);
+			currentState.getParents().remove(parentState);
 		} else {
 			parentState = currentState.getSingleParentState().getSingleParentState();
 			childState = currentState;
-			parentState.getTransitionsFrom().remove(currentState.getSingleParentState());
-			currentState.getSingleParentState().getTransitionsTo().remove(parentState);
+			parentState.getChildren().remove(currentState.getSingleParentState());
+			currentState.getSingleParentState().getParents().remove(parentState);
 		}
 		
 		BoardState.reparentChildren(childState, parentState);
 		
 		// delete the current state
 		if (currentState.isModifiable()) {
-			BoardState.deleteState(currentState);
+			currentState.deleteState();
 		} else {
-			BoardState.deleteState(currentState.getSingleParentState());
+			currentState.getSingleParentState().deleteState();
 		}
 		
 		Legup.getInstance().getSelections().setSelection(new Selection(parentState, false));
@@ -406,14 +406,14 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		if (s.isState())
 		{ // state
 			// make sure we don't delete the initial board state
-			Vector<BoardState> parentStates = state.getTransitionsTo();
+			Vector<BoardState> parentStates = state.getParents();
 			if (parentStates.size() == 0)
 				return;
 				
 			// use to select the previous state
 			BoardState parent = parentStates.get(0);
 			
-			BoardState.deleteState(state);
+			state.deleteState();
 			
 			Legup.getInstance().getSelections().setSelection(new Selection(parent, false));
 		}
@@ -424,13 +424,13 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			Legup.getInstance().getSelections().setSelection(new Selection(state, false));
 
 			// delete children states
-			Vector <BoardState> children = state.getTransitionsFrom();
+			Vector <BoardState> children = state.getChildren();
 
 			while (children.size() > 0)
 			{
 				BoardState child = children.get(0);
 
-				BoardState.deleteState(child);
+				child.deleteState();
 
 				children.remove(0);
 			}
@@ -504,13 +504,13 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		boolean isCollapsed = state.isCollapsed();
 
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
-		Vector <BoardState> transitionsFrom = null;
+		Vector <BoardState> children = null;
 		Point draw;
 
 		g.setColor(Color.black);
 		draw = (Point)state.getLocation().clone();
 		if (!isCollapsed)
-			transitionsFrom = state.getTransitionsFrom();
+			children = state.getChildren();
 		else
 		{
 			int[] ptrNumTransitions = new int[1];
@@ -518,19 +518,19 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			Point nextPoint = (Point)lastCollapsed.getLocation().clone();
 			draw.x = (draw.x + nextPoint.x)/2;
 
-			transitionsFrom = lastCollapsed.getTransitionsFrom();
+			children = lastCollapsed.getChildren();
 		}
 
-		for (int c = 0; c < transitionsFrom.size(); ++c)
+		for (int c = 0; c < children.size(); ++c)
 		{
-			BoardState b = transitionsFrom.get(c);
+			BoardState b = children.get(c);
 			Point childPoint = (Point)b.getLocation().clone();
 			if(b.isCollapsed())
 			{
 				childPoint.x = (childPoint.x + getLastCollapsed(state).getLocation().x)/2;
 			}
 
-			if (transitionsFrom.size() == 1)
+			if (children.size() == 1)
 			{
 				int status = (flag ? b.getStatus() : b.getDelayStatus());
 				if (status == BoardState.STATUS_RULE_CORRECT || status ==  BoardState.STATUS_CONTRADICTION_CORRECT)
@@ -575,12 +575,12 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 					// maybe all the other ones are contradictions (proof by contradiction)
 					boolean allOthersLeadToContradiction = true;
 
-					for (int index = 0; index < transitionsFrom.size(); ++index)
+					for (int index = 0; index < children.size(); ++index)
 					{
 						if (c == index) // skip ourselves
 							continue;
 
-						BoardState sibling = transitionsFrom.get(index);
+						BoardState sibling = children.get(index);
 
 						if (!sibling.leadsToContradiction())
 						{
@@ -601,9 +601,9 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			}
 
 			//**********************Source of node issue*************************//
-			//if (b.getTransitionsFrom().size() > 0)
+			//if (b.getChildren().size() > 0)
 				drawTree(g, b);
-				//drawTree(g, b.getTransitionsFrom().get(0));
+				//drawTree(g, b.getChildren().get(0));
 		}
 
 		Selection theSelection = new Selection(state,false);

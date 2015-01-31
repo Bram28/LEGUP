@@ -51,7 +51,7 @@ public abstract class PuzzleRule extends Justification
     	int errorcount = 0;
 
     	// Check for only one branch
-		if (state.getTransitionsTo().size() != 1)
+		if (state.getParents().size() != 1)
 		{
 			return "Basic rules require a single branch only!";
 		}
@@ -145,7 +145,7 @@ public abstract class PuzzleRule extends Justification
     	int cellvalue = 0;
     	boolean[][] litup = new boolean[origBoardState.getHeight()][origBoardState.getWidth()];
 
-    	if (origBoardState != null && state.getTransitionsTo().size() == 1)
+    	if (origBoardState != null && state.getParents().size() == 1)
     	{
     		for (int y = 0; y < origBoardState.getHeight(); ++y)
 			{

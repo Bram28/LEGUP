@@ -64,7 +64,7 @@ public class Permutations
 		}
 		
 		
-		BoardState.deleteState( permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0));
+		permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0).deleteState();
 		//boardState.arrangeChildren( );
 	}
 	
@@ -72,7 +72,7 @@ public class Permutations
 	{
 		if(states.size() != stateCounts.size())
 			return;
-		BoardState.deleteState( permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0));
+		permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0).deleteState();
 		//boardState.arrangeChildren( );
 	}
 	
@@ -81,7 +81,7 @@ public class Permutations
 		if(current >= cells.size())
 		{
 			BoardState newboardState = boardState.copy();
-			boardState.getTransitionsTo( ).get( 0 ).addTransitionFrom( newboardState, null );
+			boardState.getParents( ).get( 0 ).addTransitionFrom( newboardState, null );
 			return newboardState;
 		}
 		Integer state;
@@ -92,7 +92,7 @@ public class Permutations
 				state = states.get( i );
 				if(state == null)
 				{
-					boardState.setCellContents( cells.get( current ).x, cells.get( current ).y, boardState.getTransitionsTo( ).get( 0 ).getCellContents( cells.get( current ).x, cells.get( current ).y ));
+					boardState.setCellContents( cells.get( current ).x, cells.get( current ).y, boardState.getParents( ).get( 0 ).getCellContents( cells.get( current ).x, cells.get( current ).y ));
 					stateCounts.set( i, stateCounts.get( i ) - 1);
 					boardState = permutationGeneral(boardState, cells, states, stateCounts, current + 1);
 					stateCounts.set( i, stateCounts.get( i ) + 1);
@@ -113,7 +113,7 @@ public class Permutations
 	{
 		if(states.size() != stateCounts.size())
 			return;
-		BoardState.deleteState( permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,0));
+		permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,0).deleteState();
 		//boardState.arrangeChildren( );
 	}
 	
@@ -122,7 +122,7 @@ public class Permutations
 		if(current >= boardState.getWidth())
 		{
 			BoardState newboardState = boardState.copy();
-			boardState.getTransitionsTo( ).get( 0 ).addTransitionFrom( newboardState, null );
+			boardState.getParents( ).get( 0 ).addTransitionFrom( newboardState, null );
 			return newboardState;
 		}
 		Integer state;
@@ -133,7 +133,7 @@ public class Permutations
 				state = states.get( i );
 				if(state == null)
 				{
-					boardState.setCellContents( current, row, boardState.getTransitionsTo( ).get( 0 ).getCellContents( current, row ));
+					boardState.setCellContents( current, row, boardState.getParents( ).get( 0 ).getCellContents( current, row ));
 					stateCounts.set( i, stateCounts.get( i ) - 1);
 					boardState = permutationRow(boardState, row, states, stateCounts, current + 1);
 					stateCounts.set( i, stateCounts.get( i ) + 1);
@@ -154,7 +154,7 @@ public class Permutations
 	{
 		if(states.size() != stateCounts.size())
 			return;
-		BoardState.deleteState( permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,conditions,0));
+		permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,conditions,0).deleteState();
 		//boardState.arrangeChildren( );
 	}
 	
@@ -163,11 +163,11 @@ public class Permutations
 		if(current >= boardState.getWidth())
 		{
 			BoardState newboardState = boardState.copy();
-			boardState.getTransitionsTo( ).get( 0 ).addTransitionFrom( newboardState, null );
+			boardState.getParents( ).get( 0 ).addTransitionFrom( newboardState, null );
 			return newboardState;
 		}
 		Integer state;
-		if(conditions.contains( boardState.getTransitionsTo( ).get( 0 ).getCellContents( current, row )))
+		if(conditions.contains( boardState.getParents( ).get( 0 ).getCellContents( current, row )))
 		{	
 			for(int i = 0; i < states.size(); ++i)
 			{
@@ -176,7 +176,7 @@ public class Permutations
 					state = states.get( i );
 					if(state == null)
 					{
-						boardState.setCellContents( current, row, boardState.getTransitionsTo( ).get( 0 ).getCellContents( current, row ));
+						boardState.setCellContents( current, row, boardState.getParents( ).get( 0 ).getCellContents( current, row ));
 						stateCounts.set( i, stateCounts.get( i ) - 1);
 						boardState = permutationRow(boardState, row, states, stateCounts,conditions, current + 1);
 						stateCounts.set( i, stateCounts.get( i ) + 1);
@@ -212,9 +212,9 @@ public class Permutations
 	public static void caseContradictionFinder(BoardState boardState, PuzzleModule pm)
 	{
 		BoardState caseState,temp;
-		for(int i = 0; i < boardState.getTransitionsFrom( ).size( ); ++i)
+		for(int i = 0; i < boardState.getChildren( ).size( ); ++i)
 		{
-			caseState = boardState.getTransitionsFrom( ).get( i );
+			caseState = boardState.getChildren( ).get( i );
 			temp = caseState.copy( );
 			temp.setLocation( new Point(temp.getLocation( ).x, temp.getLocation( ).y + 25 ));
 			caseState.addTransitionFrom( temp, null );
