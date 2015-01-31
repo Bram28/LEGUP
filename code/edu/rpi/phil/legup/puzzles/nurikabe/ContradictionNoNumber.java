@@ -6,21 +6,21 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
 public class ContradictionNoNumber extends Contradiction
-{	 
+{
     private static final long serialVersionUID = 16944369L;
-	
+
 	 ContradictionNoNumber()
 	 {
 		setName("No Number");
 		description = "All enclosed white regions must have a number.";
 		image = new ImageIcon("images/nurikabe/contradictions/NoNumber.png");
 	 }
-		
+
 	public String getImageName()
 	{
 		return "images/nurikabe/contradictions/NoNumber.png";
 	}
-	 
+
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -29,7 +29,6 @@ public class ContradictionNoNumber extends Contradiction
      */
     public String checkContradictionRaw(BoardState state)
     {
-    	String error = null;
     	int height = state.getHeight();
     	int width = state.getWidth();
 
@@ -45,7 +44,7 @@ public class ContradictionNoNumber extends Contradiction
     			}
     		}
     	}
-    	
+
     	for(int x = 0; x < width; ++x)
     	{
     		for(int y = 0; y < height; ++y)
@@ -57,19 +56,17 @@ public class ContradictionNoNumber extends Contradiction
     			}
     		}
     	}
-    	
-    	error = "No regions without a number.";
 
-		return error;
+    	return "No regions without a number.";
     }
-    
+
     private int loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
     {
     	int numcount = 0;
     	if(boardState.getCellContents(x,y) > 10)
     		++numcount;
-    	if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
-    		++numcount;
+    	// if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
+    	// 	++numcount;
     	neighbors[y][x] = true;
     	if(x+1 < width)
     	{

@@ -45,7 +45,6 @@ public class RuleWhiteBottleNeck extends PuzzleRule
           }
           BoardState modified = origBoardState.copy();
           modified.getBoardCells()[y][x]=Nurikabe.CELL_BLACK;
-          System.out.println("x = " + x + "y = " + y);
 
           if (contraTooFew.checkContradictionRaw(modified) != null)
             return "This is not the only way to fill up the region!";

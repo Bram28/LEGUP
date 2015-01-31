@@ -57,7 +57,7 @@ public class ContradictionTooFewSpaces extends Contradiction
     				temp = loopConnected(neighbors, state,x,y,width,height);
     				if(temp.y == 0)
     				{
-    					return "Different contradiction found. No number found in a region.";
+    					//return "Different contradiction found. No number found in a region.";
     				}
     				else if(temp.y == -1)
     				{
