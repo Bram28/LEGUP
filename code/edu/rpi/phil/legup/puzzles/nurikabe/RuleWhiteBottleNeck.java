@@ -29,12 +29,20 @@ public class RuleWhiteBottleNeck extends PuzzleRule
 
   protected String checkRuleRaw(BoardState destBoardState)
   {
-    Contradiction contraTooFew = new ContradictionTooFewSpaces();
+    Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
+    contras.add(new ContradictionNoNumber());
+    contras.add(new ContradictionTooFewSpaces());
     Contradiction contraTooMany = new ContradictionTooManySpaces();
 
     BoardState origBoardState = destBoardState.getSingleParentState();
     int width = origBoardState.getWidth();
     int height = origBoardState.getHeight();
+
+    // Check for only one branch
+    if (destBoardState.getTransitionsTo().size() != 1)
+    {
+      return "This rule only involves having a single branch!";
+    }
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
@@ -43,14 +51,20 @@ public class RuleWhiteBottleNeck extends PuzzleRule
           if (destBoardState.getCellContents(x, y) != Nurikabe.CELL_WHITE) {
             return "Only white cells are allowed for this rule!";
           }
-          BoardState modified = origBoardState.copy();
-          modified.getBoardCells()[y][x]=Nurikabe.CELL_BLACK;
 
-          if (contraTooFew.checkContradictionRaw(modified) != null)
-            return "This is not the only way to fill up the region!";
-          if (contraTooMany.checkContradictionRaw(modified) == null) {
-            return "Placing that amound of white tiles creates a region that is too large!";
+          BoardState modified = origBoardState.copy();
+          modified.getBoardCells()[y][x] = Nurikabe.CELL_BLACK;
+
+          int contrasSatisfied = 0;
+          for (Contradiction c : contras) {
+            if (c.checkContradictionRaw(modified) != null)
+              contrasSatisfied++;
           }
+          if (contrasSatisfied == 0) {
+            return "This is not the only way to fill up the region!";
+          }
+          if (contraTooMany.checkContradictionRaw(modified) == null)
+            return "Placing that amound of white tiles creates a region that is too large!";
         }
       }
     }
