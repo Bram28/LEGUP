@@ -6,10 +6,7 @@ import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.ConnectedRegions;
 import edu.rpi.phil.legup.Contradiction;
 import java.util.LinkedHashSet;
-import java.awt.Point;
-import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 public class RuleBlackBottleNeck extends PuzzleRule
 {
@@ -36,6 +33,12 @@ public class RuleBlackBottleNeck extends PuzzleRule
 		int width = origBoardState.getWidth();
 		int height = origBoardState.getHeight();
 
+		// Check for only one branch
+		if (destBoardState.getTransitionsTo().size() != 1)
+		{
+			return "This rule only involves having a single branch!";
+		}
+
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				if (destBoardState.getCellContents(x, y) !=
@@ -44,8 +47,7 @@ public class RuleBlackBottleNeck extends PuzzleRule
 						return "Only black cells are allowed for this rule!";
 					}
 					BoardState modified = origBoardState.copy();
-					//modified.setCellContents(x, y, Nurikabe.CELL_WHITE);
-					modified.getBoardCells()[y][x]=Nurikabe.CELL_WHITE;
+					modified.getBoardCells()[y][x] = Nurikabe.CELL_WHITE;
 					for (Contradiction c : contras) {
 						if (c.checkContradictionRaw(modified) != null)
 							return "This is not the only way for black to escape!";
@@ -55,5 +57,5 @@ public class RuleBlackBottleNeck extends PuzzleRule
 		}
 		return null;
 	}
-	
+
 }
