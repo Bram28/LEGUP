@@ -436,7 +436,7 @@ public class BoardState implements java.io.Serializable
 			{
 				BoardState parent = this.getSingleParentState();
 				Legup.getInstance().getSelections().setSelection(new Selection(parent, false));
-				deleteState(this);
+				this.deleteState();
 			}
 			else if(boardCells[y][x] == PuzzleModule.CELL_UNKNOWN)
 			{
@@ -1559,31 +1559,22 @@ public class BoardState implements java.io.Serializable
 	}
 
 	/**
-	 * Does boardState s follow from the root state (with rules)
-	 * @param s the BoardState to check
+	 * Does this BoardState follow from the root state (with rules)
 	 */
-	public static boolean followsFromRoot(BoardState s)
+	public boolean followsFromRoot()
 	{
 		BoardState root = Legup.getInstance().getInitialBoardState();
-		boolean rv = false;
 
-		if (s == root)
-			rv = true;
-		else
+		if(this == root) { return true; }
+		if(this.getStatus() == STATUS_RULE_CORRECT)
 		{
-			if (s.getStatus() == STATUS_RULE_CORRECT)
+			for (int x = 0; x < this.transitionsTo.size(); ++x)
 			{
-				for (int x = 0; x < s.transitionsTo.size(); ++x)
-				{
-					rv = followsFromRoot(s.transitionsTo.get(x));
-
-					if (rv)
-						break;
-				}
+				if(this.transitionsTo.get(x).followsFromRoot()) { return true; }
 			}
 		}
 
-		return rv;
+		return false;
 	}
 
 	/**
@@ -1855,15 +1846,14 @@ public class BoardState implements java.io.Serializable
 
 	/**
 	 * Delete this state, and therefore all it's children too
-	 * @param s the state we're deleting
 	 * Modified 9/30/2008 to account for x-space methods
 	 */
-	public static void deleteState(BoardState s)
+	public void deleteState()
 	{
 		Legup.getInstance().getGui().getTree().pushUndo();
-		s.subDelete();
+		this.subDelete();
 
-		if (!s.virtualBoard) _transitionsChanged();
+		if (!this.virtualBoard) _transitionsChanged();
 	}
 
 	private void subDelete()
@@ -1889,7 +1879,7 @@ public class BoardState implements java.io.Serializable
 				}
 			}
 		}
-		deleteState(s);
+		s.deleteState();
 	}*/
 
 	public static void reparentChildren(BoardState oldParent, BoardState newParent)

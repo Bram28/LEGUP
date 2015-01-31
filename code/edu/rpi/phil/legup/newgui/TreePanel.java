@@ -384,9 +384,9 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		
 		// delete the current state
 		if (currentState.isModifiable()) {
-			BoardState.deleteState(currentState);
+			currentState.deleteState();
 		} else {
-			BoardState.deleteState(currentState.getSingleParentState());
+			currentState.getSingleParentState().deleteState();
 		}
 		
 		Legup.getInstance().getSelections().setSelection(new Selection(parentState, false));
@@ -413,7 +413,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			// use to select the previous state
 			BoardState parent = parentStates.get(0);
 			
-			BoardState.deleteState(state);
+			state.deleteState();
 			
 			Legup.getInstance().getSelections().setSelection(new Selection(parent, false));
 		}
@@ -430,7 +430,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			{
 				BoardState child = children.get(0);
 
-				BoardState.deleteState(child);
+				child.deleteState();
 
 				children.remove(0);
 			}

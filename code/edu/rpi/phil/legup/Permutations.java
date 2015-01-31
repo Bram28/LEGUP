@@ -64,7 +64,7 @@ public class Permutations
 		}
 		
 		
-		BoardState.deleteState( permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0));
+		permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0).deleteState();
 		//boardState.arrangeChildren( );
 	}
 	
@@ -72,7 +72,7 @@ public class Permutations
 	{
 		if(states.size() != stateCounts.size())
 			return;
-		BoardState.deleteState( permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0));
+		permutationGeneral(boardState.addTransitionFrom( ), cells, states, stateCounts,0).deleteState();
 		//boardState.arrangeChildren( );
 	}
 	
@@ -113,7 +113,7 @@ public class Permutations
 	{
 		if(states.size() != stateCounts.size())
 			return;
-		BoardState.deleteState( permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,0));
+		permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,0).deleteState();
 		//boardState.arrangeChildren( );
 	}
 	
@@ -154,7 +154,7 @@ public class Permutations
 	{
 		if(states.size() != stateCounts.size())
 			return;
-		BoardState.deleteState( permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,conditions,0));
+		permutationRow(boardState.addTransitionFrom( ), row, states, stateCounts,conditions,0).deleteState();
 		//boardState.arrangeChildren( );
 	}
 	
