@@ -4,6 +4,10 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.ConnectedRegions;
+import java.util.List;
+import java.util.Set;
+import java.awt.Point;
 
 public class ContradictionNoNumber extends Contradiction
 {
@@ -31,63 +35,29 @@ public class ContradictionNoNumber extends Contradiction
     {
     	int height = state.getHeight();
     	int width = state.getWidth();
+      int[][] cells = new int[height][width];
 
-//    	false = not checked, true = checked
-    	boolean[][] neighbors = new boolean[height][width];
-    	for(int x = 0; x < width; ++x)
-    	{
-    		for(int y = 0; y < height; ++y)
-    		{
-    			if(state.getCellContents(x,y) == Nurikabe.CELL_BLACK)
-    			{
-    				neighbors[y][x] = true;
-    			}
-    		}
-    	}
+      for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+          cells[y][x] = state.getCellContents(x, y);
+        }
+      }
+      List<Set<Point>> regions = ConnectedRegions.getConnectedRegions(Nurikabe.CELL_BLACK, cells, width, height);
+      for (Set<Point> region : regions)
+      {
+        if (!ConnectedRegions.regionContains(Nurikabe.CELL_WHITE, cells, region)) continue;
+        boolean haveNumber = false;
+        for (Point p : region)
+        {
+          if (state.getCellContents(p.x, p.y) > 10)
+          {
+            haveNumber = true;
+            break;
+          }
+        }
+        if (!haveNumber) return null;
+      }
 
-    	for(int x = 0; x < width; ++x)
-    	{
-    		for(int y = 0; y < height; ++y)
-    		{
-    			if(!neighbors[y][x])
-    			{
-    				if(loopConnected(neighbors, state,x,y,width,height) == 0)
-    					return null;
-    			}
-    		}
-    	}
-
-    	return "No regions without a number.";
-    }
-
-    private int loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
-    {
-    	int numcount = 0;
-    	if(boardState.getCellContents(x,y) > 10)
-    		++numcount;
-    	// if(boardState.getCellContents(x,y) == Nurikabe.CELL_UNKNOWN)
-    	// 	++numcount;
-    	neighbors[y][x] = true;
-    	if(x+1 < width)
-    	{
-    		if(!neighbors[y][x+1])
-    			numcount += loopConnected(neighbors, boardState, x+1, y, width, height);
-    	}
-    	if(x-1 >= 0)
-    	{
-    		if(!neighbors[y][x-1])
-    			numcount += loopConnected(neighbors, boardState, x-1, y, width, height);
-    	}
-    	if(y+1 < height)
-    	{
-    		if(!neighbors[y+1][x])
-    			numcount += loopConnected(neighbors, boardState, x, y+1, width, height);
-    	}
-    	if(y-1 >= 0)
-    	{
-    		if(!neighbors[y-1][x])
-    			numcount += loopConnected(neighbors, boardState, x, y-1, width, height);
-    	}
-    	return numcount;
+      return "No white regions (contains >1 white cell) without a number.";
     }
 }
