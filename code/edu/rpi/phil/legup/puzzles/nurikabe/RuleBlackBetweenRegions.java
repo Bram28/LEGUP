@@ -64,7 +64,7 @@ public class RuleBlackBetweenRegions extends PuzzleRule
 					int contrasSatisfied = 0;
 					for (Contradiction c : contras)
 					{
-						if (c.checkContradictionRaw(modified) != null)
+						if (c.checkContradictionRaw(modified) == null)
 							contrasSatisfied++;
 					}
 					if (contrasSatisfied == 0)
