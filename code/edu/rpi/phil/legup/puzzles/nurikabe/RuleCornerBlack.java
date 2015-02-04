@@ -50,13 +50,13 @@ public class RuleCornerBlack extends PuzzleRule
 						return "Only black cells are allowed for this rule!";
 					}
 
-					Set<Point> whiteTwos = whiteTwoLocation(destBoardState, new Point(x, y), width, height);
-					if (whiteTwos.size() == 0)
-						return "The black must be kitty-corner to a white 2 cell!";
+					Set<Point> whiteDiagonals = whiteCellDiagonalLocation(destBoardState, new Point(x, y), width, height);
+					if (whiteDiagonals.size() == 0)
+						return "The black must be kitty-corner to a white cell!";
 
 					int correctTwos = 0;
 
-					for (Point p : whiteTwos)
+					for (Point p : whiteDiagonals)
 					{
 						Set<Point> openAdjs = openAdjacents(destBoardState, p, width, height);
 						if (openAdjs == null)
@@ -73,7 +73,7 @@ public class RuleCornerBlack extends PuzzleRule
 							correctTwos++;
 					}
 					if (correctTwos == 0)
-						return "There must be two unknown cells adjacent to the white 2!";
+						return "There must be two unknown cells adjacent to the white cell!";
 				}
 			}
 		}
@@ -81,34 +81,38 @@ public class RuleCornerBlack extends PuzzleRule
 	}
 
 	/**
-		Finds the location of the #2 white cell on the blacks corner
+		Finds the location of the adjacent diagonal white cell on the blacks corner
 		Returns a point with values (-1,-1) if no such cell exists
 	*/
-	private Set<Point> whiteTwoLocation(BoardState board, Point black, int width, int height)
+	private Set<Point> whiteCellDiagonalLocation(BoardState board, Point black, int width, int height)
 	{
 		Set<Point> targets = new LinkedHashSet<Point>();
 
 		if (black.x-1 >= 0 && black.y-1 >= 0)
 		{
-			if (board.getCellContents(black.x-1, black.y-1) == 12)
+			if (board.getCellContents(black.x-1, black.y-1) > 10 
+					|| board.getCellContents(black.x-1, black.y-1) == Nurikabe.CELL_WHITE)
 				targets.add(new Point(black.x-1, black.y-1));
 		}
 
 		if (black.x+1 < width && black.y-1 >= 0)
 		{
-			if (board.getCellContents(black.x+1, black.y-1) == 12)
+			if (board.getCellContents(black.x+1, black.y-1) > 10 
+					|| board.getCellContents(black.x+1, black.y-1) == Nurikabe.CELL_WHITE)
 				targets.add(new Point(black.x+1, black.y-1));
 		}
 
 		if (black.x-1 >= 0 && black.y+1 < height)
 		{
-			if (board.getCellContents(black.x-1, black.y+1) == 12)
+			if (board.getCellContents(black.x-1, black.y+1) > 10 
+					|| board.getCellContents(black.x-1, black.y+1) == Nurikabe.CELL_WHITE)
 				targets.add(new Point(black.x-1, black.y+1));
 		}
 
 		if (black.x+1 < width && black.y+1 < height)
 		{
-			if (board.getCellContents(black.x+1, black.y+1) == 12)
+			if (board.getCellContents(black.x+1, black.y+1) > 10 
+					|| board.getCellContents(black.x+1, black.y+1) == Nurikabe.CELL_WHITE)
 				targets.add(new Point(black.x+1, black.y+1));
 		}
 
