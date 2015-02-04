@@ -305,6 +305,16 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 //		repaint();
 	}
 
+	protected void highlightSelectedTransition(Point p)
+	{
+		Selection sel = getSelectionAtPoint(Legup.getInstance().getInitialBoardState(), p);
+		if(sel != null && sel.getState().isModifiable())
+		{
+				Legup.getInstance().getGui().getJustificationFrame().
+				setSelectionByJustification(sel.getState().getJustification());
+		}
+	}
+	
 	public void mouseReleasedAt(Point p, MouseEvent e)
 	{
 		if( e.getButton() == MouseEvent.BUTTON1 )
@@ -316,6 +326,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			} else {
 				// make a new selection
 				newSelection( Legup.getInstance().getInitialBoardState(), p );
+				highlightSelectedTransition(p);
 			}
 			// right click
 		}
