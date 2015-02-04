@@ -60,11 +60,8 @@ public class RuleWhiteBottleNeck extends PuzzleRule
             if (c.checkContradictionRaw(modified) == null)
               contrasSatisfied++;
           }
-          if (contrasSatisfied == 0) {
+          if (contrasSatisfied == 0)
             return "This is not the only way to fill up the region!";
-          }
-          if (contraTooMany.checkContradictionRaw(destBoardState) == null)
-            return "Placing that amound of white tiles creates a region that is too large!";
         }
       }
     }
