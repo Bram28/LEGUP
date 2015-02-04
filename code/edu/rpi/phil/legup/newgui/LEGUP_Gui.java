@@ -206,6 +206,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		
 		setVisible(true);
 		
+		// http://stackoverflow.com/questions/479523/java-swing-maximize-window
+		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		// Centers the window
 		setLocationRelativeTo( null );
 
