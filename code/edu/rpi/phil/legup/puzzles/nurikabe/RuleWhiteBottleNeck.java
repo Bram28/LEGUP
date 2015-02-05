@@ -19,12 +19,12 @@ public class RuleWhiteBottleNeck extends PuzzleRule
   {
     setName("White Bottle Neck");
     description = "If a region needs more whites and there is only one path for the region to expand, then those unknowns must be white.";
-    image = new ImageIcon("images/nurikabe/rules/OneUnknownRegion.png");
+    image = new ImageIcon("images/nurikabe/rules/OneUnknownWhite.png");
   }
 
   public String getImageName()
   {
-    return "images/nurikabe/rules/OneUnknownRegion.png";
+    return "images/nurikabe/rules/OneUnknownWhite.png";
   }
 
   protected String checkRuleRaw(BoardState destBoardState)
@@ -32,7 +32,6 @@ public class RuleWhiteBottleNeck extends PuzzleRule
     Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
     contras.add(new ContradictionNoNumber());
     contras.add(new ContradictionTooFewSpaces());
-    Contradiction contraTooMany = new ContradictionTooManySpaces();
 
     BoardState origBoardState = destBoardState.getSingleParentState();
     int width = origBoardState.getWidth();
