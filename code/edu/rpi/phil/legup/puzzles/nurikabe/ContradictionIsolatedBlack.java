@@ -26,7 +26,7 @@ public class ContradictionIsolatedBlack extends Contradiction
 	{
 		return "images/nurikabe/contradictions/BlackArea.png";
 	}
-	
+
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -39,13 +39,13 @@ public class ContradictionIsolatedBlack extends Contradiction
     	int width = state.getWidth();
 
     	//Put all cells into array for connected regions method
-    	int[][] cells = new int[width][height];
+    	int[][] cells = new int[height][width];
     	for (int x = 0; x < width; x++) {
     		for (int y = 0; y < height; y++) {
     			if (state.getCellContents(x, y) == Nurikabe.CELL_UNKNOWN || state.getCellContents(x, y) == Nurikabe.CELL_BLACK) {
-        			cells[x][y] = state.getCellContents(x, y);
+        			cells[y][x] = state.getCellContents(x, y);
     			} else {
-    				cells[x][y] = Nurikabe.CELL_WHITE;
+    				cells[y][x] = Nurikabe.CELL_WHITE;
     			}
     		}
     	}
