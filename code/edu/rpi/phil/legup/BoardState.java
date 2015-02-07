@@ -1989,7 +1989,7 @@ public class BoardState implements java.io.Serializable
 				}
 				
 				this.location.x = mergeOverlord.location.x + fixedOffset.x;
-				this.location.y = mergeOverlord.location.y + fixedOffset.y;
+				this.location.y = mergeOverlord.location.y + fixedOffset.y - 5*TreePanel.NODE_RADIUS;
 			}
 		}
 
