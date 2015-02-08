@@ -41,38 +41,55 @@ public class ContradictionMalformedShip extends Contradiction
     					return null;
     				switch(cellValue)
     				{
+    				
     				case BattleShip.CELL_MIDDLE:
-    					if (BattleShip.checkAdjacentForSegments(state,i,j))
+    					// water on both north and south and either east or west
+    					if (BattleShip.checkNorthForWater(state, i, j) &&
+    						BattleShip.checkSouthForWater(state, i, j) &&
+    						(BattleShip.checkEastForWater(state, i, j) ||
+    						 BattleShip.checkWestForWater(state, i, j)))
     						return null;
+    					// water on both east and west and either north south
+    					if (BattleShip.checkEastForWater(state, i, j) &&
+        					BattleShip.checkWestForWater(state, i, j) &&
+        					(BattleShip.checkNorthForWater(state, i, j) ||
+        					 BattleShip.checkSouthForWater(state, i, j)))
+        						return null;
+    					// segments on two non-opposite sides
+    					if ((BattleShip.checkNorthForSegment(state, i, j)  ||
+       						 BattleShip.checkSouthForSegment(state, i, j)) &&
+       						(BattleShip.checkEastForSegment (state, i, j)  ||
+       						 BattleShip.checkWestForSegment (state, i, j)))
+       						return null;
     					break;
+    					
     				case BattleShip.CELL_LEFT_CAP:
-    					if (BattleShip.checkWestForSegment(state, i, j) ||
-    	    				BattleShip.checkNorthForSegment(state, i, j) ||
-    	    				BattleShip.checkSouthForSegment(state, i, j))
+    					// water on east side
+    					if (BattleShip.checkEastForWater(state, i, j))
     						return null;
     					break;
+    					
     				case BattleShip.CELL_RIGHT_CAP:
-    					if (BattleShip.checkEastForSegment(state, i, j) ||
-    						BattleShip.checkNorthForSegment(state, i, j) ||
-    						BattleShip.checkSouthForSegment(state, i, j))
+    					// water on west side
+    					if (BattleShip.checkWestForWater(state, i, j))
     						return null;
     					break;
+    					
     				case BattleShip.CELL_TOP_CAP:
-    					if (BattleShip.checkEastForSegment(state, i, j) ||
-       						BattleShip.checkWestForSegment(state, i, j) ||
-       						BattleShip.checkNorthForSegment(state, i, j))
+    					// water on south side
+    					if (BattleShip.checkSouthForWater(state, i, j))
     						return null;
     					break;
+    					
     				case BattleShip.CELL_BOTTOM_CAP:
-    					if (BattleShip.checkEastForSegment(state, i, j) ||
-    						BattleShip.checkWestForSegment(state, i, j) ||
-    						BattleShip.checkSouthForSegment(state, i, j))
+    					// water on north side
+    					if (BattleShip.checkNorthForWater(state, i, j))
     						return null;
     					break;
     				}
     			}
     		}
     	}
-        return "No ships are adjacent to each other";
+        return "No ships are malformed";
     }
 }
