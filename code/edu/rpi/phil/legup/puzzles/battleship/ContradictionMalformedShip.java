@@ -4,17 +4,15 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
-import edu.rpi.phil.legup.puzzles.nurikabe.Nurikabe;
 
-public class ContradictionAdjacentShips extends Contradiction
-{	 
-    private static final long serialVersionUID = 450786104L;
-	
-    
-	ContradictionAdjacentShips()
+public class ContradictionMalformedShip extends Contradiction
+{
+	private static final long serialVersionUID = -8371270465029723898L;
+
+	ContradictionMalformedShip()
 	{
-		setName("Ships cannot be adjacent");
-		description = "Two segments from different ships cannot be next to eachother.";
+		setName("Ships must be properly formed");
+		description = "End and middle ship segments must be connected to other suitable segments accordingly.";
 	}
 		
 	public String getImageName()
@@ -43,7 +41,7 @@ public class ContradictionAdjacentShips extends Contradiction
     					return null;
     				switch(cellValue)
     				{
-    				case BattleShip.CELL_SUBMARINE:
+    				case BattleShip.CELL_MIDDLE:
     					if (BattleShip.checkAdjacentForSegments(state,i,j))
     						return null;
     					break;
