@@ -251,6 +251,17 @@ public class BattleShip extends PuzzleModule
 	}
 	
 	/**
+	 * 	Determines whether a specific cell value represents a ship segment
+	 * 
+	 * @param cellValue The value of the cell
+	 * @return true if the cell is known to be water, false otherwise
+	 */
+	public static boolean isWater(int cellValue)
+	{
+		return (cellValue == CELL_WATER);
+	}
+	
+	/**
 	 * Checks if a ship segment is directly north of a specific tile
 	 */
 	public static boolean checkNorthForSegment(BoardState boardState, int column, int row)
@@ -258,6 +269,18 @@ public class BattleShip extends PuzzleModule
 		if (row <= 0)
 			return true;
 		if (isShip(boardState.getCellContents(column, row-1)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if water is directly north of a specific tile
+	 */
+	public static boolean checkNorthForWater(BoardState boardState, int column, int row)
+	{
+		if (row <= 0)
+			return true;
+		if (isWater(boardState.getCellContents(column, row-1)))
 			return true;
 		return false;
 	}
@@ -275,6 +298,18 @@ public class BattleShip extends PuzzleModule
 	}
 	
 	/**
+	 * Checks if water is directly south of a specific tile
+	 */
+	public static boolean checkSouthForWater(BoardState boardState, int column, int row)
+	{
+		if (row >= boardState.getHeight() - 1)
+			return true;
+		if (isWater(boardState.getCellContents(column, row+1)))
+			return true;
+		return false;
+	}
+	
+	/**
 	 * Checks if a ship segment is directly east of a specific tile
 	 */
 	public static boolean checkEastForSegment(BoardState boardState, int column, int row)
@@ -287,6 +322,18 @@ public class BattleShip extends PuzzleModule
 	}
 	
 	/**
+	 * Checks if water is directly east of a specific tile
+	 */
+	public static boolean checkEastForWater(BoardState boardState, int column, int row)
+	{
+		if (column >= boardState.getWidth() - 1)
+			return true;
+		if (isWater(boardState.getCellContents(column+1, row)))
+			return true;
+		return false;
+	}
+	
+	/**
 	 * Checks if a ship segment is directly west of a specific tile
 	 */
 	public static boolean checkWestForSegment(BoardState boardState, int column, int row)
@@ -294,6 +341,18 @@ public class BattleShip extends PuzzleModule
 		if (column <= 0)
 			return true;
 		if (isShip(boardState.getCellContents(column-1, row)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if water is directly west of a specific tile
+	 */
+	public static boolean checkWestForWater(BoardState boardState, int column, int row)
+	{
+		if (column <= 0)
+			return true;
+		if (isWater(boardState.getCellContents(column-1, row)))
 			return true;
 		return false;
 	}
