@@ -1,7 +1,5 @@
 package edu.rpi.phil.legup.puzzles.battleship;
 
-import javax.swing.ImageIcon;
-
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 

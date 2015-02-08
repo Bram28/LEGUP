@@ -3,16 +3,18 @@ package edu.rpi.phil.legup.puzzles.battleship;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import edu.rpi.phil.legup.*;
+import edu.rpi.phil.legup.BoardState;
+import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.PuzzleRule;
 
-public class RulePreventAdjacentShips extends PuzzleRule
+public class RuleContinueShip extends PuzzleRule
 {
-	private static final long serialVersionUID = 853810334L;
+	private static final long serialVersionUID = 153790127149316292L;
 
-	public RulePreventAdjacentShips()
+	public RuleContinueShip()
 	{
-		setName("Prevent adjacent ships");
-		description = "Set tiles to water to prevent two ships from being next to each other";
+		setName("Continue");
+		description = "Place a generic segment next to each ship end";
 	}
 
 	public String getImageName()
@@ -23,7 +25,7 @@ public class RulePreventAdjacentShips extends PuzzleRule
 	protected String checkRuleRaw(BoardState state)
 	{
 		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
-		contras.add(new ContradictionAdjacentShips());
+		contras.add(new ContradictionMalformedShip());
 
 		BoardState origBoardState = state.getSingleParentState();
 		int width = origBoardState.getWidth();
@@ -39,14 +41,14 @@ public class RulePreventAdjacentShips extends PuzzleRule
 			for (int x = 0; x < width; x++) {
 				if (state.getCellContents(x, y) !=
 						origBoardState.getCellContents(x, y)) {
-					if (state.getCellContents(x, y) != BattleShip.CELL_WATER) {
-						return "This rule can only prove water tiles!";
+					if (state.getCellContents(x, y) != BattleShip.CELL_SEGMENT) {
+						return "This rule can only prove generic ship segments!";
 					}
 					BoardState modified = origBoardState.copy();
-					modified.getBoardCells()[y][x] = BattleShip.CELL_SEGMENT;
+					modified.getBoardCells()[y][x] = BattleShip.CELL_WATER;
 					for (Contradiction c : contras) {
 						if (c.checkContradictionRaw(modified) != null)
-							return "At least one of these tiles is not forced to be water!";
+							return "At least one of these tiles is not forced to be a ship segment!";
 					}
 				}
 			}

@@ -10,8 +10,6 @@ import javax.swing.ImageIcon;
 public class WaterRowRule extends PuzzleRule
 {
 	static final long serialVersionUID = 853810334L;
-	
-    private static final BattleShip battleship = new BattleShip();
 
 	public WaterRowRule()
 	{
