@@ -73,7 +73,7 @@ public class BattleShip extends PuzzleModule
 	 	super.mousePressedEvent(state, where);
 	 }
 
-	 public void labelPressedEvent(BoardState state, int index, int side)
+	 /*public void labelPressedEvent(BoardState state, int index, int side)
 	 {
 	 	ArrayList<Point> points = new ArrayList<Point>();
 	 	BoardState toModify = state.conditionalAddTransition();
@@ -107,7 +107,7 @@ public class BattleShip extends PuzzleModule
 			for (Point p : points) if (toModify.getCellContents(p.x, p.y) == CELL_UNKNOWN)
 				toModify.setCellContents(p.x, p.y, CELL_SEGMENT);
 		}
-	 }
+	 }*/
 
 	public String getImageLocation(int cellValue)
 	{
@@ -247,7 +247,7 @@ public class BattleShip extends PuzzleModule
 	/**
 	 * Checks if a ship segment is directly north of a specific tile
 	 */
-	public static boolean checkNorth(BoardState boardState, int column, int row)
+	public static boolean checkNorthForSegment(BoardState boardState, int column, int row)
 	{
 		if (row <= 0)
 			return true;
@@ -259,7 +259,7 @@ public class BattleShip extends PuzzleModule
 	/**
 	 * Checks if a ship segment is directly south of a specific tile
 	 */
-	public static boolean checkSouth(BoardState boardState, int column, int row)
+	public static boolean checkSouthForSegment(BoardState boardState, int column, int row)
 	{
 		if (row >= boardState.getHeight() - 1)
 			return true;
@@ -271,7 +271,7 @@ public class BattleShip extends PuzzleModule
 	/**
 	 * Checks if a ship segment is directly east of a specific tile
 	 */
-	public static boolean checkEast(BoardState boardState, int column, int row)
+	public static boolean checkEastForSegment(BoardState boardState, int column, int row)
 	{
 		if (column >= boardState.getWidth() - 1)
 			return true;
@@ -283,7 +283,7 @@ public class BattleShip extends PuzzleModule
 	/**
 	 * Checks if a ship segment is directly west of a specific tile
 	 */
-	public static boolean checkWest(BoardState boardState, int column, int row)
+	public static boolean checkWestForSegment(BoardState boardState, int column, int row)
 	{
 		if (column <= 0)
 			return true;
@@ -293,14 +293,14 @@ public class BattleShip extends PuzzleModule
 	}
 	
 	/**
-	 * Checks if there are any segments directly diagonal to a specific tile
+	 * Checks if there are any segments directly diagonal (ne, nw, se, sw) to a specific tile
 	 * 
 	 * @param boardState The board
 	 * @param column The column of the square to check around
 	 * @param row The row of the square to check around
 	 * @return true if a ship segment exists directly diagonal to the square, false otherwise 
 	 */
-	public static boolean checkDiagonals(BoardState boardState, int column, int row)
+	public static boolean checkDiagonalsForSegments(BoardState boardState, int column, int row)
 	{
 		for (int i = -1; i <= 1; i+=2)
 		{
@@ -328,12 +328,12 @@ public class BattleShip extends PuzzleModule
 	 * @param row The row of the square to check around
 	 * @return true if a ship segment exists directly adjacent to the square, false otherwise 
 	 */
-	public static boolean checkAdjacent(BoardState boardState, int column, int row)
+	public static boolean checkAdjacentForSegments(BoardState boardState, int column, int row)
 	{
-		return (checkNorth(boardState, column, row) ||
-				checkSouth(boardState, column, row) ||
-				checkEast(boardState, column, row)  ||
-				checkWest(boardState, column, row));
+		return (checkNorthForSegment(boardState, column, row) ||
+				checkSouthForSegment(boardState, column, row) ||
+				checkEastForSegment(boardState, column, row)  ||
+				checkWestForSegment(boardState, column, row));
 	}
 
 	// As recommended, these are scratched

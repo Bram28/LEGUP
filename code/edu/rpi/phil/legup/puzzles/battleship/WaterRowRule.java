@@ -27,7 +27,11 @@ public class WaterRowRule extends PuzzleRule
 
 	protected String checkRuleRaw(BoardState state)
 	{
+<<<<<<< HEAD
 		if (state.getParents().size() > 1)
+=======
+		if (state.getChildren().size() > 1)
+>>>>>>> Added malformed ship contradiction (wip), some refactoring
 			return "Rule does not apply to Merge cases";
 
 		BoardState parent = state.getSingleParentState();
