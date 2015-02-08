@@ -37,8 +37,6 @@ public class ContradictionMalformedShip extends Contradiction
     			int cellValue = state.getCellContents(i, j);
     			if(BattleShip.isShip(cellValue))
     			{
-    				if (BattleShip.checkDiagonalsForSegments(state,i,j))
-    					return null;
     				switch(cellValue)
     				{
     				

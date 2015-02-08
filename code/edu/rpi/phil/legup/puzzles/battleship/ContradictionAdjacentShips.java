@@ -71,6 +71,8 @@ public class ContradictionAdjacentShips extends Contradiction
     						BattleShip.checkSouthForSegment(state, i, j))
     						return null;
     					break;
+    				default:
+    					break;
     				}
     			}
     		}
