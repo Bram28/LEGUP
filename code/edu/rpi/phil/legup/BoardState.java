@@ -103,6 +103,7 @@ public class BoardState implements java.io.Serializable
 	private boolean isMerged = false; //only merge once
 	private Point fixedOffset = new Point(0, 0); //offset applied after merge
 	
+	
 	private boolean virtualBoard = false;
 	
 	private boolean modifiableState = false;
@@ -1159,6 +1160,7 @@ public class BoardState implements java.io.Serializable
 		if (mergeChildren.size() > 0)
 		{
 			int depth = getDepth();
+			//System.out.println("depth = " + depth);
 			int mergeTot = 0; for (BoardState B : mergeChildren) mergeTot += B.numBranches();
 
 			int place = -(mergeTot-1)*(int)(1.5*TreePanel.NODE_RADIUS);
@@ -1210,9 +1212,15 @@ public class BoardState implements java.io.Serializable
 	{
 		//return getDirectDepth()+getMergeDepth();
 		int tmp_max = -1;
+	
 		for(BoardState b : children)
 		{
 			int boardStateDepth = b.getDepth();
+			
+			//if this node is a leaf node (not part of the merge), then its depth should be ignored
+			if (boardStateDepth == 0 && b.offset.y != 0)
+				continue;
+			
 			if(boardStateDepth > tmp_max)tmp_max = boardStateDepth;
 		}
 		return tmp_max+1;
@@ -1952,7 +1960,7 @@ public class BoardState implements java.io.Serializable
 	 * Get the next location of the tree node to draw.
 	 */
 	public void recalculateLocation()
-	{
+	{	
 		if (this.getParents().size() == 1)
 		{
 			BoardState parentState = this.getSingleParentState();
@@ -1989,10 +1997,11 @@ public class BoardState implements java.io.Serializable
 				}
 				
 				this.location.x = mergeOverlord.location.x + fixedOffset.x;
-				this.location.y = mergeOverlord.location.y + fixedOffset.y - 5*TreePanel.NODE_RADIUS;
+				//makes distance between nodes equal
+				this.location.y = mergeOverlord.location.y + fixedOffset.y - 5*TreePanel.NODE_RADIUS; 
 			}
 		}
-
+	
 		for (BoardState s : children) s.recalculateLocation();
 		for (BoardState s : mergeChildren) s.recalculateLocation();
 	}
