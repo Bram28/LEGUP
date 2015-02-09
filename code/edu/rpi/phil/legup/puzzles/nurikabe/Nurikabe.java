@@ -89,7 +89,6 @@ public class Nurikabe extends PuzzleModule
 
 	public Vector<PuzzleRule> getRules(){
 		Vector<PuzzleRule>ruleList = new Vector<PuzzleRule>();
-		//ruleList.add(new PuzzleRule());
 
 		ruleList.add(new RuleBlackBetweenRegions());
 		ruleList.add(new RulePreventBlackSquare());
@@ -111,7 +110,6 @@ public class Nurikabe extends PuzzleModule
 	public Vector<Contradiction> getContradictions()
 	{
 		Vector<Contradiction> contradictionList = new Vector<Contradiction>();
-		//contradictionList.add(new ContradictionBlackArea());
 		contradictionList.add(new ContradictionIsolatedBlack());
 		contradictionList.add(new ContradictionBlackSquare());
 		contradictionList.add(new ContradictionNoNumber());

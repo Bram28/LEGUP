@@ -69,4 +69,3 @@ public class CaseBlackOrWhite extends CaseRule
 		return rv;
 	}
 }
-//test
