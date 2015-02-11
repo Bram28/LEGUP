@@ -95,7 +95,7 @@ public class BattleShip extends PuzzleModule
 	 public void labelPressedEvent(BoardState state, int index, int side)
 	 {
 	 	ArrayList<Point> points = new ArrayList<Point>();
-	 	BoardState state2 = state.getSingleParentState();
+	 	BoardState toModify = state.conditionalAddTransition();
 		if (side == Math.abs(BoardState.LABEL_LEFT) || side == Math.abs(BoardState.LABEL_RIGHT))
 		{
 			side = BoardState.LABEL_RIGHT;
@@ -107,25 +107,24 @@ public class BattleShip extends PuzzleModule
 			for (int i = 0; i < state.getHeight(); i++) points.add(new Point(index, i));
 		}
 
-		int numShips = 0, numWater = 0, numUnknown = 0;
+		int numShips = 0, numUnknown = 0;
 
 		for (Point p : points)
 		{
-			int val = Math.abs(state2.getCellContents(p.x, p.y));
+			int val = Math.abs(state.getCellContents(p.x, p.y));
 			if (isShipPart(val)) numShips++;
-			else if (val == CELL_WATER) numWater++;
 			else numUnknown++;
 		}
 
-		if (numShips == state2.getLabel(side, index)-40)
+		if (numShips == toModify.getLabel(side, index)-40)
 		{
-			for (Point p : points) if (Math.abs(state2.getCellContents(p.x, p.y)) == CELL_UNKNOWN)
-				state.setCellContents(p.x, p.y, CELL_WATER);
+			for (Point p : points) if (Math.abs(toModify.getCellContents(p.x, p.y)) == CELL_UNKNOWN)
+				toModify.setCellContents(p.x, p.y, CELL_WATER);
 		}
-		else if (numShips+numUnknown == state2.getLabel(side, index)-40)
+		else if (numShips+numUnknown == toModify.getLabel(side, index)-40)
 		{
-			for (Point p : points) if (Math.abs(state2.getCellContents(p.x, p.y)) == CELL_UNKNOWN)
-				state.setCellContents(p.x, p.y, CELL_SHIP);
+			for (Point p : points) if (Math.abs(toModify.getCellContents(p.x, p.y)) == CELL_UNKNOWN)
+				toModify.setCellContents(p.x, p.y, CELL_SHIP);
 		}
 	 }
 
