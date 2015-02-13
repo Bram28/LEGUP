@@ -1160,7 +1160,6 @@ public class BoardState implements java.io.Serializable
 		if (mergeChildren.size() > 0)
 		{
 			int depth = getDepth();
-			//System.out.println("depth = " + depth);
 			int mergeTot = 0; for (BoardState B : mergeChildren) mergeTot += B.numBranches();
 
 			int place = -(mergeTot-1)*(int)(1.5*TreePanel.NODE_RADIUS);
