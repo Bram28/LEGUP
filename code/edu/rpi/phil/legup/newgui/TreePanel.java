@@ -355,13 +355,15 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	{
 		Selection s = Legup.getInstance().getSelections().getFirstSelection();
 
-		//Don't collapse if the point is a transition
-		if (s.getState().isModifiable()) 
-			return;
-				
 		BoardState state = s.getState();
+		
+		//Don't collapse if the selected node is a transition
+		if (state.isModifiable()) 
+			return;
 
-		state.toggleCollapse();
+		//collapse should hide information about transitions
+		if (state.getChildren().size() == 1)
+			state.getChildren().get(0).toggleCollapse();
 		
 		updateTreeSize();
 		repaint();
