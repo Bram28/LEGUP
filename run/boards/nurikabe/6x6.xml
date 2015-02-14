@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.5.0_06" class="java.beans.XMLDecoder">
+ <object class="edu.rpi.phil.legup.editor.SaveableBoardState">
+  <void property="boardCells">
+   <array class="[I" length="6">
+    <void index="0">
+     <array class="int" length="6">
+     </array>
+    </void>
+    <void index="1">
+     <array class="int" length="6">
+     </array>
+    </void>
+    <void index="2">
+     <array class="int" length="6">
+      <void index="0">
+       <int>14</int>
+      </void>
+      <void index="2">
+       <int>13</int>
+      </void>
+      <void index="5">
+       <int>12</int>
+      </void>
+     </array>
+    </void>
+    <void index="3">
+     <array class="int" length="6">
+      <void index="1">
+       <int>13</int>
+      </void>
+     </array>
+    </void>
+    <void index="4">
+     <array class="int" length="6">
+     </array>
+    </void>
+    <void index="5">
+     <array class="int" length="6">
+      <void index="4">
+       <int>14</int>
+      </void>
+     </array>
+    </void>
+   </array>
+  </void>
+  <void property="bottomLabels">
+   <array class="int" length="6"/>
+  </void>
+  <void property="height">
+   <int>6</int>
+  </void>
+  <void property="leftLabels">
+   <array class="int" length="6"/>
+  </void>
+  <void property="puzzleMod">
+   <string>Nurikabe</string>
+  </void>
+  <void property="rightLabels">
+   <array class="int" length="6"/>
+  </void>
+  <void property="topLabels">
+   <array class="int" length="6"/>
+  </void>
+  <void property="width">
+   <int>6</int>
+  </void>
+ </object>
+</java>
