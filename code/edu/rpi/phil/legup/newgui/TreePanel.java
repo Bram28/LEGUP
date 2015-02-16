@@ -21,6 +21,8 @@ import java.awt.geom.Line2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -66,6 +68,8 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 	private Point mousePoint;
 	private static Selection mouseOver;
+	
+	private Map<Integer, Color> collapseColorHash = new HashMap<Integer, Color>();
 
 	//Path for node images
 	//Currently only classic and smiley options exist
@@ -101,7 +105,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		Vector <BoardState> children = s.getChildren();
 		BoardState rv = s;
 		int numTransitions = 0;
-;
+	
 		if (children.size() == 1)
 		{
 			BoardState child = children.get(0);
@@ -112,7 +116,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 				rv = getLastCollapsed(child);
 			}
 		}
-		if(outptrNumTransitions != null) { outptrNumTransitions[0] = numTransitions; }
+		if(outptrNumTransitions != null) { outptrNumTransitions[0] = numTransitions;  }
 		return rv;
 	}
 
@@ -365,8 +369,45 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		if (state.getChildren().size() == 1)
 			state.getChildren().get(0).toggleCollapse();
 		
+		getCollapseColor(state);
+		
 		updateTreeSize();
 		repaint();
+	}
+	
+	//This function must be called before the board collapsing takes place, otherwise transition data will be hidden
+	public void getCollapseColor(BoardState lastCollapsed)
+	{	
+		int x = (int) lastCollapsed.getLocation().getX();
+		int y = (int) lastCollapsed.getLocation().getY();
+		int hashSum = x + y;
+
+		BoardState iterBoard = lastCollapsed;
+		boolean overallColor = true;
+		
+		//collapse is colored green if all of the transitions are green. 
+		//if there is one red, the entire thing is red
+		while (iterBoard.getChildren().size() == 1)
+		{
+			int status = iterBoard.getStatus();
+			if (status == BoardState.STATUS_RULE_CORRECT || status ==  BoardState.STATUS_CONTRADICTION_CORRECT)
+			{
+				overallColor &= true;
+			}
+			else if (status == BoardState.STATUS_RULE_INCORRECT || status ==  BoardState.STATUS_CONTRADICTION_INCORRECT)
+			{
+				overallColor &= false;
+			}
+			
+			//get children
+			iterBoard = iterBoard.getChildren().get(0);
+		}
+		
+		//save multiple colors, because collapse might produce different results on different parts of the tree
+		if (overallColor)
+			this.collapseColorHash.put(hashSum, Color.GREEN);
+		else 
+			this.collapseColorHash.put(hashSum, Color.RED);
 	}
 
 	/**
@@ -536,6 +577,10 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			draw.x = (draw.x + nextPoint.x)/2;
 
 			children = lastCollapsed.getChildren();
+			
+//			System.out.println("Display collapse state....");
+//			System.out.println("board state: " + lastCollapsed.getLocation());
+//			getCollapseColor(lastCollapsed);
 		}
 
 		for (int c = 0; c < children.size(); ++c)
@@ -641,10 +686,10 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 		if (!isCollapsed)
 		{
-			drawNode(g,draw.x, draw.y,state);
+			drawNode(g, draw.x, draw.y, state);
 		}
 		else
-			drawCollapsedNode(g,draw.x,draw.y);
+			drawCollapsedNode(g, draw.x, draw.y);
 		// to prevent the drawing of contradictions from taking over the CPU
 		try {
 			Thread.sleep(1);
@@ -774,12 +819,14 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	 * @param x the x location to draw it on
 	 * @param y the y location to draw it on
 	 */
-	private void drawCollapsedNode(Graphics g,int x, int y)
+	private void drawCollapsedNode(Graphics g, int x, int y)
 	{
 		final int rad = SMALL_NODE_RADIUS;
 		final int diam = 2 * rad;
 		final int deltaX = -COLLAPSED_DRAW_DELTA_X;
 		final int deltaY = -COLLAPSED_DRAW_DELTA_Y;
+		
+		final int hashSum = (x+y - 6*NODE_RADIUS); //have to take collapse offset into account
 
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
@@ -787,7 +834,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
         for (int c = 0; c < 3; ++c)
         {
             Polygon tri = makeTriangle(x - rad + (c - 1) * deltaX, y, diam/2);
-            g.setColor(nodeColor);
+            g.setColor(collapseColorHash.get(hashSum));
             g.fillPolygon(tri);
             g.setColor(Color.black);
             g.drawPolygon(tri);
