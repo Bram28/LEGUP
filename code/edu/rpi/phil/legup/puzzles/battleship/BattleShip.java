@@ -157,6 +157,7 @@ public class BattleShip extends PuzzleModule
 		result.add(new ContradictionAdjacentShips());
 		result.add(new ContradictionMalformedShip());
 		result.add(new ContradictionTooManyRowCol());
+		result.add(new ContradictionTooFewRowCol());
 		return result;
 	}
 
