@@ -400,9 +400,9 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			}
 			
 			//get children
-			iterBoard = iterBoard.getChildren().get(0);
+			iterBoard = iterBoard.getChildren().get(0);	
 		}
-		
+
 		//save multiple colors, because collapse might produce different results on different parts of the tree
 		if (overallColor)
 			this.collapseColorHash.put(hashSum, Color.GREEN);
@@ -577,10 +577,6 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			draw.x = (draw.x + nextPoint.x)/2;
 
 			children = lastCollapsed.getChildren();
-			
-//			System.out.println("Display collapse state....");
-//			System.out.println("board state: " + lastCollapsed.getLocation());
-//			getCollapseColor(lastCollapsed);
 		}
 
 		for (int c = 0; c < children.size(); ++c)
@@ -827,14 +823,18 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		final int deltaY = -COLLAPSED_DRAW_DELTA_Y;
 		
 		final int hashSum = (x+y - 6*NODE_RADIUS); //have to take collapse offset into account
-
+		
+		Color transitionColor = collapseColorHash.get(hashSum);
+		if (!collapseColorHash.containsKey(hashSum)) 
+			transitionColor = new Color(255, 255, 155); //set color to default color
+		
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
 		g2D.setColor(Color.black);
         for (int c = 0; c < 3; ++c)
         {
             Polygon tri = makeTriangle(x - rad + (c - 1) * deltaX, y, diam/2);
-            g.setColor(collapseColorHash.get(hashSum));
+            g.setColor(transitionColor);
             g.fillPolygon(tri);
             g.setColor(Color.black);
             g.drawPolygon(tri);
