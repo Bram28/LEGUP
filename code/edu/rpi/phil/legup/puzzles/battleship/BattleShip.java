@@ -12,6 +12,7 @@ import edu.rpi.phil.legup.*;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -65,7 +66,7 @@ public class BattleShip extends PuzzleModule
 	 	super.mousePressedEvent(state, where);
 	 }
 
-	 /*public void labelPressedEvent(BoardState state, int index, int side)
+	 public void labelPressedEvent(BoardState state, int index, int side)
 	 {
 	 	ArrayList<Point> points = new ArrayList<Point>();
 	 	BoardState toModify = state.conditionalAddTransition();
@@ -99,7 +100,7 @@ public class BattleShip extends PuzzleModule
 			for (Point p : points) if (toModify.getCellContents(p.x, p.y) == CELL_UNKNOWN)
 				toModify.setCellContents(p.x, p.y, CELL_SEGMENT);
 		}
-	 }*/
+	 }
 
 	public String getImageLocation(int cellValue)
 	{
@@ -165,6 +166,7 @@ public class BattleShip extends PuzzleModule
 		Vector<Contradiction> result = new Vector<Contradiction>();
 		result.add(new ContradictionAdjacentShips());
 		result.add(new ContradictionMalformedShip());
+		result.add(new ContradictionTooFewRowCol());
 		return result;
 	}
 
