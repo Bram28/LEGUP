@@ -3,12 +3,12 @@ package edu.rpi.phil.legup.puzzles.battleship;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
-public class ContradictionTooFewRowCol extends Contradiction
+public class ContradictionTooManyRowCol extends Contradiction
 {	 
     private static final long serialVersionUID = 450786104L;
 	
     
-    ContradictionTooFewRowCol()
+    ContradictionTooManyRowCol()
 	{
 		setName("Too many segments in a row/column");
 		description = "The number of segments in a row/column may not exceed the label.";

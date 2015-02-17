@@ -19,7 +19,7 @@ import java.util.Vector;
 
 public class BattleShip extends PuzzleModule
 {
-    static final long serialVersionUID = 532393951L;
+	static final long serialVersionUID = 532393951L;
 
 	public static int NUM_SHIPS_SIZE4 = 1;
 	public static int NUM_SHIPS_SIZE3 = 2;
@@ -56,19 +56,9 @@ public class BattleShip extends PuzzleModule
         return tmp;
     }
 
-	public BattleShip()
+	public void labelPressedEvent(BoardState state, int index, int side)
 	{
-
-	}
-
-	 public void mousePressedEvent(BoardState state, Point where)
-	 {
-	 	super.mousePressedEvent(state, where);
-	 }
-
-	 public void labelPressedEvent(BoardState state, int index, int side)
-	 {
-	 	ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<Point> points = new ArrayList<Point>();
 	 	BoardState toModify = state.conditionalAddTransition();
 		if (side == BoardState.LABEL_LEFT || side == BoardState.LABEL_RIGHT)
 		{
@@ -100,14 +90,14 @@ public class BattleShip extends PuzzleModule
 			for (Point p : points) if (toModify.getCellContents(p.x, p.y) == CELL_UNKNOWN)
 				toModify.setCellContents(p.x, p.y, CELL_SEGMENT);
 		}
-	 }
+	}
 
 	public String getImageLocation(int cellValue)
 	{
 		return "images/battleship/image["+cellValue+"].gif";
 	}
 
-	public BoardImage[] getAllBorderImages()
+	/*public BoardImage[] getAllBorderImages()
 	{
 		BoardImage[] s = new BoardImage[30];
 		int count = 0;
@@ -123,7 +113,7 @@ public class BattleShip extends PuzzleModule
 		}
 
 		return s;
-	}
+	}*/
 
 	public void drawLeftLabel(Graphics2D g, int val, int x, int y){
 		drawText( g, x, y, String.valueOf( (char)( 'A'-30 + val ) ) );
@@ -166,7 +156,7 @@ public class BattleShip extends PuzzleModule
 		Vector<Contradiction> result = new Vector<Contradiction>();
 		result.add(new ContradictionAdjacentShips());
 		result.add(new ContradictionMalformedShip());
-		result.add(new ContradictionTooFewRowCol());
+		result.add(new ContradictionTooManyRowCol());
 		return result;
 	}
 
