@@ -34,7 +34,7 @@ import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Selection;
-  
+
 /**
  * @TODO add link rule from the tree's perspective:
  * 	 grass / tree / linked tent
@@ -66,10 +66,10 @@ public class TreeTent extends PuzzleModule
 	private static Stroke med = new BasicStroke(2);
 
 	private static int[][] annotations = null;
-	
+
 	public TreeTent(){
 	}
-	
+
 	/*
 	 * The grass annotation will indicate that grass will fit in the specified cell.
 	 * The following rules can be used for justification:
@@ -78,21 +78,21 @@ public class TreeTent extends PuzzleModule
 	 * -Surround Tent
 	 */
 	static void setAnnotationsGrass(BoardState B)
-	{ 
+	{
 		int w = B.getWidth();
 		int h = B.getHeight();
-		
+
 		int dx[] = { 0, -1, 1, 0 };
 		int dy[] = { -1, 0, 0, 1 };
-		
+
 		//Apply the "Finish Grass" rule if an entire row or entire column has been filled with the required number of tents.
-		
+
 		//Check if all the tents have been filled in for each row.
 		for (int y = 0; y < h; y++)
 		{
 			int numTentsInRow = TreeTent.translateNumTents(B.getLabel(BoardState.LABEL_RIGHT, y));
 			for (int i = 0; i < w; i++)
-			{    
+			{
 				//If the cell is a tent, subtract from the total tents remaining
 				if (B.getCellContents(i, y) == TreeTent.CELL_TENT)
 					numTentsInRow--;
@@ -102,7 +102,7 @@ public class TreeTent extends PuzzleModule
 			if (numTentsInRow == 0)
 			{
 				for (int i = 0; i < w; i++)
-				{    
+				{
 					if (B.getCellContents(i, y) == TreeTent.CELL_UNKNOWN)
 						annotations[i][y] = TreeTent.CELL_GRASS;
 				}
@@ -111,10 +111,10 @@ public class TreeTent extends PuzzleModule
 
 		//Check if all the tents have been filled in for each column
 		for (int x = 0; x < w; x++)
-		{	
+		{
 			int numTentsInCol = TreeTent.translateNumTents(B.getLabel(BoardState.LABEL_BOTTOM, x));
 			for (int i = 0; i < h; i++)
-			{    
+			{
 				//If the cell is a tent, subtract from the total tents remaining
 				if (B.getCellContents(x, i) == TreeTent.CELL_TENT)
 					numTentsInCol--;
@@ -124,18 +124,18 @@ public class TreeTent extends PuzzleModule
 			if (numTentsInCol == 0)
 			{
 				for (int i = 0; i < h; i++)
-				{      
+				{
 					if (B.getCellContents(x, i) == TreeTent.CELL_UNKNOWN)
 						annotations[x][i] = TreeTent.CELL_GRASS;
 				}
 			}
 		}
-		
+
 		//Fill in individual cells
 		for (int y = 0; y < h; y++)
 		{
 			for (int x = 0; x < w; x++)
-			{				
+			{
 				//Skip this cell if it already has a known value
 				if (B.getCellContents(x, y) != TreeTent.CELL_UNKNOWN || annotations[x][y] != 0)
 					continue;
@@ -143,7 +143,7 @@ public class TreeTent extends PuzzleModule
 				//Check if there any trees are adjacent to this cell
 				//If no trees nearby, the rule "Empty Field" can be used to justify that grass will fit in this cell.
 				boolean isEmptyField = true;
-				
+
 				//Check if there are any tents nearby.
 				//If there is a tent nearby, the rule "Suround Tent" can be used to justify that grass will fit in this cell.
 				boolean isSurroundTent = false;
@@ -153,12 +153,12 @@ public class TreeTent extends PuzzleModule
 				{
 					int nx = x + dx[i];
 					int ny = y + dy[i];
-				
+
 					if (nx >= 0 && ny >= 0 && nx < w && ny < h)
 					{
 						if (B.getCellContents(nx, ny) == TreeTent.CELL_TREE)
 							isEmptyField = false;
-						
+
 						if (B.getCellContents(nx, ny) == TreeTent.CELL_TENT)
 							isSurroundTent = true;
 					}
@@ -171,9 +171,9 @@ public class TreeTent extends PuzzleModule
 					annotations[x][y] = TreeTent.CELL_GRASS;
 			}
 		}
-		
+
 	}
-	
+
 	/*
 	 * The tent annotation will indicate that grass will fit in the specified cell.
 	 * The following rules can be used for justification:
@@ -184,29 +184,29 @@ public class TreeTent extends PuzzleModule
 	{
 		int w = B.getWidth();
 		int h = B.getHeight();
-	
+
 		int dx[] = { 0, -1, 1, 0 };
 		int dy[] = { -1, 0, 0, 1 };
-		
+
 		//Apply the "Finish Tents" rule if tents can be filled in for the remaining unknown spots.
-		
+
 		//Check if all the tents can be filled in for each row.
 		for (int y = 0; y < h; y++)
 		{
 			int totalTentRow = TreeTent.translateNumTents(B.getLabel(BoardState.LABEL_RIGHT, y));
 			if (totalTentRow == 0)
 				continue;
-			
+
 			int tentCount = 0, unknownCount = 0;
 			for (int i = 0; i < w; i++)
-			{    
+			{
 				if (B.getCellContents(i, y) == TreeTent.CELL_TENT)
 					tentCount++;
-				
+
 				if (B.getCellContents(i, y) == TreeTent.CELL_UNKNOWN)
 					unknownCount++;
 			}
-			
+
 			if (tentCount + unknownCount == totalTentRow)
 			{
 				for (int i = 0; i < w; i++)
@@ -216,24 +216,24 @@ public class TreeTent extends PuzzleModule
 				}
 			}
 		}
-		
+
 		//Check if all the tents can be filled in for each col.
 		for (int x = 0; x < w; x++)
 		{
 	    	int totalTentCol = TreeTent.translateNumTents(B.getLabel(BoardState.LABEL_BOTTOM, x));
 	    	if (totalTentCol == 0)
 	    		continue;
-	    	
+
 	    	int tentCount = 0, unknownCount = 0;
 			for (int i = 0; i < h; i++)
-			{    
+			{
 				if (B.getCellContents(x, i) == TreeTent.CELL_TENT)
 					tentCount++;
-				
+
 				if (B.getCellContents(x, i) == TreeTent.CELL_UNKNOWN)
 					unknownCount++;
 			}
-			
+
 			if (tentCount + unknownCount == totalTentCol)
 			{
 				for (int i = 0; i < h; i++)
@@ -243,12 +243,12 @@ public class TreeTent extends PuzzleModule
 				}
 			}
 		}
-		
+
 		//Fill in individual cells
 		for (int y = 0; y < h; y++)
-		{ 
+		{
 			for (int x = 0; x < w; x++)
-			{				
+			{
 				//Skip this cell if it isn't a tree or if an annotation has been placed already
 				if (B.getCellContents(x, y) != TreeTent.CELL_TREE || annotations[x][y] != 0)
 					continue;
@@ -258,13 +258,13 @@ public class TreeTent extends PuzzleModule
 				int numUnknown = 0;
 				int numExistingTents = 0;
 				int unknownX = 0, unknownY = 0;
- 
+
 				//Loop through all the adjacent tiles
 				for (int i = 0; i < 4; i++)
 				{
 					int nx = x + dx[i];
 					int ny = y + dy[i];
-					
+
 					//Make sure the tile is in bounds
 					if (nx >= 0 && ny >= 0 && nx < w && ny < h)
 					{
@@ -278,25 +278,25 @@ public class TreeTent extends PuzzleModule
 							numExistingTents++;
 					}
 				}
-				 
+
 				//mark the spot where the tree should be placed
 				if (numUnknown == 1 && numExistingTents == 0)
 					annotations[unknownX][unknownY] = TreeTent.CELL_TENT;
 			}
-		}	
+		}
 	}
-	
+
 	static void setAnnotations(BoardState B)
 	{
 		//0 - unknown
 		//1 - tree
 		//2 - tent
 		//3 - grass
-	
+
 		int w = B.getWidth();
 		int h = B.getHeight();
-		
-		annotations = new int[w][h];	
+
+		annotations = new int[w][h];
 		for (int x = 0; x < w; x++)
 		{
 			for (int y = 0; y < h; y++)
@@ -304,17 +304,17 @@ public class TreeTent extends PuzzleModule
 				annotations[x][y] = 0;
 			}
 		}
-		
+
 		setAnnotationsGrass(B);
-		setAnnotationsTents(B); 
+		setAnnotationsTents(B);
 	}
-	
+
 	public void disableAnnotationsForCell(int x, int y)
 	{
 		if (annotations != null)
 			annotations[x][y] = 0;
 	}
- 	
+
 	public Object extraDataFromString(String str)
 	{
 		String[] data = str.split(",");
@@ -322,7 +322,7 @@ public class TreeTent extends PuzzleModule
 		ExtraTreeTentLink link = new ExtraTreeTentLink(new Point(Integer.valueOf(data[0]).intValue(),Integer.valueOf(data[1]).intValue()),new Point(Integer.valueOf(data[2]).intValue(),Integer.valueOf(data[3]).intValue()));
 		return link;
 	}
-	
+
 	//returns true iff there are no invalid links
     public static boolean noInvalidLinks(BoardState state)
     {
@@ -335,7 +335,7 @@ public class TreeTent extends PuzzleModule
 		}
     	return true;
     }
-	
+
 	public boolean checkBoardComplete(BoardState finalstate)
 	{
 		if(super.checkBoardComplete(finalstate)) //make sure there are no blanks (which is what PuzzleModule.checkBoardComplete() does)
@@ -368,7 +368,7 @@ public class TreeTent extends PuzzleModule
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Take an action when the left mouse button is pressed
 	 * @param state the current board state
@@ -377,15 +377,15 @@ public class TreeTent extends PuzzleModule
 	 */
 	public void mousePressedEvent(BoardState state, Point where)
 	{
-		//get rid of annotation 
+		//get rid of annotation
 		disableAnnotationsForCell(where.x, where.y);
-		
+
 		super.mousePressedEvent(state,where);
 	}
 	public void mouseDraggedEvent(BoardState state, Point where)
 	{
         state.setCellContents(where.x,where.y,CELL_GRASS);
-	} 
+	}
 	public void labelPressedEvent(BoardState state, int index, int side)
 	{
 		//System.out.println(index);
@@ -402,7 +402,7 @@ public class TreeTent extends PuzzleModule
 				if(next.isModifiableCell(x,y))
 				{
 					next.setCellContents(x,y,CELL_GRASS);
-					
+
 					//make sure to disable annotations since the cell will be filled with grass
 					disableAnnotationsForCell(x, y);
 				}
@@ -432,10 +432,10 @@ public class TreeTent extends PuzzleModule
 		{ // drag, create link, or remove it
 			ExtraTreeTentLink e = new ExtraTreeTentLink(from,to);
 			boolean removed = false;
-			
+
 			if(((to.x-from.x)^2 + (to.y-from.y)^2) != 1 && ((from.x-to.x)^2 + (from.y-to.y)^2) != 1)
 				return;
-			
+
 			//check if exactly one point is a tree
 			if (!((state.getCellContents(from.x, from.y) == CELL_TREE && state.getCellContents(to.x, to.y) != CELL_TREE) ||
 			(state.getCellContents(from.x, from.y) != CELL_TREE && state.getCellContents(to.x, to.y) == CELL_TREE)))
@@ -454,10 +454,10 @@ public class TreeTent extends PuzzleModule
 			{
 				next.extraDataDelta.add(e);
 			}
-			
+
 			next.propagateExtraData(e,!removed);
 		}
-	} 
+	}
 
 	/**
 	 * Draw any extra data for the board
@@ -492,14 +492,14 @@ public class TreeTent extends PuzzleModule
 			int width_mult = (x1 == x2)? 1 : 2;
 			int height_mult = (y1 == y2)? 1 : 2;
 			g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
-			
+
 			if(extraDataDelta.contains(e))
 			{
 				g.setColor(Color.green);
 				g.setStroke(highlightStroke);
-				
+
 				g.drawRect((int)(x1-halfX+2),(int)(y1-halfY+2),(int)(2*width_mult*halfX-4),(int)(2*height_mult*halfY-4));
-				
+
 				g.setColor(Color.red);
 				g.setStroke(med);
 			}
@@ -527,13 +527,13 @@ public class TreeTent extends PuzzleModule
 			return "images/treetent/unknown.gif";
 		}
 	}
-	
+
 	public String getImageLocation(int x, int y, BoardState boardState)
 	{
-		//just started 
+		//just started
 		if (annotations == null || !drawAnnotations)
 			return getImageLocation(boardState.getCellContents(x, y));
-		
+
 		if (annotations[x][y] == TreeTent.CELL_GRASS)
 			return "images/treetent/annotate_grass.png";
 		else if (annotations[x][y] == TreeTent.CELL_TENT)
@@ -541,7 +541,7 @@ public class TreeTent extends PuzzleModule
 		else
 			return getImageLocation(boardState.getCellContents(x, y));
 	}
-	 
+
 	public void drawCell( Graphics2D g, int x, int y, BoardState state ){
 		String imagePath = getImageLocation(x, y, state);
 		Image i = new ImageIcon(imagePath).getImage();
@@ -647,7 +647,7 @@ public class TreeTent extends PuzzleModule
 			curValue = 9; // will get incremented
 
 		return (curValue + 1 <= 39 ? curValue + 1 : 10);
-	} 
+	}
 
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
@@ -658,13 +658,13 @@ public class TreeTent extends PuzzleModule
 		//ruleList.add(new PuzzleRule());
 		ruleList.add(new RuleNewTentLink());
 		ruleList.add(new RuleNewTreeLink());
-		ruleList.add(new RuleAllGrass());
-		ruleList.add(new RuleNoTreesAround());
+		ruleList.add(new RuleFinishWithGrass());
+		ruleList.add(new RuleEmptyField());
 		ruleList.add(new RuleGrassNextToTent());
-		
-		ruleList.add(new RuleOneUnknownNearTree());
-		ruleList.add(new RuleAllTents());
-		
+
+		ruleList.add(new RuleLastCampingSpot());
+		ruleList.add(new RuleFinishWithTents());
+
 		//ruleList.add(new RuleNewLink());
 		//ruleList.add(new RuleNewLink());
 		return ruleList;
@@ -695,7 +695,7 @@ public class TreeTent extends PuzzleModule
 		caseRules.add(new CaseTentsInRow());
 		caseRules.add(new CaseLinkTree());
 		caseRules.add(new CaseLinkTent());
-		
+
 		return caseRules;
 	}
 
@@ -731,7 +731,7 @@ public class TreeTent extends PuzzleModule
 							return false;
 						}
 					}
-				} 
+				}
 				catch (Exception e)
 				{
 				}
@@ -747,14 +747,14 @@ public class TreeTent extends PuzzleModule
 				return false;
 			}
 		}
-		
+
 		for (int i = 0; i < width; i++)
 		{
 			if (!checkCol(boardState, i))
 			{
 				return false;
 			}
-		}	
+		}
 
 		return true;
 	}
@@ -767,7 +767,7 @@ public class TreeTent extends PuzzleModule
 		try
 		{
 			numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_RIGHT, rowNum));
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -780,7 +780,7 @@ public class TreeTent extends PuzzleModule
 				{
 					numTents--;
 				}
-			} 
+			}
 			catch (Exception e)
 			{
 			}
@@ -803,7 +803,7 @@ public class TreeTent extends PuzzleModule
 		try
 		{
 			numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_BOTTOM, colNum));
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -816,7 +816,7 @@ public class TreeTent extends PuzzleModule
 				{
 					numTents--;
 				}
-			} 
+			}
 			catch (Exception e)
 			{
 			}
@@ -841,7 +841,7 @@ public class TreeTent extends PuzzleModule
 			{
 				return true;
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -853,7 +853,7 @@ public class TreeTent extends PuzzleModule
 			{
 				return true;
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -866,7 +866,7 @@ public class TreeTent extends PuzzleModule
 			{
 				return true;
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -878,7 +878,7 @@ public class TreeTent extends PuzzleModule
 			{
 				return true;
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -895,7 +895,7 @@ public class TreeTent extends PuzzleModule
 			{
 				return true;
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -907,7 +907,7 @@ public class TreeTent extends PuzzleModule
 			{
 				return true;
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -920,7 +920,7 @@ public class TreeTent extends PuzzleModule
 			{
 				return true;
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -932,7 +932,7 @@ public class TreeTent extends PuzzleModule
 			{
 				return true;
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 		}
@@ -972,7 +972,7 @@ public class TreeTent extends PuzzleModule
 		System.out.println("Statement: Your puzzle has been solved already. Why do you persist?");
 		return Board;
 	}
-   
+
 	private Point GenerateBestGuess(BoardState Board) {
 		// this should more properly be some kind of ranking system whereby different
 		// conditions scored points and the highest scoring square was chosen.

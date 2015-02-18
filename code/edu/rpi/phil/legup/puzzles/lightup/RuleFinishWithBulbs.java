@@ -10,17 +10,17 @@ import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.RuleApplication;
 
-public class RuleSurroundBulbs extends PuzzleRule
+public class RuleFinishWithBulbs extends PuzzleRule
 {
 	static final long serialVersionUID = 5613497586353427743L;
 	public String getImageName() {return "images/lightup/rules/SurroundBulbs.png";}
-	 RuleSurroundBulbs()
+	 RuleFinishWithBulbs()
 	 {
-		 setName("Finish Bulbs");
+		 setName("Finish with Bulbs");
 		 description = "The remaining unknowns around a block must be bulbs to satisfy the number.";
 		 //image = new ImageIcon("images/lightup/rules/SurroundBulbs.png");
 	 }
-	 
+	
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -37,7 +37,7 @@ public class RuleSurroundBulbs extends PuzzleRule
     	boolean foundvalidblock;
     	boolean[][] litup = new boolean[origBoardState.getHeight()][origBoardState.getWidth()];
     	LightUp.determineLight(origBoardState, litup);
-    	
+
     	// Check for only one branch
 		if (destBoardState.getParents().size() != 1)
 		{
@@ -51,11 +51,11 @@ public class RuleSurroundBulbs extends PuzzleRule
 				{
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
-					
+
 					if (origState != newState)
 					{
 						changed = true;
-						
+
 						if (newState != LightUp.CELL_LIGHT || origState != LightUp.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding light bulbs!";
@@ -74,28 +74,28 @@ public class RuleSurroundBulbs extends PuzzleRule
 						if(y < height - 1)
 							if(destBoardState.getCellContents(x,y+1)>= 10 && destBoardState.getCellContents(x,y+1)< 15)
 								foundvalidblock = foundvalidblock | checkBlockCompleted(destBoardState,x,y+1,width,height,litup);
-						
+
 						if(!foundvalidblock)
 						{
 							error = "A bulb cell must be placed to complete a block's number.";
 							break;
 						}
-						
-						
-						
+
+
+
 					}
 				}
 			}
-			
+
 			if (error == null && !changed)
 			{
 				error = "You must add a bulb to use this rule!";
 			}
 		}
-		
+
 		return error;
     }
-	 
+
 	 protected boolean doDefaultApplicationRaw(BoardState destBoardState, PuzzleModule pm)
 	  {
 		 BoardState origBoardState = destBoardState.getSingleParentState();
@@ -105,7 +105,7 @@ public class RuleSurroundBulbs extends PuzzleRule
 	    	int cellvalue = 0;
 	    	boolean[][] litup = new boolean[origBoardState.getHeight()][origBoardState.getWidth()];
 	    	LightUp.determineLight(origBoardState, litup);
-	    	
+
 	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
 	    	{
 	    		for (int y = 0; y < origBoardState.getHeight(); ++y)
@@ -122,36 +122,36 @@ public class RuleSurroundBulbs extends PuzzleRule
 						}
 					}
 				}
-	        	
+
 		    	String error = checkRuleRaw(destBoardState);
-		    	
+
 				if (error == null)
 				{
 					changed = true;
 					// valid change
 				}
 	    	}
-	    	
+
 	    	if(!changed)
 	    	{
 	    		destBoardState = origBoardState.copy();
 	    	}
-	    	
+
 	    	LightUp.fillLight(destBoardState);
-		    	
+
 		    return changed;
 	  }*/
-	 
+
 	 protected RuleApplication canApplyAt(BoardState state, Point at)
 	 {
 		 boolean[][] litup = new boolean[state.getHeight()][state.getWidth()];
 	    LightUp.determineLight(state, litup);
-	    
+
 		 if(state.getCellContents(at.x, at.y) != PuzzleModule.CELL_UNKNOWN || litup[at.y][at.x])
 			 return new RuleApplication(at);
-		 
+
 		 Vector<Point> numbers = LightUp.findAdjacentNumbers(state, at);
-		 
+
 		 boolean found = false;
 		 for(Point p : numbers)
 		 {
@@ -164,14 +164,14 @@ public class RuleSurroundBulbs extends PuzzleRule
 				 return ret;
 			 }
 		 }
-		 
+
 		 return new RuleApplication(at);
 		//TODO: Add parent semantics
 	 }
-	 
+
 	 private boolean checkBlockCompleted(BoardState destBoardState, int x, int y, int width, int height, boolean[][] litup)
 	 {
-		 
+
 			int bulbs = 0;
 			int blanks = 0;
 			if(x > 0)
@@ -210,14 +210,14 @@ public class RuleSurroundBulbs extends PuzzleRule
 			}
 			else
 				++blanks;
-		 
-		 
+
+
 		 return ((bulbs + blanks == 4) && (bulbs == destBoardState.getCellContents(x, y)-10));
 	 }
-	 
+
 	 private boolean checkBlockCompletable(BoardState destBoardState, int x, int y, int width, int height, boolean[][] litup)
 	 {
-		 
+
 		 int bulbs = 0;
 			int blanks = 0;
 			if(x > 0)
@@ -256,11 +256,11 @@ public class RuleSurroundBulbs extends PuzzleRule
 			}
 			else
 				++blanks;
-		 
-		 
+
+
 		 return (4 - blanks - bulbs == destBoardState.getCellContents(x, y)-10 - bulbs);
 	 }
-	 
+
 	 private void completeBlock(BoardState destBoardState, int x, int y, int width, int height, boolean[][] litup)
 	 {
 
@@ -285,5 +285,5 @@ public class RuleSurroundBulbs extends PuzzleRule
 					destBoardState.setCellContents(x, y+1, LightUp.CELL_LIGHT);
 			}
 	 }
-	 
+
 }

@@ -39,7 +39,7 @@ public class Heyawake extends PuzzleModule
 {
 	public static int CELL_WHITE = 1;
 	public static int CELL_BLACK = 2;
-	
+
     public Map<String, Integer> getSelectableCells()
     {
         Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
@@ -52,10 +52,10 @@ public class Heyawake extends PuzzleModule
     { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
 
 	HeyawakeEditorBoardFrame boardEditor;
-	
+
 	public Heyawake(){
 	}
-	
+
 	/**
 	 * Take an action when the left mouse button is pressed
 	 * @param state the current board state
@@ -63,7 +63,7 @@ public class Heyawake extends PuzzleModule
 	 * @param y the y position where the pressed event occured
 	 */
 	//public void mousePressedEvent(BoardState state, Point where){}
-	
+
 	/**
 	 * Take an action when a left mouse drag (or click) event occurs
 	 * @param state
@@ -71,7 +71,7 @@ public class Heyawake extends PuzzleModule
 	 * @param to
 	 */
 	public void mouseDraggedEvent(BoardState state, Point from, Point to){}
-	
+
 	/**
 	 * Draw any extra data for the board
 	 * @param g the Graphics to draw with
@@ -84,7 +84,7 @@ public class Heyawake extends PuzzleModule
 	{
 		Graphics2D g = (Graphics2D)gr;
 		g.setColor(Color.black);
-		
+
 		//extra data is region[] regioncount int[][]
 		if(extraData == null)
 		{
@@ -99,13 +99,13 @@ public class Heyawake extends PuzzleModule
 			int regionCount = ((Integer)(extraData.get(1))).intValue();
 			int[][] cellRegions = (int[][])(extraData.get(2));
 			Region[] boardRegions = (Region[])(extraData.get(0));
-			
-			
+
+
 			double dx = bounds.width / (double)w;
 			double dy = bounds.height / (double)h;
 			Stroke thin = new BasicStroke(1);
 			Stroke thick = new BasicStroke(3);
-			
+
 			if(regionCount > 0)
 			{
 				for (int x = 1; x < w; ++x)
@@ -116,11 +116,11 @@ public class Heyawake extends PuzzleModule
 							g.setStroke(thick);
 						else
 							g.setStroke(thin);
-						
+
 						g.drawLine((int)(bounds.x + (dx * x)), (int)(bounds.y + (dy * y)), (int)(bounds.x + (dx * x)),  (int)(bounds.y + (dy * (y + 1))));
 					}
 				}
-				
+
 				for (int x = 0; x < w; ++x)
 				{
 					for (int y = 1; y < h; ++y)
@@ -129,31 +129,31 @@ public class Heyawake extends PuzzleModule
 							g.setStroke(thick);
 						else
 							g.setStroke(thin);
-						
+
 						g.drawLine((int)(bounds.x + (dx * x)), (int)(bounds.y + (dy * y)), (int)(bounds.x + (dx * (x+1))),  (int)(bounds.y + (dy * y)));
 					}
 				}
 			}
-			
+
 			g.setStroke(thick);
 			g.drawLine(bounds.x, bounds.y, bounds.x, bounds.y + bounds.height);
 			g.drawLine(bounds.x + bounds.width, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
 			g.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y);
 			g.drawLine(bounds.x, bounds.y + bounds.height, bounds.x + bounds.width, bounds.y + bounds.height);
 			g.setStroke(thin);
-			
+
 			if(regionCount > 0)
 			{
 				boolean[] valueDrawn = new boolean[regionCount];
 				for(int cnt = 0; cnt < regionCount; ++cnt)
 					valueDrawn[cnt] = false;
-				
+
 				g.setColor(Color.RED);
 				g.setFont(new Font("Arial",Font.BOLD,16));
 				float fontsize = g.getFont().getSize2D();
-				
+
 				Vector<Region> stateRegions = Region.getRegions(boardRegions, regionCount);
-				
+
 				for (int y = 0; y < h; ++y)
 				{
 					for (int x = 0; x < w; ++x)
@@ -206,15 +206,15 @@ public class Heyawake extends PuzzleModule
 	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}
-	
+
 	public Vector <PuzzleRule> getRules(){
 		Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
-		
+
 		ruleList.add(new RuleFillRoomWhite());
 		ruleList.add(new RuleFillRoomBlack());
 		ruleList.add(new RuleWhiteAroundBlack());
-		ruleList.add(new RuleOneUnknownWhite());
+		ruleList.add(new RuleWhiteEscape());
 		ruleList.add(new RulePreventWhiteLine());
 		ruleList.add(new RuleOneRow());
 		ruleList.add(new Rule3x3());
@@ -222,15 +222,15 @@ public class Heyawake extends PuzzleModule
 		ruleList.add(new Rule2InCorner());
 		ruleList.add(new RuleZigZagWhite());
 		ruleList.add(new RuleBottleNeck());
-		ruleList.add(new RuleForcedBlack());
+		ruleList.add(new RuleBlackPath());
 		return ruleList;
 	}
-	
+
 	 /**
 	 * Gets a list of Contradictions associated with this puzzle
 	 *
 	 * @return A Vector of Contradictions
-	 */   
+	 */
 	public Vector <Contradiction> getContradictions()
 	{
 		Vector <Contradiction> contradictionList = new Vector <Contradiction>();
@@ -240,17 +240,17 @@ public class Heyawake extends PuzzleModule
 		contradictionList.add(new ContradictionWhiteLine());
 		contradictionList.add(new ContradictionRoomTooFull());
 		contradictionList.add(new ContradictionRoomTooEmpty());
-		
+
 		return contradictionList;
 	}
-	
+
 	public Vector <CaseRule> getCaseRules()
 	{
 		Vector <CaseRule> caseRules = new Vector <CaseRule>();
-		
+
 		caseRules.add(new CaseBlackOrWhite());
 		caseRules.add(new CaseZigZag());
-		
+
 		return caseRules;
 	}
 
@@ -258,7 +258,7 @@ public class Heyawake extends PuzzleModule
 	{
 		int height = boardState.getHeight();
 		int width = boardState.getWidth();
-	
+
 		if(!checkWhiteConnected(boardState, width, height))
 		{
 			System.out.println("All the whites are not connected.");
@@ -266,7 +266,7 @@ public class Heyawake extends PuzzleModule
 		}
 		return checkWhiteConnected(boardState, width, height) && checkBlackAdjacent(boardState, width, height) && checkRoomTooEmpty(boardState) && checkWhiteLine(boardState, width, height);
 	}
-	
+
 	public boolean checkWhiteConnected(BoardState boardState, int width, int height)
 	{
 		//false = not checked, true = checked
@@ -301,10 +301,10 @@ public class Heyawake extends PuzzleModule
 				}
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	private boolean[][] loopConnected(boolean[][] neighbors,BoardState boardState, int x, int y, int width, int height)
 	{
 		neighbors[y][x] = true;
@@ -330,7 +330,7 @@ public class Heyawake extends PuzzleModule
 		}
 		return neighbors;
 	}
-	
+
 	public boolean checkBlackAdjacent(BoardState boardState, int width, int height)
 	{
 		for(int x = 0; x < width; ++x)
@@ -354,7 +354,7 @@ public class Heyawake extends PuzzleModule
 		}
 		return true;
 	}
-	
+
 	public boolean checkWhiteLine(BoardState boardState, int width, int height)
 	{
 		int[][] arrayacross= new int[height][width];
@@ -367,7 +367,7 @@ public class Heyawake extends PuzzleModule
 				arrayacross[y][x] = arraydown[y][x] = 0;
 			}
 		}
-		
+
 		for(int x = 0; x < width; ++x)
 		{
 			for(int y = 0; y < height; ++y)
@@ -397,7 +397,7 @@ public class Heyawake extends PuzzleModule
 				}
 			}
 		}
-		
+
 		for(int x = 0; x < width; ++x)
 		{
 			for(int y = 0; y < height; ++y)
@@ -408,7 +408,7 @@ public class Heyawake extends PuzzleModule
 		}
 		return true;
 	}
-	
+
 	public boolean checkRoomTooEmpty(BoardState boardState)
 	{
 		int countwhite, countblack, countunknown, cellval;
@@ -444,12 +444,12 @@ public class Heyawake extends PuzzleModule
 					return false;
 				}
 			}
-			
+
 		}
-		
+
 		return true;
 	}
-	
+
 	public boolean checkRoomTooFull(BoardState boardState)
 	{
 		int countwhite, countblack, countunknown, cellval;
@@ -485,12 +485,12 @@ public class Heyawake extends PuzzleModule
 					return false;
 				}
 			}
-			
+
 		}
-		
+
 		return true;
 	}
-	
+
 	public boolean checkRoomCount(BoardState boardState)
 	{
 		int countwhite, countblack, countunknown, cellval;
@@ -530,26 +530,26 @@ public class Heyawake extends PuzzleModule
 					return false;
 				}
 			}
-			
+
 		}
-		
+
 		return true;
 	}
-	
+
 	public boolean editExtraData(BoardState boardState, edu.rpi.phil.legup.editor.PuzzleEditor peditor)
 	{
 		if(boardEditor == null)
 		{
 			boardEditor = new HeyawakeEditorBoardFrame(boardState, this, peditor);
 			peditor.setEditorVisible(false);
-			
+
 			//if trying modal use this:
 			//comment out line 503 HeyawakeEditorBoardFrame
 			//boardEditor.setModal(true);
 			//boardEditor.setVisible(true);
 			//JOptionPane.showMessageDialog(null, "Done."); //this should pop up only after the window has closed
 			//return false;
-			
+
 			//if non-modal use this:
 			//Also, the on window close needs to let the puzzle editor know that the extra data editor is finished
 			//uncomment line 503 HeyawakeEditorBoardFrame
@@ -562,12 +562,12 @@ public class Heyawake extends PuzzleModule
 		}
 		return true;
 	}
-	public BoardState guess(BoardState Board) 
+	public BoardState guess(BoardState Board)
 	{
 		// out of forced moves, need to guess
 		Point guess = GenerateBestGuess(Board);
 		// guess, if we found one
-		if (guess.x != -1 && guess.y != -1) 
+		if (guess.x != -1 && guess.y != -1)
 		{
 			BoardState Parent = Board.getSingleParentState();
 			BoardState CaseBlack = Board;
@@ -617,7 +617,7 @@ public class Heyawake extends PuzzleModule
 				if(Board.getCellContents(curCell.getX(),curCell.getY()) == CELL_UNKNOWN)
 				{
 					cUnknown++;
-					
+
 				}
 			}
 			if(cUnknown==0)
@@ -630,7 +630,7 @@ public class Heyawake extends PuzzleModule
 			double myOff = Math.abs(BESTPROB-myProb);
 			if(myOff<currentOff)
 			{
-				
+
 				bestRegion = curRegion;
 				currentOff=myOff;
 			}

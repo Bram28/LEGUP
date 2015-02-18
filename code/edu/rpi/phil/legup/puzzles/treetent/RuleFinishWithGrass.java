@@ -16,13 +16,13 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleAllGrass extends PuzzleRule
+public class RuleFinishWithGrass extends PuzzleRule
 {
 	static final long serialVersionUID = 9511L;
 	public String getImageName() {return "images/treetent/finishGrass.png";}
-    public RuleAllGrass()
+    public RuleFinishWithGrass()
     {
-    	setName("Finish Grass");
+    	setName("Finish with Grass");
     	description = "Grass can be added to finish a row or column that has reached its tent limit.";
     	//image = new ImageIcon("images/treetent/finishGrass.png");
     }
@@ -33,17 +33,17 @@ public class RuleAllGrass extends PuzzleRule
 		int width = boardState.getWidth();
 		int label = boardState.getLabel(BoardState.LABEL_RIGHT, y);
 		int numTents = TreeTent.translateNumTents(label);
-		
+
 		//Iterate through each cell in this row
 		for (int i = 0; i < width; i++)
-		{    
+		{
 			//If the cell is a tent, subtract from the total tents remaining
 			if (boardState.getCellContents(i,y) == 2)
 			{
 			    numTents--;
 			}
 		}
-	
+
 		//True, if no more tents are remaining.
 		return numTents == 0;
     }
@@ -52,7 +52,7 @@ public class RuleAllGrass extends PuzzleRule
     {
 		int height = boardState.getHeight();
 		int numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_BOTTOM, x));
-		
+
 		//Iterate through each cell in this column
 		for (int i = 0; i < height; i++)
 		{
@@ -61,7 +61,7 @@ public class RuleAllGrass extends PuzzleRule
 			    numTents--;
 			}
 		}
-		
+
 		//True, if no more tents are remaining
 		return numTents == 0;
     }
@@ -71,7 +71,7 @@ public class RuleAllGrass extends PuzzleRule
     	String error = null;
     	boolean changed = false;
     	BoardState origBoardState = destBoardState.getSingleParentState();
-    	
+
     	// Check for only one branch
 		if (destBoardState.getParents().size() != 1)
 		{
@@ -81,7 +81,7 @@ public class RuleAllGrass extends PuzzleRule
 		{
 			error = "This rule does not involve changing tree-tent links.";
 		}
-		else 
+		else
 		{
 			// For each cell, check if the row or column has a sufficient number of tents in it
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
@@ -90,35 +90,35 @@ public class RuleAllGrass extends PuzzleRule
 				{
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
-					
+
 					if (origState != newState)
 					{
 						changed = true;
-						
+
 						if (newState != TreeTent.CELL_GRASS || origState != TreeTent.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding grass!";
 							break;
 						}
-						
+
 						if (!checkRow(destBoardState, y) && !checkCol(destBoardState, x))
 						{
-							error = "Neither the row nor column at " + (char)(y + (int)'A') + "" + (x + 1)  
+							error = "Neither the row nor column at " + (char)(y + (int)'A') + "" + (x + 1)
 									+ " has its maximum number of tents.";
 							break;
 						}
 					}
 				}
 			}
-			
+
 			if (error == null && !changed)
 			{
 				error = "You must add grass to use this rule!";
 			}
 		}
-		
+
 		TreeTent.setAnnotations(destBoardState);
-		
+
 		return error;
 	}
 	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
@@ -127,7 +127,7 @@ public class RuleAllGrass extends PuzzleRule
 		boolean changed = false;
 	    	int width = destBoardState.getWidth();
 	    	int height = destBoardState.getHeight();
-	    	
+
 	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
 	    	{
 	        	for(int x = 0; x < width; ++x)
@@ -177,9 +177,9 @@ public class RuleAllGrass extends PuzzleRule
 		    			}
 		    		}
 	        	}
-	        	
+
 		    	String error = checkRuleRaw(destBoardState);
-		    	
+
 				if (error != null)
 				{
 					System.out.println(error);
@@ -187,12 +187,12 @@ public class RuleAllGrass extends PuzzleRule
 					// valid change
 				}
 	    	}
-	    	
+
 	    	if(!changed)
 	    	{
 	    		destBoardState = origBoardState.copy();
 	    	}
-		    	
+
 		    return changed;
 	}
 }

@@ -18,11 +18,11 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleOneUnknownNearTree extends PuzzleRule
+public class RuleLastCampingSpot extends PuzzleRule
 {
 	static final long serialVersionUID = 9518L;
 	public String getImageName() {return "images/treetent/oneTentPosition.png";}
-	public RuleOneUnknownNearTree()
+	public RuleLastCampingSpot()
     {
 		setName("Last Camping Spot");
 		description = "If there is one unknown cell next to a tentless unlinked tree, it is a tent which must be linked to the tree.";
@@ -30,7 +30,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
     }
 
     /**
-     * Check if a tree at a certain position forces a tent at another one (there are no other 
+     * Check if a tree at a certain position forces a tent at another one (there are no other
      * possiblities)
      * @param state the original BoardState (before we added the tent)
      * @param treeX the tree's x position
@@ -99,8 +99,8 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 				}
 				numUnknown++;
 			}
-		} 
-	
+		}
+
 		// Check Right
 		if (treeX + 1 < w)
 		{
@@ -117,7 +117,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 				}
 				numUnknown++;
 			}
-		} 
+		}
 
 		return (numUnknown == 1 && foundTentPos);
     }
@@ -133,18 +133,18 @@ public class RuleOneUnknownNearTree extends PuzzleRule
     {
     	int w = state.getWidth();
     	int h = state.getHeight();
-    	
+
     	//Make sure the current position is within bounds
     	if (x >= 0 && x < w && y >= 0 && y < h)
     	{
     		//Make sure the tree at the position is unlinked
     		return (state.getCellContents(x,y) == TreeTent.CELL_TREE) && !TreeTent.isLinked(state.getExtraData(), new Point(x,y));
     	}
-    	
+
     	//The position is out of bounds
     	return false;
     }
-    
+
     /**
      * Check if inserting a tent at the given position is a legal application of the rule
      * @param original the original board state
@@ -155,7 +155,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
     private boolean checkLegal(BoardState original, int x, int y)
     {
     	boolean rv = false;
-    	
+
     	if (isTree(original,x+1,y) && checkTreeForcesTent(original,x+1,y,x,y))
     		rv = true;
     	else if (isTree(original,x-1,y) && checkTreeForcesTent(original,x-1,y,x,y))
@@ -164,17 +164,17 @@ public class RuleOneUnknownNearTree extends PuzzleRule
     		rv = true;
     	else if (isTree(original,x,y-1) && checkTreeForcesTent(original,x,y-1,x,y))
     		rv = true;
- 
+
     	return rv;
     }
-    
+
     protected String checkRuleRaw(BoardState destBoardState)
     {
     	String error = null;
     	boolean changed = false;
     	BoardState origBoardState = destBoardState.getSingleParentState();
     	int numTentsAdded = 0;
-    	
+
     	// Check for only one branch
 		if (destBoardState.getParents().size() != 1)
 		{
@@ -196,22 +196,22 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 				{
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
-					
+
 					if (origState != newState)
 					{
 						changed = true;
-						
+
 						if (newState != TreeTent.CELL_TENT || origState != TreeTent.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding and linking tents!";
 							break;
-						} 
-						
+						}
+
 						numTentsAdded++;
-						
+
 						if (!checkLegal(origBoardState,x,y))
 						{
-							error = "The tent at " + (char)(y + (int)'A') + "" + (x + 1)  
+							error = "The tent at " + (char)(y + (int)'A') + "" + (x + 1)
 									+ " is not forced by any adjacent tree.";
 							break;
 						}
@@ -222,15 +222,15 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 			{
 				error = "This rule requires links to be added for every tent added.";
 			}
-			
+
 			if (error == null && !changed)
 			{
 				error = "You must add one or more tents to use this rule!";
 			}
 		}
-		
+
 		TreeTent.setAnnotations(destBoardState);
-		
+
 		return error;
 	}
 	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
@@ -249,7 +249,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 			{
 				for(int y = 0; y<height;++y)
 				{
-					
+
 					if(TreeTent.isLinked(destExtra, new Point(x,y)))
 						continue;
 					if(origBoardState.getCellContents(x,y)==TreeTent.CELL_TREE)
@@ -267,7 +267,7 @@ public class RuleOneUnknownNearTree extends PuzzleRule
 									continue;
 								if(i!=0 && j!=0)
 									continue;
-									
+
 								if(TreeTent.isLinked(origExtra, new Point(x+i,y+j)))
 									continue;
 								if(origBoardState.getCellContents(x+i,y+j)==0)

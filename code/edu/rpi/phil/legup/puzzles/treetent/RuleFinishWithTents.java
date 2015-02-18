@@ -16,18 +16,18 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleAllTents extends PuzzleRule
+public class RuleFinishWithTents extends PuzzleRule
 {
 	static final long serialVersionUID = 9512L;
 	public String getImageName() {return "images/treetent/finishTent.png";}
-	public RuleAllTents()
+	public RuleFinishWithTents()
     {
-		setName("Finish Tents");
+		setName("Finish with Tents");
 		description = "Tents can be added to finish a row or column that has one open spot per required tent.";
 		//image = new ImageIcon("images/treetent/finishTent.png");
     }
 
-    
+
     /**
      * Count the number of occurances of a certain cell type in a row or column
      * @param state the BoardState we're counting on
@@ -39,19 +39,19 @@ public class RuleAllTents extends PuzzleRule
     private int countCell(BoardState state, boolean givenX, int type, int num)
     {
     	int rv = 0;
-    	
+
     	int x = 0, y = 0;
-    	
+
     	if (givenX)
     		x = num;
     	else
     		y = num;
-    	
+
     	while (true)
-    	{	
+    	{
     		if (state.getCellContents(x,y) == type)
     			++rv;
-    		
+
     		if (givenX)
     		{
     			++y;
@@ -65,10 +65,10 @@ public class RuleAllTents extends PuzzleRule
     				break;
     		}
     	}
-    		
+
     	return rv;
     }
-    
+
     /**
      * Check if adding a tent here is a valid application of this rule
      * @param state the destination board state
@@ -79,33 +79,33 @@ public class RuleAllTents extends PuzzleRule
     public boolean checkLegal(BoardState state, int x, int y)
     {
     	boolean rv = false;
-    	
+
     	//Total number of tents that can exist in a row or column
     	int numRow = TreeTent.translateNumTents(state.getLabel(BoardState.LABEL_RIGHT, y));
     	int numCol = TreeTent.translateNumTents(state.getLabel(BoardState.LABEL_BOTTOM, x));
-    	
+
     	//Current number of unknown spots which can be filled
     	int spotsCol = countCell(state,true,TreeTent.CELL_UNKNOWN,x);
     	int spotsRow = countCell(state,false,TreeTent.CELL_UNKNOWN,y);
-    	
+
     	//Current number of tents
     	int tentsCol = countCell(state,true,TreeTent.CELL_TENT,x);
     	int tentsRow = countCell(state,false,TreeTent.CELL_TENT,y);
-    	
+
     	//Total number of tents = Number of unknown cells + Current number of tents
     	//There is enough unknown spaces to be filled up with tents
     	if (numRow == spotsRow + tentsRow || numCol == spotsCol + tentsCol)
     		rv = true;
-    	
+
     	return rv;
-    }  
-   
+    }
+
     protected String checkRuleRaw(BoardState destBoardState)
     {
     	String error = null;
     	boolean changed = false;
     	BoardState origBoardState = destBoardState.getSingleParentState();
-    	
+
     	// Check for only one branch
 		if (destBoardState.getParents().size() != 1)
 		{
@@ -118,54 +118,54 @@ public class RuleAllTents extends PuzzleRule
 		else
 		{
 			// For each cell, check if the row or column has a sufficient number of tents in it
-			
+
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
 			{
 				for (int x = 0; x < origBoardState.getWidth(); ++x)
 				{
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
-					
+
 					if (origState != newState)
 					{
-						changed = true;						
-						
+						changed = true;
+
 						if (newState != TreeTent.CELL_TENT || origState != TreeTent.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding tents!";
 							break;
 						}
-						
+
 						if (!checkLegal(destBoardState,x,y))
 						{
-							error = "Neither the row nor column at " 
-								+ String.valueOf((char)(y + (int)'A')) 
+							error = "Neither the row nor column at "
+								+ String.valueOf((char)(y + (int)'A'))
 								+ "" + (x + 1) + " has its maximum number of non-tents.";
 							break;
 						}
 					}
 				}
 			}
-			
+
 			if (error == null && !changed)
 			{
 				error = "You must add some tents to use this rule2!";
 			}
 		}
-		
+
 		TreeTent.setAnnotations(destBoardState);
-		
+
 		return error;
 	}
-	
-	
+
+
 	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
 	{
 		 	BoardState origBoardState = destBoardState.getSingleParentState();
 	    	boolean changed = false;
 	    	int width = destBoardState.getWidth();
 	    	int height = destBoardState.getHeight();
-	    	
+
 	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
 	    	{
 	        	for(int x = 0; x < width; ++x)
@@ -215,10 +215,10 @@ public class RuleAllTents extends PuzzleRule
 		    			}
 		    		}
 	        	}
-	        	
-		    	
-		    	
-				
+
+
+
+
 	    	}
 	    	String error = checkRuleRaw(destBoardState);
 	    	if (error != null)
@@ -231,7 +231,7 @@ public class RuleAllTents extends PuzzleRule
 	    	{
 	    		destBoardState = origBoardState.copy();
 	    	}
-		    	
+
 		    return changed;
 	  }
 }
