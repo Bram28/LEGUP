@@ -285,7 +285,7 @@ public class Sudoku extends PuzzleModule
 					if (runningDifficulty == PuzzleGeneration.EASY)
 					{
 						Object just = test.getJustification();
-						if (just instanceof RuleForcedLocation)
+						if (just instanceof RuleForcedElimination)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 							if (unknown1-unknown2 < 6 && (unknown1-unknown2)*3 < unknown1)
@@ -303,7 +303,7 @@ public class Sudoku extends PuzzleModule
 					else if (runningDifficulty == PuzzleGeneration.NORMAL)
 					{
 						Object just = test.getJustification();
-						if (just instanceof RuleForcedLocation || just instanceof RuleForcedDeduction)
+						if (just instanceof RuleForcedElimination || just instanceof RuleForcedDeduction)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 
