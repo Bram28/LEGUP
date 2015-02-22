@@ -56,6 +56,10 @@ public class BattleShip extends PuzzleModule
         return tmp;
     }
 
+    public boolean isRemodifiable(int cellType) {
+		return cellType == CELL_SEGMENT;
+	}
+
 	public void labelPressedEvent(BoardState state, int index, int side)
 	{
 		ArrayList<Point> points = new ArrayList<Point>();
@@ -261,7 +265,7 @@ public class BattleShip extends PuzzleModule
 	public static boolean checkNorthForWater(BoardState boardState, int column, int row)
 	{
 		if (row <= 0)
-			return false;
+			return true;
 		if (isWater(boardState.getCellContents(column, row-1)))
 			return true;
 		return false;
@@ -285,7 +289,7 @@ public class BattleShip extends PuzzleModule
 	public static boolean checkSouthForWater(BoardState boardState, int column, int row)
 	{
 		if (row >= boardState.getHeight() - 1)
-			return false;
+			return true;
 		if (isWater(boardState.getCellContents(column, row+1)))
 			return true;
 		return false;
@@ -309,7 +313,7 @@ public class BattleShip extends PuzzleModule
 	public static boolean checkEastForWater(BoardState boardState, int column, int row)
 	{
 		if (column >= boardState.getWidth() - 1)
-			return false;
+			return true;
 		if (isWater(boardState.getCellContents(column+1, row)))
 			return true;
 		return false;
@@ -333,7 +337,7 @@ public class BattleShip extends PuzzleModule
 	public static boolean checkWestForWater(BoardState boardState, int column, int row)
 	{
 		if (column <= 0)
-			return false;
+			return true;
 		if (isWater(boardState.getCellContents(column-1, row)))
 			return true;
 		return false;

@@ -707,4 +707,13 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	public void disableAnnotationsForCell(int x, int y)
 	{
 	}
+	
+	/**
+	 * Allows specific cell values to be set after already being set once (e.g. battleship)
+	 * @param cellType The cell value being checked
+	 * @return True if this type of cell can be remodified
+	 */
+	public boolean isRemodifiable(int cellType) {
+		return false;
+	}
 }
