@@ -656,14 +656,13 @@ public class TreeTent extends PuzzleModule
 	public Vector <PuzzleRule> getRules(){
 		Vector <PuzzleRule>ruleList = new Vector <PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
+		ruleList.add(new RuleFinishWithGrass());
+		ruleList.add(new RuleFinishWithTents());
+		ruleList.add(new RuleGrassNextToTent()); //surround tent with grass
+		ruleList.add(new RuleEmptyField());
 		ruleList.add(new RuleNewTentLink());
 		ruleList.add(new RuleNewTreeLink());
-		ruleList.add(new RuleFinishWithGrass());
-		ruleList.add(new RuleEmptyField());
-		ruleList.add(new RuleGrassNextToTent());
-
 		ruleList.add(new RuleLastCampingSpot());
-		ruleList.add(new RuleFinishWithTents());
 
 		//ruleList.add(new RuleNewLink());
 		//ruleList.add(new RuleNewLink());

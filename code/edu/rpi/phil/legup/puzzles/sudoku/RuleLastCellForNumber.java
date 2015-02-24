@@ -7,7 +7,7 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 
-public class RuleForcedElimination extends PuzzleRule
+public class RuleLastCellForNumber extends PuzzleRule
 {
 
 	// cell index = 9*row+col
@@ -15,9 +15,9 @@ public class RuleForcedElimination extends PuzzleRule
 	private final int[][] groupToCellRef;
 	private static final long serialVersionUID = 206709517L;
 
-	RuleForcedElimination()
+	RuleLastCellForNumber()
     {
-		setName("Forced by Elimination");
+		setName("Last Cell for Number");
 		description = "This is the only spot left for a number to go in this row, column, or square";
 		image = new ImageIcon("images/sudoku/forcedByElimination.png");
 

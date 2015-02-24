@@ -16,19 +16,19 @@ import edu.rpi.phil.legup.PuzzleModule;
  *	@author Daniel Ploch
  *	@version 1.0 09/30/2008
  */
-public class CasePossibleValues extends CaseRule
+public class CasePossibleNumbersForCell extends CaseRule
 {
 	private static final long serialVersionUID = 174002227L;
 
-	public CasePossibleValues()
+	public CasePossibleNumbersForCell()
 	{
-		setName("Possible Values");
+		setName("Possible Numbers For Cell");
 		description = "A blank cell has a limited set of solutions, based on elimination";
 		image = new ImageIcon("images/sudoku/PossibleValues.png");
 
 		defaultApplicationText= "Select an unknown square.";
 	}
-	
+
 	public String getImageName()
 	{
 		return "images/sudoku/PossibleValues.png";
@@ -93,7 +93,7 @@ public class CasePossibleValues extends CaseRule
 		if(location.x < 0 || location.y < 0 || location.x >= state.getWidth( ) || location.y >= state.getHeight( )){
 			return false;
 		}
-		
+
 		if(state.getCellContents(location.x, location.y) == Sudoku.CELL_UNKNOWN)
 		{
 			Vector<Integer> states = new Vector<Integer>();

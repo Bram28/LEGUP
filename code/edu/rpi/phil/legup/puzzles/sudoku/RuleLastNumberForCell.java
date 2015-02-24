@@ -15,7 +15,7 @@ import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
  *	be eliminated by the rules of Sudoku
  *	@author: Daniel Ploch
  */
-public class RuleForcedDeduction extends PuzzleRule
+public class RuleLastNumberForCell extends PuzzleRule
 {
 	private static final long serialVersionUID = 712640204L;
 
@@ -23,16 +23,16 @@ public class RuleForcedDeduction extends PuzzleRule
 	private final int[][] cellToGroupRef;
 	private final int[][] groupToCellRef;
 
-	RuleForcedDeduction()
+	RuleLastNumberForCell()
     {
-		setName("Forced by Deduction");
+		setName("Last Number for Cell");
 		description = "This is the only the number left that can validly fit in the row, column, and square";
 		image = new ImageIcon("images/sudoku/forcedByDeduction.png");
 
 		groupToCellRef = Sudoku.getGroups();
 		cellToGroupRef = Sudoku.getCrossReference();
     }
-	
+
 	public String getImageName()
 	{
 		return "images/sudoku/forcedByDeduction.png";
@@ -88,9 +88,9 @@ public class RuleForcedDeduction extends PuzzleRule
 	boolean checkDeduced(int x, int y, int n, BoardState origBoardState)
 	{
 		int index = 9*y+x;
-		 
+
 		//Add all integers to the list that don't equal the newly added value (n)
-		LinkedList<Integer> list = new LinkedList<Integer>(); 
+		LinkedList<Integer> list = new LinkedList<Integer>();
 		for (int i = 0; i < 9; i++) if (i+1 != n) list.add(new Integer(i+1));
 
 		//Remove all integers that exist in the same row, column, or box as this value

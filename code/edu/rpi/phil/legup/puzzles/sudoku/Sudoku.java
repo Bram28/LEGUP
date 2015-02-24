@@ -166,12 +166,12 @@ public class Sudoku extends PuzzleModule
 	{
 		name = "Sudoku";
 
-		ruleList.add(new RuleForcedElimination());
-		ruleList.add(new RuleForcedDeduction());
-		ruleList.add(new RuleAdvancedDeduction());
+		ruleList.add(new RuleLastCellForNumber());
+		ruleList.add(new RuleLastNumberForCell());
+		//ruleList.add(new RuleAdvancedDeduction());
 		contraList.add(new ContradictionBoardStateViolated());
 		contraList.add(new ContradictionNoSolutionForCell());
-		caseList.add(new CasePossibleValues());
+		caseList.add(new CasePossibleNumbersForCell());
 	}
 
 	public BoardState generatePuzzle(int difficulty, JFrame host)
