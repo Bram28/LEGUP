@@ -797,17 +797,29 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		if(!state.isModifiable())
 		{
 			g.fillOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
-			g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-			g2D.setStroke((sel.contains(theSelection)? medium : thin));
+			g.setColor(Color.black);
+			g2D.setStroke(thin);
 			g.drawOval( x - NODE_RADIUS, y - NODE_RADIUS, diam, diam );
+			if (sel.contains(theSelection))
+			{
+				g.setColor(Color.green);
+				g2D.setStroke(medium);
+				g.drawRect( x - diam, y - diam, diam * 2, diam * 2 );
+			}
 		}
 		else
 		{
 			{
 				g2D.fill(triangle);
-				g.setColor((sel.contains(theSelection)? Color.blue : Color.black));
-				g2D.setStroke((sel.contains(theSelection)? medium : thin));
+				g.setColor(Color.black);
+				g2D.setStroke(thin);
 				g.drawPolygon(triangle);
+				if (sel.contains(theSelection))
+				{
+					g.setColor(Color.green);
+					g2D.setStroke(medium);
+					g.drawRect( x - diam, y - diam, diam * 2, diam * 2 );
+				}
 			}
 			if(state.getJustification() instanceof Contradiction)
 			{
