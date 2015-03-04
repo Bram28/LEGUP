@@ -579,6 +579,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 			children = lastCollapsed.getChildren();
 			
+			//Find out which cells have been changed since that collapse
 			for (int x = 0; x < state.getBoardCells()[0].length; x++)
 			{
 				for (int y = 0; y < state.getBoardCells().length; y++)
@@ -831,20 +832,16 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		}
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 	}
-
+	
 	/**
-	 * Draw a collapsed node at the current location
-	 * @param g the Graphics to draw with
-	 * @param x the x location to draw it on
-	 * @param y the y location to draw it on
+	 * When the user collapses the nodes, find out which board state was collapsed. The board state can then be used to find out 
+	 * the overall color for the collapsed transition(s)
+	 * @param lastCollapsed BoardState before the collapsed transition(s)
+	 * @param changedCells Cells modified during the collapse
+	 * @return OVerall color for the collapsed transition(s)
 	 */
-	private void drawCollapsedNode(Graphics g, int x, int y, BoardState lastCollapsed, Vector<Point> changedCells)
+	private Color getCollapsedTransitionColor(BoardState lastCollapsed, Vector<Point> changedCells)
 	{
-		final int rad = SMALL_NODE_RADIUS;
-		final int diam = 2 * rad;
-		final int deltaX = -COLLAPSED_DRAW_DELTA_X;
-		final int deltaY = -COLLAPSED_DRAW_DELTA_Y;
-		
 		Color transitionColor = new Color(255, 255, 155);
 		
 		Set<BoardState> keys = collapseColorHash.keySet();
@@ -878,7 +875,25 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 				break;
 			}
 		}
+		
+		return transitionColor;
+	}
 
+	/**
+	 * Draw a collapsed node at the current location
+	 * @param g the Graphics to draw with
+	 * @param x the x location to draw it on
+	 * @param y the y location to draw it on
+	 */
+	private void drawCollapsedNode(Graphics g, int x, int y, BoardState lastCollapsed, Vector<Point> changedCells)
+	{
+		final int rad = SMALL_NODE_RADIUS;
+		final int diam = 2 * rad;
+		final int deltaX = -COLLAPSED_DRAW_DELTA_X;
+		final int deltaY = -COLLAPSED_DRAW_DELTA_Y;
+		
+		Color transitionColor = getCollapsedTransitionColor(lastCollapsed, changedCells);
+	
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
 		g2D.setColor(Color.black);
@@ -910,8 +925,12 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		}
 	}
 
+	/**
+	 * When the user hovers over the transition, draws the corresponding justification image
+	 * @param g the graphics to use to draw
+	 */
 	private void drawMouseOver(Graphics2D g)
-	{
+	{	
 		BoardState B = mouseOver.getState();
 		//J contains both basic rules and contradictions
 		Justification J = B.getJustification();
