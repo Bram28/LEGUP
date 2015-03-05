@@ -104,7 +104,6 @@ public class BoardState implements java.io.Serializable
 	private BoardState mergeOverlord;
 	private boolean isMerged = false; //only merge once
 	private Point fixedOffset = new Point(0, 0); //offset applied after merge
-	private Set<Point> visitedPointsDepth = new HashSet<Point>();
 	
 	private boolean virtualBoard = false;
 	
@@ -285,9 +284,18 @@ public class BoardState implements java.io.Serializable
 				offset.y += TreePanel.NODE_RADIUS;
 			else
 				offset.y -= TreePanel.NODE_RADIUS;*/
-			
+
 			toggleCollapseRecursive(location.x,location.y, true);
 			recalculateLocation();
+			
+			//Since one branch has been modified by collapse, recalculate merge coordinates
+			BoardState mergedResult = children.get(0);
+			while (mergedResult.children.size() == 1 && mergedResult.parents.size() < 2)
+			{
+				mergedResult = mergedResult.children.get(0);
+			}
+			mergedResult.isMerged = false;
+			evalMergeY();
 			transitionsChanged();
 		}
 		else
@@ -346,7 +354,8 @@ public class BoardState implements java.io.Serializable
 	{
 		boolean branchesConverge = checkIfBranchesConverge();
 
-		if (children.size() == 2 && branchesConverge)
+		//if branches have been merged, then collapse everything
+		/*if (children.size() == 2 && branchesConverge)
 		{
 			BoardState child0 = children.get(0);
 			BoardState child1 = children.get(1);
@@ -371,14 +380,13 @@ public class BoardState implements java.io.Serializable
 				child0.offset.y = 0;
 				child1.offset.y = 0;
 			}
-		}
+		}*/
 		
-		
+
 		//Make sure the branch is linear, before collapsing nodes
 		if (children.size() == 1 && parents.size() < 2 && children.get(0).parents.size() < 2)
 		{
 			BoardState child = children.get(0);
-			
 			
 			collapsed = !collapsed;
 			if(!initial) {
@@ -389,8 +397,7 @@ public class BoardState implements java.io.Serializable
 					offset.y = 5 * TreePanel.NODE_RADIUS;
 				}
 			}
-			
-			
+
 			// collapse the child too
 			if (collapsed != child.collapsed)
 				child.toggleCollapseRecursive(x,y, false);
@@ -1237,7 +1244,6 @@ public class BoardState implements java.io.Serializable
 	{
 		if (mergeChildren.size() > 0)
 		{
-			visitedPointsDepth = new HashSet<Point>();
 			int depth = getDepth();
 			int mergeTot = 0; for (BoardState B : mergeChildren) mergeTot += B.numBranches();
 
@@ -1248,7 +1254,6 @@ public class BoardState implements java.io.Serializable
 				B.offset.x = place+(B.numBranches()-1)*((int)(1.5*TreePanel.NODE_RADIUS));
 				place += B.numBranches()*3*TreePanel.NODE_RADIUS;
 			}
-
 			recalculateLocation();
 		}
 
@@ -1293,19 +1298,33 @@ public class BoardState implements java.io.Serializable
 	
 		//add initial point
 		BoardState current = this;
-		visitedPointsDepth.add(current.location);
+		
+		int lowestY = current.location.y;
+		int highestY = Integer.MIN_VALUE;
 		
 		//add all children's points only once, since some boardstates might overlap
 		for(BoardState b : children)
 		{
 			current = b;
-			while (current.children.size() == 1)
+			
+			//only add nodes on the straight path
+			while (current.children.size() == 1 && current.parents.size() < 2)
 			{
 				current = current.children.get(0);
-				visitedPointsDepth.add(current.location);
+				
+				//this is the merged transition node
+				if (current.children.get(0).parents.size() >= 2)
+				{
+					if (current.location.y > highestY)
+						highestY = current.location.y;
+		
+					break;
+				}	
 			}
 		}
-		return visitedPointsDepth.size();
+		
+		int depthDifference = (highestY - lowestY)/(5*TreePanel.NODE_RADIUS) + 1;
+		return depthDifference;
 		
 		/*for(BoardState b : children)
 		{
@@ -2084,7 +2103,7 @@ public class BoardState implements java.io.Serializable
 				//However, it's only necessary to increase the offset once.
 				//This fixes a bug where the offset kept increasing and stretched the tree.
 				if (isMerged == false)
-				{
+				{	
 					fixedOffset.x = offset.x;
 					fixedOffset.y = offset.y;
 					isMerged = true;
