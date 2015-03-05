@@ -367,7 +367,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		//Don't collapse if the selected node is a transition
 		if (state.isModifiable()) 
 			return;
-
+		
 		//collapse should hide information about transitions
 		if (state.getChildren().size() == 1)
 			state.getChildren().get(0).toggleCollapse();

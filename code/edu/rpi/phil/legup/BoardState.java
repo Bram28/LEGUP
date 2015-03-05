@@ -8,6 +8,8 @@ import java.awt.Component;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 import java.lang.Math;
 import java.awt.Color;
@@ -102,7 +104,7 @@ public class BoardState implements java.io.Serializable
 	private BoardState mergeOverlord;
 	private boolean isMerged = false; //only merge once
 	private Point fixedOffset = new Point(0, 0); //offset applied after merge
-	
+	private Set<Point> visitedPointsDepth = new HashSet<Point>();
 	
 	private boolean virtualBoard = false;
 	
@@ -278,10 +280,11 @@ public class BoardState implements java.io.Serializable
 		// if we can collapse it legally
 		if (children.size() == 1 && parents.size() < 2)
 		{
-			if (!collapsed)
+			//no need for extra offset
+			/*if (!collapsed)
 				offset.y += TreePanel.NODE_RADIUS;
 			else
-				offset.y -= TreePanel.NODE_RADIUS;
+				offset.y -= TreePanel.NODE_RADIUS;*/
 			
 			toggleCollapseRecursive(location.x,location.y, true);
 			recalculateLocation();
@@ -292,6 +295,46 @@ public class BoardState implements java.io.Serializable
 			// TODO: elegant error handling, add error label to treeframe
 		}
 	}
+	
+	public boolean checkIfBranchesConverge()
+	{
+		//collapse usually stops before a merge.
+		//but...if each branch is merged back together, then just collapse the merge as well.
+		if (children.size() == 2)
+		{
+			//check branch 0
+			BoardState branch0 = children.get(0);
+			
+			while (branch0.children.size() == 1)
+			{
+				branch0 = branch0.children.get(0);
+
+				if (branch0.parents.size() == 2)
+					break;
+			}
+
+			//check branch 1
+			BoardState branch1 = children.get(1);
+
+			while (branch1.children.size() == 1)
+			{
+				branch1 = branch1.children.get(0);
+
+				if (branch1.parents.size() == 2)
+					break;
+			}
+
+			if (branch0.location.equals(branch1.location))
+			{
+				branch0.collapsed = !branch0.collapsed;
+				return true;
+			}
+			else
+				return false;
+		}
+		
+		return true;
+	}
 
 	/**
 	 * Recursively toggle the collapse value of this state and all it's children
@@ -301,10 +344,13 @@ public class BoardState implements java.io.Serializable
 	//Initial refers to whether or not the state is the first state in the collapse or uncollapse chain.
 	public void toggleCollapseRecursive(int x, int y, boolean initial)
 	{
-		//Make sure the branch is linear, before collapsing nodes
-		if (children.size() == 1 && parents.size() < 2 && children.get(0).parents.size() < 2)
+		boolean branchesConverge = checkIfBranchesConverge();
+
+		if (children.size() == 2 && branchesConverge)
 		{
-			BoardState child = children.get(0);
+			BoardState child0 = children.get(0);
+			BoardState child1 = children.get(1);
+			
 			collapsed = !collapsed;
 			if(!initial) {
 				if (collapsed) {
@@ -314,6 +360,37 @@ public class BoardState implements java.io.Serializable
 					offset.y = 5 * TreePanel.NODE_RADIUS;
 				}
 			}
+			// collapse the child too
+			if (collapsed != child0.collapsed)
+				child0.toggleCollapseRecursive(child0.location.x, child0.location.y, false);
+			
+			if (collapsed != child1.collapsed)
+				child1.toggleCollapseRecursive(child1.location.x, child1.location.y, false);
+			
+			if (collapsed) {
+				child0.offset.y = 0;
+				child1.offset.y = 0;
+			}
+		}
+		
+		
+		//Make sure the branch is linear, before collapsing nodes
+		if (children.size() == 1 && parents.size() < 2 && children.get(0).parents.size() < 2)
+		{
+			BoardState child = children.get(0);
+			
+			
+			collapsed = !collapsed;
+			if(!initial) {
+				if (collapsed) {
+					offset.y = 0;
+				}
+				else {
+					offset.y = 5 * TreePanel.NODE_RADIUS;
+				}
+			}
+			
+			
 			// collapse the child too
 			if (collapsed != child.collapsed)
 				child.toggleCollapseRecursive(x,y, false);
@@ -1160,6 +1237,7 @@ public class BoardState implements java.io.Serializable
 	{
 		if (mergeChildren.size() > 0)
 		{
+			visitedPointsDepth = new HashSet<Point>();
 			int depth = getDepth();
 			int mergeTot = 0; for (BoardState B : mergeChildren) mergeTot += B.numBranches();
 
@@ -1211,9 +1289,25 @@ public class BoardState implements java.io.Serializable
 	public int getDepth()
 	{
 		//return getDirectDepth()+getMergeDepth();
-		int tmp_max = -1;
+		//int tmp_max = -1;
 	
+		//add initial point
+		BoardState current = this;
+		visitedPointsDepth.add(current.location);
+		
+		//add all children's points only once, since some boardstates might overlap
 		for(BoardState b : children)
+		{
+			current = b;
+			while (current.children.size() == 1)
+			{
+				current = current.children.get(0);
+				visitedPointsDepth.add(current.location);
+			}
+		}
+		return visitedPointsDepth.size();
+		
+		/*for(BoardState b : children)
 		{
 			int boardStateDepth = b.getDepth();
 			
@@ -1223,7 +1317,7 @@ public class BoardState implements java.io.Serializable
 			
 			if(boardStateDepth > tmp_max)tmp_max = boardStateDepth;
 		}
-		return tmp_max+1;
+		return tmp_max+1;*/
 	}
 	// .... to this comment are all related to computation of position for
 	// regular nodes and Merge nodes
