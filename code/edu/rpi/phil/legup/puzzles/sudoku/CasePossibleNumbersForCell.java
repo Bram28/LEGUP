@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Vector;
 
+import edu.rpi.phil.legup.Legup;
+import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Permutations;
@@ -32,6 +34,28 @@ public class CasePossibleNumbersForCell extends CaseRule
 	public String getImageName()
 	{
 		return "images/sudoku/PossibleValues.png";
+	}
+
+	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
+	{
+		Contradiction contra = new ContradictionBoardStateViolated();
+
+		for (int i = 1; i < 9; i++)
+		{
+
+			BoardState modified = cur.copy();
+			modified.getBoardCells()[pointSelected.y][pointSelected.x] = i;
+			System.out.println(modified.getBoardCells()[pointSelected.y][pointSelected.x]);
+			if (contra.checkContradictionRaw(modified) == null) {
+				continue;
+			}
+
+			BoardState tmp = cur.addTransitionFrom();
+			tmp.setCaseSplitJustification(this);
+			tmp.setCellContents(pointSelected.x, pointSelected.y, i);
+			tmp.endTransition();
+		}
+		return Legup.getCurrentState();
 	}
 
 	public String checkCaseRuleRaw(BoardState state)
