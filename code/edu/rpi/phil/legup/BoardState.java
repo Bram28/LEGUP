@@ -304,7 +304,7 @@ public class BoardState implements java.io.Serializable
 		}
 	}
 	
-	public boolean checkIfBranchesConverge()
+	/*public boolean checkIfBranchesConverge()
 	{
 		//collapse usually stops before a merge.
 		//but...if each branch is merged back together, then just collapse the merge as well.
@@ -342,7 +342,7 @@ public class BoardState implements java.io.Serializable
 		}
 		
 		return true;
-	}
+	}*/
 
 	/**
 	 * Recursively toggle the collapse value of this state and all it's children
@@ -352,7 +352,7 @@ public class BoardState implements java.io.Serializable
 	//Initial refers to whether or not the state is the first state in the collapse or uncollapse chain.
 	public void toggleCollapseRecursive(int x, int y, boolean initial)
 	{
-		boolean branchesConverge = checkIfBranchesConverge();
+		//boolean branchesConverge = checkIfBranchesConverge();
 
 		//if branches have been merged, then collapse everything
 		/*if (children.size() == 2 && branchesConverge)
@@ -1312,14 +1312,45 @@ public class BoardState implements java.io.Serializable
 			{
 				current = current.children.get(0);
 				
-				//this is the merged transition node
-				if (current.children.get(0).parents.size() >= 2)
+				//Branch off and try to find the correct leaf node
+				if (current.children.size() == 2)
 				{
-					if (current.location.y > highestY)
-						highestY = current.location.y;
-		
-					break;
-				}	
+					for (int i = 0; i < current.children.size(); i++)
+					{
+						BoardState currentRootBackup = current;
+						
+						//examine
+						current = current.children.get(i);
+						while (current.children.size() == 1 && current.parents.size() < 2)
+						{
+							current = current.children.get(0);
+							
+							//this is the merged transition node
+							if (current.parents.size() >= 2)
+							{
+								//get the parent's rightmost node to prevent stretching
+								int farRightParent = Math.max(current.parents.get(0).location.y, current.parents.get(1).location.y);
+								
+								if (farRightParent > highestY)
+									highestY = farRightParent;
+							}	
+						}
+						
+						current = currentRootBackup;
+					}
+				}
+				
+				if (current.children.size() > 0)
+				{
+					//this is the merged transition node
+					if (current.children.get(0).parents.size() >= 2)
+					{
+						if (current.location.y > highestY)
+							highestY = current.location.y;
+			
+						break;
+					}
+				}
 			}
 		}
 		
