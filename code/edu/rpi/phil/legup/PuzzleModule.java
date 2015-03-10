@@ -542,7 +542,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	}
 
 	/**
-	 *	Separate method, intended for overwriting when extra data needs to be incorporated
+	 *	Separate method, intended for overriding when extra data needs to be incorporated
 	 */
 	public String getImageLocation(int x, int y, BoardState boardState)
 	{
@@ -557,6 +557,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	 */
 	public String getImageLocation(int cellValue)
 	{
+        // TODO: consider using a Map<Integer, String>-based lookup here?
 		if (cellValue == 0)
 			return "images/blank.gif";
 		else

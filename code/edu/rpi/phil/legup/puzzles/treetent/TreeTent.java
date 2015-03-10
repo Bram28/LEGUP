@@ -509,43 +509,13 @@ public class TreeTent extends PuzzleModule
 		g.setStroke(preStroke);
 	}
 
-	public String getImageLocation(int cellValue){
-		if (cellValue == 0){
-			return "images/treetent/unknown.gif";
-		} else if (cellValue == 3){
-			return "images/treetent/grass.png";
-		} else if (cellValue == 1){
-			return "images/treetent/tree.png";
-		} else if (cellValue == 2){
-			return "images/treetent/tent.png";
-		} else if (cellValue >= 10 && cellValue < 30){
-			return "images/treetent/" + (cellValue-10)+".gif"; }
-		  else if (cellValue >= 30 && cellValue <= 39){
-				return "images/treetent/" + (char)('a' + (cellValue - 30)) + ".gif";
+	public String getImageLocation(int cellValue) {
+		switch(cellValue) {
+			case 1: return "images/treetent/tree.png";
+			case 2: return "images/treetent/tent.png";
+			case 3: return "images/treetent/grass.png";
+			default: return "images/treetent/unknown.gif";
 		}
-		else{
-			return "images/treetent/unknown.gif";
-		}
-	}
-
-	public String getImageLocation(int x, int y, BoardState boardState)
-	{
-		//just started
-		if (annotations == null || !drawAnnotations)
-			return getImageLocation(boardState.getCellContents(x, y));
-
-		if (annotations[x][y] == TreeTent.CELL_GRASS)
-			return "images/treetent/annotate_grass.png";
-		else if (annotations[x][y] == TreeTent.CELL_TENT)
-			return "images/treetent/annotate_tent.png";
-		else
-			return getImageLocation(boardState.getCellContents(x, y));
-	}
-
-	public void drawCell( Graphics2D g, int x, int y, BoardState state ){
-		String imagePath = getImageLocation(x, y, state);
-		Image i = new ImageIcon(imagePath).getImage();
-		drawImage(g,x,y,i);
 	}
 
 	public void initBoard(BoardState state)
