@@ -168,7 +168,9 @@ public class BattleShip extends PuzzleModule
 	public Vector<CaseRule> getCaseRules()
 	{
 		Vector<CaseRule> result = new Vector<CaseRule>();
-		result.add(new CaseRule()
+		result.add(new CaseSegmentType());
+		result.add(new CaseShipOrWater());
+		/*result.add(new CaseRule()
 		{
 		    public String getImageName()
 		    {
@@ -179,7 +181,7 @@ public class BattleShip extends PuzzleModule
 			{
 				return null;
 			}
-		});
+		});*/
 		return result;
 	}
 
