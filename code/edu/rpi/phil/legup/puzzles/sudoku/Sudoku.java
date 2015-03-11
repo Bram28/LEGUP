@@ -44,7 +44,7 @@ public class Sudoku extends PuzzleModule
     public Map<String, Integer> getSelectableCells()
     {
         Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
-        for(int i=0; i<=9; i++) {
+        for(int i = 1; i <= 9; i++) {
         	tmp.put(String.format("%d", i), i);
         }
         return tmp;
