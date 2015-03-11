@@ -11,8 +11,8 @@ public class CaseShipOrWater extends CaseRule {
 	
 	public CaseShipOrWater()
 	{
-		setName("Ship Type");
-		description = "A ship segment can be one of several types.";
+		setName("Ship or Water");
+		description = "A tile can either be a ship segment or water.";
 	}
 
 	
@@ -31,13 +31,10 @@ public class CaseShipOrWater extends CaseRule {
 		return Legup.getCurrentState();
 	}
 
-	@Override
 	protected String checkCaseRuleRaw(BoardState state) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public String getImageName() {
 		return "images/battleship/ShipOrWater.png";
 	}

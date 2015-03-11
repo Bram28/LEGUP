@@ -44,10 +44,14 @@ public class RulePreventAdjacentShips extends PuzzleRule
 					}
 					BoardState modified = origBoardState.copy();
 					modified.getBoardCells()[y][x] = BattleShip.CELL_SEGMENT;
-					for (Contradiction c : contras) {
-						if (c.checkContradictionRaw(modified) != null)
-							return "At least one of these tiles is not forced to be water!";
+					boolean contradicts = false;
+					for (Contradiction c : contras)
+					{
+						if (c.checkContradictionRaw(modified) == null)
+							contradicts = true;
 					}
+					if (!contradicts)
+						return "At least one of these tiles is not forced to be water!";
 				}
 			}
 		}

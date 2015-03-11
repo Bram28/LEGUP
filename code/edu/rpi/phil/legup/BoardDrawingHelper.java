@@ -192,16 +192,13 @@ public abstract class BoardDrawingHelper
 			}
 		}
 		
-		//Draw green if a cell has been changed from CELL_UNKNOWN to a value
-		//Draw red if a cell has been changed, and not from an unknown
+		//Draw green if a cell has been changed
 		//If it is a transition then draw all cells which don't match as orange
-		if( prevVal == PuzzleModule.CELL_UNKNOWN && curVal != prevVal )
+		if( curVal != prevVal )
 		{
 			if( showOrange ) return orangeSquare;
 			else return greenFilter;
 		}
-		else if( prevVal != PuzzleModule.CELL_UNKNOWN && prevVal != curVal )
-			return redFilter;
 		else if( oldState == null && newState.getParents().size() > 1 ){
 			//Transition
 			// check if it's identical in all children if not draw orange

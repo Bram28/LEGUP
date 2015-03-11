@@ -39,24 +39,22 @@ public class ContradictionMalformedShip extends Contradiction
     				{
     				
     				case BattleShip.CELL_MIDDLE:
-    					// water on both north and south and either east or west
+    					// water on north and ship on south
     					if (BattleShip.checkNorthForWater(state, i, j) &&
-    						BattleShip.checkSouthForWater(state, i, j) &&
-    						(BattleShip.checkEastForWater(state, i, j) ||
-    						 BattleShip.checkWestForWater(state, i, j)))
+    						BattleShip.checkSouthForSegment(state, i, j))
     						return null;
-    					// water on both east and west and either north south
+    					// water on south and ship on north
+    					if (BattleShip.checkSouthForWater(state, i, j) &&
+    						BattleShip.checkNorthForSegment(state, i, j))
+    						return null;
+    					// water on east and ship on west
     					if (BattleShip.checkEastForWater(state, i, j) &&
-        					BattleShip.checkWestForWater(state, i, j) &&
-        					(BattleShip.checkNorthForWater(state, i, j) ||
-        					 BattleShip.checkSouthForWater(state, i, j)))
-        						return null;
-    					// segments on two non-opposite sides
-    					if ((BattleShip.checkNorthForSegment(state, i, j)  ||
-       						 BattleShip.checkSouthForSegment(state, i, j)) &&
-       						(BattleShip.checkEastForSegment (state, i, j)  ||
-       						 BattleShip.checkWestForSegment (state, i, j)))
-       						return null;
+    						BattleShip.checkWestForSegment(state, i, j))
+    						return null;
+    					// water on west and ship on east
+    					if (BattleShip.checkWestForWater(state, i, j) &&
+    						BattleShip.checkEastForSegment(state, i, j))
+    						return null;
     					break;
     					
     				case BattleShip.CELL_LEFT_CAP:

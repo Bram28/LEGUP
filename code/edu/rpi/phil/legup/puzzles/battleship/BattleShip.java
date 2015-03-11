@@ -152,6 +152,7 @@ public class BattleShip extends PuzzleModule
 		ruleList.add(new WaterRowRule());
 		ruleList.add(new RulePreventAdjacentShips());
 		ruleList.add(new RuleContinueShip());
+		ruleList.add(new RuleSegmentType());
 		return ruleList;
 	}
 

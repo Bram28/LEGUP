@@ -45,13 +45,10 @@ public class CaseSegmentType extends CaseRule {
 		return Legup.getCurrentState();
 	}
 
-	@Override
 	protected String checkCaseRuleRaw(BoardState state) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public String getImageName() {
 		return "images/battleship/SegmentType.png";
 	}
