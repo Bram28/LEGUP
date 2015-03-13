@@ -99,57 +99,61 @@ public class CaseRuleSelectionHelper extends Board
 		BoardDrawingHelper.draw(g,this);//pointSelected,mode);
 	}
 	
-	//used for highlighting now, remove duplication below later
 	public boolean isForbiddenTile(Point p)
+	{
+		return verifyAndNormalizePoint(p) == null;
+	}
+	public Point verifyAndNormalizePoint(Point p)
 	{
 		BoardState state = Legup.getCurrentState();
 		int w  = state.getWidth();
 		int h = state.getHeight();
-		if((p.x < -1)||(p.x > w)||(p.y < -1)||(p.y > h))return true;
-		if(((p.x == -1)||(p.x == w))&&((p.y == -1)||(p.y == h)))return true;
+		// forbid out of bounds cells
+		if((p.x < -1)||(p.x > w)||(p.y < -1)||(p.y > h)) { return null; }
+		// forbid corners
+		if(((p.x == -1)||(p.x == w))&&((p.y == -1)||(p.y == h))) { return null; }
+		// potentially forbid labels (depending on puzzle module and mode)
 		if((!allowLabels)||(mode != MODE_COL_ROW))
 		{
 			if((p.x == -1)||(p.x == w)||(p.y == -1)||(p.y == h))
 			{
-				return true;
+				return null;
 			}
 		}
-		if(!((p.x == -5)&&(p.y == -5)))
+		// forbid points that aren't allowed to be modified
+		if(mode == MODE_TILE)
 		{
-			if(mode == MODE_TILE)
+			if(!state.isModifiableCell(p.x,p.y))
 			{
-				if(!state.isModifiableCell(p.x,p.y))
-				{
-					return true;
-				}
-			}
-			if(mode == MODE_TILETYPE)
-			{
-				if(tileTypes != null)
-				{
-					int current_cell = state.getCellContents(p.x,p.y); 
-					if(!tileTypes.contains(current_cell))
-					{
-						return true;
-					}
-				}
-				else
-				{
-					//JOptionPane.showMessageDialog(null,"The tile type whitelist is null.");
-					return true;
-				}
+				return null;
 			}
 		}
-		if(p.x == w)p.x = -1;
-		if(p.y == h)p.y = -1;
+		// forbid non-whitelisted tiles (when in the relevant mode)
+		if(mode == MODE_TILETYPE)
+		{
+			if(tileTypes == null) { throw new Error("The tile type whitelist should not be null."); }
+			int current_cell = state.getCellContents(p.x,p.y);
+			if(!tileTypes.contains(current_cell))
+			{
+				return null;
+			}
+		}
+		// normalize the point
+		Point normalized = p;
+		if(normalized.x == w) { normalized.x = -1; }
+		if(normalized.y == h) { normalized.y = -1; }
+
+		// forbid non-labels (in the relevant mode)
 		if(mode == MODE_COL_ROW)
 		{
-			if((p.x != -1)&&(p.y != -1))
+			if((normalized.x != -1)&&(normalized.y != -1))
 			{
-				return true;
+				return null;
 			}
 		}
-		return false;
+
+		// allow if not forbidden
+		return normalized;
 	}
 	
 	protected void mousePressedAt(Point p, MouseEvent e)
@@ -171,85 +175,27 @@ public class CaseRuleSelectionHelper extends Board
 			p.x = (int)(Math.floor((double)p.x/imW));
 			p.y = (int)(Math.floor((double)p.y/imH));
 			
-			if((p.x < -1)||(p.x > w)||(p.y < -1)||(p.y > h)) //don't allow out of bounds
+			if((p = verifyAndNormalizePoint(p)) != null)
 			{
-				p.x = -5;
-				p.y = -5;
-			}
-			if(((p.x == -1)||(p.x == w))&&((p.y == -1)||(p.y == h))) //don't allow corners (with no label)
-			{
-				p.x = -5;
-				p.y = -5;
-			}
-			if((!allowLabels)||(mode != MODE_COL_ROW))
-			{
-				if((p.x == -1)||(p.x == w)||(p.y == -1)||(p.y == h))
+				pointSelected = p;
+				if(CLOSE_ON_SELECTION)
 				{
-					p.x = -5;
-					p.y = -5;
-				}
-			}
-			if(!((p.x == -5)&&(p.y == -5)))
-			{
-				if(mode == MODE_TILE)
-				{
-					if(!state.isModifiableCell(p.x,p.y))
+					if(dialog != null)
 					{
-						p.x = -5;
-						p.y = -5;
-					}
-				}
-				if(mode == MODE_TILETYPE)
-				{
-					if(tileTypes != null)
-					{
-						int current_cell = state.getCellContents(p.x,p.y); 
-						if(!tileTypes.contains(current_cell))
+						if((p.x != -5) && (p.y != -5))
 						{
-							p.x = -5;
-							p.y = -5;
+							dialog.setVisible(false);
 						}
 					}
-					else
+					else if(notifyOnSelection != null)
 					{
-						JOptionPane.showMessageDialog(null,"The tile type whitelist is null.");
-						p.x = -5;
-						p.y = -5;
+						Legup.getInstance().getGui().popBoard();
+						//notifyOnSelection.notify();
+						//System.out.println("setting CRSH.notifyOnSelection to null.");
+						notifyOnSelection = null;
 					}
 				}
 			}
-			if(p.x == w)p.x = -1;
-			if(p.y == h)p.y = -1;
-			if(mode == MODE_COL_ROW)
-			{
-				if((p.x != -1)&&(p.y != -1))
-				{
-					p.x = -5;
-					p.y = -5;
-				}
-			}
-			
-			
-			
-			pointSelected.x = p.x;
-			pointSelected.y = p.y;
-            if(CLOSE_ON_SELECTION)
-            {
-                if(dialog != null)
-                {
-                    if((p.x != -5) && (p.y != -5))
-                    {
-                        dialog.setVisible(false);
-                    }
-                }
-                else if(notifyOnSelection != null)
-                {
-                    Legup.getInstance().getGui().popBoard();
-                    //notifyOnSelection.notify();
-                    //System.out.println("setting CRSH.notifyOnSelection to null.");
-                    notifyOnSelection = null;
-                }
-            }
 		}
 		repaint();
 	}
