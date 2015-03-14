@@ -184,9 +184,7 @@ public class CasePanel extends JustificationPanel
 		*/
 		if(Legup.getInstance().getGui().checkCaseRuleGen())
 		{
-			final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
-			crsh.mode = caseRules.get(button).crshMode();
-			crsh.tileTypes = caseRules.get(button).crshTileType();
+			final CaseRuleSelectionHelper crsh = caseRules.get(button).getSelectionHelper();
             if(!experimentalCaseRuleBoardSwap)
             {
                 crsh.showInNewDialog();

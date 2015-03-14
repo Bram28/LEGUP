@@ -17,7 +17,12 @@ public class CaseTentsInRow extends CaseRule
 {
 	static final long serialVersionUID = 9506L;
 	protected final String defaultApplicationText= "Select a row number.";
-	public int crshMode(){return CaseRuleSelectionHelper.MODE_COL_ROW;}
+    public CaseRuleSelectionHelper getSelectionHelper()
+    {
+        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper();
+        crsh.mode = CaseRuleSelectionHelper.MODE_COL_ROW;
+        return crsh;
+    }
 	
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{

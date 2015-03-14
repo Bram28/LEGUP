@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import java.util.Vector;
+import java.util.Set;
 
 public class CaseRuleSelectionHelper extends Board
 {
@@ -30,10 +30,9 @@ public class CaseRuleSelectionHelper extends Board
 	public static final int MODE_TILE = 0;
 	public static final int MODE_COL_ROW = 1;
 	public static final int MODE_TILETYPE = 2;
-	Vector<Integer> tileTypes = null; //whitelist of allowed tiles for MODE_TILETYPE
+	public Set<Integer> tileTypes = null; //whitelist of allowed tiles for MODE_TILETYPE
 	public Point pointSelected = new Point(-5,-5);
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
-	private LEGUP_Gui parent = null;
 	public JDialog dialog = null;
 	public volatile Object notifyOnSelection = null;
 
@@ -43,10 +42,9 @@ public class CaseRuleSelectionHelper extends Board
 			"Click an blue-highlighed square to apply the case rule there.":
 			"Select where you would like to apply the CaseRule, and then select ok.";
 	
-	CaseRuleSelectionHelper(LEGUP_Gui gui)
+	public CaseRuleSelectionHelper()
 	{
         super(false);
-		parent = gui;
 		setPreferredSize(new Dimension(600,400));
 		setBackground(new Color(0xE0E0E0));
 		setSize(getProperSize());
