@@ -89,7 +89,10 @@ public class Selections
     {
     	treeSelectionListeners.add(l);
     }
-    
+    public void removeTreeSelectionListener(TreeSelectionListener l)
+    {
+    	treeSelectionListeners.remove(l); // this is O(n), consider replacing tSL with Set
+    }
     public void clearTreeSelectionListeners()
     {
     	treeSelectionListeners.clear();

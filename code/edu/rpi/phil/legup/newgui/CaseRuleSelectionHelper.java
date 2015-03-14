@@ -20,9 +20,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import java.util.ArrayList;
 import java.util.Set;
 
-public class CaseRuleSelectionHelper extends Board
+public class CaseRuleSelectionHelper extends Board implements TreeSelectionListener
 {
 	static final long serialVersionUID = -489237132432L;
 
@@ -53,6 +54,7 @@ public class CaseRuleSelectionHelper extends Board
 		tileTypes = null;
 		pointSelected.x = -5;
 		pointSelected.y = -5;
+		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 	}
 
     public void showInNewDialog()
@@ -176,27 +178,32 @@ public class CaseRuleSelectionHelper extends Board
 			if((p = verifyAndNormalizePoint(p)) != null)
 			{
 				pointSelected = p;
-				if(CLOSE_ON_SELECTION)
-				{
-					if(dialog != null)
-					{
-						if((p.x != -5) && (p.y != -5))
-						{
-							dialog.setVisible(false);
-						}
-					}
-					else if(notifyOnSelection != null)
-					{
-						Legup.getInstance().getGui().popBoard();
-						//notifyOnSelection.notify();
-						//System.out.println("setting CRSH.notifyOnSelection to null.");
-						notifyOnSelection = null;
-					}
-				}
+				selectionMade();
 			}
 		}
 		repaint();
 	}
+	protected void selectionMade()
+	{
+		if(CLOSE_ON_SELECTION)
+		{
+			if(dialog != null)
+			{
+				if((pointSelected.x != -5) && (pointSelected.y != -5))
+				{
+					dialog.setVisible(false);
+				}
+			}
+			else if(notifyOnSelection != null)
+			{
+				Legup.getInstance().getGui().popBoard();
+				//notifyOnSelection.notify();
+				//System.out.println("setting CRSH.notifyOnSelection to null.");
+				notifyOnSelection = null;
+			}
+		}
+	}
+
 	protected void mouseReleasedAt(Point p, MouseEvent e) {}
     public void initSize() { System.out.println("CaseRuleSelectionHelper#initSize() called."); }
 
@@ -257,4 +264,5 @@ public class CaseRuleSelectionHelper extends Board
         while(notifyOnSelection != null) {}
     }
     public void boardDataChanged(BoardState state) {}
+    public void treeSelectionChanged(ArrayList<Selection> newSelection) { selectionMade(); }
 }

@@ -205,6 +205,7 @@ public class CasePanel extends JustificationPanel
                         {
                             buttonPressedContinuation1(r);
                         }
+                        Legup.getInstance().getSelections().removeTreeSelectionListener(crsh);
                     }}).start();
                 }
             }
