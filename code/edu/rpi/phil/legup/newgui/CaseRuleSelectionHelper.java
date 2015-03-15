@@ -30,6 +30,7 @@ public class CaseRuleSelectionHelper extends Board
 	public static final int MODE_TILE = 0;
 	public static final int MODE_COL_ROW = 1;
 	public static final int MODE_TILETYPE = 2;
+	public static final int MODE_NO_TILE_SELECT = 3;
 	Vector<Integer> tileTypes = null; //whitelist of allowed tiles for MODE_TILETYPE
 	public Point pointSelected = new Point(-5,-5);
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
@@ -42,7 +43,7 @@ public class CaseRuleSelectionHelper extends Board
 	public static String helpMessage = (HIGHLIGHT_SELECTABLES && CLOSE_ON_SELECTION)?
 			"Click an blue-highlighed square to apply the case rule there.":
 			"Select where you would like to apply the CaseRule, and then select ok.";
-	
+
 	CaseRuleSelectionHelper(LEGUP_Gui gui)
 	{
         super(false);
@@ -93,15 +94,16 @@ public class CaseRuleSelectionHelper extends Board
 
 		return rv;
 	}
-	
+
 	protected void draw( Graphics2D g )
 	{
 		BoardDrawingHelper.draw(g,this);//pointSelected,mode);
 	}
-	
+
 	//used for highlighting now, remove duplication below later
 	public boolean isForbiddenTile(Point p)
 	{
+		if (mode == MODE_NO_TILE_SELECT) { return true; }
 		BoardState state = Legup.getCurrentState();
 		int w  = state.getWidth();
 		int h = state.getHeight();
@@ -127,7 +129,7 @@ public class CaseRuleSelectionHelper extends Board
 			{
 				if(tileTypes != null)
 				{
-					int current_cell = state.getCellContents(p.x,p.y); 
+					int current_cell = state.getCellContents(p.x,p.y);
 					if(!tileTypes.contains(current_cell))
 					{
 						return true;
@@ -151,15 +153,20 @@ public class CaseRuleSelectionHelper extends Board
 		}
 		return false;
 	}
-	
+
 	protected void mousePressedAt(Point p, MouseEvent e)
 	{
+		if (mode == MODE_NO_TILE_SELECT) {
+			pointSelected.x = -6;
+			pointSelected.y = -6;
+			return;
+		}
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
 			BoardState state = Legup.getCurrentState();
 			PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 			Dimension d = pm.getImageSize();
-			
+
 			int imW = d.width;
 			int imH = d.height;
 			int w  = state.getWidth();
@@ -170,7 +177,7 @@ public class CaseRuleSelectionHelper extends Board
 
 			p.x = (int)(Math.floor((double)p.x/imW));
 			p.y = (int)(Math.floor((double)p.y/imH));
-			
+
 			if((p.x < -1)||(p.x > w)||(p.y < -1)||(p.y > h)) //don't allow out of bounds
 			{
 				p.x = -5;
@@ -203,7 +210,7 @@ public class CaseRuleSelectionHelper extends Board
 				{
 					if(tileTypes != null)
 					{
-						int current_cell = state.getCellContents(p.x,p.y); 
+						int current_cell = state.getCellContents(p.x,p.y);
 						if(!tileTypes.contains(current_cell))
 						{
 							p.x = -5;
@@ -228,9 +235,8 @@ public class CaseRuleSelectionHelper extends Board
 					p.y = -5;
 				}
 			}
-			
-			
-			
+
+
 			pointSelected.x = p.x;
 			pointSelected.y = p.y;
             if(CLOSE_ON_SELECTION)
@@ -310,7 +316,7 @@ public class CaseRuleSelectionHelper extends Board
     }
     public void blockUntilSelectionMade()
     {
-        while(notifyOnSelection != null) {}
+        while(notifyOnSelection != null && mode != MODE_NO_TILE_SELECT) {}
     }
     public void boardDataChanged(BoardState state) {}
 }

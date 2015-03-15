@@ -172,6 +172,7 @@ public class Sudoku extends PuzzleModule
 		contraList.add(new ContradictionBoardStateViolated());
 		contraList.add(new ContradictionNoSolutionForCell());
 		caseList.add(new CasePossibleNumbersForCell());
+		caseList.add(new CasePossibleCellsForNumber());
 	}
 
 	public BoardState generatePuzzle(int difficulty, JFrame host)

@@ -137,14 +137,13 @@ public class CasePanel extends JustificationPanel
 
     protected boolean doCaseRuleAutogen(Point point, BoardState cur, int button)
     {
-        if((point.x == -5) && (point.y == -5))
+        if((point.x == -5) && (point.y == -5) &&
+					caseRules.get(button).crshMode() != CaseRuleSelectionHelper.MODE_NO_TILE_SELECT)
         {
-            //System.out.println("Nothing selected.");
             return false;
         }
         else
         {
-            //System.out.println("Point ("+point.x+","+point.y+") selected.");
             PuzzleModule pm = Legup.getInstance().getPuzzleModule();
             //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
             BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
@@ -166,7 +165,7 @@ public class CasePanel extends JustificationPanel
 	{
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		final BoardState cur = selection.getState();
-		
+
 		if (cur.getChildren().size() > 0)
 			return null;
 		if (cur.isModifiable() && Legup.getInstance().getGui().checkCaseRuleGen())
@@ -177,7 +176,7 @@ public class CasePanel extends JustificationPanel
 			return null;
 
 		final CaseRule r = caseRules.get(button);
-		
+
 		/*int quantityofcases = Integer.valueOf(JOptionPane.showInputDialog(null,"How many branches?")).intValue();
 		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
 		if(quantityofcases < 2)quantityofcases = 2; //the user from creating 100 nodes or something
@@ -202,7 +201,6 @@ public class CasePanel extends JustificationPanel
                     //try { this.wait(); } catch(Exception e){e.printStackTrace();}
                     new Thread(new Runnable(){ public void run() {
                         crsh.blockUntilSelectionMade();
-                        System.out.println("unblocked");
                         if(doCaseRuleAutogen(crsh.pointSelected, cur, button))
                         {
                             buttonPressedContinuation1(r);
