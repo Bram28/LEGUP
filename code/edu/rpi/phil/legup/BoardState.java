@@ -8,6 +8,8 @@ import java.awt.Component;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 import java.lang.Math;
 import java.awt.Color;
@@ -102,7 +104,6 @@ public class BoardState implements java.io.Serializable
 	private BoardState mergeOverlord;
 	private boolean isMerged = false; //only merge once
 	private Point fixedOffset = new Point(0, 0); //offset applied after merge
-	
 	
 	private boolean virtualBoard = false;
 	
@@ -278,13 +279,23 @@ public class BoardState implements java.io.Serializable
 		// if we can collapse it legally
 		if (children.size() == 1 && parents.size() < 2)
 		{
-			if (!collapsed)
+			//no need for extra offset
+			/*if (!collapsed)
 				offset.y += TreePanel.NODE_RADIUS;
 			else
-				offset.y -= TreePanel.NODE_RADIUS;
-			
+				offset.y -= TreePanel.NODE_RADIUS;*/
+
 			toggleCollapseRecursive(location.x,location.y, true);
 			recalculateLocation();
+			
+			//Since one branch has been modified by collapse, recalculate merge coordinates
+			BoardState mergedResult = children.get(0);
+			while (mergedResult.children.size() == 1 && mergedResult.parents.size() < 2)
+			{
+				mergedResult = mergedResult.children.get(0);
+			}
+			mergedResult.isMerged = false;
+			evalMergeY();
 			transitionsChanged();
 		}
 		else
@@ -292,6 +303,46 @@ public class BoardState implements java.io.Serializable
 			// TODO: elegant error handling, add error label to treeframe
 		}
 	}
+	
+	/*public boolean checkIfBranchesConverge()
+	{
+		//collapse usually stops before a merge.
+		//but...if each branch is merged back together, then just collapse the merge as well.
+		if (children.size() == 2)
+		{
+			//check branch 0
+			BoardState branch0 = children.get(0);
+			
+			while (branch0.children.size() == 1)
+			{
+				branch0 = branch0.children.get(0);
+
+				if (branch0.parents.size() == 2)
+					break;
+			}
+
+			//check branch 1
+			BoardState branch1 = children.get(1);
+
+			while (branch1.children.size() == 1)
+			{
+				branch1 = branch1.children.get(0);
+
+				if (branch1.parents.size() == 2)
+					break;
+			}
+
+			if (branch0.location.equals(branch1.location))
+			{
+				branch0.collapsed = !branch0.collapsed;
+				return true;
+			}
+			else
+				return false;
+		}
+		
+		return true;
+	}*/
 
 	/**
 	 * Recursively toggle the collapse value of this state and all it's children
@@ -301,10 +352,14 @@ public class BoardState implements java.io.Serializable
 	//Initial refers to whether or not the state is the first state in the collapse or uncollapse chain.
 	public void toggleCollapseRecursive(int x, int y, boolean initial)
 	{
-		//Make sure the branch is linear, before collapsing nodes
-		if (children.size() == 1 && parents.size() < 2 && children.get(0).parents.size() < 2)
+		//boolean branchesConverge = checkIfBranchesConverge();
+
+		//if branches have been merged, then collapse everything
+		/*if (children.size() == 2 && branchesConverge)
 		{
-			BoardState child = children.get(0);
+			BoardState child0 = children.get(0);
+			BoardState child1 = children.get(1);
+			
 			collapsed = !collapsed;
 			if(!initial) {
 				if (collapsed) {
@@ -314,6 +369,35 @@ public class BoardState implements java.io.Serializable
 					offset.y = 5 * TreePanel.NODE_RADIUS;
 				}
 			}
+			// collapse the child too
+			if (collapsed != child0.collapsed)
+				child0.toggleCollapseRecursive(child0.location.x, child0.location.y, false);
+			
+			if (collapsed != child1.collapsed)
+				child1.toggleCollapseRecursive(child1.location.x, child1.location.y, false);
+			
+			if (collapsed) {
+				child0.offset.y = 0;
+				child1.offset.y = 0;
+			}
+		}*/
+		
+
+		//Make sure the branch is linear, before collapsing nodes
+		if (children.size() == 1 && parents.size() < 2 && children.get(0).parents.size() < 2)
+		{
+			BoardState child = children.get(0);
+			
+			collapsed = !collapsed;
+			if(!initial) {
+				if (collapsed) {
+					offset.y = 0;
+				}
+				else {
+					offset.y = 5 * TreePanel.NODE_RADIUS;
+				}
+			}
+
 			// collapse the child too
 			if (collapsed != child.collapsed)
 				child.toggleCollapseRecursive(x,y, false);
@@ -349,8 +433,8 @@ public class BoardState implements java.io.Serializable
 	 */
 	public boolean isModifiableCell(int x, int y)
 	{
-		//return modifiableCells[y][x];
-		return Math.abs(boardCells[y][x]) == boardCells[y][x];
+		return modifiableCells[y][x];
+		//return Math.abs(boardCells[y][x]) == boardCells[y][x];
 	}
 
 	/**
@@ -591,13 +675,9 @@ public class BoardState implements java.io.Serializable
 	 //Used for puzzle generation.
 	 public void setModifiableCell(int x, int y, boolean value)
 	 {
-		//modifiableCells[y][x] = value;
-		 if (value)
-			 boardCells[y][x] = Math.abs(boardCells[y][x]);
-		 else
-			 boardCells[y][x] = Math.abs(boardCells[y][x])*-1;
-		 
-		 //if (boardCells[y][x] == 0)System.out.println("WARNING: tried to make 0 value negative");
+		modifiableCells[y][x] = value;
+		//boardCells[y][x] = Math.abs(boardCells[y][x]) * (value ? 1 : -1);
+		//if (boardCells[y][x] == 0)System.out.println("WARNING: tried to make 0 value negative");
 	 }
 	 
 	
@@ -1170,7 +1250,6 @@ public class BoardState implements java.io.Serializable
 				B.offset.x = place+(B.numBranches()-1)*((int)(1.5*TreePanel.NODE_RADIUS));
 				place += B.numBranches()*3*TreePanel.NODE_RADIUS;
 			}
-
 			recalculateLocation();
 		}
 
@@ -1211,9 +1290,70 @@ public class BoardState implements java.io.Serializable
 	public int getDepth()
 	{
 		//return getDirectDepth()+getMergeDepth();
-		int tmp_max = -1;
+		//int tmp_max = -1;
 	
+		//add initial point
+		BoardState current = this;
+		
+		int lowestY = current.location.y;
+		int highestY = Integer.MIN_VALUE;
+		
+		//add all children's points only once, since some boardstates might overlap
 		for(BoardState b : children)
+		{
+			current = b;
+			
+			//only add nodes on the straight path
+			while (current.children.size() == 1 && current.parents.size() < 2)
+			{
+				current = current.children.get(0);
+				
+				//Branch off and try to find the correct leaf node
+				if (current.children.size() == 2)
+				{
+					for (int i = 0; i < current.children.size(); i++)
+					{
+						BoardState currentRootBackup = current;
+						
+						//examine
+						current = current.children.get(i);
+						while (current.children.size() == 1 && current.parents.size() < 2)
+						{
+							current = current.children.get(0);
+							
+							//this is the merged transition node
+							if (current.parents.size() >= 2)
+							{
+								//get the parent's rightmost node to prevent stretching
+								int farRightParent = Math.max(current.parents.get(0).location.y, current.parents.get(1).location.y);
+								
+								if (farRightParent > highestY)
+									highestY = farRightParent;
+							}	
+						}
+						
+						current = currentRootBackup;
+					}
+				}
+				
+				if (current.children.size() > 0)
+				{
+					//this is the merged transition node
+					if (current.children.get(0).parents.size() >= 2)
+					{
+						if (current.location.y > highestY)
+							highestY = current.location.y;
+			
+						break;
+					}
+				}
+			}
+		}
+		
+		int depthDifference = (highestY - lowestY)/(5*TreePanel.NODE_RADIUS) + 1;
+		return depthDifference;
+		
+		/*for(BoardState b : children)
 		{
 			int boardStateDepth = b.getDepth();
 			
@@ -1223,7 +1363,7 @@ public class BoardState implements java.io.Serializable
 			
 			if(boardStateDepth > tmp_max)tmp_max = boardStateDepth;
 		}
-		return tmp_max+1;
+		return tmp_max+1;*/
 	}
 	// .... to this comment are all related to computation of position for
 	// regular nodes and Merge nodes
@@ -1990,7 +2130,7 @@ public class BoardState implements java.io.Serializable
 				//However, it's only necessary to increase the offset once.
 				//This fixes a bug where the offset kept increasing and stretched the tree.
 				if (isMerged == false)
-				{
+				{	
 					fixedOffset.x = offset.x;
 					fixedOffset.y = offset.y;
 					isMerged = true;

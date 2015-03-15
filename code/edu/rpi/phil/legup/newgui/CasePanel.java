@@ -138,7 +138,7 @@ public class CasePanel extends JustificationPanel
     protected boolean doCaseRuleAutogen(Point point, BoardState cur, int button)
     {
         if((point.x == -5) && (point.y == -5) &&
-					caseRules.get(button).crshMode() != CaseRuleSelectionHelper.MODE_NO_TILE_SELECT)
+					caseRules.get(button).getSelectionHelper().mode != CaseRuleSelectionHelper.MODE_NO_TILE_SELECT)
         {
             return false;
         }
@@ -183,9 +183,7 @@ public class CasePanel extends JustificationPanel
 		*/
 		if(Legup.getInstance().getGui().checkCaseRuleGen())
 		{
-			final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
-			crsh.mode = caseRules.get(button).crshMode();
-			crsh.tileTypes = caseRules.get(button).crshTileType();
+			final CaseRuleSelectionHelper crsh = caseRules.get(button).getSelectionHelper();
             if(!experimentalCaseRuleBoardSwap)
             {
                 crsh.showInNewDialog();
@@ -205,6 +203,7 @@ public class CasePanel extends JustificationPanel
                         {
                             buttonPressedContinuation1(r);
                         }
+                        Legup.getInstance().getSelections().removeTreeSelectionListener(crsh);
                     }}).start();
                 }
             }

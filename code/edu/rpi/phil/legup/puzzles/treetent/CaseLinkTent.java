@@ -2,6 +2,7 @@ package edu.rpi.phil.legup.puzzles.treetent;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -16,13 +17,14 @@ import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
 public class CaseLinkTent extends CaseRule
 {
 	static final long serialVersionUID = 9504L;
-	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
-	public Vector<Integer> crshTileType()
-	{
-		Vector<Integer> ret = new Vector<Integer>();
-		ret.add(TreeTent.CELL_TENT);
-		return ret;
-	}
+    public CaseRuleSelectionHelper getSelectionHelper()
+    {
+        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper();
+        crsh.mode = CaseRuleSelectionHelper.MODE_TILETYPE;
+        crsh.tileTypes = new LinkedHashSet();
+		crsh.tileTypes.add(TreeTent.CELL_TENT);
+        return crsh;
+    }
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
 		for(int c1=0;c1<4;c1++) //4: one for each orthagonal direction

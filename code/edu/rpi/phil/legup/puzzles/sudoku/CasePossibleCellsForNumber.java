@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 
@@ -40,13 +41,15 @@ public class CasePossibleCellsForNumber extends CaseRule
 		return "images/sudoku/PossibleValues.png";
 	}
 
-	public Vector<Integer> crshTileType()
-	{
-		return new Vector<Integer>();
-	}
-
 	public int crshMode() {
 		return CaseRuleSelectionHelper.MODE_NO_TILE_SELECT;
+	}
+
+	public CaseRuleSelectionHelper getSelectionHelper()
+	{
+			CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper();
+			crsh.mode = CaseRuleSelectionHelper.MODE_NO_TILE_SELECT;
+			return crsh;
 	}
 
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)

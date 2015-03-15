@@ -44,7 +44,7 @@ public class Sudoku extends PuzzleModule
     public Map<String, Integer> getSelectableCells()
     {
         Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
-        for(int i=0; i<=9; i++) {
+        for(int i = 1; i <= 9; i++) {
         	tmp.put(String.format("%d", i), i);
         }
         return tmp;
@@ -286,13 +286,13 @@ public class Sudoku extends PuzzleModule
 					if (runningDifficulty == PuzzleGeneration.EASY)
 					{
 						Object just = test.getJustification();
-						if (just instanceof RuleForcedElimination)
+						if (just instanceof RuleLastCellForNumber)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 							if (unknown1-unknown2 < 6 && (unknown1-unknown2)*3 < unknown1)
 								runningDifficulty = PuzzleGeneration.NORMAL;
 						}
-						else if (just instanceof RuleForcedDeduction)
+						else if (just instanceof RuleLastNumberForCell)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 							if (unknown1-unknown2 < 3 && (unknown2-unknown1)*5 < unknown1)
@@ -304,7 +304,7 @@ public class Sudoku extends PuzzleModule
 					else if (runningDifficulty == PuzzleGeneration.NORMAL)
 					{
 						Object just = test.getJustification();
-						if (just instanceof RuleForcedElimination || just instanceof RuleForcedDeduction)
+						if (just instanceof RuleLastCellForNumber || just instanceof RuleLastNumberForCell)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 
