@@ -40,7 +40,7 @@ public class CasePossibleNumbersForCell extends CaseRule
 	{
 		Contradiction contra = new ContradictionBoardStateViolated();
 
-		for (int i = 1; i < 9; i++)
+		for (int i = 1; i <= 9; i++)
 		{
 
 			BoardState modified = cur.copy();
