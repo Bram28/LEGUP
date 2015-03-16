@@ -87,6 +87,24 @@ public abstract class BoardDrawingHelper
 				//Determine if we need to add a different color based on
 				//transitions and changes made
 				Color filterColor = determineTransitionColor(x, y, newState, origState, showOrange);
+				
+				//If this is a collapsed transition, then we should try to compute the change of the entire collapse,
+				//not just a single transition
+				if (newState.isCollapsed())
+				{
+					BoardState collapseBegin = origState;
+					
+					//Get the node which ends the collapse
+					BoardState collapseEnd = newState.getChildren().get(0);
+					//Make sure node follows a straight path
+					while (collapseEnd.getChildren().size() == 1 && !collapseEnd.getChildren().get(0).isMergeTransition())
+					{
+						collapseEnd = collapseEnd.getChildren().get(0);
+					}
+					
+					//Compute difference of the entire collapse
+					filterColor = determineTransitionColor(x, y, collapseEnd, collapseBegin, showOrange);
+				}
 				//Color it, if needed
 				g.setStroke( new BasicStroke(3f) );
 				if( filterColor != null )
