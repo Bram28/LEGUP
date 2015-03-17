@@ -21,19 +21,57 @@ import java.awt.event.ActionEvent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
+
+interface CellPredicate { public boolean check(BoardState s, int x, int y); }
 
 public class CaseRuleSelectionHelper extends Board implements TreeSelectionListener
 {
 	static final long serialVersionUID = -489237132432L;
 
-	public int mode = MODE_TILE;
-	public static final int MODE_TILE = 0;
-	public static final int MODE_COL_ROW = 1;
-	public static final int MODE_TILETYPE = 2;
-	public static final int MODE_NO_TILE_SELECT = 3;
-	public Set<Integer> tileTypes = null; //whitelist of allowed tiles for MODE_TILETYPE
-	public Point pointSelected = new Point(-5,-5);
+    public CellPredicate validCell = onlyModifiableCells();
+
+    // TODO: possibly consider moving CellPredicate to seperate file(s)?
+    public static boolean inBounds(BoardState s, int x, int y, boolean includeEdges) {
+        int w = s.getWidth(); int h = s.getHeight();
+        if(includeEdges) { return !((x < -1)||(x > w)||(y < -1)||(y > h)); }
+        else { return !((x <= -1)||(x >= w)||(y <= -1)||(y >= h)); }
+    }
+    public static boolean isCorner(BoardState s, int x, int y) {
+        int w = s.getWidth(); int h = s.getHeight();
+        return ((x == -1) && (y == -1)) ||
+               ((x ==  w) && (y == -1)) ||
+               ((x == -1) && (y ==  h)) ||
+               ((x ==  w) && (y ==  h));
+    }
+    public static CellPredicate onlyModifiableCells() {
+        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+            return inBounds(s, x, y, false) && s.isModifiableCell(x, y);
+        }};
+    }
+    public static CellPredicate fullColumnsAndRows() {
+        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+            return inBounds(s, x, y, true) && !inBounds(s, x, y, false) && !isCorner(s, x, y);
+        }};
+    }
+    public static CellPredicate onlyOfType(final Integer... whitelist) {
+        return onlyOfType(new LinkedHashSet(Arrays.asList(whitelist)));
+    }
+    public static CellPredicate onlyOfType(final Set<Integer> whitelist) {
+        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+            return inBounds(s, x, y, false) && whitelist.contains(s.getCellContents(x, y));
+        }};
+    }
+    public static CellPredicate constFalse() {
+        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+            // This seems to be the intended behavior of MODE_NO_TILE_SELECT
+            // TODO: consider a cleaner way to implement dialog box caserule widgets
+            return false;
+        }};
+    }
+	public Point pointSelected = null;
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
 	public JDialog dialog = null;
 	public volatile Object notifyOnSelection = null;
@@ -44,18 +82,16 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 			"Click an blue-highlighed square to apply the case rule there.":
 			"Select where you would like to apply the CaseRule, and then select ok.";
 
-	public CaseRuleSelectionHelper()
+	public CaseRuleSelectionHelper(CellPredicate cp)
 	{
-        super(false);
+		super(false);
 		setPreferredSize(new Dimension(600,400));
 		setBackground(new Color(0xE0E0E0));
 		setSize(getProperSize());
 		zoomFit();
 		zoomTo(1.0);
-		tileTypes = null;
-		pointSelected.x = -5;
-		pointSelected.y = -5;
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
+		validCell = cp;
 	}
 
     public void showInNewDialog()
@@ -102,69 +138,16 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 
 	public boolean isForbiddenTile(Point p)
 	{
-		if (mode == MODE_NO_TILE_SELECT) return true;
 		return verifyAndNormalizePoint(p) == null;
 	}
-	public Point verifyAndNormalizePoint(Point p)
-	{
+
+	public Point verifyAndNormalizePoint(Point p) {
 		BoardState state = Legup.getCurrentState();
-		int w  = state.getWidth();
-		int h = state.getHeight();
-		// forbid out of bounds cells
-		if((p.x < -1)||(p.x > w)||(p.y < -1)||(p.y > h)) { return null; }
-		// forbid corners
-		if(((p.x == -1)||(p.x == w))&&((p.y == -1)||(p.y == h))) { return null; }
-		// potentially forbid labels (depending on puzzle module and mode)
-		if((!allowLabels)||(mode != MODE_COL_ROW))
-		{
-			if((p.x == -1)||(p.x == w)||(p.y == -1)||(p.y == h))
-			{
-				return null;
-			}
-		}
-		// forbid points that aren't allowed to be modified
-		if(mode == MODE_TILE)
-		{
-			if(!state.isModifiableCell(p.x,p.y))
-			{
-				return null;
-			}
-		}
-		// forbid non-whitelisted tiles (when in the relevant mode)
-		if(mode == MODE_TILETYPE)
-		{
-			if(tileTypes == null) { throw new Error("The tile type whitelist should not be null."); }
-			int current_cell = state.getCellContents(p.x,p.y);
-			if(!tileTypes.contains(current_cell))
-			{
-				return null;
-			}
-		}
-		// normalize the point
-		Point normalized = p;
-		if(normalized.x == w) { normalized.x = -1; }
-		if(normalized.y == h) { normalized.y = -1; }
-
-		// forbid non-labels (in the relevant mode)
-		if(mode == MODE_COL_ROW)
-		{
-			if((normalized.x != -1)&&(normalized.y != -1))
-			{
-				return null;
-			}
-		}
-
-		// allow if not forbidden
-		return normalized;
+		return validCell.check(state, p.x, p.y) ? p : null;
 	}
 
 	protected void mousePressedAt(Point p, MouseEvent e)
 	{
-		if (mode == MODE_NO_TILE_SELECT) {
-			pointSelected.x = -6;
-			pointSelected.y = -6;
-			return;
-		}
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
 			BoardState state = Legup.getCurrentState();
@@ -196,7 +179,7 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 		{
 			if(dialog != null)
 			{
-				if((pointSelected.x != -5) && (pointSelected.y != -5))
+				if(pointSelected != null)
 				{
 					dialog.setVisible(false);
 				}
@@ -232,32 +215,6 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
                             imageWidth - 0,
                             imageHeight - 0);
                 }
-                if((mode == CaseRuleSelectionHelper.MODE_TILE)||(mode == CaseRuleSelectionHelper.MODE_TILETYPE))
-                {
-                    if((pointSelected.x == x) && (pointSelected.y == y))
-                    {
-                        g.setStroke(new BasicStroke(3f));
-                        g.setColor(cyanFilter);
-                        g.drawRect(
-                                (x+1) * imageWidth + 2,
-                                (y+1) * imageHeight + 2,
-                                imageWidth - 4,
-                                imageHeight - 4 );
-                    }
-                }
-                else if(mode == CaseRuleSelectionHelper.MODE_COL_ROW)
-                {
-                    if(((pointSelected.x == -1)&&(pointSelected.y == y))||((pointSelected.x == x)&&(pointSelected.y == -1)))
-                    {
-                        g.setStroke(new BasicStroke(3f));
-                        g.setColor(cyanFilter);
-                        g.drawRect(
-                                (x+1) * imageWidth + 2,
-                                (y+1) * imageHeight + 2,
-                                imageWidth - 4,
-                                imageHeight - 4 );
-                    }
-                }
             }
         }
     }
@@ -268,7 +225,7 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
     }
     public void blockUntilSelectionMade()
     {
-        while(notifyOnSelection != null && mode != MODE_NO_TILE_SELECT) {}
+        while(notifyOnSelection != null) {}
     }
     public void boardDataChanged(BoardState state) {}
     public void treeSelectionChanged(ArrayList<Selection> newSelection) { selectionMade(); }

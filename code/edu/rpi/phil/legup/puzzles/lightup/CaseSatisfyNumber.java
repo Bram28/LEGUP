@@ -21,10 +21,7 @@ public class CaseSatisfyNumber extends CaseRule
 	static final long serialVersionUID = 5238481899970588295L;
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper();
-        crsh.mode = CaseRuleSelectionHelper.MODE_TILETYPE;
-        crsh.tileTypes = getTileTypes();
-		return crsh;
+        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.onlyOfType(getTileTypes()));
 	}
     private Set<Integer> tileTypes = null;
     public Set<Integer> getTileTypes()

@@ -19,9 +19,7 @@ public class CaseTentsInRow extends CaseRule
 	protected final String defaultApplicationText= "Select a row number.";
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper();
-        crsh.mode = CaseRuleSelectionHelper.MODE_COL_ROW;
-        return crsh;
+        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.fullColumnsAndRows());
     }
 	
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)

@@ -19,11 +19,7 @@ public class CaseLinkTent extends CaseRule
 	static final long serialVersionUID = 9504L;
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper();
-        crsh.mode = CaseRuleSelectionHelper.MODE_TILETYPE;
-        crsh.tileTypes = new LinkedHashSet();
-		crsh.tileTypes.add(TreeTent.CELL_TENT);
-        return crsh;
+        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.onlyOfType(TreeTent.CELL_TENT));
     }
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{

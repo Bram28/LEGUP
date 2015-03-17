@@ -15,10 +15,7 @@ public abstract class CaseRule extends Justification
 	protected String defaultApplicationText;
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper();
-        crsh.mode = CaseRuleSelectionHelper.MODE_TILE;
-        //crsh.tileTypes = new LinkedHashSet();
-        return crsh;
+        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.onlyModifiableCells());
     }
 	//do the case rule autogeneration, return the state to be transitioned to
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
@@ -65,7 +62,7 @@ public abstract class CaseRule extends Justification
 		return defaultApplicationText;
 	}
 	
-public boolean startDefaultApplication(BoardState state)
+    public boolean startDefaultApplication(BoardState state)
     {
     	return startDefaultApplicationRaw(state);
     }

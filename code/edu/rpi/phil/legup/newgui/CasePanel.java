@@ -15,12 +15,9 @@ import edu.rpi.phil.legup.Selection;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.PuzzleModule;
-import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
-import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
-import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTent;
-import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
-import edu.rpi.phil.legup.puzzles.lightup.LightUp;
-import edu.rpi.phil.legup.puzzles.lightup.CaseSatisfyNumber;
+
+// TODO: unhack sudoku-specific case
+import edu.rpi.phil.legup.puzzles.sudoku.CasePossibleCellsForNumber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,8 +134,8 @@ public class CasePanel extends JustificationPanel
 
     protected boolean doCaseRuleAutogen(Point point, BoardState cur, int button)
     {
-        if((point.x == -5) && (point.y == -5) &&
-					caseRules.get(button).getSelectionHelper().mode != CaseRuleSelectionHelper.MODE_NO_TILE_SELECT)
+        // TODO: unhack sudoku-specific case
+        if((point == null) && !(caseRules.get(button) instanceof CasePossibleCellsForNumber))
         {
             return false;
         }
@@ -198,7 +195,11 @@ public class CasePanel extends JustificationPanel
                     crsh.temporarilyReplaceBoard(Legup.getInstance().getGui(), this);
                     //try { this.wait(); } catch(Exception e){e.printStackTrace();}
                     new Thread(new Runnable(){ public void run() {
-                        crsh.blockUntilSelectionMade();
+                        // TODO: unhack sudoku-specific case
+                        if(!(caseRules.get(button) instanceof CasePossibleCellsForNumber))
+                        {
+                            crsh.blockUntilSelectionMade();
+                        }
                         if(doCaseRuleAutogen(crsh.pointSelected, cur, button))
                         {
                             buttonPressedContinuation1(r);

@@ -47,9 +47,7 @@ public class CasePossibleCellsForNumber extends CaseRule
 
 	public CaseRuleSelectionHelper getSelectionHelper()
 	{
-			CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper();
-			crsh.mode = CaseRuleSelectionHelper.MODE_NO_TILE_SELECT;
-			return crsh;
+        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.constFalse());
 	}
 
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
