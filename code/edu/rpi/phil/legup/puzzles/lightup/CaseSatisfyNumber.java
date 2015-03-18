@@ -8,27 +8,28 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
-import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
-import edu.rpi.phil.legup.PuzzleModule;
+import edu.rpi.phil.legup.CellPredicate;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
-import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
+import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
+import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
 
 public class CaseSatisfyNumber extends CaseRule
 {
 	static final long serialVersionUID = 5238481899970588295L;
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.onlyOfType(getTileTypes()));
+        return new CaseRuleSelectionHelper(CellPredicate.typeWhitelist(getTileTypes()));
 	}
     private Set<Integer> tileTypes = null;
     public Set<Integer> getTileTypes()
     {
         if(tileTypes == null)
         {
-            tileTypes = new LinkedHashSet();
+            tileTypes = new LinkedHashSet<Integer>();
             tileTypes.add(LightUp.CELL_BLOCK0);
             tileTypes.add(LightUp.CELL_BLOCK1);
             tileTypes.add(LightUp.CELL_BLOCK2);

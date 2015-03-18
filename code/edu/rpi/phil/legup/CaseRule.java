@@ -1,7 +1,7 @@
 package edu.rpi.phil.legup;
 
 import java.awt.Point;
-//import java.util.LinkedHashSet;
+import edu.rpi.phil.legup.CellPredicate;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 /**
@@ -15,7 +15,7 @@ public abstract class CaseRule extends Justification
 	protected String defaultApplicationText;
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.onlyModifiableCells());
+        return new CaseRuleSelectionHelper(CellPredicate.modifiableCell());
     }
 	//do the case rule autogeneration, return the state to be transitioned to
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)

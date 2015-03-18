@@ -16,9 +16,6 @@ import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.PuzzleModule;
 
-// TODO: unhack sudoku-specific case
-import edu.rpi.phil.legup.puzzles.sudoku.CasePossibleCellsForNumber;
-
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.TransferHandler;
@@ -134,25 +131,19 @@ public class CasePanel extends JustificationPanel
 
     protected boolean doCaseRuleAutogen(Point point, BoardState cur, int button)
     {
-        // TODO: unhack sudoku-specific case
-        if((point == null) && !(caseRules.get(button) instanceof CasePossibleCellsForNumber))
+        if(point == null) { return false; }
+
+        PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+        //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
+        BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
+        if(b != null) { Legup.setCurrentState(b); }
+        if((cur.getChildren().size() > 0) && (cur.getChildren().get(0) != null))
         {
-            return false;
+            Legup.setCurrentState(cur.getChildren().get(0));
         }
-        else
-        {
-            PuzzleModule pm = Legup.getInstance().getPuzzleModule();
-            //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
-            BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
-            if(b != null) Legup.setCurrentState(b);
-            if((cur.getChildren().size() > 0) && (cur.getChildren().get(0) != null))
-            {
-                Legup.setCurrentState(cur.getChildren().get(0));
-            }
-            //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
-            //Legup.getInstance().getGui().getTree().pushUndo();
-            return true;
-        }
+        //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
+        //Legup.getInstance().getGui().getTree().pushUndo();
+        return true;
     }
 
     boolean experimentalCaseRuleBoardSwap = true; //still a bit buggy, so use a flag
@@ -195,11 +186,7 @@ public class CasePanel extends JustificationPanel
                     crsh.temporarilyReplaceBoard(Legup.getInstance().getGui(), this);
                     //try { this.wait(); } catch(Exception e){e.printStackTrace();}
                     new Thread(new Runnable(){ public void run() {
-                        // TODO: unhack sudoku-specific case
-                        if(!(caseRules.get(button) instanceof CasePossibleCellsForNumber))
-                        {
-                            crsh.blockUntilSelectionMade();
-                        }
+                        crsh.blockUntilSelectionMade();
                         if(doCaseRuleAutogen(crsh.pointSelected, cur, button))
                         {
                             buttonPressedContinuation1(r);

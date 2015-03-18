@@ -1,76 +1,34 @@
 package edu.rpi.phil.legup.newgui;
 
-import edu.rpi.phil.legup.newgui.DynamicViewer;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
-import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.newgui.DynamicViewer;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
+import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-interface CellPredicate { public boolean check(BoardState s, int x, int y); }
 
 public class CaseRuleSelectionHelper extends Board implements TreeSelectionListener
 {
 	static final long serialVersionUID = -489237132432L;
 
-    public CellPredicate validCell = onlyModifiableCells();
+    public CellPredicate validCell = null;
 
-    // TODO: possibly consider moving CellPredicate to seperate file(s)?
-    public static boolean inBounds(BoardState s, int x, int y, boolean includeEdges) {
-        int w = s.getWidth(); int h = s.getHeight();
-        if(includeEdges) { return !((x < -1)||(x > w)||(y < -1)||(y > h)); }
-        else { return !((x <= -1)||(x >= w)||(y <= -1)||(y >= h)); }
-    }
-    public static boolean isCorner(BoardState s, int x, int y) {
-        int w = s.getWidth(); int h = s.getHeight();
-        return ((x == -1) && (y == -1)) ||
-               ((x ==  w) && (y == -1)) ||
-               ((x == -1) && (y ==  h)) ||
-               ((x ==  w) && (y ==  h));
-    }
-    public static CellPredicate onlyModifiableCells() {
-        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
-            return inBounds(s, x, y, false) && s.isModifiableCell(x, y);
-        }};
-    }
-    public static CellPredicate fullColumnsAndRows() {
-        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
-            return inBounds(s, x, y, true) && !inBounds(s, x, y, false) && !isCorner(s, x, y);
-        }};
-    }
-    public static CellPredicate onlyOfType(final Integer... whitelist) {
-        return onlyOfType(new LinkedHashSet(Arrays.asList(whitelist)));
-    }
-    public static CellPredicate onlyOfType(final Set<Integer> whitelist) {
-        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
-            return inBounds(s, x, y, false) && whitelist.contains(s.getCellContents(x, y));
-        }};
-    }
-    public static CellPredicate constFalse() {
-        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
-            // This seems to be the intended behavior of MODE_NO_TILE_SELECT
-            // TODO: consider a cleaner way to implement dialog box caserule widgets
-            return false;
-        }};
-    }
 	public Point pointSelected = null;
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
 	public JDialog dialog = null;
@@ -143,6 +101,9 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 
 	public Point verifyAndNormalizePoint(Point p) {
 		BoardState state = Legup.getCurrentState();
+		int w = state.getWidth(); int h = state.getHeight();
+		if(p.x == w) { p.x = -1; }
+		if(p.y == h) { p.y = -1; }
 		return validCell.check(state, p.x, p.y) ? p : null;
 	}
 
@@ -225,7 +186,7 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
     }
     public void blockUntilSelectionMade()
     {
-        while(notifyOnSelection != null) {}
+        while((notifyOnSelection != null) && (pointSelected == null)) {}
     }
     public void boardDataChanged(BoardState state) {}
     public void treeSelectionChanged(ArrayList<Selection> newSelection) { selectionMade(); }

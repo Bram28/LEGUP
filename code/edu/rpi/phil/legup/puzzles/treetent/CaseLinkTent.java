@@ -5,21 +5,20 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
-
-import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
-import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
+import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 
 public class CaseLinkTent extends CaseRule
 {
 	static final long serialVersionUID = 9504L;
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.onlyOfType(TreeTent.CELL_TENT));
+        return new CaseRuleSelectionHelper(CellPredicate.typeWhitelist(TreeTent.CELL_TENT));
     }
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{

@@ -4,11 +4,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
-
-import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
@@ -19,12 +18,12 @@ public class CaseTentsInRow extends CaseRule
 	protected final String defaultApplicationText= "Select a row number.";
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.fullColumnsAndRows());
+        return new CaseRuleSelectionHelper(CellPredicate.columnRowLabel());
     }
 	
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
-		boolean row = (pointSelected.x == -1)? true : false;
+		boolean row = (pointSelected.x == -1) ? true : false;
 		int where = (row)? pointSelected.y : pointSelected.x;
 		int num_blanks = cur.numEmptySpaces(where,row);
 		int[] whatgoesintheblanks = new int[num_blanks];
@@ -61,7 +60,6 @@ public class CaseTentsInRow extends CaseRule
 	{
 		setName("Fill In row");
 		description = "A row must have the number of tents of its clue.";
-		//image = new ImageIcon("images/treetent/case_rowcount.png");
 	}
 	
 	private int numTentsNeededInRow(BoardState state, int row){

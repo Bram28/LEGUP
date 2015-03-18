@@ -11,11 +11,12 @@ import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
+import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
-import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
-import edu.rpi.phil.legup.Legup;
 
 
 /**
@@ -41,13 +42,11 @@ public class CasePossibleCellsForNumber extends CaseRule
 		return "images/sudoku/PossibleValues.png";
 	}
 
-	public int crshMode() {
-		return CaseRuleSelectionHelper.MODE_NO_TILE_SELECT;
-	}
-
 	public CaseRuleSelectionHelper getSelectionHelper()
 	{
-        return new CaseRuleSelectionHelper(CaseRuleSelectionHelper.constFalse());
+        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(CellPredicate.constFalse());
+        crsh.pointSelected = new Point(0,0); //dummy point to bypass cell-picker functionality
+        return crsh;
 	}
 
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
