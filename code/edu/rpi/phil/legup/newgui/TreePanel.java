@@ -364,14 +364,21 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 		BoardState state = s.getState();
 		
-		//Don't collapse if the selected node is a transition
-		if (state.isModifiable()) 
-			return;
-		
-		//collapse should hide information about transitions
-		if (state.getChildren().size() == 1)
-			state.getChildren().get(0).toggleCollapse();
-		
+		//toggle collapse for the collapse icon or for nodes before it
+		if (state.isCollapsed())
+		{
+			state.toggleCollapse();
+		}
+		else
+		{
+			//Don't collapse if the selected node is a transition
+			if (state.isModifiable() && !state.isCollapsed()) 
+				return;
+			
+			//collapse should hide information about transitions
+			if (state.getChildren().size() == 1)
+				state.getChildren().get(0).toggleCollapse();
+		}
 		getCollapseColor(state);
 		
 		updateTreeSize();
@@ -685,6 +692,14 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			drawNode(g, draw.x, draw.y, state);
 		else
 			drawCollapsedNode(g, draw.x, draw.y, lastCollapsed);
+		
+		if (isCollapsed && sel.contains(theSelection))
+		{
+			g.setColor(Color.green);
+			g2D.setStroke(medium);
+			final int diam = NODE_RADIUS + NODE_RADIUS;
+			g.drawRect( draw.x - diam, draw.y - diam, diam * 2, diam * 2 );
+		}
 		
 		// to prevent the drawing of contradictions from taking over the CPU
 		try {
