@@ -18,6 +18,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import java.util.ArrayList;
 import javax.swing.JDialog;
@@ -28,6 +29,14 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 	static final long serialVersionUID = -489237132432L;
 
     public CellPredicate validCell = null;
+
+    // reasonable default, row/col will need a slight variant
+    public CellPredicate shouldHighlightCell = new CellPredicate() {
+        @Override public boolean check(BoardState s, int x, int y) {
+            return (validCell != null) && validCell.check(s,x,y) &&
+                (lastMousePosition.x == x) && (lastMousePosition.y == y);
+        }
+    };
 
 	public Point pointSelected = null;
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
@@ -46,10 +55,12 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 		setPreferredSize(new Dimension(600,400));
 		setBackground(new Color(0xE0E0E0));
 		setSize(getProperSize());
+		System.out.printf("CRSH.getSize(): %s\n", getSize());
 		zoomFit();
 		zoomTo(1.0);
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 		validCell = cp;
+		addMouseMotionListener(updateMousePosition);
 	}
 
     public void showInNewDialog()
@@ -73,11 +84,11 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 		if (selection.isState())
 		{
 			BoardState state = selection.getState();
-			PuzzleModule pz = Legup.getInstance().getPuzzleModule();
+			PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 
-			if (pz != null)
+			if (pm != null)
 			{
-				Dimension d = pz.getImageSize();
+				Dimension d = pm.getImageSize();
 				int w  = state.getWidth();
 				int h = state.getHeight();
 
@@ -113,18 +124,7 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 		{
 			BoardState state = Legup.getCurrentState();
 			PuzzleModule pm = Legup.getInstance().getPuzzleModule();
-			Dimension d = pm.getImageSize();
-
-			int imW = d.width;
-			int imH = d.height;
-			int w  = state.getWidth();
-			int h = state.getHeight();
-
-			p.x -= imW;
-			p.y -= imH;
-
-			p.x = (int)(Math.floor((double)p.x/imW));
-			p.y = (int)(Math.floor((double)p.y/imH));
+			p = mouseCoordsToGridCoords(state,pm,p);
 
 			if((p = verifyAndNormalizePoint(p)) != null)
 			{
@@ -158,10 +158,24 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 	protected void mouseReleasedAt(Point p, MouseEvent e) {}
     public void initSize() { System.out.println("CaseRuleSelectionHelper#initSize() called."); }
 
+    public final Point lastMousePosition = new Point(-10,-10);
+    protected final MouseMotionListener updateMousePosition = new MouseMotionListener() {
+        @Override public void mouseDragged(MouseEvent e) {}
+        @Override public void mouseMoved(MouseEvent e) {
+            BoardState state = Legup.getCurrentState();
+            PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+            Point p = mouseCoordsToGridCoords(state, pm, e.getPoint());
+            System.out.printf("updateMousePosition: (%d, %d)\n", p.x, p.y);
+            lastMousePosition.x = p.x;
+            lastMousePosition.y = p.y;
+        }
+    };
     public static Color caseRuleTargetHighlight = new Color(0,192,255,192);
+    public static Color mouseoverHighlight = new Color(0,192,0,192);
     public static final Color cyanFilter = BoardDrawingHelper.cyanFilter;
     public void drawBoardOverlay(Graphics2D g, int width, int height, int imageWidth, int imageHeight)
     {
+        BoardState state = Legup.getCurrentState();
         for(int x = -1;x < width;++x)
         {
             for(int y = -1;y < height;++y)
@@ -170,6 +184,16 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
                 {
                     g.setStroke(new BasicStroke(3f));
                     g.setColor(caseRuleTargetHighlight);
+                    g.fillRect(
+                            (x+1) * imageWidth,
+                            (y+1) * imageHeight,
+                            imageWidth - 0,
+                            imageHeight - 0);
+                }
+                if(shouldHighlightCell.check(state, x, y))
+                {
+                    g.setStroke(new BasicStroke(3f));
+                    g.setColor(mouseoverHighlight);
                     g.fillRect(
                             (x+1) * imageWidth,
                             (y+1) * imageHeight,

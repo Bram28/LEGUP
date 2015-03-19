@@ -90,19 +90,9 @@ public class NormalBoard extends Board
 		
 		if (e.getButton() == MouseEvent.BUTTON3)
 		{
-			//System.out.println("Right mouse clicked.");
-			//copied from MouseEvent.BUTTON1 code below
-			Dimension d = pm.getImageSize();
-			int imW = d.width;
-			int imH = d.height;
-			int w  = state.getWidth();
+			int w = state.getWidth();
 			int h = state.getHeight();
-
-			p.x -= imW;
-			p.y -= imH;
-			p.x = (int)(Math.floor((double)p.x/imW));
-			p.y = (int)(Math.floor((double)p.y/imH));
-			
+			p = mouseCoordsToGridCoords(state, pm, p);
 			if(pm.defaultApplication != null)
 			{
 				JustificationFrame.justificationApplied(state,pm.defaultApplication);
@@ -220,25 +210,13 @@ public class NormalBoard extends Board
 
 			if (lastMousePoint != null && parentStates.size() > 0) // not root state
 			{
-				PuzzleModule pz = Legup.getInstance().getPuzzleModule();
-				Dimension d = pz.getImageSize();
-				int imW = d.width;
-				int imH = d.height;
-				int w  = state.getWidth();
+				int w = state.getWidth();
 				int h = state.getHeight();
-
-				p.x -= imW;
-				p.y -= imH;
-
-				if (p.x > 0 && p.y > 0)
+				PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+				p = mouseCoordsToGridCoords(state, pm, p);
+				if((p.x > 0 && p.y > 0) && (p.x < w && p.y < h))
 				{
-					p.x /= imW;
-					p.y /= imH;
-
-					if (p.x < w && p.y < h)
-					{ // p.x and p.y hold the grid point now!
-						pz.mouseDraggedEvent(state,lastMousePoint,p);
-					}
+					pm.mouseDraggedEvent(state,lastMousePoint,p);
 				}
 			}
 		}
