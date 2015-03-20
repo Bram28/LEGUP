@@ -10,11 +10,13 @@ import edu.rpi.phil.legup.Selection;
 import edu.rpi.phil.legup.newgui.DynamicViewer;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 
+import java.awt.AWTEvent;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -60,7 +62,14 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 		zoomTo(1.0);
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
 		validCell = cp;
-		addMouseMotionListener(updateMousePosition);
+		//addMouseMotionListener(updateMousePosition);
+		java.awt.Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+			@Override public void eventDispatched(AWTEvent e) {
+				if(e.getID() == MouseEvent.MOUSE_MOVED) {
+					updateMousePosition.mouseMoved((MouseEvent)e);
+				}
+			}
+		}, AWTEvent.MOUSE_MOTION_EVENT_MASK);
 	}
 
     public void showInNewDialog()
@@ -155,7 +164,7 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 		}
 	}
 
-	protected void mouseReleasedAt(Point p, MouseEvent e) {}
+    protected void mouseReleasedAt(Point p, MouseEvent e) {}
     public void initSize() { System.out.println("CaseRuleSelectionHelper#initSize() called."); }
 
     public final Point lastMousePosition = new Point(-10,-10);
@@ -165,9 +174,10 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
             BoardState state = Legup.getCurrentState();
             PuzzleModule pm = Legup.getInstance().getPuzzleModule();
             Point p = mouseCoordsToGridCoords(state, pm, e.getPoint());
-            System.out.printf("updateMousePosition: (%d, %d)\n", p.x, p.y);
+            //System.out.printf("updateMousePosition: (%d, %d)\n", p.x, p.y);
             lastMousePosition.x = p.x;
             lastMousePosition.y = p.y;
+            repaint();
         }
     };
     public static Color caseRuleTargetHighlight = new Color(0,192,255,192);
@@ -203,7 +213,7 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
             }
         }
     }
-	public void temporarilyReplaceBoard(LEGUP_Gui gui, Object toNotify)
+    public void temporarilyReplaceBoard(LEGUP_Gui gui, Object toNotify)
     {
         gui.pushBoard(this);
         notifyOnSelection = toNotify;
