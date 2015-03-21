@@ -4,6 +4,7 @@ import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.CellPredicate;
+import edu.rpi.phil.legup.Endomorphism;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Selection;
@@ -37,6 +38,17 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
         @Override public boolean check(BoardState s, int x, int y) {
             return (validCell != null) && validCell.check(s,x,y) &&
                 (lastMousePosition.x == x) && (lastMousePosition.y == y);
+        }
+    };
+
+    public Endomorphism<Point> normalizePoint = new Endomorphism<Point>() {
+        @Override public Point apply(Point p) {
+            BoardState state = Legup.getCurrentState();
+            int w = state.getWidth(); int h = state.getHeight();
+            Point q = new Point(p);
+            if(q.x == w) { q.x = -1; }
+            if(q.y == h) { q.y = -1; }
+            return q;
         }
     };
 
@@ -121,9 +133,7 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 
 	public Point verifyAndNormalizePoint(Point p) {
 		BoardState state = Legup.getCurrentState();
-		int w = state.getWidth(); int h = state.getHeight();
-		if(p.x == w) { p.x = -1; }
-		if(p.y == h) { p.y = -1; }
+		p = normalizePoint.apply(p);
 		return validCell.check(state, p.x, p.y) ? p : null;
 	}
 
