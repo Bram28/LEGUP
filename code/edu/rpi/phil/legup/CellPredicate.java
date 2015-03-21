@@ -1,5 +1,6 @@
 package edu.rpi.phil.legup;
 
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -43,6 +44,18 @@ public abstract class CellPredicate
             return false;
         }};
     }
+
+    public static CellPredicate sameRowOrColumn(final Point p) {
+        return new CellPredicate() {
+            @Override public boolean check(BoardState s, int x, int y) {
+                if((p.x == -1) && (p.y == -1)) { return false; }
+                if(p.x == -1) { return p.y == y; }
+                if(p.y == -1) { return p.x == x; }
+                return false;
+            }
+        };
+    }
+
     public static CellPredicate union(final CellPredicate... preds) {
         return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
             boolean result = false;
