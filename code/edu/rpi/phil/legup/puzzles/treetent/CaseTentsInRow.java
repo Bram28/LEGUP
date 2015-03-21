@@ -18,7 +18,7 @@ public class CaseTentsInRow extends CaseRule
 	protected final String defaultApplicationText= "Select a row number.";
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        return new CaseRuleSelectionHelper(CellPredicate.columnRowLabel());
+        return new CaseRuleSelectionHelper(CellPredicate.edge());
     }
 	
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)

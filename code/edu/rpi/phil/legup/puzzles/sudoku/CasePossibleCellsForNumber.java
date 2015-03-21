@@ -43,18 +43,19 @@ public class CasePossibleCellsForNumber extends CaseRule
 		return "images/sudoku/PossibleValues.png";
 	}
 
-	public CaseRuleSelectionHelper getSelectionHelper()
-	{
-		String[] possNums = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    public CaseRuleSelectionHelper getSelectionHelper()
+    {
+        String[] possNums = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-		String sNum = (String) JOptionPane.showInputDialog(null, "Choose a number...",
-									"Possible Cells for Number Case Rule", JOptionPane.QUESTION_MESSAGE,
-									null, possNums, possNums[0]);
-		if (sNum != null) {
-			currNumSelected = Integer.parseInt(sNum);
-		}
-    CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(CellPredicate.modifiableCellAndEdge());
-    return crsh;
+        String sNum = (String) JOptionPane.showInputDialog(null, "Choose a number...",
+                                    "Possible Cells for Number Case Rule", JOptionPane.QUESTION_MESSAGE,
+                                    null, possNums, possNums[0]);
+        if (sNum != null) {
+            currNumSelected = Integer.parseInt(sNum);
+        }
+        CellPredicate p = CellPredicate.union(CellPredicate.modifiableCell(), CellPredicate.edge());
+        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(p);
+        return crsh;
 	}
 
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)

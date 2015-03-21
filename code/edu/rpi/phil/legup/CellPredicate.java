@@ -25,14 +25,9 @@ public abstract class CellPredicate
             return inBounds(s, x, y, false) && s.isModifiableCell(x, y);
         }};
     }
-    public static CellPredicate columnRowLabel() {
+    public static CellPredicate edge() {
         return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
             return inBounds(s, x, y, true) && !inBounds(s, x, y, false) && !isCorner(s, x, y);
-        }};
-    }
-    public static CellPredicate modifiableCellAndEdge() {
-        return new CellPredicate() {@Override public boolean check(BoardState s, int x, int y) {
-            return inBounds(s, x, y, true) && !isCorner(s, x, y);
         }};
     }
     public static CellPredicate typeWhitelist(final Integer... whitelist) {
@@ -46,6 +41,25 @@ public abstract class CellPredicate
     public static CellPredicate constFalse() {
         return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
             return false;
+        }};
+    }
+    public static CellPredicate union(final CellPredicate... preds) {
+        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+            boolean result = false;
+            for(CellPredicate p : preds) { result |= p.check(s, x, y); }
+            return result;
+        }};
+    }
+    public static CellPredicate intersection(final CellPredicate... preds) {
+        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+            boolean result = true;
+            for(CellPredicate p : preds) { result &= p.check(s, x, y); }
+            return result;
+        }};
+    }
+    public static CellPredicate negate(final CellPredicate p) {
+        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+            return !p.check(s, x, y);
         }};
     }
 }
