@@ -27,6 +27,7 @@ public class CasePossibleCellsForNumber extends CaseRule
 {
 	private static final long serialVersionUID = 174002227L;
 
+	private int currNumSelected = -1;
 
 	public CasePossibleCellsForNumber()
 	{
@@ -44,23 +45,42 @@ public class CasePossibleCellsForNumber extends CaseRule
 
 	public CaseRuleSelectionHelper getSelectionHelper()
 	{
-        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(CellPredicate.constFalse());
-        crsh.pointSelected = new Point(0,0); //dummy point to bypass cell-picker functionality
-        return crsh;
+		String[] possNums = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+		String sNum = (String) JOptionPane.showInputDialog(null, "Choose a number...",
+									"Possible Cells for Number Case Rule", JOptionPane.QUESTION_MESSAGE,
+									null, possNums, possNums[0]);
+		if (sNum != null) {
+			currNumSelected = Integer.parseInt(sNum);
+		}
+    CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(CellPredicate.modifiableCellAndEdge());
+    return crsh;
 	}
 
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
 		Contradiction contra = new ContradictionBoardStateViolated();
-
-    String[] possNums = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    String sNum = (String) JOptionPane.showInputDialog(null, "Choose a number...",
-                  "Possible Cells for Number Case Rule", JOptionPane.QUESTION_MESSAGE,
-                  null, possNums, possNums[0]);
-		if (sNum == null) return cur;
-		int num = Integer.parseInt(sNum);
-		for (int x = 0; x < 9; x++) {
-			for (int y = 0; y < 9; y++) {
+		int xLo, xHi, yLo, yHi;
+		if (pointSelected.x < 0) {
+			xLo = 0;
+			xHi = 9;
+			yLo = pointSelected.y;
+			yHi = pointSelected.y + 1;
+		} else if (pointSelected.y < 0) {
+			xLo = pointSelected.x;
+			xHi = pointSelected.x + 1;
+			yLo = 0;
+			yHi = 9;
+		} else {
+			xLo = (pointSelected.x/3) * 3;
+			xHi = ((pointSelected.x/3) * 3) + 3;
+			yLo = (pointSelected.y/3) * 3;
+			yHi = ((pointSelected.y/3) * 3) + 3;
+		}
+		if (currNumSelected == -1) return cur;
+		int num = currNumSelected;
+		for (int x = xLo; x < xHi; x++) {
+			for (int y = yLo; y < yHi; y++) {
 				if (cur.getCellContents(x, y) != Sudoku.CELL_UNKNOWN) {
 					continue;
 				}
@@ -83,10 +103,10 @@ public class CasePossibleCellsForNumber extends CaseRule
 
 	public String checkCaseRuleRaw(BoardState state)
 	{
-// 		BoardState parent = state.getSingleParentState();
-// 		if (parent != null && parent.getChildren().size() <= 2){
-// 			return "This case rule can only be applied on a split transition";
-// 		}
+		BoardState parent = state.getSingleParentState();
+		if (parent != null && parent.getChildren().size() < 2){
+			return "This case rule can only be applied on a split transition";
+		}
 // 		Vector<BoardState> states = parent.getChildren();
 // 		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
 // 		if (dif.size() != 1){
