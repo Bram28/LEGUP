@@ -59,8 +59,9 @@ public class CasePossibleNumbersForCell extends CaseRule
 
 	public String checkCaseRuleRaw(BoardState state)
 	{
+		// System.out.println("checkCaseRuleRaw");
 		BoardState parent = state.getSingleParentState();
-		if (parent != null && parent.getChildren().size() <= 2){
+		if (parent != null && parent.getChildren().size() < 2){
 			return "This case rule can only be applied on a split transition";
 		}
 		Vector<BoardState> states = parent.getChildren();
@@ -100,9 +101,10 @@ public class CasePossibleNumbersForCell extends CaseRule
 ////			}
 //		}
 //
-//		if (values.size() > 0){
-//			return "Case rule invalid - not all possibilities have been accounted for";
-//		}
+		// if (values.size() > 0){
+		// 	System.out.println("check");
+		// 	return "Case rule invalid - not all possibilities have been accounted for";
+		// }
 		return null;
 	}
 

@@ -30,6 +30,11 @@ public abstract class CellPredicate
             return inBounds(s, x, y, true) && !inBounds(s, x, y, false) && !isCorner(s, x, y);
         }};
     }
+    public static CellPredicate modifiableCellAndEdge() {
+        return new CellPredicate() {@Override public boolean check(BoardState s, int x, int y) {
+            return inBounds(s, x, y, true) && !isCorner(s, x, y);
+        }};
+    }
     public static CellPredicate typeWhitelist(final Integer... whitelist) {
         return typeWhitelist(new LinkedHashSet<Integer>(Arrays.asList(whitelist)));
     }
