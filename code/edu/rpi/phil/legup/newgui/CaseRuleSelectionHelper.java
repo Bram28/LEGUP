@@ -169,12 +169,18 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 
     public final Point lastMousePosition = new Point(-10,-10);
     protected final MouseMotionListener updateMousePosition = new MouseMotionListener() {
+        final boolean MOUSEMOTION_LOGGING = false;
         @Override public void mouseDragged(MouseEvent e) {}
         @Override public void mouseMoved(MouseEvent e) {
             BoardState state = Legup.getCurrentState();
             PuzzleModule pm = Legup.getInstance().getPuzzleModule();
-            Point p = mouseCoordsToGridCoords(state, pm, e.getPoint());
-            //System.out.printf("updateMousePosition: (%d, %d)\n", p.x, p.y);
+            Point p = mouseCoordsToGridCoords(state, pm, toDrawCoordinates(e.getPoint()));
+            if(MOUSEMOTION_LOGGING) {
+                System.out.println(e.getComponent());
+                System.out.println(e.getPoint());
+                System.out.println(p);
+                System.out.println();
+            }
             lastMousePosition.x = p.x;
             lastMousePosition.y = p.y;
             repaint();

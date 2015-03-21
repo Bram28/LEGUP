@@ -27,7 +27,10 @@ public abstract class DynamicViewer extends JScrollPane {
 	/*** FIELDS ***/
 	// customized JComponent provides a scalable canvas for drawing
 	private DynamicViewer outerThis = this;
-	private JComponent canvas = new JComponent(){
+	private JComponent canvas = new JComponent() {
+        // This anonymous class seems to be receiving MouseMotion 
+        //  events, possibly along with other events. Should this pass 
+        //   events through? What's the most generic way to do that, if that's to be done?
 		private static final long serialVersionUID = -6592350784886799360L;
 		public void paint( Graphics g ){
 			Graphics2D g2d = (Graphics2D) g;
@@ -174,7 +177,7 @@ public abstract class DynamicViewer extends JScrollPane {
 	}
 
 	// converts canvas coordinates to draw coordinates
-	private Point toDrawCoordinates( Point p ){
+	protected Point toDrawCoordinates( Point p ) {
 		return new Point( (int)( p.x / scale ), (int)( p.y / scale ) );
 	}
 
