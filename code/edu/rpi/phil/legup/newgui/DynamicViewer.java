@@ -1,16 +1,17 @@
 package edu.rpi.phil.legup.newgui;
 
+import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.LayoutManager;
-import java.awt.Point;
 import java.lang.Double;
 import java.util.TreeSet;
 import javax.swing.JComponent;
@@ -28,15 +29,18 @@ public abstract class DynamicViewer extends JScrollPane {
 	// customized JComponent provides a scalable canvas for drawing
 	private DynamicViewer outerThis = this;
 	private JComponent canvas = new JComponent() {
-        // This anonymous class seems to be receiving MouseMotion 
-        //  events, possibly along with other events. Should this pass 
-        //   events through? What's the most generic way to do that, if that's to be done?
 		private static final long serialVersionUID = -6592350784886799360L;
 		public void paint( Graphics g ){
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.scale(scale,scale);
 			DynamicViewer.draw(outerThis, g2d);
 		}
+        protected void processEvent(AWTEvent e) {
+            // delegate events to the dynamic viewer first
+            outerThis.dispatchEvent(e);
+            // fall back to the normal processing, if the event wasn't processed
+            super.processEvent(e);
+        }
 	};
 	private Dimension size = new Dimension();
 	private Dimension zoomSize = new Dimension();
