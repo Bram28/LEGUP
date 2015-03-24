@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.Vector;
@@ -13,16 +14,13 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.CellPredicate;
 import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.Endomorphism;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 
-/**
- *	@author Daniel Ploch
- *	@version 1.0 09/30/2008
- */
 public class CasePossibleCellsForNumber extends CaseRule
 {
 	private static final long serialVersionUID = 174002227L;
@@ -53,10 +51,40 @@ public class CasePossibleCellsForNumber extends CaseRule
         if (sNum != null) {
             currNumSelected = Integer.parseInt(sNum);
         }
-        CellPredicate p = CellPredicate.union(CellPredicate.modifiableCell(), CellPredicate.edge());
-        CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(p);
-        return crsh;
-	}
+
+				Set<Integer> whiteListCells = new HashSet<Integer>();
+				for (int i = 1; i <= 9; i++) {
+					whiteListCells.add(i);
+				}
+        CellPredicate p = CellPredicate.union(CellPredicate.modifiableCell(), CellPredicate.edge(),
+														CellPredicate.typeWhitelist(whiteListCells));
+        final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(p);
+
+				crsh.normalizePoint = new Endomorphism<Point>() {
+						@Override public Point apply(Point p) {
+							BoardState state = Legup.getCurrentState();
+							int w = state.getWidth(); int h = state.getHeight();
+							Point q = new Point(p);
+							if(q.x == w) { q.x = -1; }
+							if(q.y == h) { q.y = -1; }
+							if(q.x > -1 && q.y > -1) {
+								q.x = q.x/3 * 3;
+								q.y = q.y/3 * 3;
+							}
+							return q;
+						}
+					};
+
+				// CellPredicate miniGrid = new CellPredicate() {
+				// 		@Override public boolean check(BoardState s, int x, int y) {
+				//
+				// 		}
+				// };
+
+        crsh.shouldHighlightCell = CellPredicate.union(CellPredicate.sameRowOrColumn(crsh.lastMousePosition),
+																									CellPredicate.subGrid(crsh.lastMousePosition));
+				return crsh;
+		}
 
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
