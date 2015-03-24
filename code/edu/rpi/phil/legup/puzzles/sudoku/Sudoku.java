@@ -63,9 +63,7 @@ public class Sudoku extends PuzzleModule
         @Override public Point apply(Point p) {
             BoardState state = Legup.getCurrentState();
             int w = state.getWidth(); int h = state.getHeight();
-            Point q = new Point(p);
-            if(q.x == w) { q.x = -1; }
-            if(q.y == h) { q.y = -1; }
+            Point q = CellPredicate.normalizeEdge.apply(p);
             if(q.x > -1 && q.y > -1) {
                 // use integer division to normalize points to upper left corner of 3x3 grids
                 q.x = q.x/3 * 3;

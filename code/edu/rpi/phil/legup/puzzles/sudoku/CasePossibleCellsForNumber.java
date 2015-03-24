@@ -55,7 +55,7 @@ public class CasePossibleCellsForNumber extends CaseRule
         for (int i = 1; i <= 9; i++) {
             whiteListCells.add(i);
         }
-        CellPredicate p = CellPredicate.union(CellPredicate.modifiableCell(), CellPredicate.edge(),
+        CellPredicate p = CellPredicate.union(CellPredicate.modifiableCell, CellPredicate.edge,
                                                 CellPredicate.typeWhitelist(whiteListCells));
         final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(p);
 

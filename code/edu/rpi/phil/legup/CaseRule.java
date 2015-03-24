@@ -15,7 +15,7 @@ public abstract class CaseRule extends Justification
 	protected String defaultApplicationText;
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        return new CaseRuleSelectionHelper(CellPredicate.modifiableCell());
+        return new CaseRuleSelectionHelper(CellPredicate.modifiableCell);
     }
 	//do the case rule autogeneration, return the state to be transitioned to
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)

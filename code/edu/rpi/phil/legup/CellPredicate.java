@@ -21,27 +21,35 @@ public abstract class CellPredicate
                ((x == -1) && (y ==  h)) ||
                ((x ==  w) && (y ==  h));
     }
-    public static CellPredicate modifiableCell() {
-        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+    public static final Endomorphism<Point> normalizeEdge = new Endomorphism<Point>() {
+        @Override public Point apply(Point p) {
+            BoardState state = Legup.getCurrentState();
+            int w = state.getWidth(); int h = state.getHeight();
+            Point q = new Point(p);
+            if(q.x == w) { q.x = -1; }
+            if(q.y == h) { q.y = -1; }
+            return q;
+        }
+    };
+
+    public static final CellPredicate modifiableCell = new CellPredicate() {
+        @Override public boolean check(BoardState s, int x, int y) {
             return inBounds(s, x, y, false) && s.isModifiableCell(x, y);
-        }};
-    }
-    public static CellPredicate edge() {
-        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
+        }
+    };
+
+    public static final CellPredicate edge = new CellPredicate() {
+        @Override public boolean check(BoardState s, int x, int y) {
             return inBounds(s, x, y, true) && !inBounds(s, x, y, false) && !isCorner(s, x, y);
-        }};
-    }
+        }
+    };
+
     public static CellPredicate typeWhitelist(final Integer... whitelist) {
         return typeWhitelist(new LinkedHashSet<Integer>(Arrays.asList(whitelist)));
     }
     public static CellPredicate typeWhitelist(final Set<Integer> whitelist) {
         return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
             return inBounds(s, x, y, false) && whitelist.contains(s.getCellContents(x, y));
-        }};
-    }
-    public static CellPredicate constFalse() {
-        return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
-            return false;
         }};
     }
 

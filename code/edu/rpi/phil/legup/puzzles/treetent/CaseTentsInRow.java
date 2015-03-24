@@ -18,7 +18,7 @@ public class CaseTentsInRow extends CaseRule
 	protected final String defaultApplicationText= "Select a row number.";
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(CellPredicate.edge());
+        final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(CellPredicate.edge);
         crsh.shouldHighlightCell = CellPredicate.sameRowOrColumn(crsh.lastMousePosition);
         return crsh;
     }

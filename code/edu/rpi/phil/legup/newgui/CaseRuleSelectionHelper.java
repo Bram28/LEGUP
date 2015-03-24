@@ -39,16 +39,7 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
         }
     };
 
-    public Endomorphism<Point> normalizePoint = new Endomorphism<Point>() {
-        @Override public Point apply(Point p) {
-            BoardState state = Legup.getCurrentState();
-            int w = state.getWidth(); int h = state.getHeight();
-            Point q = new Point(p);
-            if(q.x == w) { q.x = -1; }
-            if(q.y == h) { q.y = -1; }
-            return q;
-        }
-    };
+    public Endomorphism<Point> normalizePoint = CellPredicate.normalizeEdge;
 
 	public Point pointSelected = null;
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
