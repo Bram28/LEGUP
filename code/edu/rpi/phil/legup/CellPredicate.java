@@ -56,21 +56,6 @@ public abstract class CellPredicate
         };
     }
 
-    public static CellPredicate subGrid(final Point p) {
-        return new CellPredicate() {
-            @Override public boolean check(BoardState s, int x, int y) {
-                if(p.x > -1 && p.y > -1) {
-                    // x = x/3 * 3;
-                    // y = y/3 * 3;
-                    p.x = p.x/3 * 3;
-                    p.y = p.y/3 * 3;
-                    return (x >= p.x && x < p.x+3) && (y >= p.y && y < p.y+3);
-                }
-                return false;
-            }
-        };
-    }
-
     public static CellPredicate union(final CellPredicate... preds) {
         return new CellPredicate() { @Override public boolean check(BoardState s, int x, int y) {
             boolean result = false;

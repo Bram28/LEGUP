@@ -14,7 +14,6 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.CellPredicate;
 import edu.rpi.phil.legup.Contradiction;
-import edu.rpi.phil.legup.Endomorphism;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
@@ -52,39 +51,20 @@ public class CasePossibleCellsForNumber extends CaseRule
             currNumSelected = Integer.parseInt(sNum);
         }
 
-				Set<Integer> whiteListCells = new HashSet<Integer>();
-				for (int i = 1; i <= 9; i++) {
-					whiteListCells.add(i);
-				}
+        Set<Integer> whiteListCells = new HashSet<Integer>();
+        for (int i = 1; i <= 9; i++) {
+            whiteListCells.add(i);
+        }
         CellPredicate p = CellPredicate.union(CellPredicate.modifiableCell(), CellPredicate.edge(),
-														CellPredicate.typeWhitelist(whiteListCells));
+                                                CellPredicate.typeWhitelist(whiteListCells));
         final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(p);
 
-				crsh.normalizePoint = new Endomorphism<Point>() {
-						@Override public Point apply(Point p) {
-							BoardState state = Legup.getCurrentState();
-							int w = state.getWidth(); int h = state.getHeight();
-							Point q = new Point(p);
-							if(q.x == w) { q.x = -1; }
-							if(q.y == h) { q.y = -1; }
-							if(q.x > -1 && q.y > -1) {
-								q.x = q.x/3 * 3;
-								q.y = q.y/3 * 3;
-							}
-							return q;
-						}
-					};
-
-				// CellPredicate miniGrid = new CellPredicate() {
-				// 		@Override public boolean check(BoardState s, int x, int y) {
-				//
-				// 		}
-				// };
+        crsh.normalizePoint = Sudoku.normalizeToSubgrid;
 
         crsh.shouldHighlightCell = CellPredicate.union(CellPredicate.sameRowOrColumn(crsh.lastMousePosition),
-																									CellPredicate.subGrid(crsh.lastMousePosition));
-				return crsh;
-		}
+                                                            Sudoku.inSameSubgrid(crsh.lastMousePosition));
+        return crsh;
+    }
 
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{

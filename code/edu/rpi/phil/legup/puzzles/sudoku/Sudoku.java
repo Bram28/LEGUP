@@ -6,6 +6,7 @@
 //
 
 package edu.rpi.phil.legup.puzzles.sudoku;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,7 +33,10 @@ import edu.rpi.phil.legup.AI;
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
 import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.Endomorphism;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleGeneration;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
@@ -54,6 +58,33 @@ public class Sudoku extends PuzzleModule
     	return tmp;
     }
 	public boolean hasLabels(){return false;}
+
+    public static final Endomorphism<Point> normalizeToSubgrid = new Endomorphism<Point>() {
+        @Override public Point apply(Point p) {
+            BoardState state = Legup.getCurrentState();
+            int w = state.getWidth(); int h = state.getHeight();
+            Point q = new Point(p);
+            if(q.x == w) { q.x = -1; }
+            if(q.y == h) { q.y = -1; }
+            if(q.x > -1 && q.y > -1) {
+                // use integer division to normalize points to upper left corner of 3x3 grids
+                q.x = q.x/3 * 3;
+                q.y = q.y/3 * 3;
+            }
+            return q;
+        }
+    };
+
+    public static CellPredicate inSameSubgrid(final Point p) {
+        return new CellPredicate() {
+            @Override public boolean check(BoardState s, int x, int y) {
+                Point q = normalizeToSubgrid.apply(p);
+                return (q.x > -1 && q.y > -1) &&
+                        (x >= q.x && x < q.x+3) &&
+                        (y >= q.y && y < q.y+3);
+            }
+        };
+    }
 
 	Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 	Vector <Contradiction> contraList = new Vector <Contradiction>();
