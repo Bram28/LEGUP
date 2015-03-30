@@ -378,6 +378,16 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			//collapse should hide information about transitions
 			if (state.getChildren().size() == 1)
 				state.getChildren().get(0).toggleCollapse();
+			else if (state.getChildren().size() == 2)
+			{
+				BoardState child0 = state.getChildren().get(0);
+				BoardState child1 = state.getChildren().get(1);
+				
+				//both children should be transitions, so don't collapse just yet
+				//get grandchildren
+				child0.getChildren().get(0).getChildren().get(0).toggleCollapse();
+				child1.getChildren().get(0).getChildren().get(0).toggleCollapse();
+			}
 		}
 		getCollapseColor(state);
 		
