@@ -88,7 +88,7 @@ Significance:
   Students learning in this traditional way may grasp the concepts within
   whichever physical logic system they are currently using, but will
   fail to apply that logic to any other domain where logical reasoning will by helpful.
-  LEGUP, on the other hand, shows students that logic is not simply manipulationg Ps and Qs
+  LEGUP, on the other hand, shows students that logic is not simply manipulating Ps and Qs
   with truth tables and quantifiers, but rather a strong principle with an underlying
   abstract nature that can be applied across all domains. This realization will
   lead to a "deep" understanding of logical reasoning that can help students in
