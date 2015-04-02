@@ -2,44 +2,94 @@ This text is compiled from previous LEGUP posters and has been updated
 to reflect current changes and modifications to the project.
 
 --------------------------------------------------------------------------
-(updated from the 2008 poster)
 
-BAH! Logic is... Boring, Abstract, Hard
-Boring:
-Learning logic can be dry and boring for students. However, grid-based
-puzzles that build upon basic logic skills can make learning logic a
-fun, interesting and entertaining game for students.
+(right side)
 
-Abstract:
-There lies a gap between the abstract symbols of logic and the meaningful
-problems that they represent. Presenting logic to students without
-these abstract symbols allows them to better understand its meaning and
-goals.
+  BAH! Formal Logic is... Boring, Abstract, Hard
+  Boring:
+  Learning formal logic can be dry and boring for students. It often seems to students
+  that it lacks any practical implications or meaning and is only a sequence of symbol
+  manipulation.
 
-Hard:
-Logic can be a difficult concept to master. The visual, grid-based puzzles
-in LEGUP can help make formal logic more approachable and easier to
-understand.
+  Abstract:
+  There lies a gap between the abstract symbols of logic and the meaningful
+  problems that they represent. The link between formal logic symbols and what
+  they represent difficult to comprehend for many students beginning logic.
+
+  Hard:
+  Logic can be a difficult concept to master. It can be especially challenging
+  to visualize the flow of an argument in a long formal logic proof, which can
+  make learning formal logic very discouraging for students.
 
 --------------------------------------------------------------------------
+
+**I forgot if I was supposed to change anything with this...**
 Objective:
 The objective of the LEGUP project is to create an easy to use graphical
-interface that will facilitate education of formal logic by using grid-
+interface that will facilitate learning of logical reasoning by using grid-
 based puzzles. LEGUP could be used while teaching courses in formal logic
 to make the concepts more approachable for students and increase their
 understanding of the subject.
 
 --------------------------------------------------------------------------
-Methods:
-LEGUP uses grid-based puzzles to convey the principle concepts of logic
-into recognizable and entertaining games such as Sudoku, Nurikabe,
-Battleship, and others. Students find proofs to each puzzle by applying
-various "basic rules" that are based on axioms of formal logic.
-Additionally, students can also perform a proof by cases, where the proof
-is split into a set of possible moves and the student continues with
-each case until either they either solve the puzzle, reach a
-contradiction, or merge two or more cases to get closer to a solution.
-LEGUP shows both the puzzle grid and a graphical proof tree that can
-give the user feedback on if their proof is correct or not.
+
+(Middle Pictures)
+
+  First Picture (in progress sudoku proof):
+  LEGUP uses grid-based puzzles to convey the principle concepts of logic
+  into recognizable and entertaining games such as Sudoku, Nurikabe,
+  Battleship, and others.
+
+  Second Picture (Different types of rules):
+  Students have a number of options when proving these puzzles: "basic rules"
+  that are based on axioms of formal logic relating to puzzle moves, a proof
+  by cases where the proof is split into a set of all possibilities for a grid
+  location, and proof by contradiction which would eliminate impossible cases.
+
+  Third Picture (proof tree):
+  LEGUP shows both the puzzle grid and a graphical proof tree that can
+  give the user feedback on if their proof is correct or not. The degree of
+  feedback given can be modified to alter difficulty and enhance learning.
+
+
+---------------------------------------------------------------------------
+
+(left side)
+
+  Solution:
+  LEGUP is Engaging, Concrete, Easy to Use
+
+  Engaging:
+  Grid-based puzzles like those employed in LEGUP build upon basic logic skills
+  and can make learning formal logic a more interesting and entertaining game
+  for students.
+
+  Concrete:
+  By using puzzles, we give students a clear representation of the formal logic
+  they use. Additionally, students can see that despite having different puzzles
+  in LEGUP the same logical principles can be used to solve each one.
+
+  Easy to Use:
+  The visual, grid-based puzzles in LEGUP can help make formal logic more
+  approachable and easier to understand. The corresponding graphical proof
+  tree also makes it easier to visualize the flow of the proof.
 
 --------------------------------------------------------------------------
+
+Significance:
+  Despite its vast importance across disciplines and society, no one possesses
+  the power of perfect reasoning. It is for this reason that logic classes are
+  taught. However, traditional formal logic instruction relies heavily on proofs
+  that appear only as symbol manipulation. Rather than actually grasping the
+  true purpose and meaning of logic, students only learn how to manipulate symbols
+  using a given set of rules in order to reach a given goal. This is very similar
+  to the "Chinese Room" argument proposed by John Searle; in which he adamantly
+  argues that this form of symbol manipulation is not intelligence at all.
+  Students learning in this traditional way may grasp the concepts within
+  whichever physical logic system they are currently using, but will
+  fail to apply that logic to any other domain where logical reasoning will by helpful.
+  LEGUP, on the other hand, shows students that logic is not simply manipulationg Ps and Qs
+  with truth tables and quantifiers, but rather a strong principle with an underlying
+  abstract nature that can be applied across all domains. This realization will
+  lead to a "deep" understanding of logical reasoning that can help students in
+  areas far beyond their assignments in a single logic course.
