@@ -76,11 +76,10 @@ public class CasePossibleCellsForNumber extends CaseRule
         final String[] options = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
         final JPopupMenu menu = new JPopupMenu();
         for(String opt : options) {
-            final JMenuItem toAdd = new JMenuItem(opt);
+            JMenuItem toAdd = new JMenuItem(opt);
             toAdd.addActionListener(new ActionListener() { @Override public void actionPerformed(ActionEvent e) {
                 final int num = 1 + menu.getComponentIndex((Component)e.getSource());
                 k.apply(num);
-            menu.add(toAdd);
             }});
         }
         Board b = Legup.getInstance().getGui().getBoard();
