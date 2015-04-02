@@ -2,18 +2,13 @@ package edu.rpi.phil.legup.puzzles.sudoku;
 
 import javax.swing.ImageIcon;
 
-import java.awt.Component;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.Vector;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
@@ -22,7 +17,6 @@ import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
-import edu.rpi.phil.legup.newgui.Board;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 
@@ -48,14 +42,14 @@ public class CasePossibleCellsForNumber extends CaseRule
 
     public CaseRuleSelectionHelper getSelectionHelper()
     {
-        /*String[] possNums = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+        String[] possNums = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
         String sNum = (String) JOptionPane.showInputDialog(null, "Choose a number...",
                                     "Possible Cells for Number Case Rule", JOptionPane.QUESTION_MESSAGE,
                                     null, possNums, possNums[0]);
         if (sNum != null) {
             currNumSelected = Integer.parseInt(sNum);
-        }*/
+        }
 
         Set<Integer> whiteListCells = new HashSet<Integer>();
         for (int i = 1; i <= 9; i++) {
@@ -72,70 +66,46 @@ public class CasePossibleCellsForNumber extends CaseRule
         return crsh;
     }
 
-    void showPopupMenuAndRunContinuation(final autoGenerateCases_continuation k) {
-        final String[] options = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-        final JPopupMenu menu = new JPopupMenu();
-        for(String opt : options) {
-            JMenuItem toAdd = new JMenuItem(opt);
-            toAdd.addActionListener(new ActionListener() { @Override public void actionPerformed(ActionEvent e) {
-                final int num = 1 + menu.getComponentIndex((Component)e.getSource());
-                k.apply(num);
-            }});
-        }
-        Board b = Legup.getInstance().getGui().getBoard();
-        menu.show(b, b.getX(), b.getY());
-    }
-
-    class autoGenerateCases_continuation {
-        public Contradiction contra = new ContradictionBoardStateViolated();
-        public int xLo, xHi, yLo, yHi;
-        public BoardState cur;
-        public CasePossibleCellsForNumber outerThis;
-        public void apply(int num) {
-            for (int x = xLo; x < xHi; x++) {
-                for (int y = yLo; y < yHi; y++) {
-                    if (cur.getCellContents(x, y) != Sudoku.CELL_UNKNOWN) {
-                        continue;
-                    }
-                    BoardState modified = cur.copy();
-                    modified.getBoardCells()[y][x] = num;
-
-                    if (contra.checkContradictionRaw(modified) == null) {
-                        continue;
-                    }
-
-                    BoardState tmp = cur.addTransitionFrom();
-                    tmp.setCaseSplitJustification(outerThis);
-                    tmp.setCellContents(x, y, num);
-                    tmp.endTransition();
-                }
-            }
-        }
-    }
-
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
-		autoGenerateCases_continuation k = new autoGenerateCases_continuation();
-		k.cur = cur; k.outerThis = this;
+		Contradiction contra = new ContradictionBoardStateViolated();
+		int xLo, xHi, yLo, yHi;
 		if (pointSelected.x < 0) {
-			k.xLo = 0;
-			k.xHi = 9;
-			k.yLo = pointSelected.y;
-			k.yHi = pointSelected.y + 1;
+			xLo = 0;
+			xHi = 9;
+			yLo = pointSelected.y;
+			yHi = pointSelected.y + 1;
 		} else if (pointSelected.y < 0) {
-			k.xLo = pointSelected.x;
-			k.xHi = pointSelected.x + 1;
-			k.yLo = 0;
-			k.yHi = 9;
+			xLo = pointSelected.x;
+			xHi = pointSelected.x + 1;
+			yLo = 0;
+			yHi = 9;
 		} else {
-			k.xLo = (pointSelected.x/3) * 3;
-			k.xHi = ((pointSelected.x/3) * 3) + 3;
-			k.yLo = (pointSelected.y/3) * 3;
-			k.yHi = ((pointSelected.y/3) * 3) + 3;
+			xLo = (pointSelected.x/3) * 3;
+			xHi = ((pointSelected.x/3) * 3) + 3;
+			yLo = (pointSelected.y/3) * 3;
+			yHi = ((pointSelected.y/3) * 3) + 3;
 		}
-		/*if (currNumSelected == -1) return cur;
-		int num = currNumSelected;*/
-		showPopupMenuAndRunContinuation(k);
+		if (currNumSelected == -1) return cur;
+		int num = currNumSelected;
+		for (int x = xLo; x < xHi; x++) {
+			for (int y = yLo; y < yHi; y++) {
+				if (cur.getCellContents(x, y) != Sudoku.CELL_UNKNOWN) {
+					continue;
+				}
+				BoardState modified = cur.copy();
+				modified.getBoardCells()[y][x] = num;
+
+				if (contra.checkContradictionRaw(modified) == null) {
+					continue;
+				}
+
+				BoardState tmp = cur.addTransitionFrom();
+				tmp.setCaseSplitJustification(this);
+				tmp.setCellContents(x, y, num);
+				tmp.endTransition();
+			}
+		}
 
 		return Legup.getCurrentState();
 	}
