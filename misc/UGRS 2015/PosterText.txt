@@ -76,7 +76,26 @@ understanding of the subject.
 
 --------------------------------------------------------------------------
 
+(Use the bulleted part)
+
 Significance:
+  Why study logic?
+    * Fundamental building block of many major concepts
+    * Universally helpful across various disciplines
+    * No one has perfect reasoning, we can all improve
+
+  Problems with current formal logic instruction:
+    * Teaches students to manipulate symbol using a set of rules to reach a given goal
+    * Often fails to convey the meaning beneath the symbols
+    * Does not make logic applicable to other domains
+
+  How LEGUP is different:
+    * Shows students the meaning beneath formal logic
+    * Teaches logic has an abstract nature and can be applied to different problems
+    * Gives students a "deep" understanding of logical reasoning
+
+  (convert '*' to bullet points)
+
   Despite its vast importance across disciplines and society, no one possesses
   the power of perfect reasoning. It is for this reason that logic classes are
   taught. However, traditional formal logic instruction relies heavily on proofs
