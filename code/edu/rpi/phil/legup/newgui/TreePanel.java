@@ -419,7 +419,8 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		
 		//collapse is colored green if all of the transitions are green. 
 		//if there is one red, the entire thing is red
-		while (iterBoard.getChildren().size() == 1)
+		while (iterBoard.getChildren().size() == 1 
+				&& iterBoard.getChildren().get(0).getParents().size() < 2)
 		{
 			int status = iterBoard.getStatus();
 			if (status == BoardState.STATUS_RULE_CORRECT || status ==  BoardState.STATUS_CONTRADICTION_CORRECT)
@@ -434,7 +435,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			//get children
 			iterBoard = iterBoard.getChildren().get(0);	
 		}
-	
+
 		//save multiple colors, because collapse might produce different results on different parts of the tree
 		//iterBoard should be the leaf node
 		if (overallColor)
@@ -875,7 +876,8 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	
 		//get last node
 		BoardState iterBoard = lastCollapsed;
-		while (iterBoard.getChildren().size() == 1)
+		while (iterBoard.getChildren().size() == 1 &&
+				iterBoard.getChildren().get(0).getParents().size() < 2)
 			iterBoard = iterBoard.getChildren().get(0);
 		
 		transitionColor = new Color(255, 255, 155);
