@@ -371,23 +371,39 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		}
 		else
 		{
-			//Don't collapse if the selected node is a transition
-			if (state.isModifiable() && !state.isCollapsed()) 
-				return;
-			
-			//collapse should hide information about transitions
-			if (state.getChildren().size() == 1)
-				state.getChildren().get(0).toggleCollapse();
-			else if (state.getChildren().size() == 2)
+			if (!state.isModifiable() && state.getChildren().size() == 2)
 			{
 				BoardState child0 = state.getChildren().get(0);
 				BoardState child1 = state.getChildren().get(1);
 				
 				//both children should be transitions, so don't collapse just yet
 				//get grandchildren
-				child0.getChildren().get(0).getChildren().get(0).toggleCollapse();
-				child1.getChildren().get(0).getChildren().get(0).toggleCollapse();
+				BoardState child0next = child0.getChildren().get(0).getChildren().get(0);
+				BoardState child1next = child1.getChildren().get(0).getChildren().get(0);
+				//if both are collapsed, then undo collapse
+				if (child0next.isCollapsed() && child1next.isCollapsed())
+				{
+					child0next.toggleCollapse();
+					child1next.toggleCollapse();
+				}
+				//otherwise collapse both of them if they haven't done so already
+				else 
+				{
+					if (!child0next.isCollapsed()) 
+					{
+						child0next.toggleCollapse();
+					}
+					if (!child1next.isCollapsed())
+					{
+						child1next.toggleCollapse();
+					}
+				}
 			}
+			
+			//if the state is a transition then collapse everything to the right of it
+			if (state.isModifiable() && state.getChildren().size() == 1 
+					&& state.getParents().get(0).getChildren().size() < 2)
+				state.toggleCollapse();
 		}
 		getCollapseColor(state);
 		
@@ -877,9 +893,10 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	 */
 	private void drawCollapsedNode(Graphics g, int x, int y, BoardState lastCollapsed)
 	{
+		x += 5;
 		final int rad = SMALL_NODE_RADIUS;
 		final int diam = 2 * rad;
-		final int deltaX = -COLLAPSED_DRAW_DELTA_X;
+		final int deltaX = -COLLAPSED_DRAW_DELTA_X + 2;
 		final int deltaY = -COLLAPSED_DRAW_DELTA_Y;
 		
 		Color transitionColor = getCollapsedTransitionColor(lastCollapsed);
