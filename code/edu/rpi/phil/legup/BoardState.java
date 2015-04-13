@@ -301,7 +301,8 @@ public class BoardState implements java.io.Serializable
 	//Initial refers to whether or not the state is the first state in the collapse or uncollapse chain.
 	public void toggleCollapseRecursive(int x, int y, boolean initial)
 	{
-		if (children.size() == 1 && parents.size() < 2)
+		//Make sure the branch is linear, before collapsing nodes
+		if (children.size() == 1 && parents.size() < 2 && children.get(0).parents.size() < 2)
 		{
 			BoardState child = children.get(0);
 			collapsed = !collapsed;

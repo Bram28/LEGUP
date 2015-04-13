@@ -50,34 +50,34 @@ public class Sudoku extends PuzzleModule
         return tmp;
     }
     public Map<String, Integer> getUnselectableCells(){
-    	Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); 
-    	return tmp; 
+    	Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+    	return tmp;
     }
 	public boolean hasLabels(){return false;}
-	
+
 	Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 	Vector <Contradiction> contraList = new Vector <Contradiction>();
 	Vector <CaseRule> caseList = new Vector <CaseRule>();
 
 	private static final int[][] groups = new int[27][9], crossRef = new int[81][3];
-	
+
 	private static boolean[][][] annotations = new boolean[9][9][9];
 	private static ArrayList<Vector<Integer> > validNums = new ArrayList<Vector<Integer> >();
-	
+
 	static
-	{	
+	{
 		//The groups array contains references to each square in the entire grid (numbered from 0 to 80)
-		
+
 		//Go through row by row, starting with the topmost row
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
 				groups[i][j] = 9*i+j;
-		
+
 		//Go through column by column, starting with the leftmost column
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
 				groups[i+9][j] = 9*j+i;
-		
+
 		//Go through box by box, starting with the top left corner
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
@@ -118,7 +118,7 @@ public class Sudoku extends PuzzleModule
 	 *	Returns a matrix of the form [x][y][v-1], designating if the value v is valid at cell (x,y)
 	 */
 	static boolean[][][] getPossMatrix(BoardState B)
-	{	
+	{
 		boolean[][][] possMatrix = new boolean[9][9][9];
 		for (int a = 0; a < 9; a++) for (int b = 0; b < 9; b++) for (int c = 0; c < 9; c++)
 			possMatrix[a][b][c] = true;
@@ -134,16 +134,16 @@ public class Sudoku extends PuzzleModule
 			}
 		return possMatrix;
 	}
-	
+
 	/**
 	 * Marks possible numbers that could fit in each cell.
 	 * @param B
 	 */
 	static void setAnnotations(BoardState B)
-	{	
+	{
 		//obtain a large truth table of values that may or may not fit in the cell
 		annotations = getPossMatrix(B);
-		
+
 		//obtain all the numbers that could potentially fit each cell
 		validNums.clear();
 		for (int y = 0; y < 9; y++)
@@ -166,7 +166,7 @@ public class Sudoku extends PuzzleModule
 	{
 		name = "Sudoku";
 
-		ruleList.add(new RuleForcedLocation());
+		ruleList.add(new RuleForcedElimination());
 		ruleList.add(new RuleForcedDeduction());
 		ruleList.add(new RuleAdvancedDeduction());
 		contraList.add(new ContradictionBoardStateViolated());
@@ -285,7 +285,7 @@ public class Sudoku extends PuzzleModule
 					if (runningDifficulty == PuzzleGeneration.EASY)
 					{
 						Object just = test.getJustification();
-						if (just instanceof RuleForcedLocation)
+						if (just instanceof RuleForcedElimination)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 							if (unknown1-unknown2 < 6 && (unknown1-unknown2)*3 < unknown1)
@@ -303,7 +303,7 @@ public class Sudoku extends PuzzleModule
 					else if (runningDifficulty == PuzzleGeneration.NORMAL)
 					{
 						Object just = test.getJustification();
-						if (just instanceof RuleForcedLocation || just instanceof RuleForcedDeduction)
+						if (just instanceof RuleForcedElimination || just instanceof RuleForcedDeduction)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 
@@ -411,7 +411,7 @@ public class Sudoku extends PuzzleModule
 						return false;
 				}
 			}
-		} 
+		}
 
 		return true;
 	}
@@ -427,14 +427,14 @@ public class Sudoku extends PuzzleModule
 		if( state > 0 && state < 10 )
 			drawText( g, x, y, String.valueOf(state) );
 		else
-		{ 
+		{
 			if (!drawAnnotations)
 				return;
-			
+
 			//puzzle has just begun
 			if (validNums.size() == 0)
 				return;
-			
+
 			//draw annotations once a case rule has been pressed
 			int cellIndex = x + y * 9;
 			int totalNumbers = validNums.get(cellIndex).size();
@@ -443,9 +443,9 @@ public class Sudoku extends PuzzleModule
 				int number = validNums.get(cellIndex).get(i);
 				drawSmallText(g, x, y, String.valueOf(number), totalNumbers, i);
 			}
-		} 
+		}
 	}
- 
+
 	/**
 	 * Draw the grid for the puzzle in the specified coords
 	 * @param g the Graphics to draw with

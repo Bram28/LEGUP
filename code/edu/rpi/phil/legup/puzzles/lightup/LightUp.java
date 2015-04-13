@@ -61,7 +61,7 @@ public class LightUp extends PuzzleModule
         return tmp;
     }
 	public int getNonunknownBlank() {return 2;} //the index into getStateName of empty
-	
+
 	public LightUp(){
 	}
 
@@ -208,9 +208,9 @@ public class LightUp extends PuzzleModule
 	public Vector <PuzzleRule> getRules(){
 		Vector <PuzzleRule>ruleList = new Vector <PuzzleRule>();
 		//ruleList.add(new PuzzleRule());
-		ruleList.add(new RuleSurroundBulbs());
-		ruleList.add(new RuleSurroundWhite());
-		ruleList.add(new RuleOnlySelfLit());
+		ruleList.add(new RuleFinishWithBulbs());
+		ruleList.add(new RuleFinishWithWhite());
+		ruleList.add(new RuleMustLight());
 		ruleList.add(new RuleWhiteCorners());
 		ruleList.add(new RuleWhiteInLight());
 		//ruleList.add(new RuleOnlyOne());
@@ -280,12 +280,12 @@ public class LightUp extends PuzzleModule
 			fillLight(b);
 		}
 	}
-	
+
 	public void boardDataChanged(BoardState state)
 	{
 		fillLight(state);
 	}
-	
+
 	public static void fillLight(BoardState state)
 	{
 		ArrayList<Object> extra = state.getExtraData();

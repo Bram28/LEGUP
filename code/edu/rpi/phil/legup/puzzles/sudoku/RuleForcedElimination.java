@@ -7,7 +7,7 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 
-public class RuleForcedLocation extends PuzzleRule
+public class RuleForcedElimination extends PuzzleRule
 {
 
 	// cell index = 9*row+col
@@ -15,7 +15,7 @@ public class RuleForcedLocation extends PuzzleRule
 	private final int[][] groupToCellRef;
 	private static final long serialVersionUID = 206709517L;
 
-	RuleForcedLocation()
+	RuleForcedElimination()
     {
 		setName("Forced by Elimination");
 		description = "This is the only spot left for a number to go in this row, column, or square";
@@ -24,7 +24,7 @@ public class RuleForcedLocation extends PuzzleRule
 		groupToCellRef = Sudoku.getGroups();
 		cellToGroupRef = Sudoku.getCrossReference();
     }
-	
+
 	public String getImageName()
 	{
 		return "images/sudoku/forcedByElimination.png";
@@ -49,7 +49,7 @@ public class RuleForcedLocation extends PuzzleRule
 	    		{
 	    			int o = origBoardState.getCellContents(x,y);
 					int n = destBoardState.getCellContents(x,y);
-					
+
 					if (o != n)
 					{
 						anychange = true;
@@ -71,9 +71,9 @@ public class RuleForcedLocation extends PuzzleRule
 			if (!anychange)
 				error = "You must insert a number to apply this rule!";
 		}
-	
+
 		Sudoku.setAnnotations(destBoardState);
-		
+
 		return error;
 	}
 
@@ -82,7 +82,7 @@ public class RuleForcedLocation extends PuzzleRule
 	  * @param nx Cell x
 	  * @param ny Cell y
 	  * @param val The number to add
-	  * @param origBoardState The original board state 
+	  * @param origBoardState The original board state
 	  * @return
 	  */
     boolean checkForced(int nx, int ny, int val, BoardState origBoardState)
@@ -90,14 +90,14 @@ public class RuleForcedLocation extends PuzzleRule
     	//Determine which cells were empty
 		boolean[] possible = new boolean[81];
 		for (int i = 0; i < 81; possible[i] = (origBoardState.getCellContents(i%9, i++/9) == Sudoku.CELL_UNKNOWN));
-		
+
 		//Prevent all cells in the same row, same column, or same box as the current cell from having the same value
 		for (int y = 0; y < 9; y++) for (int x = 0; x < 9; x++)
 			if (origBoardState.getCellContents(x, y) == val)
 				filter(y*9+x, possible);
 
 		//Make sure the value is valid in the specified location
-		for (int group : cellToGroupRef[ny*9+nx]) 
+		for (int group : cellToGroupRef[ny*9+nx])
 			if (isSolitary(ny*9+nx, group, possible))
 				return true;
 
@@ -131,7 +131,7 @@ public class RuleForcedLocation extends PuzzleRule
     {
     	//Return false if there is another location where the value can be placed
     	//OR
-    	//The value cannot be placed in the current cell because another 
+    	//The value cannot be placed in the current cell because another
     	//cell in the same row, column, or box already has that value
     	for (int cell : groupToCellRef[group])
     		if ((elim[cell] && cell != cellIndex) || (!elim[cell] && cell == cellIndex))
@@ -142,7 +142,7 @@ public class RuleForcedLocation extends PuzzleRule
 	protected boolean doDefaultApplicationRaw(BoardState state)
 	{
 		boolean[][][] possMatrix = Sudoku.getPossMatrix(state);
-		
+
 		boolean updated = false;
 		BoardState noUpdate = state.getSingleParentState().copy();
 		for (int[] group : groupToCellRef)

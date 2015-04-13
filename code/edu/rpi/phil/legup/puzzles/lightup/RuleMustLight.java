@@ -8,24 +8,24 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleOnlySelfLit extends PuzzleRule
+public class RuleMustLight extends PuzzleRule
 {
 	static final long serialVersionUID = 3220052913694553750L;
 	public String getImageName() {return "images/lightup/rules/MustLight.png";}
-	RuleOnlySelfLit()
+	RuleMustLight()
 	{
 		setName("Must Light");
 		description = "A cell must be a light if it is the only cell to be able to light another.";
 	}
-	
+
 	//Returns a point which is the only way to light up this cell
 	private Point findOneSource(BoardState boardState, boolean[][] litup, int x, int y)
 	{
 		if(litup[y][x] || boardState.getCellContents(x, y) == LightUp.CELL_LIGHT || boardState.getCellContents(x, y) >= 10)
 			return null;
-		
+
 		Point ret = null;
-		
+
 		int ix = x; //This is just x so we can check this cell
 		while(ix >= 0)
 		{
@@ -39,7 +39,7 @@ public class RuleOnlySelfLit extends PuzzleRule
 			}
 			--ix;
 		}
-		
+
 		ix = x + 1;
 		while(ix < boardState.getWidth())
 		{
@@ -53,7 +53,7 @@ public class RuleOnlySelfLit extends PuzzleRule
 			}
 			++ix;
 		}
-		
+
 		int iy = y - 1;
 		while(iy >= 0)
 		{
@@ -67,7 +67,7 @@ public class RuleOnlySelfLit extends PuzzleRule
 			}
 			--iy;
 		}
-		
+
 		iy = y + 1;
 		while(iy < boardState.getHeight())
 		{
@@ -81,10 +81,10 @@ public class RuleOnlySelfLit extends PuzzleRule
 			}
 			++iy;
 		}
-		
+
 		return ret;
 	}
-	
+
 	private ArrayList<Point> findAllOneSources(BoardState boardState, boolean[][] litup)
 	{
 		ArrayList<Point> points = new ArrayList<Point>();
@@ -151,7 +151,7 @@ public class RuleOnlySelfLit extends PuzzleRule
 								break;
 							}
 						}
-						
+
 						if(!issource)
 							return "A light is incorrectly marked as being the only possible source for a cell.";
 					}

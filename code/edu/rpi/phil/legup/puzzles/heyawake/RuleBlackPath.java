@@ -9,11 +9,11 @@ import java.awt.Point;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
-public class RuleForcedBlack extends PuzzleRule
+public class RuleBlackPath extends PuzzleRule
 {
 	private static final long serialVersionUID = 843828064L;
 
-	RuleForcedBlack()
+	RuleBlackPath()
 	{
 		setName("Black Path");
 		description = "A path of length 2*n-1 has only one configuration.";
@@ -41,7 +41,7 @@ public class RuleForcedBlack extends PuzzleRule
 		xmax = ymax =-1000000;
 		Region region = ((Region[])origState.getExtraData().get(0))[cellregion];
 		cells = region.getCells();
-		
+
 		for(int c = 0; c<cells.size(); ++c)
 		{
 			if(origState.getCellContents(cells.get(c).getX(),cells.get(c).getY())==Heyawake.CELL_WHITE)
@@ -52,7 +52,7 @@ public class RuleForcedBlack extends PuzzleRule
 				xmin = cells.get(c).getX();
 			if(cells.get(c).getY()<ymin)
 				ymin = cells.get(c).getY();
-			
+
 			if(cells.get(c).getX()>xmax)
 				xmax = cells.get(c).getX();
 			if(cells.get(c).getY()>ymax)
@@ -61,7 +61,7 @@ public class RuleForcedBlack extends PuzzleRule
 		rwidth = xmax-xmin;
 		rheight = ymax-ymin;
 		return new Point(rwidth,rheight);
-		
+
 	}
 	protected int getRegionValue(BoardState origState,int cellregion)
 	{
@@ -124,14 +124,14 @@ public class RuleForcedBlack extends PuzzleRule
 		}
 		else
 		{
-			
+
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
 			{
 				for (int x = 0; x < origBoardState.getWidth(); ++x)
 				{
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
-					
+
 					if (origState != newState)
 					{
 						changed = true;
@@ -140,14 +140,14 @@ public class RuleForcedBlack extends PuzzleRule
 							error = "This rule only involves adding black and white cells!";
 							break;
 						}
-						
+
 						if(!checkRegionHasClue(origBoardState, ((int[][])origBoardState.getExtraData().get(2))[y][x]))
 						{
 							error = "Rule cannot be applied to regions without a designated number.";
 							break;
 						}
 						int maxconnect=0;
-						
+
 						regionNum = ((int[][])origBoardState.getExtraData().get(2))[y][x];
 						curRegion = ((Region[])extraData.get(0))[regionNum];
 						Vector<CellLocation> cells = curRegion.getCells();
@@ -176,7 +176,7 @@ public class RuleForcedBlack extends PuzzleRule
 				error = "You must add a black cell to use this rule!";
 			}
 		}
-		
+
 		return error;
 	}
 	protected boolean find_pattern(BoardState board, int regionNum, int value)
@@ -223,7 +223,7 @@ public class RuleForcedBlack extends PuzzleRule
 				}
 			}
 		}
-		
+
 		if(value==0)
 		{
 			Point cell = getRegionLocation(board,regionNum);
@@ -241,10 +241,10 @@ public class RuleForcedBlack extends PuzzleRule
 		//If we have been here before return nothing
 		if(visited[x][y] == 1)
 			return 0;
-		
+
 		//Set the cell to visited but not white
 		visited[x][y] = 1;
-		
+
 		//If the cell is black return nothing
 		if(boardState.getCellContents(x,y) == Heyawake.CELL_BLACK)
 			return 0;
@@ -252,16 +252,16 @@ public class RuleForcedBlack extends PuzzleRule
 			return 0;
 		if(region!= ((int[][])boardState.getExtraData().get(2))[y][x])
 			return 0;
-		
+
 		int width = boardState.getWidth();
 		int height= boardState.getHeight();
-		
+
 		//A counter of how many unknowns/whites we have found
 		int ret = 1;
 
 		//Temporary integer
 		int temp;
-		
+
 		//Essentially if there is a cell in the adjacent direction, see how many unknowns we can find from it
 		//Return the sum of those unknowns if we didn't find a -1
 		if(x+1 < width)
@@ -325,8 +325,8 @@ public class RuleForcedBlack extends PuzzleRule
 				}
 			}
 		}
-			
-			
+
+
 		String error = checkRuleRaw(destBoardState);
 		if (error != null)
 		{
@@ -338,8 +338,8 @@ public class RuleForcedBlack extends PuzzleRule
 		{
 			destBoardState = origBoardState.copy();
 		}
-			
-		return changed;	
-			
-	}	
+
+		return changed;
+
+	}
 }

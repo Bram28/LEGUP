@@ -17,17 +17,17 @@ import java.awt.Point;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleNoTreesAround extends PuzzleRule
+public class RuleEmptyField extends PuzzleRule
 {
 	static final long serialVersionUID = 9517L;
 	public String getImageName() {return "images/treetent/noTreesAround.png";}
-	public RuleNoTreesAround()
+	public RuleEmptyField()
     {
 		setName("Empty Field");
 		description = "Any cell not next to an unlinked tree can be marked grass.";
 		//image = new ImageIcon("images/treetent/noTreesAround.png");
     }
-    
+
     private boolean hasLink(BoardState state, int x, int y)
     {
     	Point p = new Point(x,y);
@@ -38,7 +38,7 @@ public class RuleNoTreesAround extends PuzzleRule
 			if (e.pos1.equals(p) || e.pos2.equals(p))
 			{
 				return true;
-			}					
+			}
 		}
     	return false;
     }
@@ -55,7 +55,7 @@ public class RuleNoTreesAround extends PuzzleRule
     	boolean rv = false;
     	int w = state.getWidth();
     	int h = state.getHeight();
-    	
+
     	if (x > 0 && state.getCellContents(x-1,y) == TreeTent.CELL_TREE)
     		rv = !hasLink(state, x-1,y);
     	else if (x + 1 < w && state.getCellContents(x + 1,y) == TreeTent.CELL_TREE)
@@ -74,7 +74,7 @@ public class RuleNoTreesAround extends PuzzleRule
     	String error = null;
     	boolean changed = false;
     	BoardState origBoardState = destBoardState.getSingleParentState();
-    	
+
     	// Check for only one branch
 		if (destBoardState.getParents().size() != 1)
 		{
@@ -87,42 +87,42 @@ public class RuleNoTreesAround extends PuzzleRule
 		else
 		{
 			// For each cell, check if the row or column has a sufficient number of tents in it
-			
+
 			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
 			{
 				for (int x = 0; x < origBoardState.getWidth(); ++x)
 				{
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
-					
+
 					if (origState != newState)
 					{
 						changed = true;
-						
+
 						if (newState != TreeTent.CELL_GRASS || origState != TreeTent.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding grass!";
 							break;
 						}
-						
+
 						if (checkAdjacent(destBoardState,x,y))
 						{
-							error = "The cell at " + (char)(y + (int)'A') + "" + (x + 1)  
+							error = "The cell at " + (char)(y + (int)'A') + "" + (x + 1)
 									+ " is next to a tree.";
 							break;
 						}
 					}
 				}
 			}
-			
+
 			if (error == null && !changed)
 			{
 				error = "You must add grass to use this rule!";
 			}
 		}
-		
+
 		TreeTent.setAnnotations(destBoardState);
-		
+
 		return error;
 	}
 	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
@@ -155,13 +155,13 @@ public class RuleNoTreesAround extends PuzzleRule
 									continue;
 								if( j!=0 && i!=0)
 									continue;
-									
-								
+
+
 								if(destBoardState.getCellContents(x+i,y+j)==TreeTent.CELL_TREE)
 								{
 									if(TreeTent.isLinked(destExtra, new Point(x+i,y+j)))
 										continue;
-									
+
 									tree_cells++;
 								}
 							}
@@ -176,7 +176,7 @@ public class RuleNoTreesAround extends PuzzleRule
 				}
 			}
 		}
-		
+
 		String error = checkRuleRaw(destBoardState);
 		if(error != null)
 		{

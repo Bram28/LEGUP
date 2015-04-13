@@ -21,8 +21,10 @@ import java.awt.geom.Line2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -69,8 +71,9 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	private Point mousePoint;
 	private static Selection mouseOver;
 	
-	private Map<Integer, Color> collapseColorHash = new HashMap<Integer, Color>();
-
+	//hashmap should be based off of boardstate, which is unique, instead of position, since position can be shifted
+    private Map<BoardState, Color> collapseColorHash = new HashMap<BoardState, Color>();
+    
 	//Path for node images
 	//Currently only classic and smiley options exist
 	private static final String NodeImgs = "images/tree/smiley/";
@@ -378,10 +381,6 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	//This function must be called before the board collapsing takes place, otherwise transition data will be hidden
 	public void getCollapseColor(BoardState lastCollapsed)
 	{	
-		int x = (int) lastCollapsed.getLocation().getX();
-		int y = (int) lastCollapsed.getLocation().getY();
-		int hashSum = x + y;
-
 		BoardState iterBoard = lastCollapsed;
 		boolean overallColor = true;
 		
@@ -405,9 +404,9 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 		//save multiple colors, because collapse might produce different results on different parts of the tree
 		if (overallColor)
-			this.collapseColorHash.put(hashSum, Color.GREEN);
+			this.collapseColorHash.put(lastCollapsed, Color.GREEN);
 		else 
-			this.collapseColorHash.put(hashSum, Color.RED);
+			this.collapseColorHash.put(lastCollapsed, Color.RED);
 	}
 
 	/**
@@ -560,7 +559,9 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 		ArrayList <Selection> sel = Legup.getInstance().getSelections().getCurrentSelection();
 		boolean isCollapsed = state.isCollapsed();
-
+		BoardState lastCollapsed = null;
+		Vector<Point> changedCells = new Vector<Point>();
+		
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
 		Vector <BoardState> children = null;
 		Point draw;
@@ -572,11 +573,22 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		else
 		{
 			int[] ptrNumTransitions = new int[1];
-			BoardState lastCollapsed = getLastCollapsed(state, ptrNumTransitions);
+			lastCollapsed = getLastCollapsed(state, ptrNumTransitions);
 			Point nextPoint = (Point)lastCollapsed.getLocation().clone();
 			draw.x = (draw.x + nextPoint.x)/2;
 
 			children = lastCollapsed.getChildren();
+			
+			for (int x = 0; x < state.getBoardCells()[0].length; x++)
+			{
+				for (int y = 0; y < state.getBoardCells().length; y++)
+				{
+					if (state.getBoardCells()[y][x] != children.get(0).getBoardCells()[y][x])
+					{
+						changedCells.add(new Point(x, y));
+					}
+				}
+			}
 		}
 
 		for (int c = 0; c < children.size(); ++c)
@@ -681,11 +693,10 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		}
 
 		if (!isCollapsed)
-		{
 			drawNode(g, draw.x, draw.y, state);
-		}
 		else
-			drawCollapsedNode(g, draw.x, draw.y);
+			drawCollapsedNode(g, draw.x, draw.y, lastCollapsed, changedCells);
+		
 		// to prevent the drawing of contradictions from taking over the CPU
 		try {
 			Thread.sleep(1);
@@ -815,19 +826,47 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	 * @param x the x location to draw it on
 	 * @param y the y location to draw it on
 	 */
-	private void drawCollapsedNode(Graphics g, int x, int y)
+	private void drawCollapsedNode(Graphics g, int x, int y, BoardState lastCollapsed, Vector<Point> changedCells)
 	{
 		final int rad = SMALL_NODE_RADIUS;
 		final int diam = 2 * rad;
 		final int deltaX = -COLLAPSED_DRAW_DELTA_X;
 		final int deltaY = -COLLAPSED_DRAW_DELTA_Y;
 		
-		final int hashSum = (x+y - 6*NODE_RADIUS); //have to take collapse offset into account
+		Color transitionColor = new Color(255, 255, 155);
 		
-		Color transitionColor = collapseColorHash.get(hashSum);
-		if (!collapseColorHash.containsKey(hashSum)) 
-			transitionColor = new Color(255, 255, 155); //set color to default color
+		Set<BoardState> keys = collapseColorHash.keySet();
 		
+		//Search for the correct board state near the collapse transition
+		for (BoardState state : keys)
+		{
+			boolean areBoardsEqual = true;
+			
+			int[][] oldCells = state.getBoardCells();
+			for (int i = 0; i < oldCells.length; i++)
+			{
+				for (int j = 0; j < oldCells[i].length; j++)
+				{
+					//if the cells were changed, then it's still the same board
+					if (changedCells.contains(new Point(j, i)))
+						continue;
+					
+					//cell was not supposed to change, so this not the board we're looking for.
+					if (oldCells[i][j] != lastCollapsed.getBoardCells()[i][j])
+					{
+						areBoardsEqual = false;
+						break;
+					}
+				}
+			}
+			
+			if (areBoardsEqual)
+			{
+				transitionColor = collapseColorHash.get(state);
+				break;
+			}
+		}
+
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.setStroke(thin);
 		g2D.setColor(Color.black);
