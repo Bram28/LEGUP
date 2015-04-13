@@ -15,12 +15,6 @@ import edu.rpi.phil.legup.Selection;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 import edu.rpi.phil.legup.PuzzleModule;
-import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
-import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
-import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTent;
-import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
-import edu.rpi.phil.legup.puzzles.lightup.LightUp;
-import edu.rpi.phil.legup.puzzles.lightup.CaseSatisfyNumber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,26 +131,19 @@ public class CasePanel extends JustificationPanel
 
     protected boolean doCaseRuleAutogen(Point point, BoardState cur, int button)
     {
-        if((point.x == -5) && (point.y == -5))
+        if(point == null) { return false; }
+
+        PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+        //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
+        BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
+        if(b != null) { Legup.setCurrentState(b); }
+        if((cur.getChildren().size() > 0) && (cur.getChildren().get(0) != null))
         {
-            //System.out.println("Nothing selected.");
-            return false;
+            Legup.setCurrentState(cur.getChildren().get(0));
         }
-        else
-        {
-            //System.out.println("Point ("+point.x+","+point.y+") selected.");
-            PuzzleModule pm = Legup.getInstance().getPuzzleModule();
-            //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
-            BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
-            if(b != null) Legup.setCurrentState(b);
-            if((cur.getChildren().size() > 0) && (cur.getChildren().get(0) != null))
-            {
-                Legup.setCurrentState(cur.getChildren().get(0));
-            }
-            //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
-            //Legup.getInstance().getGui().getTree().pushUndo();
-            return true;
-        }
+        //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
+        //Legup.getInstance().getGui().getTree().pushUndo();
+        return true;
     }
 
     boolean experimentalCaseRuleBoardSwap = true; //still a bit buggy, so use a flag
@@ -166,7 +153,7 @@ public class CasePanel extends JustificationPanel
 	{
 		Selection selection = Legup.getInstance().getSelections().getFirstSelection();
 		final BoardState cur = selection.getState();
-		
+
 		if (cur.getChildren().size() > 0)
 			return null;
 		if (cur.isModifiable() && Legup.getInstance().getGui().checkCaseRuleGen())
@@ -177,16 +164,14 @@ public class CasePanel extends JustificationPanel
 			return null;
 
 		final CaseRule r = caseRules.get(button);
-		
+
 		/*int quantityofcases = Integer.valueOf(JOptionPane.showInputDialog(null,"How many branches?")).intValue();
 		if(quantityofcases > 10)quantityofcases = 10; //some sanity checks on the input, to prevent
 		if(quantityofcases < 2)quantityofcases = 2; //the user from creating 100 nodes or something
 		*/
 		if(Legup.getInstance().getGui().checkCaseRuleGen())
 		{
-			final CaseRuleSelectionHelper crsh = new CaseRuleSelectionHelper(null/*Legup.getInstance().getGui()*/);
-			crsh.mode = caseRules.get(button).crshMode();
-			crsh.tileTypes = caseRules.get(button).crshTileType();
+			final CaseRuleSelectionHelper crsh = caseRules.get(button).getSelectionHelper();
             if(!experimentalCaseRuleBoardSwap)
             {
                 crsh.showInNewDialog();
@@ -202,11 +187,11 @@ public class CasePanel extends JustificationPanel
                     //try { this.wait(); } catch(Exception e){e.printStackTrace();}
                     new Thread(new Runnable(){ public void run() {
                         crsh.blockUntilSelectionMade();
-                        System.out.println("unblocked");
                         if(doCaseRuleAutogen(crsh.pointSelected, cur, button))
                         {
                             buttonPressedContinuation1(r);
                         }
+                        Legup.getInstance().getSelections().removeTreeSelectionListener(crsh);
                     }}).start();
                 }
             }

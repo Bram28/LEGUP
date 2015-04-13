@@ -1,39 +1,48 @@
 package edu.rpi.phil.legup.newgui;
 
-import edu.rpi.phil.legup.newgui.DynamicViewer;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
+import edu.rpi.phil.legup.Endomorphism;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleModule;
-import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.newgui.DynamicViewer;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
+import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import java.util.Vector;
 
-public class CaseRuleSelectionHelper extends Board
+public class CaseRuleSelectionHelper extends Board implements TreeSelectionListener
 {
 	static final long serialVersionUID = -489237132432L;
 
-	public int mode = MODE_TILE;
-	public static final int MODE_TILE = 0;
-	public static final int MODE_COL_ROW = 1;
-	public static final int MODE_TILETYPE = 2;
-	Vector<Integer> tileTypes = null; //whitelist of allowed tiles for MODE_TILETYPE
-	public Point pointSelected = new Point(-5,-5);
+    public CellPredicate validCell = null;
+
+    // reasonable default, row/col will need a slight variant
+    public CellPredicate shouldHighlightCell = new CellPredicate() {
+        @Override public boolean check(BoardState s, int x, int y) {
+            return (validCell != null) && validCell.check(s,x,y) &&
+                (lastMousePosition.x == x) && (lastMousePosition.y == y);
+        }
+    };
+
+    public Endomorphism<Point> normalizePoint = CellPredicate.normalizeEdge;
+
+	public Point pointSelected = null;
 	public boolean allowLabels = Legup.getInstance().getPuzzleModule().hasLabels();
-	private LEGUP_Gui parent = null;
 	public JDialog dialog = null;
 	public volatile Object notifyOnSelection = null;
 
@@ -42,19 +51,19 @@ public class CaseRuleSelectionHelper extends Board
 	public static String helpMessage = (HIGHLIGHT_SELECTABLES && CLOSE_ON_SELECTION)?
 			"Click an blue-highlighed square to apply the case rule there.":
 			"Select where you would like to apply the CaseRule, and then select ok.";
-	
-	CaseRuleSelectionHelper(LEGUP_Gui gui)
+
+	public CaseRuleSelectionHelper(CellPredicate cp)
 	{
-        super(false);
-		parent = gui;
+		super(false);
 		setPreferredSize(new Dimension(600,400));
 		setBackground(new Color(0xE0E0E0));
 		setSize(getProperSize());
+		System.out.printf("CRSH.getSize(): %s\n", getSize());
 		zoomFit();
 		zoomTo(1.0);
-		tileTypes = null;
-		pointSelected.x = -5;
-		pointSelected.y = -5;
+		Legup.getInstance().getSelections().addTreeSelectionListener(this);
+		validCell = cp;
+		addMouseMotionListener(updateMousePosition);
 	}
 
     public void showInNewDialog()
@@ -78,11 +87,11 @@ public class CaseRuleSelectionHelper extends Board
 		if (selection.isState())
 		{
 			BoardState state = selection.getState();
-			PuzzleModule pz = Legup.getInstance().getPuzzleModule();
+			PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 
-			if (pz != null)
+			if (pm != null)
 			{
-				Dimension d = pz.getImageSize();
+				Dimension d = pm.getImageSize();
 				int w  = state.getWidth();
 				int h = state.getHeight();
 
@@ -93,173 +102,88 @@ public class CaseRuleSelectionHelper extends Board
 
 		return rv;
 	}
-	
+
 	protected void draw( Graphics2D g )
 	{
 		BoardDrawingHelper.draw(g,this);//pointSelected,mode);
 	}
-	
-	//used for highlighting now, remove duplication below later
+
 	public boolean isForbiddenTile(Point p)
 	{
-		BoardState state = Legup.getCurrentState();
-		int w  = state.getWidth();
-		int h = state.getHeight();
-		if((p.x < -1)||(p.x > w)||(p.y < -1)||(p.y > h))return true;
-		if(((p.x == -1)||(p.x == w))&&((p.y == -1)||(p.y == h)))return true;
-		if((!allowLabels)||(mode != MODE_COL_ROW))
-		{
-			if((p.x == -1)||(p.x == w)||(p.y == -1)||(p.y == h))
-			{
-				return true;
-			}
-		}
-		if(!((p.x == -5)&&(p.y == -5)))
-		{
-			if(mode == MODE_TILE)
-			{
-				if(!state.isModifiableCell(p.x,p.y))
-				{
-					return true;
-				}
-			}
-			if(mode == MODE_TILETYPE)
-			{
-				if(tileTypes != null)
-				{
-					int current_cell = state.getCellContents(p.x,p.y); 
-					if(!tileTypes.contains(current_cell))
-					{
-						return true;
-					}
-				}
-				else
-				{
-					//JOptionPane.showMessageDialog(null,"The tile type whitelist is null.");
-					return true;
-				}
-			}
-		}
-		if(p.x == w)p.x = -1;
-		if(p.y == h)p.y = -1;
-		if(mode == MODE_COL_ROW)
-		{
-			if((p.x != -1)&&(p.y != -1))
-			{
-				return true;
-			}
-		}
-		return false;
+		return verifyAndNormalizePoint(p) == null;
 	}
-	
+
+	public Point verifyAndNormalizePoint(Point p) {
+		BoardState state = Legup.getCurrentState();
+		p = normalizePoint.apply(p);
+		return validCell.check(state, p.x, p.y) ? p : null;
+	}
+
 	protected void mousePressedAt(Point p, MouseEvent e)
 	{
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
 			BoardState state = Legup.getCurrentState();
 			PuzzleModule pm = Legup.getInstance().getPuzzleModule();
-			Dimension d = pm.getImageSize();
-			
-			int imW = d.width;
-			int imH = d.height;
-			int w  = state.getWidth();
-			int h = state.getHeight();
+			p = mouseCoordsToGridCoords(state,pm,p);
 
-			p.x -= imW;
-			p.y -= imH;
-
-			p.x = (int)(Math.floor((double)p.x/imW));
-			p.y = (int)(Math.floor((double)p.y/imH));
-			
-			if((p.x < -1)||(p.x > w)||(p.y < -1)||(p.y > h)) //don't allow out of bounds
+			if((p = verifyAndNormalizePoint(p)) != null)
 			{
-				p.x = -5;
-				p.y = -5;
+				pointSelected = p;
+				selectionMade();
 			}
-			if(((p.x == -1)||(p.x == w))&&((p.y == -1)||(p.y == h))) //don't allow corners (with no label)
-			{
-				p.x = -5;
-				p.y = -5;
-			}
-			if((!allowLabels)||(mode != MODE_COL_ROW))
-			{
-				if((p.x == -1)||(p.x == w)||(p.y == -1)||(p.y == h))
-				{
-					p.x = -5;
-					p.y = -5;
-				}
-			}
-			if(!((p.x == -5)&&(p.y == -5)))
-			{
-				if(mode == MODE_TILE)
-				{
-					if(!state.isModifiableCell(p.x,p.y))
-					{
-						p.x = -5;
-						p.y = -5;
-					}
-				}
-				if(mode == MODE_TILETYPE)
-				{
-					if(tileTypes != null)
-					{
-						int current_cell = state.getCellContents(p.x,p.y); 
-						if(!tileTypes.contains(current_cell))
-						{
-							p.x = -5;
-							p.y = -5;
-						}
-					}
-					else
-					{
-						JOptionPane.showMessageDialog(null,"The tile type whitelist is null.");
-						p.x = -5;
-						p.y = -5;
-					}
-				}
-			}
-			if(p.x == w)p.x = -1;
-			if(p.y == h)p.y = -1;
-			if(mode == MODE_COL_ROW)
-			{
-				if((p.x != -1)&&(p.y != -1))
-				{
-					p.x = -5;
-					p.y = -5;
-				}
-			}
-			
-			
-			
-			pointSelected.x = p.x;
-			pointSelected.y = p.y;
-            if(CLOSE_ON_SELECTION)
-            {
-                if(dialog != null)
-                {
-                    if((p.x != -5) && (p.y != -5))
-                    {
-                        dialog.setVisible(false);
-                    }
-                }
-                else if(notifyOnSelection != null)
-                {
-                    Legup.getInstance().getGui().popBoard();
-                    //notifyOnSelection.notify();
-                    //System.out.println("setting CRSH.notifyOnSelection to null.");
-                    notifyOnSelection = null;
-                }
-            }
 		}
 		repaint();
 	}
-	protected void mouseReleasedAt(Point p, MouseEvent e) {}
+	protected void selectionMade()
+	{
+		if(CLOSE_ON_SELECTION)
+		{
+			if(dialog != null)
+			{
+				if(pointSelected != null)
+				{
+					dialog.setVisible(false);
+				}
+			}
+			else if(notifyOnSelection != null)
+			{
+				Legup.getInstance().getGui().popBoard();
+				//notifyOnSelection.notify();
+				//System.out.println("setting CRSH.notifyOnSelection to null.");
+				notifyOnSelection = null;
+			}
+		}
+	}
+
+    protected void mouseReleasedAt(Point p, MouseEvent e) {}
     public void initSize() { System.out.println("CaseRuleSelectionHelper#initSize() called."); }
 
+    public final Point lastMousePosition = new Point(-10,-10);
+    protected final MouseMotionListener updateMousePosition = new MouseMotionListener() {
+        final boolean MOUSEMOTION_LOGGING = false;
+        @Override public void mouseDragged(MouseEvent e) {}
+        @Override public void mouseMoved(MouseEvent e) {
+            BoardState state = Legup.getCurrentState();
+            PuzzleModule pm = Legup.getInstance().getPuzzleModule();
+            Point p = mouseCoordsToGridCoords(state, pm, toDrawCoordinates(e.getPoint()));
+            if(MOUSEMOTION_LOGGING) {
+                System.out.println(e.getComponent());
+                System.out.println(e.getPoint());
+                System.out.println(p);
+                System.out.println();
+            }
+            lastMousePosition.x = p.x;
+            lastMousePosition.y = p.y;
+            repaint();
+        }
+    };
     public static Color caseRuleTargetHighlight = new Color(0,192,255,192);
+    public static Color mouseoverHighlight = new Color(0,192,0,192);
     public static final Color cyanFilter = BoardDrawingHelper.cyanFilter;
     public void drawBoardOverlay(Graphics2D g, int width, int height, int imageWidth, int imageHeight)
     {
+        BoardState state = Legup.getCurrentState();
         for(int x = -1;x < width;++x)
         {
             for(int y = -1;y < height;++y)
@@ -274,43 +198,28 @@ public class CaseRuleSelectionHelper extends Board
                             imageWidth - 0,
                             imageHeight - 0);
                 }
-                if((mode == CaseRuleSelectionHelper.MODE_TILE)||(mode == CaseRuleSelectionHelper.MODE_TILETYPE))
+                if(shouldHighlightCell.check(state, x, y))
                 {
-                    if((pointSelected.x == x) && (pointSelected.y == y))
-                    {
-                        g.setStroke(new BasicStroke(3f));
-                        g.setColor(cyanFilter);
-                        g.drawRect(
-                                (x+1) * imageWidth + 2,
-                                (y+1) * imageHeight + 2,
-                                imageWidth - 4,
-                                imageHeight - 4 );
-                    }
-                }
-                else if(mode == CaseRuleSelectionHelper.MODE_COL_ROW)
-                {
-                    if(((pointSelected.x == -1)&&(pointSelected.y == y))||((pointSelected.x == x)&&(pointSelected.y == -1)))
-                    {
-                        g.setStroke(new BasicStroke(3f));
-                        g.setColor(cyanFilter);
-                        g.drawRect(
-                                (x+1) * imageWidth + 2,
-                                (y+1) * imageHeight + 2,
-                                imageWidth - 4,
-                                imageHeight - 4 );
-                    }
+                    g.setStroke(new BasicStroke(3f));
+                    g.setColor(mouseoverHighlight);
+                    g.fillRect(
+                            (x+1) * imageWidth,
+                            (y+1) * imageHeight,
+                            imageWidth - 0,
+                            imageHeight - 0);
                 }
             }
         }
     }
-	public void temporarilyReplaceBoard(LEGUP_Gui gui, Object toNotify)
+    public void temporarilyReplaceBoard(LEGUP_Gui gui, Object toNotify)
     {
         gui.pushBoard(this);
         notifyOnSelection = toNotify;
     }
     public void blockUntilSelectionMade()
     {
-        while(notifyOnSelection != null) {}
+        while((notifyOnSelection != null) && (pointSelected == null)) {}
     }
     public void boardDataChanged(BoardState state) {}
+    public void treeSelectionChanged(ArrayList<Selection> newSelection) { selectionMade(); }
 }

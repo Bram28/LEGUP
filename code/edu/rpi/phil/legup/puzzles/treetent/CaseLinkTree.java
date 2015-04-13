@@ -2,28 +2,24 @@ package edu.rpi.phil.legup.puzzles.treetent;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Vector;
-import java.lang.ClassLoader;
 
-import javax.swing.ImageIcon;
-
-import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
-import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 import edu.rpi.phil.legup.puzzles.treetent.ExtraTreeTentLink;
+import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 
 public class CaseLinkTree extends CaseRule
 {
 	static final long serialVersionUID = -2422204259682293361L;
-	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
-	public Vector<Integer> crshTileType()
-	{
-		Vector<Integer> ret = new Vector<Integer>();
-		ret.add(TreeTent.CELL_TREE);
-		return ret;
-	}
+    public CaseRuleSelectionHelper getSelectionHelper()
+    {
+        return new CaseRuleSelectionHelper(CellPredicate.typeWhitelist(TreeTent.CELL_TREE));
+    }
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
 		if(TreeTent.isLinked(cur.getExtraData(),pointSelected))return Legup.getCurrentState();

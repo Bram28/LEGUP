@@ -1,7 +1,7 @@
 package edu.rpi.phil.legup;
 
 import java.awt.Point;
-import java.util.Vector;
+import edu.rpi.phil.legup.CellPredicate;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
 /**
@@ -13,11 +13,10 @@ public abstract class CaseRule extends Justification
 {	
 	static final long serialVersionUID = 9003L;
 	protected String defaultApplicationText;
-	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILE;}
-	public Vector<Integer> crshTileType()
-	{
-		return new Vector<Integer>(0);
-	}
+    public CaseRuleSelectionHelper getSelectionHelper()
+    {
+        return new CaseRuleSelectionHelper(CellPredicate.modifiableCell);
+    }
 	//do the case rule autogeneration, return the state to be transitioned to
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
@@ -63,7 +62,7 @@ public abstract class CaseRule extends Justification
 		return defaultApplicationText;
 	}
 	
-public boolean startDefaultApplication(BoardState state)
+    public boolean startDefaultApplication(BoardState state)
     {
     	return startDefaultApplicationRaw(state);
     }

@@ -6,6 +6,7 @@
 //
 
 package edu.rpi.phil.legup.puzzles.sudoku;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,7 +33,10 @@ import edu.rpi.phil.legup.AI;
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
 import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.Endomorphism;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleGeneration;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
@@ -44,7 +48,7 @@ public class Sudoku extends PuzzleModule
     public Map<String, Integer> getSelectableCells()
     {
         Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
-        for(int i=0; i<=9; i++) {
+        for(int i = 0; i <= 9; i++) {
         	tmp.put(String.format("%d", i), i);
         }
         return tmp;
@@ -54,6 +58,31 @@ public class Sudoku extends PuzzleModule
     	return tmp;
     }
 	public boolean hasLabels(){return false;}
+
+    public static final Endomorphism<Point> normalizeToSubgrid = new Endomorphism<Point>() {
+        @Override public Point apply(Point p) {
+            BoardState state = Legup.getCurrentState();
+            int w = state.getWidth(); int h = state.getHeight();
+            Point q = CellPredicate.normalizeEdge.apply(p);
+            if(q.x > -1 && q.y > -1) {
+                // use integer division to normalize points to upper left corner of 3x3 grids
+                q.x = q.x/3 * 3;
+                q.y = q.y/3 * 3;
+            }
+            return q;
+        }
+    };
+
+    public static CellPredicate inSameSubgrid(final Point p) {
+        return new CellPredicate() {
+            @Override public boolean check(BoardState s, int x, int y) {
+                Point q = normalizeToSubgrid.apply(p);
+                return (q.x > -1 && q.y > -1) &&
+                        (x >= q.x && x < q.x+3) &&
+                        (y >= q.y && y < q.y+3);
+            }
+        };
+    }
 
 	Vector <PuzzleRule> ruleList = new Vector <PuzzleRule>();
 	Vector <Contradiction> contraList = new Vector <Contradiction>();
@@ -166,12 +195,13 @@ public class Sudoku extends PuzzleModule
 	{
 		name = "Sudoku";
 
-		ruleList.add(new RuleForcedElimination());
-		ruleList.add(new RuleForcedDeduction());
-		ruleList.add(new RuleAdvancedDeduction());
+		ruleList.add(new RuleLastCellForNumber());
+		ruleList.add(new RuleLastNumberForCell());
+		//ruleList.add(new RuleAdvancedDeduction());
 		contraList.add(new ContradictionBoardStateViolated());
 		contraList.add(new ContradictionNoSolutionForCell());
-		caseList.add(new CasePossibleValues());
+		caseList.add(new CasePossibleNumbersForCell());
+		caseList.add(new CasePossibleCellsForNumber());
 	}
 
 	public BoardState generatePuzzle(int difficulty, JFrame host)
@@ -285,13 +315,13 @@ public class Sudoku extends PuzzleModule
 					if (runningDifficulty == PuzzleGeneration.EASY)
 					{
 						Object just = test.getJustification();
-						if (just instanceof RuleForcedElimination)
+						if (just instanceof RuleLastCellForNumber)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 							if (unknown1-unknown2 < 6 && (unknown1-unknown2)*3 < unknown1)
 								runningDifficulty = PuzzleGeneration.NORMAL;
 						}
-						else if (just instanceof RuleForcedDeduction)
+						else if (just instanceof RuleLastNumberForCell)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 							if (unknown1-unknown2 < 3 && (unknown2-unknown1)*5 < unknown1)
@@ -303,7 +333,7 @@ public class Sudoku extends PuzzleModule
 					else if (runningDifficulty == PuzzleGeneration.NORMAL)
 					{
 						Object just = test.getJustification();
-						if (just instanceof RuleForcedElimination || just instanceof RuleForcedDeduction)
+						if (just instanceof RuleLastCellForNumber || just instanceof RuleLastNumberForCell)
 						{
 							int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 

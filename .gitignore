@@ -17,4 +17,5 @@ Thumbs.db
 *.Ink
 *.launch
 *.sh
+*.swp
 /bin

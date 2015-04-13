@@ -2,32 +2,42 @@ package edu.rpi.phil.legup.puzzles.lightup;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
-import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
-import edu.rpi.phil.legup.PuzzleModule;
+import edu.rpi.phil.legup.CellPredicate;
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
-import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
+import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
+import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
 
 public class CaseSatisfyNumber extends CaseRule
 {
 	static final long serialVersionUID = 5238481899970588295L;
-	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
-	public Vector<Integer> crshTileType()
-	{
-		Vector<Integer> retval = new Vector<Integer>();
-		retval.add(LightUp.CELL_BLOCK0);
-		retval.add(LightUp.CELL_BLOCK1);
-		retval.add(LightUp.CELL_BLOCK2);
-		retval.add(LightUp.CELL_BLOCK3);
-		retval.add(LightUp.CELL_BLOCK4);
-		return retval;
+    public CaseRuleSelectionHelper getSelectionHelper()
+    {
+        return new CaseRuleSelectionHelper(CellPredicate.typeWhitelist(getTileTypes()));
 	}
+    private Set<Integer> tileTypes = null;
+    public Set<Integer> getTileTypes()
+    {
+        if(tileTypes == null)
+        {
+            tileTypes = new LinkedHashSet<Integer>();
+            tileTypes.add(LightUp.CELL_BLOCK0);
+            tileTypes.add(LightUp.CELL_BLOCK1);
+            tileTypes.add(LightUp.CELL_BLOCK2);
+            tileTypes.add(LightUp.CELL_BLOCK3);
+            tileTypes.add(LightUp.CELL_BLOCK4);
+        }
+        return tileTypes;
+    }
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
@@ -73,7 +83,7 @@ public class CaseSatisfyNumber extends CaseRule
 		BoardState parent = state.getSingleParentState();
 		{
 			int num_children = parent.getChildren().size();
-			Vector<Point> points = findCommonTile(parent,state,crshTileType());
+			Vector<Point> points = findCommonTile(parent,state,getTileTypes());
 			Point p = (points.size()==1)?points.get(0):null;
 			int block_value = (p != null)?getBlockValue(parent.getCellContents(p.x,p.y)):-2;
 			int num_adj_blanks = CaseLinkTree.calcAdjacentTiles(parent,p,LightUp.CELL_UNKNOWN);
@@ -126,7 +136,7 @@ public class CaseSatisfyNumber extends CaseRule
 	
 	//returns the tiles that are adjacent to all changed tiles between parent and state
 	//if types is null, all tiles are returned, if not, only tiles whitelisted in types are counted
-	static Vector<Point> findCommonTile(BoardState parent,BoardState state,Vector<Integer> types)
+	static Vector<Point> findCommonTile(BoardState parent,BoardState state,Set<Integer> types)
 	{
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(parent,state);
 		Vector<Point> ret = new Vector<Point>();
