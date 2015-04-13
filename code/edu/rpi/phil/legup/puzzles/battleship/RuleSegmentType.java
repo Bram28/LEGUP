@@ -26,7 +26,7 @@ public class RuleSegmentType extends PuzzleRule
 	{
 		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
 		contras.add(new ContradictionAdjacentShips());
-		contras.add(new ContradictionMalformedShip());
+		contras.add(new ContradictionIncompleteShip());
 
 		BoardState origBoardState = state.getSingleParentState();
 		int width = origBoardState.getWidth();

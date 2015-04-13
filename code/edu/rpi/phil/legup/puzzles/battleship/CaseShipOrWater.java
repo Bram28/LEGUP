@@ -36,7 +36,7 @@ public class CaseShipOrWater extends CaseRule {
 	}
 
 	public String getImageName() {
-		return "images/battleship/ShipOrWater.png";
+		return "images/battleship/cases/ShipOrWater.png";
 	}
 
 }

@@ -3,19 +3,19 @@ package edu.rpi.phil.legup.puzzles.battleship;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
-public class ContradictionMalformedShip extends Contradiction
+public class ContradictionIncompleteShip extends Contradiction
 {
 	private static final long serialVersionUID = -8371270465029723898L;
 
-	ContradictionMalformedShip()
+	ContradictionIncompleteShip()
 	{
-		setName("Ships must be properly formed");
+		setName("Ships must not end abruptly");
 		description = "End and middle ship segments must be connected to other suitable segments accordingly.";
 	}
 		
 	public String getImageName()
 	{
-		return "images/nurikabe/contradictions/BlackArea.png";
+		return "images/battleship/contradictions/IncompleteShip.png";
 	}
 	
 	 /**

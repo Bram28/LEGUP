@@ -5,17 +5,17 @@ import java.util.Vector;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
+import edu.rpi.phil.legup.CellPredicate;
 import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
+import edu.rpi.phil.legup.puzzles.treetent.TreeTent;
 
 public class CaseSegmentType extends CaseRule {
 	private static final long serialVersionUID = -683278713957257834L;
-	public int crshMode(){return CaseRuleSelectionHelper.MODE_TILETYPE;}
-	public Vector<Integer> crshTileType()
+
+	public CaseRuleSelectionHelper getSelectionHelper()
 	{
-		Vector<Integer> ret = new Vector<Integer>();
-		ret.add(BattleShip.CELL_SEGMENT);
-		return ret;
+        return new CaseRuleSelectionHelper(CellPredicate.typeWhitelist(BattleShip.CELL_SEGMENT));
 	}
 	
 	public CaseSegmentType()
@@ -50,7 +50,7 @@ public class CaseSegmentType extends CaseRule {
 	}
 
 	public String getImageName() {
-		return "images/battleship/SegmentType.png";
+		return "images/battleship/cases/SegmentType.png";
 	}
 
 }

@@ -98,7 +98,28 @@ public class BattleShip extends PuzzleModule
 
 	public String getImageLocation(int cellValue)
 	{
-		return "images/battleship/image["+cellValue+"].gif";
+		switch (cellValue)
+		{
+		case CELL_UNKNOWN:
+			return "images/blank.gif";
+		case CELL_WATER:
+			return "images/battleship/Water.png";
+		case CELL_TOP_CAP:
+			return "images/battleship/TopCap.png";
+		case CELL_BOTTOM_CAP:
+			return "images/battleship/BottomCap.png";
+		case CELL_LEFT_CAP:
+			return "images/battleship/LeftCap.png";
+		case CELL_RIGHT_CAP:
+			return "images/battleship/RightCap.png";
+		case CELL_SUBMARINE:
+			return "images/battleship/Submarine.png";
+		case CELL_SEGMENT:
+			return "images/battleship/UnknownSegment.png";
+		case CELL_MIDDLE:
+			return "images/battleship/Middle.png";
+		}
+		return "images/unknown.gif";
 	}
 
 	/*public BoardImage[] getAllBorderImages()
@@ -150,7 +171,7 @@ public class BattleShip extends PuzzleModule
 	public Vector <PuzzleRule> getRules(){
 		Vector<PuzzleRule> ruleList = new Vector<PuzzleRule>();
 		ruleList.add(new WaterRowRule());
-		ruleList.add(new RulePreventAdjacentShips());
+		ruleList.add(new RuleSurroundShip());
 		ruleList.add(new RuleContinueShip());
 		ruleList.add(new RuleSegmentType());
 		return ruleList;
@@ -160,7 +181,7 @@ public class BattleShip extends PuzzleModule
 	{
 		Vector<Contradiction> result = new Vector<Contradiction>();
 		result.add(new ContradictionAdjacentShips());
-		result.add(new ContradictionMalformedShip());
+		result.add(new ContradictionIncompleteShip());
 		result.add(new ContradictionTooManyRowCol());
 		result.add(new ContradictionTooFewRowCol());
 		return result;

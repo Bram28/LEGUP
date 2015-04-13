@@ -3,29 +3,27 @@ package edu.rpi.phil.legup.puzzles.battleship;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import edu.rpi.phil.legup.BoardState;
-import edu.rpi.phil.legup.Contradiction;
-import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.*;
 
-public class RuleContinueShip extends PuzzleRule
+public class RuleSurroundShip extends PuzzleRule
 {
-	private static final long serialVersionUID = 153790127149316292L;
+	private static final long serialVersionUID = 853810334L;
 
-	public RuleContinueShip()
+	public RuleSurroundShip()
 	{
-		setName("Continue ship");
-		description = "Place a generic segment next to each ship end";
+		setName("Surround ship");
+		description = "Set tiles to water around ship segments";
 	}
 
 	public String getImageName()
 	{
-		return "images/battleship/rules/ContinueShip.png";
+		return "images/battleship/rules/SurroundShip.png";
 	}
 
 	protected String checkRuleRaw(BoardState state)
 	{
 		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
-		contras.add(new ContradictionIncompleteShip());
+		contras.add(new ContradictionAdjacentShips());
 
 		BoardState origBoardState = state.getSingleParentState();
 		int width = origBoardState.getWidth();
@@ -41,11 +39,11 @@ public class RuleContinueShip extends PuzzleRule
 			for (int x = 0; x < width; x++) {
 				if (state.getCellContents(x, y) !=
 						origBoardState.getCellContents(x, y)) {
-					if (state.getCellContents(x, y) != BattleShip.CELL_SEGMENT) {
-						return "This rule can only prove generic ship segments!";
+					if (state.getCellContents(x, y) != BattleShip.CELL_WATER) {
+						return "This rule can only prove water tiles!";
 					}
 					BoardState modified = origBoardState.copy();
-					modified.getBoardCells()[y][x] = BattleShip.CELL_WATER;
+					modified.getBoardCells()[y][x] = BattleShip.CELL_SEGMENT;
 					boolean contradicts = false;
 					for (Contradiction c : contras)
 					{
@@ -53,7 +51,7 @@ public class RuleContinueShip extends PuzzleRule
 							contradicts = true;
 					}
 					if (!contradicts)
-						return "At least one of these tiles is not forced to be a ship segment!";
+						return "At least one of these tiles is not forced to be water!";
 				}
 			}
 		}

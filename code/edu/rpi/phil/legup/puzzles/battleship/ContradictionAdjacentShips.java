@@ -16,7 +16,7 @@ public class ContradictionAdjacentShips extends Contradiction
 		
 	public String getImageName()
 	{
-		return "images/nurikabe/contradictions/BlackArea.png";
+		return "images/battleship/contradictions/AdjacentShips.png";
 	}
 	
 	 /**
