@@ -58,7 +58,6 @@ public class CaseRuleSelectionHelper extends Board implements TreeSelectionListe
 		setPreferredSize(new Dimension(600,400));
 		setBackground(new Color(0xE0E0E0));
 		setSize(getProperSize());
-		System.out.printf("CRSH.getSize(): %s\n", getSize());
 		zoomFit();
 		zoomTo(1.0);
 		Legup.getInstance().getSelections().addTreeSelectionListener(this);
