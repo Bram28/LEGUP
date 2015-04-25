@@ -376,6 +376,63 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		
 		return false;
 	}
+	
+	public void handleAllBranchesContra(BoardState state)
+	{
+		BoardState child0 = state.getChildren().get(0);
+		BoardState child1 = state.getChildren().get(1);
+		
+		boolean isChild0Contra = checkIfBranchIsContradiction(child0);
+		boolean isChild1Contra = checkIfBranchIsContradiction(child1);
+		
+		if (isChild0Contra && isChild1Contra)
+		{
+			if (child0.isCollapsed() && child1.isCollapsed())
+			{
+				child0.setOffset(new Point(-15, child0.getOffset().y));
+				child1.setOffset(new Point(15, child1.getOffset().y));
+			}
+			else
+			{
+				child0.setOffset(new Point(0, child0.getOffset().y));
+				child1.setOffset(new Point(0, child1.getOffset().y));
+			}
+			
+			child0.toggleCollapse();
+			child1.toggleCollapse();
+		}
+	}
+	
+	public void syncCollapse(BoardState state)
+	{
+		BoardState child0 = state.getChildren().get(0);
+		BoardState child1 = state.getChildren().get(1);
+		
+		//both children should be transitions, so don't collapse just yet
+		//get grandchildren
+		BoardState child0next = child0.getChildren().get(0).getChildren().get(0);
+		BoardState child1next = child1.getChildren().get(0).getChildren().get(0);
+
+		//if both are collapsed, then undo collapse
+		if (child0next.isCollapsed() && child1next.isCollapsed())
+		{
+			child0next.toggleCollapse();
+			child1next.toggleCollapse();
+		}
+		//otherwise collapse both of them if they haven't done so already
+		else 
+		{
+			if (!child0next.isCollapsed()) 
+			{
+				child0next.toggleCollapse();
+			}
+			if (!child1next.isCollapsed())
+			{
+				child1next.toggleCollapse();
+			}
+		}
+		
+	}
 
 	public void collapseCurrentState()
 	{
@@ -390,54 +447,17 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		}
 		else
 		{
+			/*
+			Special case: multiple branches
+			Collapse all branches into one if...
+			1. all branches lead to contradiction
+			 					OR 
+			2. all branches are merged back together
+			*/
 			if (!state.isModifiable() && state.getChildren().size() == 2)
 			{
-				BoardState child0 = state.getChildren().get(0);
-				BoardState child1 = state.getChildren().get(1);
-				
-				boolean isChild0Contra = checkIfBranchIsContradiction(child0);
-				boolean isChild1Contra = checkIfBranchIsContradiction(child1);
-				
-				if (isChild0Contra && isChild1Contra)
-				{
-					if (child0.isCollapsed() && child1.isCollapsed())
-					{
-						child0.setOffset(new Point(-15, child0.getOffset().y));
-						child1.setOffset(new Point(15, child1.getOffset().y));
-					}
-					else
-					{
-						child0.setOffset(new Point(0, child0.getOffset().y));
-						child1.setOffset(new Point(0, child1.getOffset().y));
-					}
-					
-					child0.toggleCollapse();
-					child1.toggleCollapse();
-				}
-				
-				//both children should be transitions, so don't collapse just yet
-				//get grandchildren
-				BoardState child0next = child0.getChildren().get(0).getChildren().get(0);
-				BoardState child1next = child1.getChildren().get(0).getChildren().get(0);
-
-				//if both are collapsed, then undo collapse
-				if (child0next.isCollapsed() && child1next.isCollapsed())
-				{
-					child0next.toggleCollapse();
-					child1next.toggleCollapse();
-				}
-				//otherwise collapse both of them if they haven't done so already
-				else 
-				{
-					if (!child0next.isCollapsed()) 
-					{
-						child0next.toggleCollapse();
-					}
-					if (!child1next.isCollapsed())
-					{
-						child1next.toggleCollapse();
-					}
-				}
+				handleAllBranchesContra(state);
+				syncCollapse(state);
 			}
 			
 			//if the state is a transition then collapse everything to the right of it
