@@ -357,6 +357,25 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		updateTreeSize();
 		return cur;
 	}
+	
+	public boolean checkIfBranchIsContradiction(BoardState state)
+	{
+		if (state.getChildren().size() == 1)
+		{
+			BoardState child = state.getChildren().get(0);
+			while (child.getChildren().size() == 1)
+			{
+				child = child.getChildren().get(0);
+			}
+			
+			if (child.getStatus() == BoardState.STATUS_CONTRADICTION_CORRECT)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	public void collapseCurrentState()
 	{
@@ -376,10 +395,31 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 				BoardState child0 = state.getChildren().get(0);
 				BoardState child1 = state.getChildren().get(1);
 				
+				boolean isChild0Contra = checkIfBranchIsContradiction(child0);
+				boolean isChild1Contra = checkIfBranchIsContradiction(child1);
+				
+				if (isChild0Contra && isChild1Contra)
+				{
+					if (child0.isCollapsed() && child1.isCollapsed())
+					{
+						child0.setOffset(new Point(-15, child0.getOffset().y));
+						child1.setOffset(new Point(15, child1.getOffset().y));
+					}
+					else
+					{
+						child0.setOffset(new Point(0, child0.getOffset().y));
+						child1.setOffset(new Point(0, child1.getOffset().y));
+					}
+					
+					child0.toggleCollapse();
+					child1.toggleCollapse();
+				}
+				
 				//both children should be transitions, so don't collapse just yet
 				//get grandchildren
 				BoardState child0next = child0.getChildren().get(0).getChildren().get(0);
 				BoardState child1next = child1.getChildren().get(0).getChildren().get(0);
+
 				//if both are collapsed, then undo collapse
 				if (child0next.isCollapsed() && child1next.isCollapsed())
 				{
