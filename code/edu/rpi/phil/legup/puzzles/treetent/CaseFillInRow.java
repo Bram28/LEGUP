@@ -12,7 +12,7 @@ import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
 
-public class CaseTentsInRow extends CaseRule
+public class CaseFillInRow extends CaseRule
 {
 	static final long serialVersionUID = 9506L;
 	protected final String defaultApplicationText= "Select a row number.";
@@ -22,7 +22,7 @@ public class CaseTentsInRow extends CaseRule
         crsh.shouldHighlightCell = CellPredicate.sameRowOrColumn(crsh.lastMousePosition);
         return crsh;
     }
-	
+
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
 		boolean row = (pointSelected.x == -1) ? true : false;
@@ -34,7 +34,7 @@ public class CaseTentsInRow extends CaseRule
 			whatgoesintheblanks[c1] = 0;
 		}
 		int num_defaults = 0;
-		
+
 		//start with what the label says
 		int correct_tents = row?(TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_RIGHT,where))):(TreeTent.translateNumTents(cur.getLabel(BoardState.LABEL_BOTTOM,where)));
 		//subtract the amount of tents already in the row
@@ -44,7 +44,7 @@ public class CaseTentsInRow extends CaseRule
 		}
 		//set the amount of defaults (grass) to the number of tiles that need to be filled minus the correct number of tents
 		num_defaults = num_blanks - correct_tents;
-		
+
 		//System.out.println(num_defaults);
 		if(num_defaults < 0)return null; //state is a contradiction in a way that interferes with the construction of a caserule
 		while(Permutations.nextPermutation(whatgoesintheblanks,num_defaults))
@@ -56,14 +56,14 @@ public class CaseTentsInRow extends CaseRule
 		}
 		return Legup.getCurrentState();
 	}
-	
+
 	public String getImageName() {return "images/treetent/case_rowcount.png";}
-	public CaseTentsInRow()
+	public CaseFillInRow()
 	{
 		setName("Fill In row");
 		description = "A row must have the number of tents of its clue.";
 	}
-	
+
 	private int numTentsNeededInRow(BoardState state, int row){
 		int label = state.getLabel(BoardState.LABEL_RIGHT, row);
 		return TreeTent.translateNumTents(label);
@@ -72,12 +72,12 @@ public class CaseTentsInRow extends CaseRule
 		int label = state.getLabel(BoardState.LABEL_BOTTOM, col);
 		return TreeTent.translateNumTents(label);
 	}
-	
+
 	private int numTentsInRow(BoardState boardState, int row)
     {
 		int width = boardState.getWidth();
 		int numTents = 0;
-		
+
 		for (int i=0;i<width;i++)
 		{
 			if (boardState.getCellContents(i,row) == 2) // if this cell contains a tent
@@ -91,7 +91,7 @@ public class CaseTentsInRow extends CaseRule
     {
 		int height = boardState.getHeight();
 		int numTents = 0;
-		
+
 		for (int i=0;i<height;i++)
 		{
 			if (boardState.getCellContents(col,i) == 2) // if this cell contains a tent
@@ -101,12 +101,12 @@ public class CaseTentsInRow extends CaseRule
 		}
 		return numTents;
     }
-	
+
 	private int numEmptySpacesInRow(BoardState boardState, int row)
     {
 		int width = boardState.getWidth();
 		int numEmpty = 0;
-		
+
 		for (int i=0;i<width;i++)
 		{
 			if (boardState.getCellContents(i,row) == 0) // if this cell is unknown
@@ -120,7 +120,7 @@ public class CaseTentsInRow extends CaseRule
     {
 		int height = boardState.getHeight();
 		int numEmpty = 0;
-		
+
 		for (int i=0;i<height;i++)
 		{
 			if (boardState.getCellContents(col,i) == 0) // if this cell is unknown
@@ -133,7 +133,7 @@ public class CaseTentsInRow extends CaseRule
 	private static int choose(int x, int y) {
 	    if (y < 0 || y > x) return 0;
 	    if (y > x/2) {
-	        // choose(n,k) == choose(n,n-k), 
+	        // choose(n,k) == choose(n,n-k),
 	        // so this could save a little effort
 	        y = x - y;
 	    }
@@ -153,7 +153,7 @@ public class CaseTentsInRow extends CaseRule
 		int affectedRow = -1; // a value of -1 indicates that a column is being affected, not a row
 		int affectedColumn = -1;
 		int numChildStates = parent.getChildren().size();  // how many branches do we have?
-		// we will first check one state to see which row/column we are working with 
+		// we will first check one state to see which row/column we are working with
 		// (we still will need to check the rest of the states to make sure they are also changing this row/col)
 		BoardState one = parent.getChildren().get(0);
 		ArrayList<Point> pointsChangedInFirstNewState = BoardState.getDifferenceLocations(parent,one);
@@ -199,7 +199,7 @@ public class CaseTentsInRow extends CaseRule
 		}
 		// now we do a combinatorial to figure out how many ways there are to place these tents in these empty spaces
 		// numEmptySpaces choose numTentsNeeded
-		
+
 		int numCombinations = choose(numEmptySpaces,numTentsNeeded);
 		if(numChildStates != numCombinations){
 			return "The number of branches must be equal to the number of possible\nconfigurations for "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces";
@@ -211,7 +211,7 @@ public class CaseTentsInRow extends CaseRule
 			if(pointsChanged.size() != numEmptySpaces){
 				return "The number of changed cells in each child state must\nbe equal to the number of unfilled states\nin the relevant row or column of the parent";
 			}
-			
+
 			// make sure that no child states are the same
 			for(int j = i+1; j < allChildStates.size(); j++){
 				ArrayList<Point> childDifferences = BoardState.getDifferenceLocations(allChildStates.get(j),currentChildState);
@@ -219,20 +219,20 @@ public class CaseTentsInRow extends CaseRule
 					return "No two child nodes may be the same";
 				}
 			}
-					
+
 			// make sure that all affected cells are in the affected row or column
 			for(int j = 0; j < pointsChanged.size(); j++){
-				if(affectedRow != -1){ 
+				if(affectedRow != -1){
 					if(pointsChanged.get(j).y != affectedRow){
 						return "Each changed cell in each child state must be in the same row or column";
 					}
 				}
-				else{ 
+				else{
 					if(pointsChanged.get(j).x != affectedColumn){
 						return "Each changed cell in each child state must be in the same row or column";
 					}
 				}
-				
+
 			}
 			// make sure that there are the correct amount of tents placed in the row or column
 			int numTentsPlaced = 0;
@@ -247,12 +247,12 @@ public class CaseTentsInRow extends CaseRule
 		}
 		return rv;
 	}
-	
+
 	public boolean startDefaultApplicationRaw(BoardState state)
 	{
 		return true;
 	}
-	
+
 	public boolean doDefaultApplicationRaw(BoardState state, PuzzleModule pm ,Point location)
 	{
 		if(location.y > 0 && location.y < state.getHeight( ))
@@ -268,7 +268,7 @@ public class CaseTentsInRow extends CaseRule
 			}
 			int tentsneeded = TreeTent.translateNumTents(state.getLabel(BoardState.LABEL_RIGHT, location.y)) - tents;
 			int grassneeded = unknowns - tentsneeded;
-			
+
 			Vector<Integer> states = new Vector<Integer>();
 			states.add( TreeTent.CELL_TENT );
 			states.add( TreeTent.CELL_GRASS );
