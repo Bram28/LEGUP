@@ -11,11 +11,11 @@ public class RuleNewTentLink extends RuleNewLink
 	public String getImageName() {return "images/treetent/NewTentLink.png";}
     public RuleNewTentLink()
     {
-    	setName("New Link Tent");
+    	setName("New Tent Link");
     	description = "A tent must link to a tree if only one unlinked tree is near the tent.";
     	//image = new ImageIcon("images/treetent/NewTentLink.png");
     }
-    
+
     protected String checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)
     {
     	return this.checkTentNeededLink(tree,tent,state,validLinks);
@@ -33,7 +33,7 @@ public class RuleNewTentLink extends RuleNewLink
 		{
 			for(int y = 0; y<height;y++)
 			{
-				
+
 				if(destBoardState.getCellContents(x,y)==TreeTent.CELL_TENT)
 				{
 					num_connected=0;
@@ -51,7 +51,7 @@ public class RuleNewTentLink extends RuleNewLink
 								continue;
 							if(i!=0 && j!=0)
 								continue;
-							
+
 							if(destBoardState.getCellContents(x+i,y+j)==TreeTent.CELL_TREE)
 							{
 								System.out.println(x+" "+y+"         "+(x+i)+" "+(y+j));
@@ -75,7 +75,7 @@ public class RuleNewTentLink extends RuleNewLink
 									continue;
 								if(i!=0 && j!=0)
 									continue;
-								
+
 								if(destBoardState.getCellContents(x+i,y+j)==TreeTent.CELL_TREE)
 								{
 									if( TreeTent.isLinked(origExtra, new Point(x+i,y+j)) )

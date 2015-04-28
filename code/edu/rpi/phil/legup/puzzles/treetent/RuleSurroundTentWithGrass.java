@@ -15,11 +15,11 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleGrassNextToTent extends PuzzleRule
+public class RuleSurroundTentWithGrass extends PuzzleRule
 {
 	static final long serialVersionUID = 9513L;
 	public String getImageName() {return "images/treetent/aroundTent.png";}
-    public RuleGrassNextToTent()
+    public RuleSurroundTentWithGrass()
     {
     	setName("Surround Tent with Grass");
     	description = "Cells next to a tent are grass.";

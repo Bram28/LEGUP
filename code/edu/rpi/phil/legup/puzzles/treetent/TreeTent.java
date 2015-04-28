@@ -628,7 +628,7 @@ public class TreeTent extends PuzzleModule
 		//ruleList.add(new PuzzleRule());
 		ruleList.add(new RuleFinishWithGrass());
 		ruleList.add(new RuleFinishWithTents());
-		ruleList.add(new RuleGrassNextToTent()); //surround tent with grass
+		ruleList.add(new RuleSurroundTentWithGrass()); //surround tent with grass
 		ruleList.add(new RuleEmptyField());
 		ruleList.add(new RuleNewTentLink());
 		ruleList.add(new RuleNewTreeLink());
@@ -650,8 +650,8 @@ public class TreeTent extends PuzzleModule
 
 		contradictionList.add(new ContradictionAdjacentTents());
 		contradictionList.add(new ContradictionMiscount());
-		contradictionList.add(new ContradictionNoTents());
-		contradictionList.add( new ContradictionTentNotNearTree() );
+		contradictionList.add(new ContradictionNoTentsForTree());
+		contradictionList.add(new ContradictionTentNotNearTree());
 
 		return contradictionList;
 	}
@@ -661,7 +661,7 @@ public class TreeTent extends PuzzleModule
 		Vector <CaseRule> caseRules = new Vector <CaseRule>();
 
 		caseRules.add(new CaseTentOrGrass());
-		caseRules.add(new CaseTentsInRow());
+		caseRules.add(new CaseFillInRow());
 		caseRules.add(new CaseLinkTree());
 		caseRules.add(new CaseLinkTent());
 
