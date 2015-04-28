@@ -134,14 +134,15 @@ public class CasePanel extends JustificationPanel
         if(point == null) { return false; }
 
         PuzzleModule pm = Legup.getInstance().getPuzzleModule();
-        //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
+        Legup.getInstance().getGui().getTree().pushUndo();
+        Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = true;
         BoardState b = caseRules.get(button).autoGenerateCases(cur,point);
         if(b != null) { Legup.setCurrentState(b); }
         if((cur.getChildren().size() > 0) && (cur.getChildren().get(0) != null))
         {
             Legup.setCurrentState(cur.getChildren().get(0));
         }
-        //Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
+        Legup.getInstance().getGui().getTree().tempSuppressUndoPushing = false;
         //Legup.getInstance().getGui().getTree().pushUndo();
         return true;
     }
