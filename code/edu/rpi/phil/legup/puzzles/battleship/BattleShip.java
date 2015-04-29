@@ -192,6 +192,7 @@ public class BattleShip extends PuzzleModule
 		Vector<CaseRule> result = new Vector<CaseRule>();
 		result.add(new CaseSegmentType());
 		result.add(new CaseShipOrWater());
+		result.add(new CaseShipLocations());
 		/*result.add(new CaseRule()
 		{
 		    public String getImageName()
