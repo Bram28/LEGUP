@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 
-public class RuleNewTreeLink extends RuleNewLink
+public class RuleTentForTree extends RuleNewLink
 {
 	static final long serialVersionUID = 9516L;
 	public String getImageName() {return "images/treetent/NewTreeLink.png";}
-    public RuleNewTreeLink()
+    public RuleTentForTree()
     {
-    	setName("New Tree Link");
+			//Combine with ruleLastCampingSpot
+    	setName("Tent for Tree");
     	description = "A tree must link to a tent if there are no unknowns or unlinked tents near the tree.";
     	//image = new ImageIcon("images/treetent/NewTreeLink.png");
     }
