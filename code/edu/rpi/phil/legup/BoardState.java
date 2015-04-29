@@ -284,7 +284,7 @@ public class BoardState implements java.io.Serializable
 				offset.y += TreePanel.NODE_RADIUS;
 			else
 				offset.y -= TreePanel.NODE_RADIUS;*/
-
+		
 			toggleCollapseRecursive(location.x,location.y, true);
 			recalculateLocation();
 			
@@ -303,46 +303,6 @@ public class BoardState implements java.io.Serializable
 			// TODO: elegant error handling, add error label to treeframe
 		}
 	}
-	
-	/*public boolean checkIfBranchesConverge()
-	{
-		//collapse usually stops before a merge.
-		//but...if each branch is merged back together, then just collapse the merge as well.
-		if (children.size() == 2)
-		{
-			//check branch 0
-			BoardState branch0 = children.get(0);
-			
-			while (branch0.children.size() == 1)
-			{
-				branch0 = branch0.children.get(0);
-
-				if (branch0.parents.size() == 2)
-					break;
-			}
-
-			//check branch 1
-			BoardState branch1 = children.get(1);
-
-			while (branch1.children.size() == 1)
-			{
-				branch1 = branch1.children.get(0);
-
-				if (branch1.parents.size() == 2)
-					break;
-			}
-
-			if (branch0.location.equals(branch1.location))
-			{
-				branch0.collapsed = !branch0.collapsed;
-				return true;
-			}
-			else
-				return false;
-		}
-		
-		return true;
-	}*/
 
 	/**
 	 * Recursively toggle the collapse value of this state and all it's children
@@ -352,6 +312,7 @@ public class BoardState implements java.io.Serializable
 	//Initial refers to whether or not the state is the first state in the collapse or uncollapse chain.
 	public void toggleCollapseRecursive(int x, int y, boolean initial)
 	{
+		
 		//boolean branchesConverge = checkIfBranchesConverge();
 
 		//if branches have been merged, then collapse everything
@@ -385,9 +346,9 @@ public class BoardState implements java.io.Serializable
 
 		//Make sure the branch is linear, before collapsing nodes
 		if (children.size() == 1 && parents.size() < 2 && children.get(0).parents.size() < 2)
-		{
+		{		
 			BoardState child = children.get(0);
-			
+	
 			collapsed = !collapsed;
 			if(!initial) {
 				if (collapsed) {
