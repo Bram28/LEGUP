@@ -357,6 +357,91 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		updateTreeSize();
 		return cur;
 	}
+	
+	public boolean checkIfBranchIsContradiction(BoardState state)
+	{
+		if (state.getChildren().size() == 1)
+		{
+			BoardState child = state.getChildren().get(0);
+			while (child.getChildren().size() == 1)
+			{
+				child = child.getChildren().get(0);
+			}
+			
+			if (child.getStatus() == BoardState.STATUS_CONTRADICTION_CORRECT)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void handleAllBranchesContra(BoardState state)
+	{
+		BoardState child0 = state.getChildren().get(0);
+		BoardState child1 = state.getChildren().get(1);
+		
+		boolean isChild0Contra = checkIfBranchIsContradiction(child0);
+		boolean isChild1Contra = checkIfBranchIsContradiction(child1);
+		
+		//both branches lead to contradiction
+		if (isChild0Contra && isChild1Contra)
+		{
+			if (child0.isCollapsed() && child1.isCollapsed())
+			{
+				child0.setOffset(new Point(-15, child0.getOffset().y));
+				child1.setOffset(new Point(15, child1.getOffset().y));
+			}
+			else
+			{
+				child0.setOffset(new Point(0, child0.getOffset().y));
+				child1.setOffset(new Point(0, child1.getOffset().y));
+			}
+			
+			child0.toggleCollapse();
+			child1.toggleCollapse();
+		}
+	}
+	
+	public void syncCollapse(BoardState state, int numBranches)
+	{
+		//first determine if all the branches are collapsed
+		boolean allCollapsed = true;
+		for (int i = 0; i < numBranches; i++)
+		{
+			BoardState child = state.getChildren().get(i);
+			BoardState childFirstNode = child.getChildren().get(0);
+			if (childFirstNode.getChildren().size() < 1)
+				continue;
+			
+			BoardState childFirstTransition = childFirstNode.getChildren().get(0);
+			
+			allCollapsed &= childFirstTransition.isCollapsed();
+		}
+		
+		//then handle collapsing for each branch
+		for (int i = 0; i < numBranches; i++)
+		{
+			BoardState child = state.getChildren().get(i);
+			BoardState childFirstNode = child.getChildren().get(0);
+			if (childFirstNode.getChildren().size() < 1)
+				continue;
+			
+			BoardState childNextTransition = childFirstNode.getChildren().get(0);
+			
+			//if all collapsed, then undo collapse
+			if (allCollapsed)
+			{
+				childNextTransition.toggleCollapse();
+			}
+			//otherwise collapse if not already collapsed
+			else if (!childNextTransition.isCollapsed())
+			{
+				childNextTransition.toggleCollapse();
+			}
+		}
+	}
 
 	public void collapseCurrentState()
 	{
@@ -371,33 +456,17 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		}
 		else
 		{
-			if (!state.isModifiable() && state.getChildren().size() == 2)
+			/*
+			Special case: multiple branches
+			Collapse all branches into one if...
+			1. all branches lead to contradiction
+			 					OR 
+			2. all branches are merged back together
+			*/
+			if (!state.isModifiable() && state.getChildren().size() >= 2)
 			{
-				BoardState child0 = state.getChildren().get(0);
-				BoardState child1 = state.getChildren().get(1);
-				
-				//both children should be transitions, so don't collapse just yet
-				//get grandchildren
-				BoardState child0next = child0.getChildren().get(0).getChildren().get(0);
-				BoardState child1next = child1.getChildren().get(0).getChildren().get(0);
-				//if both are collapsed, then undo collapse
-				if (child0next.isCollapsed() && child1next.isCollapsed())
-				{
-					child0next.toggleCollapse();
-					child1next.toggleCollapse();
-				}
-				//otherwise collapse both of them if they haven't done so already
-				else 
-				{
-					if (!child0next.isCollapsed()) 
-					{
-						child0next.toggleCollapse();
-					}
-					if (!child1next.isCollapsed())
-					{
-						child1next.toggleCollapse();
-					}
-				}
+				handleAllBranchesContra(state);
+				syncCollapse(state, state.getChildren().size());
 			}
 			
 			//if the state is a transition then collapse everything to the right of it

@@ -13,11 +13,11 @@ public class ContradictionTentNotNearTree extends Contradiction
 	public String getImageName() {return "images/treetent/contra_notree.png";}
 	public ContradictionTentNotNearTree()
 	 {
-		setName("No Trees For Tent");
+		setName("Tent Not Near Tree");
 		description = "Unlinked tent not near an unlinked tree.";
 		//image = new ImageIcon("images/treetent/contra_notree.png");
 	 }
-	 
+
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -30,7 +30,7 @@ public class ContradictionTentNotNearTree extends Contradiction
     	int height = state.getHeight();
     	int width = state.getWidth();
     	boolean found;
-    	ArrayList<Object> validLinks = state.getExtraData(); 
+    	ArrayList<Object> validLinks = state.getExtraData();
 
     	// Check all tents to see if they are adjacent to a tree
     	for (int y=0;y<height;y++)
@@ -42,7 +42,7 @@ public class ContradictionTentNotNearTree extends Contradiction
     	    		Point tent = new Point(x,y);
     	    		if(TreeTent.isLinked(validLinks, tent))
     	    			continue;
-    	    		
+
     	    		found = false;
     	    		if(y > 0)
     	    		{
