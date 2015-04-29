@@ -11,6 +11,7 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
+import edu.rpi.phil.legup.Contradiction;
 
 public class CaseFillInRow extends CaseRule
 {
@@ -47,8 +48,17 @@ public class CaseFillInRow extends CaseRule
 
 		//System.out.println(num_defaults);
 		if(num_defaults < 0)return null; //state is a contradiction in a way that interferes with the construction of a caserule
+
+		Contradiction contra = new ContradictionTentNotNearTree();
+
 		while(Permutations.nextPermutation(whatgoesintheblanks,num_defaults))
 		{
+			BoardState modified = cur.copy();
+			modified.fillBlanks(where,row,whatgoesintheblanks);
+			if (contra.checkContradictionRaw(modified) == null) {
+				continue;
+			}
+
 			BoardState tmp = cur.addTransitionFrom();
 			tmp.setCaseSplitJustification(this);
 			tmp.fillBlanks(where,row,whatgoesintheblanks);
@@ -200,10 +210,10 @@ public class CaseFillInRow extends CaseRule
 		// now we do a combinatorial to figure out how many ways there are to place these tents in these empty spaces
 		// numEmptySpaces choose numTentsNeeded
 
-		int numCombinations = choose(numEmptySpaces,numTentsNeeded);
-		if(numChildStates != numCombinations){
-			return "The number of branches must be equal to the number of possible\nconfigurations for "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces";
-		}
+		// int numCombinations = choose(numEmptySpaces,numTentsNeeded);
+		// if(numChildStates != numCombinations){
+		// 	return "The number of branches must be equal to the number of possible\nconfigurations for "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces";
+		// }
 		Vector<BoardState> allChildStates = parent.getChildren();
 		for(int i = 0; i < allChildStates.size(); i++){
 			BoardState currentChildState = allChildStates.get(i);
