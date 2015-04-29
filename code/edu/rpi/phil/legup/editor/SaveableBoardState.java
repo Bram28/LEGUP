@@ -73,7 +73,8 @@ public class SaveableBoardState
     	
     	for (int y = 0; y < state.getHeight(); y++) {
     		for (int x = 0; x < state.getWidth(); x++) {
-    			state.getBoardCells()[y][x] *= -1;
+    			if (state.getCellContents(x, y) != 0)
+    				state.setModifiableCell(x, y, false);
     		}
     	}
     	
