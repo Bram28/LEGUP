@@ -377,7 +377,41 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		return false;
 	}
 	
-	public void handleAllBranchesContra(BoardState state)
+	public boolean checkIfBranchesConverge(BoardState child0, BoardState child1)
+	{
+		//collapse usually stops before a merge.
+		//but...if each branch is merged back together, then just collapse the merge as well.
+
+		//check branch 0
+		BoardState branch0 = child0;
+		//System.out.println("child0 starts at " + branch0.getLocation());
+		while (branch0.getChildren().size() == 1)
+		{
+			branch0 = branch0.getChildren().get(0);
+
+			if (branch0.getParents().size() == 2)
+				break;
+		}
+
+		//check branch 1
+		BoardState branch1 = child1;
+		//System.out.println("child1 starts at " + branch1.getLocation());
+		while (branch1.getChildren().size() == 1)
+		{
+			branch1 = branch1.getChildren().get(0);
+			if (branch1.getParents().size() == 2)
+				break;
+		}
+
+		if (branch0.getLocation().equals(branch1.getLocation()))
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	public boolean handleAllBranchesContra(BoardState state)
 	{
 		BoardState child0 = state.getChildren().get(0);
 		BoardState child1 = state.getChildren().get(1);
@@ -401,11 +435,45 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			
 			child0.toggleCollapse();
 			child1.toggleCollapse();
+			
+			return true;
+		}
+		
+		return false;
+	}
+		
+	public void handleAllBranchesMerged(BoardState state)
+	{
+		BoardState child0 = state.getChildren().get(0);
+		BoardState child1 = state.getChildren().get(1);
+		
+		//both branches merge together
+		if (checkIfBranchesConverge(child0, child1))
+		{
+			if (child0.isCollapsed() && child1.isCollapsed())
+			{
+				child0.setOffset(new Point(-15, child0.getOffset().y));
+				child1.setOffset(new Point(15, child1.getOffset().y));
+			}
+			else
+			{
+				child0.setOffset(new Point(0, child0.getOffset().y));
+				child1.setOffset(new Point(0, child1.getOffset().y));
+			}
+			
+			child0.toggleCollapse();
+			child1.toggleCollapse();
 		}
 	}
 	
 	public void syncCollapse(BoardState state, int numBranches)
 	{
+		//if both branches coverge together, then don't bother syncing
+		if (checkIfBranchesConverge(state.getChildren().get(0), state.getChildren().get(1)))
+		{
+			return;
+		}
+		
 		//first determine if all the branches are collapsed
 		boolean allCollapsed = true;
 		for (int i = 0; i < numBranches; i++)
@@ -465,7 +533,11 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			*/
 			if (!state.isModifiable() && state.getChildren().size() >= 2)
 			{
-				handleAllBranchesContra(state);
+				//run only one or the other case
+				boolean allContra = handleAllBranchesContra(state);
+				if (!allContra)
+					handleAllBranchesMerged(state);
+				
 				syncCollapse(state, state.getChildren().size());
 			}
 			
