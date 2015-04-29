@@ -411,6 +411,62 @@ public class BattleShip extends PuzzleModule
 				checkEastForSegment(boardState, column, row)  ||
 				checkWestForSegment(boardState, column, row));
 	}
+	
+	/**
+	 * Counts the number of ship segments in a row
+	 * 
+	 * @param boardState The board
+	 * @param row The row of the board to count
+	 * @return The number of ships in that row 
+	 */
+	public static int countShipsInRow(BoardState boardState, int row)
+	{
+		int ships = 0;
+		for (int i = 0; i < boardState.getHeight(); i++)
+			if (isShip(boardState.getCellContents(i, row)))
+				ships++;
+		return ships;
+	}
+	
+	/**
+	 * Counts the number of ship segments in a column
+	 * 
+	 * @param boardState The board
+	 * @param column The column of the board to count
+	 * @return The number of ships in that column 
+	 */
+	public static int countShipsInColumn(BoardState boardState, int column)
+	{
+		int ships = 0;
+		for (int i = 0; i < boardState.getWidth(); i++)
+			if (isShip(boardState.getCellContents(column, i)))
+				ships++;
+		return ships;
+	}
+
+	/**
+	 * Returns the number of segments in a row in the completed board
+	 * 
+	 * @param boardState The board
+	 * @param row The row of the board
+	 * @return The total number of segments in that row 
+	 */
+	public static int totalSegmentsInRow(BoardState boardState, int row)
+	{
+		return boardState.getLabel(BoardState.LABEL_RIGHT, row);
+	}
+	
+	/**
+	 * Returns the number of segments in a column in the completed board
+	 * 
+	 * @param boardState The board
+	 * @param column The column of the board
+	 * @return The total number of segments in that column 
+	 */
+	public static int totalSegmentsInColumn(BoardState boardState, int column)
+	{
+		return boardState.getLabel(BoardState.LABEL_BOTTOM, column);
+	}
 
 	// As recommended, these are scratched
 	/**
