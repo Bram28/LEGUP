@@ -424,15 +424,18 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		{
 			if (child0.isCollapsed() && child1.isCollapsed())
 			{
+				//both branches collapsed, so decollapse both
 				child0.setOffset(new Point(-15, child0.getOffset().y));
 				child1.setOffset(new Point(15, child1.getOffset().y));
 			}
 			else
 			{
+				//collapse both branches
 				child0.setOffset(new Point(0, child0.getOffset().y));
 				child1.setOffset(new Point(0, child1.getOffset().y));
 			}
 			
+			//propogate changes
 			child0.toggleCollapse();
 			child1.toggleCollapse();
 			
@@ -444,23 +447,40 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		
 	public void handleAllBranchesMerged(BoardState state)
 	{
-		//System.out.println("current: " + state.getLocation());
 		BoardState parent0 = state.getParents().get(0);
 		BoardState parent1 = state.getParents().get(1);
-
-		//System.out.println("Parent 0: " + parent0.getLocation());
-		//System.out.println("Parent 1: " + parent1.getLocation());
 		
+		//find the node farthest back in the tree for each branch
 		while (parent0.getParents().get(0).getChildren().size() < 2)
 			parent0 = parent0.getParents().get(0);
 		while (parent1.getParents().get(0).getChildren().size() < 2)
 			parent1 = parent1.getParents().get(0);
+	
+		//WORKS, but produces uglier result 
+		//meaning it produces a fast-forward transition, state node, and transition
+		//instead of just one fast-forward
+		if (parent0.isCollapsed() && parent1.isCollapsed())
+		{
+			//decollapse both
+			parent0.setOffset(new Point(-15, parent0.getOffset().y));
+			parent1.setOffset(new Point(15, parent1.getOffset().y));
+		}
+		else
+		{
+			//collapse all
+			parent0.setOffset(new Point(0, parent0.getOffset().y));
+			parent1.setOffset(new Point(0, parent1.getOffset().y));
+		}
 		
-		parent0.toggleCollapseRecursiveMerge(parent0.getLocation().x, parent0.getLocation().y, true);
-		parent1.toggleCollapseRecursiveMerge(parent1.getLocation().x, parent1.getLocation().y, true);
-
-		//System.out.println("current: " + state.getLocation());
-		//System.out.println("current offset: " + state.getOffset());
+		//propogate changes
+		parent0.toggleCollapse();
+		parent1.toggleCollapse();
+		
+		//This is the better looking solution!
+		//Partially works//
+		//However decollapse is broken. Also, the gap between nodes is too large.
+		//parent0.toggleCollapseRecursiveMerge(parent0.getLocation().x, parent0.getLocation().y, true);
+		//parent1.toggleCollapseRecursiveMerge(parent1.getLocation().x, parent1.getLocation().y, true);
 	}
 	
 	public void syncCollapse(BoardState state, int numBranches)
@@ -523,7 +543,8 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 				syncCollapse(state, state.getChildren().size());
 			}
 			
-			//collapse if this is the convergence of multiple brances
+			//collapse if this is the convergence of multiple branches
+			//meaning you clicked on a converged transition node
 			if (state.isModifiable() && state.getParents().size() > 1)
 				handleAllBranchesMerged(state);
 			
