@@ -444,36 +444,27 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		
 	public void handleAllBranchesMerged(BoardState state)
 	{
-		BoardState child0 = state.getChildren().get(0);
-		BoardState child1 = state.getChildren().get(1);
+		//System.out.println("current: " + state.getLocation());
+		BoardState parent0 = state.getParents().get(0);
+		BoardState parent1 = state.getParents().get(1);
+
+		//System.out.println("Parent 0: " + parent0.getLocation());
+		//System.out.println("Parent 1: " + parent1.getLocation());
 		
-		//both branches merge together
-		if (checkIfBranchesConverge(child0, child1))
-		{
-			if (child0.isCollapsed() && child1.isCollapsed())
-			{
-				child0.setOffset(new Point(-15, child0.getOffset().y));
-				child1.setOffset(new Point(15, child1.getOffset().y));
-			}
-			else
-			{
-				child0.setOffset(new Point(0, child0.getOffset().y));
-				child1.setOffset(new Point(0, child1.getOffset().y));
-			}
-			
-			child0.toggleCollapse();
-			child1.toggleCollapse();
-		}
+		while (parent0.getParents().get(0).getChildren().size() < 2)
+			parent0 = parent0.getParents().get(0);
+		while (parent1.getParents().get(0).getChildren().size() < 2)
+			parent1 = parent1.getParents().get(0);
+		
+		parent0.toggleCollapseRecursiveMerge(parent0.getLocation().x, parent0.getLocation().y, true);
+		parent1.toggleCollapseRecursiveMerge(parent1.getLocation().x, parent1.getLocation().y, true);
+
+		//System.out.println("current: " + state.getLocation());
+		//System.out.println("current offset: " + state.getOffset());
 	}
 	
 	public void syncCollapse(BoardState state, int numBranches)
-	{
-		//if both branches coverge together, then don't bother syncing
-		if (checkIfBranchesConverge(state.getChildren().get(0), state.getChildren().get(1)))
-		{
-			return;
-		}
-		
+	{	
 		//first determine if all the branches are collapsed
 		boolean allCollapsed = true;
 		for (int i = 0; i < numBranches; i++)
@@ -524,22 +515,17 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		}
 		else
 		{
-			/*
-			Special case: multiple branches
-			Collapse all branches into one if...
-			1. all branches lead to contradiction
-			 					OR 
-			2. all branches are merged back together
-			*/
+			//Collapse all branches into one if all branches lead to contradiction
 			if (!state.isModifiable() && state.getChildren().size() >= 2)
 			{
-				//run only one or the other case
-				boolean allContra = handleAllBranchesContra(state);
-				if (!allContra)
-					handleAllBranchesMerged(state);
-				
+				handleAllBranchesContra(state);
+
 				syncCollapse(state, state.getChildren().size());
 			}
+			
+			//collapse if this is the convergence of multiple brances
+			if (state.isModifiable() && state.getParents().size() > 1)
+				handleAllBranchesMerged(state);
 			
 			//if the state is a transition then collapse everything to the right of it
 			if (state.isModifiable() && state.getChildren().size() == 1 

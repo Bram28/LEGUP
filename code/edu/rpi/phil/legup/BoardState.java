@@ -312,38 +312,6 @@ public class BoardState implements java.io.Serializable
 	//Initial refers to whether or not the state is the first state in the collapse or uncollapse chain.
 	public void toggleCollapseRecursive(int x, int y, boolean initial)
 	{
-		
-		//boolean branchesConverge = checkIfBranchesConverge();
-
-		//if branches have been merged, then collapse everything
-		/*if (children.size() == 2 && branchesConverge)
-		{
-			BoardState child0 = children.get(0);
-			BoardState child1 = children.get(1);
-			
-			collapsed = !collapsed;
-			if(!initial) {
-				if (collapsed) {
-					offset.y = 0;
-				}
-				else {
-					offset.y = 5 * TreePanel.NODE_RADIUS;
-				}
-			}
-			// collapse the child too
-			if (collapsed != child0.collapsed)
-				child0.toggleCollapseRecursive(child0.location.x, child0.location.y, false);
-			
-			if (collapsed != child1.collapsed)
-				child1.toggleCollapseRecursive(child1.location.x, child1.location.y, false);
-			
-			if (collapsed) {
-				child0.offset.y = 0;
-				child1.offset.y = 0;
-			}
-		}*/
-		
-
 		//Make sure the branch is linear, before collapsing nodes
 		if (children.size() == 1 && parents.size() < 2 && children.get(0).parents.size() < 2)
 		{		
@@ -369,6 +337,35 @@ public class BoardState implements java.io.Serializable
 		else // TODO: fix positioning of children
 		{
 
+		}
+	}
+	
+	public void toggleCollapseRecursiveMerge(int x, int y, boolean initial)
+	{	
+//		System.out.println("toggle_collapse_recursive_merge: " + x + ", " + y);
+//		System.out.println("x = " + getLocation().x + ", y = " + getLocation().y);
+//		System.out.println("offset.x = " + getOffset().x + ", y = " + getOffset().y);
+
+		if (children.size() == 0)
+			return;
+		
+		collapsed = !collapsed;
+		
+		if (collapsed) {
+			setOffset(new Point(0, 0));
+		}
+		else {
+			setOffset(new Point(0, 5 * TreePanel.NODE_RADIUS));
+		}
+		
+
+		BoardState child = children.get(0);
+
+		// collapse the child too
+		if (collapsed != child.collapsed)
+			child.toggleCollapseRecursiveMerge(x,y, false);
+		else if (collapsed) {
+			child.offset.y = 0;
 		}
 	}
 
