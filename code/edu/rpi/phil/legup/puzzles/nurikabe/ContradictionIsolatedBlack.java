@@ -4,7 +4,6 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.ConnectedRegions;
 import edu.rpi.phil.legup.Contradiction;
-import edu.rpi.phil.legup.puzzles.nurikabe.Nurikabe;
 import java.awt.Point;
 import java.util.List;
 import java.util.Set;
@@ -59,8 +58,8 @@ public class ContradictionIsolatedBlack extends Contradiction
     		if (ConnectedRegions.regionContains(Nurikabe.CELL_BLACK, cells, region)) {
     			numRegionsWithBlack++;
     		}
+      	if (numRegionsWithBlack > 1) return null;
     	}
-    	if (numRegionsWithBlack > 1) return null;
-    	else return "Contradiction applied incorrectly. No isolated Blacks.";
+    	return "Contradiction applied incorrectly. No isolated Blacks.";
     }
 }
