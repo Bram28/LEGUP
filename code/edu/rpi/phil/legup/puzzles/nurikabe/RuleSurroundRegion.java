@@ -33,7 +33,6 @@ public class RuleSurroundRegion extends PuzzleRule
   {
     Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
     contras.add(new ContradictionTooManySpaces());
-    contras.add(new ContradictionMultipleNumbers());
 
     BoardState origBoardState = destBoardState.getSingleParentState();
     int width = origBoardState.getWidth();

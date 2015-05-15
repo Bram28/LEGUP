@@ -56,7 +56,6 @@ public class ContradictionTooManySpaces extends Contradiction
     	List<Set<Point>> regions = ConnectedRegions.getConnectedRegions(boundryCells, cells, width, height);
 
       for (Set<Point> r : regions) {
-        int regSize = 0;
         int smallestNum = -1;
         boolean numFound = false;
         for (Point p : r) {
@@ -70,9 +69,8 @@ public class ContradictionTooManySpaces extends Contradiction
               smallestNum = contents-10;
             }
           }
-          regSize++;
         }
-        if (numFound && regSize > smallestNum) {
+        if (numFound && r.size() > smallestNum) {
           return null;
         }
       }
