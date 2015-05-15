@@ -35,6 +35,14 @@ public class ConnectedRegions
 		for(Point p : region) { if(cells[p.y][p.x] == toFind) { return true; } }
 		return false;
 	}
+	public static Set<Point> getRegionAroundPoint(Point p, int boundryCell, int[][] cells, int width, int height) {
+		Set<Integer> boundryCells = new HashSet<Integer>();
+		boundryCells.add(boundryCell);
+		return getRegionAroundPoint(p, boundryCells, cells, width, height);
+	}
+	public static Set<Point> getRegionAroundPoint(Point p, Set<Integer> boundryCells, int[][] cells, int width, int height) {
+		return floodfill(boundryCells, cells, new boolean[height][width], width, height, p.x, p.y);
+	}
 	private static Set<Point> floodfill(Set<Integer> boundryCells, int[][] cells, boolean[][] visited, int w, int h, int x, int y)
 	{
 		HashSet<Point> result = new HashSet<Point>();
