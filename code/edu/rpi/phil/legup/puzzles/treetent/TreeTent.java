@@ -630,8 +630,8 @@ public class TreeTent extends PuzzleModule
 		ruleList.add(new RuleFinishWithTents());
 		ruleList.add(new RuleSurroundTentWithGrass()); //surround tent with grass
 		ruleList.add(new RuleEmptyField());
-		ruleList.add(new RuleNewTentLink());
-		ruleList.add(new RuleNewTreeLink());
+		ruleList.add(new RuleTentForTree());
+		ruleList.add(new RuleTreeForTent());
 		ruleList.add(new RuleLastCampingSpot());
 
 		//ruleList.add(new RuleNewLink());
