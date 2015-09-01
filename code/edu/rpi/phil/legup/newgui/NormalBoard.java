@@ -20,15 +20,15 @@ public class NormalBoard extends Board
 	private Point lastMousePoint = null; // the last left click mouse location
 	private Point lastRightMousePoint = null;
 	private int count = 0;
-	
+
 	NormalBoard(LEGUP_Gui gui)
 	{
 		parent = gui;
 
 		BoardState.addCellChangeListener(this);
-		
+
 		setBackground( new Color(0xE0E0E0) );
-		
+
 	}
 
 	public void initSize()
@@ -87,7 +87,7 @@ public class NormalBoard extends Board
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 
 		if(pm == null)return; //Don't respond to clicks on the board if no puzzle is loaded
-		
+
 		if (e.getButton() == MouseEvent.BUTTON3)
 		{
 			int w = state.getWidth();
@@ -122,7 +122,7 @@ public class NormalBoard extends Board
 							parent.showStatus("You are not allowed to change that cell.", true);
 					}
 				}
-			}	
+			}
 		}
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
@@ -172,7 +172,7 @@ public class NormalBoard extends Board
                         }
 					}
 				}
-				
+
 				if (p.x == -1 && p.y >= 0 && p.y < h)
 					pm.labelPressedEvent(state, p.y, BoardState.LABEL_LEFT);
 				else if (p.y == -1 && p.x >= 0 && p.y < w)
@@ -185,7 +185,7 @@ public class NormalBoard extends Board
 			}
 		}
 	}
-	
+
 
 	protected void mouseReleasedAt(Point p, MouseEvent e)
 	{
@@ -197,7 +197,7 @@ public class NormalBoard extends Board
 		{
 			/* old rightclick stuff, adding changes. I'm replacing this with rightclick menu stuff - Avi
 			  BoardState cur = selection.getState();
-			
+
 			if (cur.isModifiable())
 				Legup.getInstance().getSelections().setSelection(new Selection(cur.endTransition(), false));
 			*/
@@ -214,7 +214,7 @@ public class NormalBoard extends Board
 				int h = state.getHeight();
 				PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 				p = mouseCoordsToGridCoords(state, pm, p);
-				if((p.x > 0 && p.y > 0) && (p.x < w && p.y < h))
+				if((p.x >= 0 && p.y >= 0) && (p.x < w && p.y < h))
 				{
 					pm.mouseDraggedEvent(state,lastMousePoint,p);
 				}
