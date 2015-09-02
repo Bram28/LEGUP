@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
 public class Config
 {
 	// TODO: Make this data structure more robust, rather than 
-	//       depending on type erasure and casting
+	//	   depending on type erasure and casting
 	private Hashtable<String, Hashtable<String, Object>> puzzles;
 
 	/**
@@ -57,7 +57,7 @@ public class Config
 	 * Gets a Vector of Board names (Strings) for a specific puzzle
 	 * 
 	 * @param puzzleName
-	 *            Puzzle name to look for
+	 *			Puzzle name to look for
 	 * @return Vector of Board names which are Strings
 	 */
 	@SuppressWarnings("unchecked")
@@ -91,19 +91,21 @@ public class Config
 	 * Gets a puzzle class for a Puzzle name
 	 * 
 	 * @param puzzleName
-	 *            Puzzle name to get a Class Name of
+	 *			Puzzle name to get a Class Name of
 	 * @return Class Name for the Puzzle Name
 	 */
 	public String getPuzzleClassForName(String puzzleName)
 	{
-		return (String) puzzles.get(puzzleName).get("class");
+		Hashtable<String, Object> tmp = puzzles.get(puzzleName);
+		if(tmp == null) { return null; }
+		return (String) tmp.get("class");
 	}
 
 	/**
 	 * Loads the Config object from the config XML file
 	 * 
 	 * @param configFile
-	 *            Location of the config XML file
+	 *			Location of the config XML file
 	 */
 	private void loadConfig(String configFile)
 	{

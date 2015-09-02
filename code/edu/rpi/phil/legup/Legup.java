@@ -130,13 +130,13 @@ public class Legup
 
 	public void loadBoardFile(String filename)
 	{
+		BoardState b = null;
 		System.out.println("Loading board: " + filename);
 
 		//Try to load the file
 		try
 		{
-			initialBoardState = SaveableBoardState.loadState(filename);
-			setCurrentState(initialBoardState);
+			b = SaveableBoardState.loadState(filename);
 		}
 		catch (Exception e)
 		{
@@ -145,16 +145,18 @@ public class Legup
 			return;
 		}
 
-		String puzzle = initialBoardState.getPuzzleName();
-		System.out.println("Loading puzzle module: " + puzzle);
-		
-		if(loadPuzzleModule(puzzle))
+		if(b != null)
 		{
-			errorMessage("Error encountered loading PuzzleModule.");
-		}
+			String puzzle = b.getPuzzleName();
+			System.out.println("Loading puzzle module: " + puzzle);
 
-		gui.reloadGui();
-		getGui().getTree().treePanel.reset();
+			if(loadPuzzleModule(puzzle)) {
+				this.initialBoardState = b;
+				setCurrentState(b);
+				gui.reloadGui();
+				getGui().getTree().treePanel.reset();
+			}
+		}
 	}
 
 	public void loadAssignmentFile(String filename)
@@ -183,12 +185,10 @@ public class Legup
 		String puzzle = initialBoardState.getPuzzleName();
 		if(puzzle == null)return;
 		System.out.println("Loading puzzle module: " + puzzle);
-		if(loadPuzzleModule(puzzle))
-		{
-			errorMessage("Error encountered loading PuzzleModule.");
+		if(loadPuzzleModule(puzzle)) {
+			gui.reloadGui();
+			Tree.colorTransitions();
 		}
-		gui.reloadGui();
-		Tree.colorTransitions();
 	}
 
 	/*
@@ -211,9 +211,8 @@ public class Legup
 	}
 
 	/**
-	 * @param moduleNameName
-	 * @param error
-	 * @return
+	 * @param moduleName
+	 * @return a boolean indicating success (true means success)
 	 */
 	public boolean loadPuzzleModule(String moduleName)
 	{
@@ -221,14 +220,19 @@ public class Legup
 		// Load the puzzle
 		try
 		{
-			puzzleModule = (PuzzleModule) (Class.forName(config
-					.getPuzzleClassForName(moduleName)).newInstance());
+			String className = config.getPuzzleClassForName(moduleName);
+			if(className == null)
+			{
+				errorMessage(String.format("Unsupported puzzle type: %s", moduleName));
+				return false;
+			}
+			puzzleModule = (PuzzleModule) (Class.forName(className).newInstance());
 			puzzleModule.name = moduleName;
 		}
 		catch(Exception e)
 		{
 			errorMessage("PuzzleModule load error: " + e.toString());
-			return true;
+			return false;
 		}
 		Tree tree = getGui().getTree();
 		tree.modifiedSinceSave = false;
@@ -238,7 +242,7 @@ public class Legup
 		tree.tempSuppressUndoPushing = false;
 		//tree.pushUndo();
 		tree.origInitState = SaveableProof.stateToBytes(getInitialBoardState());
-		return false;
+		return true;
 	}
 
 	/**
