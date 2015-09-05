@@ -62,11 +62,11 @@ public class RuleBlackBetweenRegions extends PuzzleRule
 
 					int numAdjacentWhite = 0;
 					for (int delta = -1; delta < 2; delta += 2) {
-						if ( (x+delta > 0 && x+delta < width)
+						if ( (x+delta >= 0 && x+delta < width)
 								 && destBoardState.getCellContents(x+delta, y) > Nurikabe.CELL_BLACK)
 							numAdjacentWhite++;
 
-						if ( (y+delta > 0 && y+delta < height)
+						if ( (y+delta >= 0 && y+delta < height)
 									&& destBoardState.getCellContents(x, y+delta) > Nurikabe.CELL_BLACK)
 							numAdjacentWhite++;
 					}
