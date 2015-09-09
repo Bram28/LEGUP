@@ -76,7 +76,7 @@ public class Legup
 		return getClass().getResource('/'+file);
 	}
 
-	private Config config = new Config("config.xml");
+	private Config config = new Config(Legup.class.getResourceAsStream("/config.xml"));
 
 	/**
 	 * Returns the <code>Config</code> object so that the calling code can have

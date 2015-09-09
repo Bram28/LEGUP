@@ -6,6 +6,7 @@ package edu.rpi.phil.legup;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -46,11 +47,10 @@ public class Config
 	 * 
 	 * @param configFile Location of configuration file to open for reading.
 	 */
-	public Config(String configFile)
+	public Config(InputStream configFile)
 	{
 		puzzles = new Hashtable<String, Hashtable<String, Object>>();
 		loadConfig(configFile);
-		
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Config
 	 * @param configFile
 	 *			Location of the config XML file
 	 */
-	private void loadConfig(String configFile)
+	private void loadConfig(InputStream configFile)
 	{
 		// System.out.println("Loading config file: "+configFile);
 
@@ -122,21 +122,21 @@ public class Config
 			DocumentBuilder builder = factory.newDocumentBuilder();
 
 			// obtain the document object from the XML document
-			Document document = builder.parse(new File(configFile));
+			Document document = builder.parse(configFile);
 
 			// get the root node
 			configNode = document.getDocumentElement();
 
 			if (configNode.getNodeName() != "legupconfig")
 			{
-				System.out.println("File (" + configFile + ") is not formatted correctly!");
+				System.out.println("config is not formatted correctly!");
 				System.out.println("ERROR: No legupconfig entry");
 				return;
 			}
 
 			if (configNode.getElementsByTagName("puzzles").getLength() != 1)
 			{
-				System.out.println("File (" + configFile + ") is not formatted correctly!");
+				System.out.println("config is not formatted correctly!");
 				System.out.println("ERROR: No puzzles entry");
 				return;
 			}
@@ -153,8 +153,7 @@ public class Config
 				if (((Element) (puzzlesList.item(i))).getElementsByTagName(
 						"name").getLength() != 1)
 				{
-					System.out.println("File (" + configFile
-							+ ") is not formatted correctly!");
+					System.out.println("config is not formatted correctly!");
 					System.out.println("ERROR: Missing name entry");
 					return;
 				}
@@ -165,8 +164,7 @@ public class Config
 				if (((Element) (puzzlesList.item(i))).getElementsByTagName(
 						"class").getLength() != 1)
 				{
-					System.out.println("File (" + configFile
-							+ ") is not formatted correctly!");
+					System.out.println("config is not formatted correctly!");
 					System.out.println("ERROR: Missing class entry");
 					return;
 				}

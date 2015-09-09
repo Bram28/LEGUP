@@ -33,6 +33,7 @@
 			<manifest>
 				<attribute name="Main-Class" value="edu.rpi.phil.legup.Legup"/>
 			</manifest>
+			<fileset dir="run/" />
 		</jar>
 	</target>
 	<!-- -->
