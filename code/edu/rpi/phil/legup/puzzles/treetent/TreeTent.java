@@ -498,7 +498,8 @@ public class TreeTent extends PuzzleModule
 				g.setColor(Color.green);
 				g.setStroke(highlightStroke);
 
-				g.drawRect((int)(x1-halfX+2),(int)(y1-halfY+2),(int)(2*width_mult*halfX-4),(int)(2*height_mult*halfY-4));
+				g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
+				//g.drawRect((int)(x1-halfX+2),(int)(y1-halfY+2),(int)(2*width_mult*halfX-4),(int)(2*height_mult*halfY-4));
 
 				g.setColor(Color.red);
 				g.setStroke(med);
