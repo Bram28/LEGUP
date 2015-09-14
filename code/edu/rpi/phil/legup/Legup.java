@@ -4,6 +4,13 @@
 
 package edu.rpi.phil.legup;
 
+import java.awt.Image;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
@@ -17,8 +24,6 @@ import edu.rpi.phil.legup.newgui.TreeSelectionListener;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 import edu.rpi.phil.legup.newgui.TransitionChangeListener;
 import edu.rpi.phil.legup.saveable.SaveableProof;
-
-import java.awt.Image;
 
 
 //TODO system l&f
@@ -72,11 +77,19 @@ public class Legup
 		return this.gui;
 	}
 
-	public java.net.URL getResource(String file){
-		return getClass().getResource('/'+file);
+	public static InputStream getResource(String name)
+	{
+		InputStream res = null;
+		res = Legup.class.getResourceAsStream('/' + name);
+		if(res == null)
+		{
+			try { res = new FileInputStream(new File(name)); }
+			catch(IOException e) { throw new RuntimeException(e); }
+		}
+		return res;
 	}
 
-	private Config config = new Config(Legup.class.getResourceAsStream("/config.xml"));
+	private Config config = new Config(getResource("config.xml"));
 
 	/**
 	 * Returns the <code>Config</code> object so that the calling code can have

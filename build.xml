@@ -1,45 +1,61 @@
 <project name="LEGUP" default="compile">
 	<description>ANT file to compile and run LEGUP code</description>
+	<path id="LEGUP.classpath.building">
+		<fileset dir="lib/" />
+	</path>
+	<path id="LEGUP.classpath.running">
+		<pathelement path="${LEGUP.classpath.building}" />
+		<fileset dir="run/edu/" />
+	</path>
 
 	<target name="compile" description="Generates executable java code from source">
-		<javac debug="true" debuglevel="lines,vars,source" includeantruntime="false" srcdir="code" destdir="run">
+		<javac
+				debug="true"
+				debuglevel="lines,vars,source"
+				includeantruntime="false"
+				srcdir="code"
+				destdir="run"
+				classpathref="LEGUP.classpath.building">
 			<compilerarg value="-Xlint"/>
 		</javac>
 	</target>
 
-	<target name="legup" description="Runs the LEGUP main program">
-		<java classname="edu.rpi.phil.legup.Legup" fork="true" dir="run"/>
+	<target name="legup" depends="compile" description="Compiles and runs the LEGUP main program">
+		<!--<java classname="edu.rpi.phil.legup.Legup"
+			fork="true" dir="run" classpathref="LEGUP.classpath.running" />-->
+		<java classname="edu.rpi.phil.legup.Legup"
+			fork="true" dir="run" />
 	</target>
 
-	<target name="editor" description="Runs the LEGUP puzzle editor">
-		<java classname="edu.rpi.phil.legup.editor.PuzzleEditor" fork="true" dir="run"/>
+	<target name="editor" depends="compile" description="Compiles and runs the LEGUP puzzle editor">
+		<!--<java classname="edu.rpi.phil.legup.editor.PuzzleEditor"
+			fork="true" dir="run" classpathref="LEGUP.classpath.running" />-->
+		<java classname="edu.rpi.phil.legup.editor.PuzzleEditor"
+			fork="true" dir="run" />
 	</target>
-
-	<target name="test-legup" description="Compiles and runs the LEGUP main program">
-		<javac debug="true" debuglevel="lines,vars,source" includeantruntime="false" srcdir="code" destdir="run"/>
-		<java classname="edu.rpi.phil.legup.Legup" fork="true" dir="run"/>
-	</target>
-
-	<target name="test-editor" depends="compile,editor" description="Compiles and runs the LEGUP puzzle editor"/>
 
 	<target name="run" depends="legup" description="Synonym for 'legup'"/>
 
-	<target name="test" depends="test-legup" description="Synonym for 'test-legup'"/>
-
 	<!-- JAR has unresolved dependency issues -->
 	<target name="jar" depends="compile" description="Creates a distributable JAR file for the LEGUP program">
-		<delete file="run/LEGUP.jar"/>
-		<jar destfile="run/LEGUP.jar" basedir="run" includes="**/*">
+		<delete file="run/main/LEGUP-internal.jar"/>
+		<jar destfile="run/main/LEGUP-internal.jar" basedir="run" includes="edu/">
 			<manifest>
 				<attribute name="Main-Class" value="edu.rpi.phil.legup.Legup"/>
 			</manifest>
 			<fileset dir="run/" />
 		</jar>
+		<copy file="run/one-jar-boot-0.95.jar" tofile="run/LEGUP.jar" overwrite="true" />
+		<jar destfile="run/LEGUP.jar" update="true">
+			<fileset dir="" includes="lib/*.jar" />
+			<fileset dir="run/" includes="main/LEGUP-internal.jar" />
+			<fileset dir="run/" includes="images/" />
+		</jar>
 	</target>
-	<!-- -->
 
 	<target name="clean" description="Removes files generated from compilation">
 		<delete dir="run/edu"/>
+		<delete file="run/main/LEGUP-internal.jar"/>
 		<delete file="run/LEGUP.jar"/>
 		<delete dir="docs"/>
 	</target>
@@ -55,6 +71,5 @@
 			doctitle="LEGUP"
 			bottom="www.rpi.edu"/>
 	</target>
-
 </project>
 

@@ -14,6 +14,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,6 +34,8 @@ import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.newgui.TreeSelectionListener;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * Generic Puzzle class. All puzzles should extend this class and implement the
@@ -619,9 +623,16 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 		drawCell( g, x, y, state.getCellContents(x, y) );
 	}
 
-	public void drawCell( Graphics2D g, int x, int y, int state ){
-		String imagePath = getImageLocation(state);
-		Image i = new ImageIcon(imagePath).getImage();
+	public void drawCell(Graphics2D g, int x, int y, int state)
+	{
+		/*
+		byte[] image = null;
+		System.out.println(getImageLocation(state));
+		InputStream imageStream = Legup.getResource(getImageLocation(state));
+		try { image = IOUtils.toByteArray(imageStream); }
+		catch(IOException e) { throw new RuntimeException(e); }
+		*/
+		Image i = new ImageIcon(getImageLocation(state)).getImage();
 		drawImage(g,x,y,i);
 	}
 
