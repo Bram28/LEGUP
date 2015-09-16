@@ -19,7 +19,7 @@ public class RuleSegmentType extends PuzzleRule
 
 	public String getImageName()
 	{
-		return "images/defaultRule.png";
+		return "images/battleship/SegmentChoice.png";
 	}
 
 	protected String checkRuleRaw(BoardState state)

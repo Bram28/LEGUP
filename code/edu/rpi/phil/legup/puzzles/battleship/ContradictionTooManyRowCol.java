@@ -16,7 +16,7 @@ public class ContradictionTooManyRowCol extends Contradiction
 		
 	public String getImageName()
 	{
-		return "images/nurikabe/contradictions/BlackArea.png";
+		return "images/battleship/contradictions/too_many_segments.png";
 	}
 	
 	 /**
