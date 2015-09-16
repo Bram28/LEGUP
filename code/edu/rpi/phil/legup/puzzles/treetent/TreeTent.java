@@ -515,7 +515,7 @@ public class TreeTent extends PuzzleModule
 			case 1: return "images/treetent/tree.png";
 			case 2: return "images/treetent/tent.png";
 			case 3: return "images/treetent/grass.png";
-			default: return "images/blank.gif";
+			default: return "images/unknown.gif";
 		}
 	}
 
@@ -573,7 +573,7 @@ public class TreeTent extends PuzzleModule
 	{
 		BoardImage[] s =
 		{
-				new BoardImage("images/blank.gif",0),
+				new BoardImage("images/unknown.gif",0),
 				new BoardImage("images/treetent/tree.gif",1),
 				new BoardImage("images/treetent/tent.gif",2),
 				new BoardImage("images/treetent/grass.gif",3)

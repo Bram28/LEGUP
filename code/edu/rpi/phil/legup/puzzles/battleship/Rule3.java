@@ -24,7 +24,7 @@ public class Rule3 extends PuzzleRule{
 
 	public String getImageName()
 	{
-		return "images/unknown.gif";
+		return "images/questionmark.gif";
 	}
 
 	public boolean completedShip(BoardState boardState, int row, int col){

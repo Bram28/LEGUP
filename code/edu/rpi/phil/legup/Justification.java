@@ -25,7 +25,7 @@ public abstract class Justification implements java.io.Serializable
 		loadImage();
 	}
 	
-	public abstract String getImageName();// {return "images/unknown.gif";}
+	public abstract String getImageName();
 	
 	public void loadImage()
 	{

@@ -90,11 +90,11 @@ public class LightUp extends PuzzleModule
 
 	public String getImageLocation(int cellValue){
 		if (cellValue == CELL_UNKNOWN){
-			return "images/lightup/unknown.gif";
+			return "images/unknown.gif";
 		} else if (cellValue == CELL_LIGHT){
 			return "images/lightup/light.png";
 		} else if (cellValue == CELL_EMPTY){
-			return "images/lightup/blank.gif";
+			return "images/blank.gif";
 		} else if (cellValue >= 10 && cellValue < 15){
 			return "images/lightup/" + (cellValue-10)+".gif";
 		} else if(cellValue == 15){

@@ -211,7 +211,7 @@ public class BattleShip extends PuzzleModule
 		{
 		    public String getImageName()
 		    {
-		    	return "images/unknown.gif";
+		    	return "images/questionmark.gif";
 		    }
 		    static final long serialVersionUID = 532394123951L;
 			public String checkContradictionRaw(BoardState state)
@@ -229,7 +229,7 @@ public class BattleShip extends PuzzleModule
 		{
 		    public String getImageName()
 		    {
-		    	return "images/unknown.gif";
+		    	return "images/questionmark.gif";
 		    }
 		    static final long serialVersionUID = 594123951L;
 			public String checkCaseRuleRaw(BoardState state)

@@ -91,7 +91,7 @@ public class Rule2 extends PuzzleRule{
     
     public String getImageName()
 	{
-		return "images/unknown.gif";
+		return "images/questionmark.gif";
 	}
 
 	protected String checkRuleRaw(BoardState state){

@@ -566,7 +566,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 		if (cellValue == 0)
 			return "images/blank.gif";
 		else
-			return "images/unknown.gif";
+			return "images/questionmark.gif";
 	}
 
 	protected Font font = new Font( "Arial", Font.BOLD, 20 );
