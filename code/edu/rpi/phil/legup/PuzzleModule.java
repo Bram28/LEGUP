@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -625,14 +626,11 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 
 	public void drawCell(Graphics2D g, int x, int y, int state)
 	{
-		/*
-		byte[] image = null;
-		System.out.println(getImageLocation(state));
-		InputStream imageStream = Legup.getResource(getImageLocation(state));
-		try { image = IOUtils.toByteArray(imageStream); }
-		catch(IOException e) { throw new RuntimeException(e); }
-		*/
-		Image i = new ImageIcon(getImageLocation(state)).getImage();
+		// TODO: caching (don't reload image every draw call)
+		String location = getImageLocation(state);
+		URL url = ClassLoader.getSystemResource(location);
+		ImageIcon ii = new ImageIcon(url);
+		Image i = ii.getImage();
 		drawImage(g,x,y,i);
 	}
 
