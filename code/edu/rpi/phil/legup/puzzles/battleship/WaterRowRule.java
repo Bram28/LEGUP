@@ -10,8 +10,6 @@ import javax.swing.ImageIcon;
 public class WaterRowRule extends PuzzleRule
 {
 	static final long serialVersionUID = 853810334L;
-	
-    private static final BattleShip battleship = new BattleShip();
 
 	public WaterRowRule()
 	{
@@ -36,7 +34,7 @@ public class WaterRowRule extends PuzzleRule
 		{
 			if (parent.getCellContents(p.x, p.y) != BattleShip.CELL_UNKNOWN)
 				return "You cannot change cells to apply this rule!";
-			if (battleship.isConcreteShipPart(state.getCellContents(p.x, p.y)))
+			if (BattleShip.isShip(state.getCellContents(p.x, p.y)))
 				return "You cannot choose specific ship parts when applying this rule";
 		}
 
@@ -57,7 +55,7 @@ public class WaterRowRule extends PuzzleRule
 
 	protected boolean doDefaultApplicationRaw(BoardState state)
 	{
-		boolean updated = false;
+		/*boolean updated = false;
 		BoardState noUpdate = state.getSingleParentState().copy();
 
 		for (int i = 0; i < state.getWidth(); i++) battleship.labelPressedEvent(state, i, BoardState.LABEL_BOTTOM);
@@ -68,7 +66,8 @@ public class WaterRowRule extends PuzzleRule
 
     	Legup.getInstance().getPuzzleModule().updateState(state);
 
-		return updated;
+		return updated;*/
+		return true;
 	}
 
 }

@@ -11,22 +11,15 @@ package edu.rpi.phil.legup.puzzles.battleship;
 import edu.rpi.phil.legup.*;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
-
-import javax.swing.ImageIcon;
 
 public class BattleShip extends PuzzleModule
 {
-    static final long serialVersionUID = 532393951L;
+	static final long serialVersionUID = 532393951L;
 
 	public static int NUM_SHIPS_SIZE4 = 1;
 	public static int NUM_SHIPS_SIZE3 = 2;
@@ -35,68 +28,43 @@ public class BattleShip extends PuzzleModule
 
 	public static final int CELL_UNKNOWN = 0;
 	public static final int CELL_WATER = 1;
-	public static final int CELL_SHIP = 2;
+	public static final int CELL_SEGMENT = 2;
 	public static final int CELL_LEFT_CAP = 10;
 	public static final int CELL_TOP_CAP = 11;
 	public static final int CELL_BOTTOM_CAP = 12;
 	public static final int CELL_RIGHT_CAP = 13;
-	public static final int CELL_CENTER = 14;
+	public static final int CELL_SUBMARINE = 14;
 	public static final int CELL_MIDDLE = 15;
-	public static final int FIXED_LEFT_CAP = 20;
-	public static final int FIXED_TOP_CAP = 21;
-	public static final int FIXED_BOTTOM_CAP = 22;
-	public static final int FIXED_RIGHT_CAP = 23;
-	public static final int FIXED_CENTER = 24;
-	public static final int FIXED_MIDDLE = 25;
-	public static final int CELL_FIXED_UNKNOWN = 26;
 	
     public Map<String, Integer> getSelectableCells()
     {
         Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
         tmp.put("blank", CELL_UNKNOWN);
         tmp.put("water", CELL_WATER);
-        tmp.put("ship", CELL_SHIP);
+        tmp.put("segment", CELL_SEGMENT);
         tmp.put("left cap", CELL_LEFT_CAP);
         tmp.put("top cap", CELL_TOP_CAP);
         tmp.put("bottom cap", CELL_BOTTOM_CAP);
         tmp.put("right cap", CELL_RIGHT_CAP);
-        tmp.put("center", CELL_CENTER);
+        tmp.put("center", CELL_SUBMARINE);
         tmp.put("middle", CELL_MIDDLE);
         return tmp;
     }
     public Map<String, Integer> getUnselectableCells()
     {
         Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
-        tmp.put("FIXED_LEFT_CAP", FIXED_LEFT_CAP);
-        tmp.put("FIXED_TOP_CAP", FIXED_TOP_CAP);
-        tmp.put("FIXED_BOTTOM_CAP", FIXED_BOTTOM_CAP);
-        tmp.put("FIXED_RIGHT_CAP", FIXED_RIGHT_CAP);
-        tmp.put("FIXED_CENTER", FIXED_CENTER);
-        tmp.put("FIXED_MIDDLE", FIXED_MIDDLE);
-        tmp.put("CELL_FIXED_UNKNOWN", CELL_FIXED_UNKNOWN);
         return tmp;
     }
 
-	public BattleShip()
-	{
-
+    public boolean isRemodifiable(int cellType) {
+		return cellType == CELL_SEGMENT;
 	}
 
-	 public void mousePressedEvent(BoardState state, Point where)
-	 {
-	 	super.mousePressedEvent(state, where);
-		if (!state.isModifiableCell(where.x, where.y) && Math.abs(state.getCellContents(where.x, where.y)) == CELL_FIXED_UNKNOWN)
-	 	{
-			state.setModifiableCell(where.x, where.y, true);
-			state.setCellContents(where.x, where.y, FIXED_LEFT_CAP);
-		}
-	 }
-
-	 public void labelPressedEvent(BoardState state, int index, int side)
-	 {
-	 	ArrayList<Point> points = new ArrayList<Point>();
+	public void labelPressedEvent(BoardState state, int index, int side)
+	{
+		ArrayList<Point> points = new ArrayList<Point>();
 	 	BoardState toModify = state.conditionalAddTransition();
-		if (side == Math.abs(BoardState.LABEL_LEFT) || side == Math.abs(BoardState.LABEL_RIGHT))
+		if (side == BoardState.LABEL_LEFT || side == BoardState.LABEL_RIGHT)
 		{
 			side = BoardState.LABEL_RIGHT;
 			for (int i = 0; i < state.getWidth(); i++) points.add(new Point(i, index));
@@ -111,9 +79,9 @@ public class BattleShip extends PuzzleModule
 
 		for (Point p : points)
 		{
-			int val = Math.abs(state.getCellContents(p.x, p.y));
-			if (isShipPart(val)) numShips++;
-			else numUnknown++;
+			int val = state.getCellContents(p.x, p.y);
+			if (isShip(val)) numShips++;
+			else if (val != CELL_WATER) numUnknown++;
 		}
 
 		if (numShips == toModify.getLabel(side, index)-40)
@@ -123,36 +91,38 @@ public class BattleShip extends PuzzleModule
 		}
 		else if (numShips+numUnknown == toModify.getLabel(side, index)-40)
 		{
-			for (Point p : points) if (Math.abs(toModify.getCellContents(p.x, p.y)) == CELL_UNKNOWN)
-				toModify.setCellContents(p.x, p.y, CELL_SHIP);
+			for (Point p : points) if (toModify.getCellContents(p.x, p.y) == CELL_UNKNOWN)
+				toModify.setCellContents(p.x, p.y, CELL_SEGMENT);
 		}
-	 }
-
-	 public boolean isShipPart(int value)
-	 {
-	 	return (value != CELL_WATER && value != CELL_UNKNOWN);
-	 }
-	 public boolean isConcreteShipPart(int value)
-	 {
-	 	return (isShipPart(value) && value != CELL_SHIP && value != CELL_FIXED_UNKNOWN);
-	 }
+	}
 
 	public String getImageLocation(int cellValue)
 	{
-		if (cellValue <= 15)
-			return "images/battleship/image["+cellValue+"].gif";
-		else if (cellValue >= 20 && cellValue <= 24)
-			return "images/battleship/image["+(cellValue-10)+"].gif";
-		else if (cellValue == 25)
-			return "images/battleship/image[0].gif";
-		else if (cellValue >= 30 && cellValue <= 39)
-			return "images/treetent/" + (char)('a' + (cellValue-30)) + ".gif";
-		else if (cellValue >= 40 && cellValue < 60)
-			return "images/treetent/" + (cellValue - 40) + ".gif";
-		else return "images/battleship/image[0].gif";
+		switch (cellValue)
+		{
+		case CELL_UNKNOWN:
+			return "images/blank.gif";
+		case CELL_WATER:
+			return "images/battleship/Water.png";
+		case CELL_TOP_CAP:
+			return "images/battleship/TopCap.png";
+		case CELL_BOTTOM_CAP:
+			return "images/battleship/BottomCap.png";
+		case CELL_LEFT_CAP:
+			return "images/battleship/LeftCap.png";
+		case CELL_RIGHT_CAP:
+			return "images/battleship/RightCap.png";
+		case CELL_SUBMARINE:
+			return "images/battleship/Submarine.png";
+		case CELL_SEGMENT:
+			return "images/battleship/UnknownSegment.png";
+		case CELL_MIDDLE:
+			return "images/battleship/Middle.png";
+		}
+		return "images/unknown.gif";
 	}
 
-	public BoardImage[] getAllBorderImages()
+	/*public BoardImage[] getAllBorderImages()
 	{
 		BoardImage[] s = new BoardImage[30];
 		int count = 0;
@@ -168,7 +138,7 @@ public class BattleShip extends PuzzleModule
 		}
 
 		return s;
-	}
+	}*/
 
 	public void drawLeftLabel(Graphics2D g, int val, int x, int y){
 		drawText( g, x, y, String.valueOf( (char)( 'A'-30 + val ) ) );
@@ -201,31 +171,29 @@ public class BattleShip extends PuzzleModule
 	public Vector <PuzzleRule> getRules(){
 		Vector<PuzzleRule> ruleList = new Vector<PuzzleRule>();
 		ruleList.add(new WaterRowRule());
+		ruleList.add(new RuleSurroundShip());
+		ruleList.add(new RuleContinueShip());
+		ruleList.add(new RuleSegmentType());
 		return ruleList;
 	}
 
 	public Vector<Contradiction> getContradictions()
 	{
 		Vector<Contradiction> result = new Vector<Contradiction>();
-		result.add(new Contradiction()
-		{
-		    public String getImageName()
-		    {
-		    	return "images/questionmark.gif";
-		    }
-		    static final long serialVersionUID = 532394123951L;
-			public String checkContradictionRaw(BoardState state)
-			{
-				return null;
-			}
-		});
+		result.add(new ContradictionAdjacentShips());
+		result.add(new ContradictionIncompleteShip());
+		result.add(new ContradictionTooManyRowCol());
+		result.add(new ContradictionTooFewRowCol());
 		return result;
 	}
 
 	public Vector<CaseRule> getCaseRules()
 	{
 		Vector<CaseRule> result = new Vector<CaseRule>();
-		result.add(new CaseRule()
+		result.add(new CaseSegmentType());
+		result.add(new CaseShipOrWater());
+		result.add(new CaseShipLocations());
+		/*result.add(new CaseRule()
 		{
 		    public String getImageName()
 		    {
@@ -236,7 +204,7 @@ public class BattleShip extends PuzzleModule
 			{
 				return null;
 			}
-		});
+		});*/
 		return result;
 	}
 
@@ -279,7 +247,225 @@ public class BattleShip extends PuzzleModule
 
 
 */
-	return true;
+		return true;
+	}
+	
+	/**
+	 * 	Determines whether a specific cell value represents a ship segment
+	 * 
+	 * @param cellValue The value of the cell
+	 * @return true if the cell is known to be a ship segment, false otherwise
+	 */
+	public static boolean isShip(int cellValue)
+	{
+		return (cellValue != CELL_UNKNOWN && cellValue != CELL_WATER);
+	}
+	
+	/**
+	 * 	Determines whether a specific cell value represents a ship segment
+	 * 
+	 * @param cellValue The value of the cell
+	 * @return true if the cell is known to be water, false otherwise
+	 */
+	public static boolean isWater(int cellValue)
+	{
+		return (cellValue == CELL_WATER);
+	}
+	
+	/**
+	 * Checks if a ship segment is directly north of a specific tile
+	 */
+	public static boolean checkNorthForSegment(BoardState boardState, int column, int row)
+	{
+		if (row <= 0)
+			return false;
+		if (isShip(boardState.getCellContents(column, row-1)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if water is directly north of a specific tile
+	 */
+	public static boolean checkNorthForWater(BoardState boardState, int column, int row)
+	{
+		if (row <= 0)
+			return true;
+		if (isWater(boardState.getCellContents(column, row-1)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if a ship segment is directly south of a specific tile
+	 */
+	public static boolean checkSouthForSegment(BoardState boardState, int column, int row)
+	{
+		if (row >= boardState.getHeight() - 1)
+			return false;
+		if (isShip(boardState.getCellContents(column, row+1)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if water is directly south of a specific tile
+	 */
+	public static boolean checkSouthForWater(BoardState boardState, int column, int row)
+	{
+		if (row >= boardState.getHeight() - 1)
+			return true;
+		if (isWater(boardState.getCellContents(column, row+1)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if a ship segment is directly east of a specific tile
+	 */
+	public static boolean checkEastForSegment(BoardState boardState, int column, int row)
+	{
+		if (column >= boardState.getWidth() - 1)
+			return false;
+		if (isShip(boardState.getCellContents(column+1, row)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if water is directly east of a specific tile
+	 */
+	public static boolean checkEastForWater(BoardState boardState, int column, int row)
+	{
+		if (column >= boardState.getWidth() - 1)
+			return true;
+		if (isWater(boardState.getCellContents(column+1, row)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if a ship segment is directly west of a specific tile
+	 */
+	public static boolean checkWestForSegment(BoardState boardState, int column, int row)
+	{
+		if (column <= 0)
+			return false;
+		if (isShip(boardState.getCellContents(column-1, row)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if water is directly west of a specific tile
+	 */
+	public static boolean checkWestForWater(BoardState boardState, int column, int row)
+	{
+		if (column <= 0)
+			return true;
+		if (isWater(boardState.getCellContents(column-1, row)))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if there are any segments directly diagonal (ne, nw, se, sw) to a specific tile
+	 * 
+	 * @param boardState The board
+	 * @param column The column of the square to check around
+	 * @param row The row of the square to check around
+	 * @return true if a ship segment exists directly diagonal to the square, false otherwise 
+	 */
+	public static boolean checkDiagonalsForSegments(BoardState boardState, int column, int row)
+	{
+		for (int i = -1; i <= 1; i+=2)
+		{
+			for (int j = -1; j <= 1; j+=2)
+			{
+				int curCol = column + i;
+				int curRow = row + j;
+				if (curCol >= 0 && curCol < boardState.getWidth() &&
+					curRow >= 0 && curRow < boardState.getHeight())
+				{
+					int cellValue = boardState.getCellContents(curCol, curRow);
+					if (isShip(cellValue))
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if there are any segments directly adjacent to a specific tile (n, s, e or w)
+	 * 
+	 * @param boardState The board
+	 * @param column The column of the square to check around
+	 * @param row The row of the square to check around
+	 * @return true if a ship segment exists directly adjacent to the square, false otherwise 
+	 */
+	public static boolean checkAdjacentForSegments(BoardState boardState, int column, int row)
+	{
+		return (checkNorthForSegment(boardState, column, row) ||
+				checkSouthForSegment(boardState, column, row) ||
+				checkEastForSegment(boardState, column, row)  ||
+				checkWestForSegment(boardState, column, row));
+	}
+	
+	/**
+	 * Counts the number of ship segments in a row
+	 * 
+	 * @param boardState The board
+	 * @param row The row of the board to count
+	 * @return The number of ships in that row 
+	 */
+	public static int countShipsInRow(BoardState boardState, int row)
+	{
+		int ships = 0;
+		for (int i = 0; i < boardState.getHeight(); i++)
+			if (isShip(boardState.getCellContents(i, row)))
+				ships++;
+		return ships;
+	}
+	
+	/**
+	 * Counts the number of ship segments in a column
+	 * 
+	 * @param boardState The board
+	 * @param column The column of the board to count
+	 * @return The number of ships in that column 
+	 */
+	public static int countShipsInColumn(BoardState boardState, int column)
+	{
+		int ships = 0;
+		for (int i = 0; i < boardState.getWidth(); i++)
+			if (isShip(boardState.getCellContents(column, i)))
+				ships++;
+		return ships;
+	}
+
+	/**
+	 * Returns the number of segments in a row in the completed board
+	 * 
+	 * @param boardState The board
+	 * @param row The row of the board
+	 * @return The total number of segments in that row 
+	 */
+	public static int totalSegmentsInRow(BoardState boardState, int row)
+	{
+		return boardState.getLabel(BoardState.LABEL_RIGHT, row);
+	}
+	
+	/**
+	 * Returns the number of segments in a column in the completed board
+	 * 
+	 * @param boardState The board
+	 * @param column The column of the board
+	 * @return The total number of segments in that column 
+	 */
+	public static int totalSegmentsInColumn(BoardState boardState, int column)
+	{
+		return boardState.getLabel(BoardState.LABEL_BOTTOM, column);
 	}
 
 	// As recommended, these are scratched
