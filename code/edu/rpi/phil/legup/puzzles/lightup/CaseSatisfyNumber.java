@@ -3,6 +3,8 @@ package edu.rpi.phil.legup.puzzles.lightup;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -63,16 +65,16 @@ public class CaseSatisfyNumber extends CaseRule
 		{
 			BoardState tmp = cur.copy();
 			int counter = 0;
-			Vector<Point> pointsChanged = new Vector<Point>();
+			Map<Point, Integer> pointsChanged = new HashMap<Point, Integer>();
 			for(int c3=0;c3<4;c3++)
 			{
 				int x = pointSelected.x + ((c3<2) ? ((c3%2 == 0)?-1:1) : 0);
 				int y = pointSelected.y + ((c3<2) ? 0 : ((c3%2 == 0)?-1:1));
 				if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
 				if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)continue;
-				tmp.setCellContents(x,y,pm.getStateNumber(pm.getStateName(whatgoesintheblanks[counter])));
-				if(pm.getStateNumber(pm.getStateName(whatgoesintheblanks[counter])) == LightUp.CELL_LIGHT)
-					pointsChanged.add(new Point(x, y));
+				int contents = pm.getStateNumber(pm.getStateName(whatgoesintheblanks[counter]));
+				tmp.setCellContents(x, y, contents);
+				pointsChanged.put(new Point(x, y), contents);
 				++counter;
 			}
 
@@ -80,8 +82,8 @@ public class CaseSatisfyNumber extends CaseRule
 
 			tmp = cur.addTransitionFrom();
 			tmp.setCaseSplitJustification(this);
-			for (Point p : pointsChanged) {
-				tmp.setCellContents(p.x, p.y, LightUp.CELL_LIGHT);
+			for (Map.Entry<Point, Integer> m : pointsChanged.entrySet()) {
+				tmp.setCellContents(m.getKey().x, m.getKey().y, m.getValue());
 			}
 			tmp.endTransition();
 		}
@@ -97,7 +99,7 @@ public class CaseSatisfyNumber extends CaseRule
 
 	public String checkCaseRuleRaw(BoardState state)
 	{
-		/* Uncomment to make a case rule application with a single case an error */ 
+		/* Uncomment to make a case rule application with a single case an error */
 		// BoardState parent = state.getSingleParentState();
 		// if (parent != null && parent.getChildren().size() < 2){
 		// 	return "This case rule can only be applied on a split transition";
