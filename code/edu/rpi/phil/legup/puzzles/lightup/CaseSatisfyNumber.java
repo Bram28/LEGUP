@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.CellPredicate;
@@ -20,24 +21,28 @@ import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
 public class CaseSatisfyNumber extends CaseRule
 {
 	static final long serialVersionUID = 5238481899970588295L;
-    public CaseRuleSelectionHelper getSelectionHelper()
-    {
-        return new CaseRuleSelectionHelper(CellPredicate.typeWhitelist(getTileTypes()));
+
+	// CaseRuleSelectionHelper Methods to highlight cells with a number in them
+	public CaseRuleSelectionHelper getSelectionHelper()
+  {
+  	return new CaseRuleSelectionHelper(CellPredicate.typeWhitelist(getTileTypes()));
 	}
-    private Set<Integer> tileTypes = null;
-    public Set<Integer> getTileTypes()
+  private Set<Integer> tileTypes = null;
+  public Set<Integer> getTileTypes()
+  {
+    if(tileTypes == null)
     {
-        if(tileTypes == null)
-        {
-            tileTypes = new LinkedHashSet<Integer>();
-            tileTypes.add(LightUp.CELL_BLOCK0);
-            tileTypes.add(LightUp.CELL_BLOCK1);
-            tileTypes.add(LightUp.CELL_BLOCK2);
-            tileTypes.add(LightUp.CELL_BLOCK3);
-            tileTypes.add(LightUp.CELL_BLOCK4);
-        }
-        return tileTypes;
+      tileTypes = new LinkedHashSet<Integer>();
+      tileTypes.add(LightUp.CELL_BLOCK0);
+      tileTypes.add(LightUp.CELL_BLOCK1);
+      tileTypes.add(LightUp.CELL_BLOCK2);
+      tileTypes.add(LightUp.CELL_BLOCK3);
+      tileTypes.add(LightUp.CELL_BLOCK4);
     }
+    return tileTypes;
+  }
+
+	// AutoGenerateCases Method will generate every possible case that does not directly lead to a contradiction
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
@@ -50,12 +55,15 @@ public class CaseSatisfyNumber extends CaseRule
 		{
 			whatgoesintheblanks[c1] = 0;
 		}
-		//System.out.println(num_empties);
+
+		// Used to remove any cases which have a bulb in light
+		Contradiction contra = new ContradictionBulbsInPath();
+
 		while(Permutations.nextPermutation(whatgoesintheblanks,num_empties))
 		{
-			BoardState tmp = cur.addTransitionFrom();
-			tmp.setCaseSplitJustification(this);
+			BoardState tmp = cur.copy();
 			int counter = 0;
+			Vector<Point> pointsChanged = new Vector<Point>();
 			for(int c3=0;c3<4;c3++)
 			{
 				int x = pointSelected.x + ((c3<2) ? ((c3%2 == 0)?-1:1) : 0);
@@ -63,77 +71,40 @@ public class CaseSatisfyNumber extends CaseRule
 				if(x < 0 || x >= cur.getWidth() || y < 0 || y >= cur.getHeight())continue;
 				if(cur.getCellContents(x,y) != LightUp.CELL_UNKNOWN)continue;
 				tmp.setCellContents(x,y,pm.getStateNumber(pm.getStateName(whatgoesintheblanks[counter])));
+				if(pm.getStateNumber(pm.getStateName(whatgoesintheblanks[counter])) == LightUp.CELL_LIGHT)
+					pointsChanged.add(new Point(x, y));
 				++counter;
+			}
+
+			if (contra.checkContradictionRaw(tmp) == null) continue; // Do not add case if light is in already lit area
+
+			tmp = cur.addTransitionFrom();
+			tmp.setCaseSplitJustification(this);
+			for (Point p : pointsChanged) {
+				tmp.setCellContents(p.x, p.y, LightUp.CELL_LIGHT);
 			}
 			tmp.endTransition();
 		}
 		return Legup.getCurrentState();
 	}
-	
+
 	public String getImageName() {return "images/lightup/cases/SatisfyNumber.png";}
 	public CaseSatisfyNumber()
 	{
 		setName("Satisfy Number");
 		description = "The different ways a blocks number can be satisfied.";
 	}
-	
+
 	public String checkCaseRuleRaw(BoardState state)
 	{
-		String rv = null;
-		BoardState parent = state.getSingleParentState();
-		{
-			int num_children = parent.getChildren().size();
-			Vector<Point> points = findCommonTile(parent,state,getTileTypes());
-			Point p = (points.size()==1)?points.get(0):null;
-			int block_value = (p != null)?getBlockValue(parent.getCellContents(p.x,p.y)):-2;
-			int num_adj_blanks = CaseLinkTree.calcAdjacentTiles(parent,p,LightUp.CELL_UNKNOWN);
-			int num_adj_lights = CaseLinkTree.calcAdjacentTiles(parent,p,LightUp.CELL_LIGHT);
-			int num_intended_branches = Permutations.combination(num_adj_blanks,block_value-num_adj_lights);
-			/*if(num_children == 1)
-			{
-				rv = "Use a basic rule instead of a case rule when\nonly one case can be created.";
-			}
-			else */if(p == null)
-			{
-				rv = "All the cells modified should be adjacent to a single numbered block.";
-			}
-			else if(num_intended_branches != num_children)
-			{
-				rv = "There are not the same amount of branches as required to have\nall combinations of lights adjacent to a single block.";
-			}
-			if(rv != null)return rv; //ensures that the conditions checked above are not overwritten
-			Vector<Point> lights = new Vector<Point>(); //location of light in each branch
-			for(BoardState b : parent.getChildren())
-			{
-				if(CaseLinkTree.calcAdjacentTiles(b,p,LightUp.CELL_UNKNOWN) != 0)
-				{
-					rv = "All tiles adjacent to the block must be filled, which\nis not the case for branch "+(parent.getChildren().indexOf(b)+1);
-					break;
-				}
-				ArrayList<Point> dif = BoardState.getDifferenceLocations(b,parent);
-				if(dif.size() != num_adj_blanks)
-				{
-					rv = "Only cells adjacent to the block should be modified,\nwhich is not the case for branch "+(parent.getChildren().indexOf(b)+1);
-					break;
-				}
-				if(CaseLinkTree.calcAdjacentTiles(b,p,LightUp.CELL_LIGHT) != block_value)
-				{
-					rv = "Branch "+(parent.getChildren().indexOf(b)+1)+" does not have the correct amount of lights.";
-					break;
-				}
-				for(BoardState b2 : parent.getChildren()) //check sibling equivalence
-				{
-					if(b==b2)continue;
-					if(BoardState.getDifferenceLocations(b,b2).size()==0)
-					{
-						rv = "Branch "+(parent.getChildren().indexOf(b)+1)+" is the same as branch "+(parent.getChildren().indexOf(b2)+1)+".";
-					}
-				}
-			}
-		}
-		return rv;
+		/* Uncomment to make a case rule application with a single case an error */ 
+		// BoardState parent = state.getSingleParentState();
+		// if (parent != null && parent.getChildren().size() < 2){
+		// 	return "This case rule can only be applied on a split transition";
+		// }
+		return null;
 	}
-	
+
 	//returns the tiles that are adjacent to all changed tiles between parent and state
 	//if types is null, all tiles are returned, if not, only tiles whitelisted in types are counted
 	static Vector<Point> findCommonTile(BoardState parent,BoardState state,Set<Integer> types)
@@ -201,7 +172,7 @@ public class CaseSatisfyNumber extends CaseRule
 		}
 		return ret;
 	}
-	
+
 	static Point findCommonBlock(BoardState parent,BoardState state)
 	{
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(parent,state);
@@ -210,7 +181,7 @@ public class CaseSatisfyNumber extends CaseRule
 		else if(dif.size() == 4)return findBlock(dif.get(0),dif.get(1),dif.get(2),dif.get(3));
 		else return null;
 	}
-	
+
 	static Point findBlock(Point cell1, Point cell2, BoardState state)
 	{
 		if(cell1.x == cell2.x)
@@ -352,7 +323,7 @@ public class CaseSatisfyNumber extends CaseRule
 			else
 				return null;
 		}
-		
+
 		else if(cell1.y == cell2.y)
 		{
 			if(cell1.x + 2 == cell2.x)
@@ -434,24 +405,24 @@ public class CaseSatisfyNumber extends CaseRule
 			else
 				return null;
 		}
-		
+
 		else
 			return null;
 	}
-	
+
 	static Point findBlock(Point cell1, Point cell2, Point cell3, Point cell4)
 	{
 		int minx = Math.min(Math.min(cell1.x, cell2.x),Math.min(cell3.x, cell4.x));
 		int maxx = Math.max(Math.max(cell1.x, cell2.x),Math.max(cell3.x, cell4.x));
-		
+
 		int miny = Math.min(Math.min(cell1.y, cell2.y),Math.min(cell3.x, cell4.y));
 		int maxy = Math.max(Math.max(cell1.y, cell2.y),Math.max(cell3.x, cell4.y));
-		
+
 		int countminx = 0;
 		int countmaxx = 0;
 		int countminy = 0;
 		int countmaxy = 0;
-		
+
 		if(minx + 2 == maxx)
 		{
 			if(miny + 2 == maxy)
@@ -464,7 +435,7 @@ public class CaseSatisfyNumber extends CaseRule
 					++countminx;
 				if(cell1.y == maxy)
 					++countmaxx;
-				
+
 				if(cell2.x == minx)
 					++countminx;
 				if(cell2.x == maxx)
@@ -473,7 +444,7 @@ public class CaseSatisfyNumber extends CaseRule
 					++countminx;
 				if(cell2.y == maxy)
 					++countmaxx;
-				
+
 				if(cell3.x == minx)
 					++countminx;
 				if(cell3.x == maxx)
@@ -482,7 +453,7 @@ public class CaseSatisfyNumber extends CaseRule
 					++countminx;
 				if(cell3.y == maxy)
 					++countmaxx;
-				
+
 				if(cell4.x == minx)
 					++countminx;
 				if(cell4.x == maxx)
@@ -491,7 +462,7 @@ public class CaseSatisfyNumber extends CaseRule
 					++countminx;
 				if(cell4.y == maxy)
 					++countmaxx;
-				
+
 				if(countminx == 1 && countmaxx == 1 && countminy == 1 && countmaxy == 1)
 				{
 					return new Point(minx + 1, miny + 1);
@@ -505,7 +476,7 @@ public class CaseSatisfyNumber extends CaseRule
 		else
 			return null;
 	}
-	
+
 	static Point lookUpBlock( Point cell1, Point cell2, Point test1, Point test2, BoardState state)
 	{
 		if(state.getCellContents(test1.x,test1.y) > 10 && state.getCellContents(test1.x,test1.y) < 14)
@@ -514,7 +485,7 @@ public class CaseSatisfyNumber extends CaseRule
 			cellValue -= 10;
 			int blanks = 0;
 			int bulbs = 0;
-			
+
 			if(test1.x + 1 < state.getWidth())
 			{
 				if(state.getCellContents(test1.x + 1, test1.y) > 1)
@@ -524,7 +495,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(test1.x - 1 > 0)
 			{
 				if(state.getCellContents(test1.x - 1, test1.y) > 1)
@@ -534,7 +505,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(test1.y + 1 < state.getHeight())
 			{
 				if(state.getCellContents(test1.x, test1.y + 1) > 1)
@@ -544,7 +515,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(test1.y - 1 > 0)
 			{
 				if(state.getCellContents(test1.x, test1.y - 1) > 1)
@@ -554,7 +525,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(cellValue - bulbs == 1)
 			{
 				if(bulbs + blanks == 2)
@@ -562,7 +533,7 @@ public class CaseSatisfyNumber extends CaseRule
 					return test1;
 				}
 			}
-		
+
 		}
 		if(state.getCellContents(test2.x,test2.y) > 10 && state.getCellContents(test2.x,test2.y) < 14)
 		{
@@ -570,7 +541,7 @@ public class CaseSatisfyNumber extends CaseRule
 			cellValue -= 10;
 			int blanks = 0;
 			int bulbs = 0;
-			
+
 			if(test2.x + 1 < state.getWidth())
 			{
 				if(state.getCellContents(test2.x + 1, test2.y) > 1)
@@ -580,7 +551,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(test2.x - 1 > 0)
 			{
 				if(state.getCellContents(test2.x - 1, test2.y) > 1)
@@ -590,7 +561,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(test2.y + 1 < state.getHeight())
 			{
 				if(state.getCellContents(test2.x, test2.y + 1) > 1)
@@ -600,7 +571,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(test2.y - 1 > 0)
 			{
 				if(state.getCellContents(test2.x, test2.y - 1) > 1)
@@ -610,7 +581,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(cellValue - bulbs == 1)
 			{
 				if(bulbs + blanks == 2)
@@ -630,7 +601,7 @@ public class CaseSatisfyNumber extends CaseRule
 			cellValue -= 10;
 			int blanks = 0;
 			int bulbs = 0;
-			
+
 			if(block.x + 1 < state.getWidth())
 			{
 				if(state.getCellContents(block.x + 1, block.y) > 1)
@@ -640,7 +611,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(block.x - 1 > 0)
 			{
 				if(state.getCellContents(block.x - 1, block.y) > 1)
@@ -650,7 +621,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(block.y + 1 < state.getHeight())
 			{
 				if(state.getCellContents(block.x, block.y + 1) > 1)
@@ -660,7 +631,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(block.y - 1 > 0)
 			{
 				if(state.getCellContents(block.x, block.y - 1) > 1)
@@ -670,7 +641,7 @@ public class CaseSatisfyNumber extends CaseRule
 			}
 			else
 				++blanks;
-			
+
 			if(cellValue - bulbs == 1 || cellValue - bulbs == 2)
 			{
 				if(bulbs + blanks == 1)
@@ -681,7 +652,7 @@ public class CaseSatisfyNumber extends CaseRule
 		}
 		return -1;
 	}
-	
+
 	public static int getBlockValue(int cell)
 	{
 		if(cell == LightUp.CELL_BLOCK0)return 0;
@@ -695,8 +666,8 @@ public class CaseSatisfyNumber extends CaseRule
 	{
 		return true;
 	}
-	
-	public boolean doDefaultApplicationRaw(BoardState state, PuzzleModule pm ,Point location)
+
+	public boolean aultApplicationRaw(BoardState state, PuzzleModule pm ,Point location)
 	{
 		Vector<Point> cells = new Vector<Point>();
 		cells.add( new Point(0,0));
