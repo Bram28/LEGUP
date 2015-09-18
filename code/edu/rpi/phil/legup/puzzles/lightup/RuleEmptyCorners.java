@@ -1,201 +1,67 @@
 package edu.rpi.phil.legup.puzzles.lightup;
 
-import javax.swing.ImageIcon;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.Contradiction;
 
 public class RuleEmptyCorners extends PuzzleRule
 {
 	static final long serialVersionUID = 9501L;
-	public String getImageName() {return "images/lightup/rules/EmptyCorners.png";}
-	 RuleEmptyCorners()
-	 {
+	public String getImageName() { return "images/lightup/rules/EmptyCorners.png"; }
+	RuleEmptyCorners()
+	{
 		setName("Empty Corners");
 		description = "Cells on the corners of a number must be empty if they would prevent the number from acheiving its lights.";
-		//image = new ImageIcon("images/lightup/rules/WhiteCorners.png");
-	 }
+	}
 
-	 /**
-     * Checks if the contradiction was applied correctly to this board state
-     *
-     * @param state The board state
-     * @return null if the contradiction was applied correctly, the error String otherwise
-     */
-	 protected String checkRuleRaw(BoardState destBoardState)
-    {
-    	String error = null;
-    	boolean changed = false;
-    	BoardState origBoardState = destBoardState.getSingleParentState();
-    	int width = destBoardState.getWidth();
-    	int height = destBoardState.getHeight();
-    	boolean foundvalidblock = false;
-    	NumberedBlock block;
-    	boolean[][] litup = new boolean[height][width];
-    	LightUp.determineLight(destBoardState, litup);
-    	int blanks;
-
-    	// Check for only one branch
-		if (destBoardState.getParents().size() != 1)
-		{
-			error = "This rule only involves having a single branch!";
-		}
-		else
-		{
-			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
-			{
-				for (int x = 0; x < origBoardState.getWidth(); ++x)
-				{
-					int origState = origBoardState.getCellContents(x,y);
-					int newState = destBoardState.getCellContents(x,y);
-					foundvalidblock = false;
-
-					if (origState != newState)
-					{
-						changed = true;
-
-						if (newState != LightUp.CELL_EMPTY || origState != LightUp.CELL_UNKNOWN)
-						{
-							error = "This rule only involves adding white cells!";
-							break;
-						}
-
-						foundvalidblock = this.willBlockLights(destBoardState, x, y, litup);
-
-
-
-						if(!foundvalidblock)
-						{
-							error = "A white cell must be placed because if it was a light it would block a number.";
-							break;
-						}
-
-					}
-				}
-			}
-
-			if (error == null && !changed)
-			{
-				error = "You must add a white cell to use this rule!";
-			}
+	/**
+	* Checks if RuleEmptyCorners was correctly applied to this board state
+	* If not making the cells on the corners of a number empty prevents the number
+	* from acheiving its lights then the rule was correctly applied
+	*
+	* @param state The board state
+	* @return null if the contradiction was applied correctly, the error String otherwise
+	*/
+	protected String checkRuleRaw(BoardState destBoardState) {
+		// Check for only one branch
+		if (destBoardState.getParents().size() != 1) {
+			return "This rule only involves having a single branch!";
 		}
 
-		return error;
-    }
+		// Add contradictions to check to set contras
+		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
+		contras.add(new ContradictionTooFewBulbs());
 
-	 protected boolean doDefaultApplicationRaw(BoardState destBoardState)
-	  {
-		 BoardState origBoardState = destBoardState.getSingleParentState();
-	    	boolean changed = false;
-	    	int width = destBoardState.getWidth();
-	    	int height = destBoardState.getHeight();
-	    	NumberedBlock block;
-	    	boolean[][] litup = new boolean[height][width];
-	    	LightUp.determineLight(destBoardState, litup);
+		// Copy the parent state to compare with current state to find changes
+		BoardState origBoardState = destBoardState.getSingleParentState();
+		int width = origBoardState.getWidth();
+		int height = origBoardState.getHeight();
 
-	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
-	    	{
-	    		for (int y = 0; y < origBoardState.getHeight(); ++y)
-				{
-					for (int x = 0; x < origBoardState.getWidth(); ++x)
-					{
-						if(destBoardState.getCellContents(x,y) == LightUp.CELL_UNKNOWN)
-						{
-							if(this.willBlockLights(destBoardState, x, y, litup))
-							{
-								destBoardState.setCellContents(x, y, LightUp.CELL_EMPTY);
-							}
-						}
+		// Check each tile for any changes,
+		// make sure changes are allowed
+		// check that doing the opposite case would lead to a contradiction (thus proving the rule)
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				// Check for changes
+				if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
+					//Make sure cells placed are empty cells
+					if (destBoardState.getCellContents(x, y) != LightUp.CELL_EMPTY) {
+						return "Only empty cells are allowed for this rule!";
 					}
-				}
 
-		    	String error = checkRuleRaw(destBoardState);
-
-				if (error == null)
-				{
-					changed = true;
-					// valid change
-				}
-	    	}
-
-	    	if(!changed)
-	    	{
-	    		destBoardState = origBoardState.copy();
-	    	}
-
-		    return changed;
-	  }
-
-	 protected boolean willBlockLights(BoardState state, int x, int y, boolean[][] litup)
-	 {
-		 int width = state.getWidth();
-		 int height = state.getHeight();
-		 NumberedBlock block;
-		 int blanks;
-
-		 if(x > 0)
-			{
-				if(y > 0)
-				{
-					if(state.getCellContents(x-1,y-1)>= 10 && state.getCellContents(x-1,y-1)< 15)
-					{
-						block = new NumberedBlock(state,x-1,y-1);
-						blanks = block.getUnNeededBlanks();
-						if(state.getCellContents(x, y-1) == LightUp.CELL_UNKNOWN && !litup[y-1][x])
-							--blanks;
-						if(state.getCellContents(x-1, y) == LightUp.CELL_UNKNOWN && !litup[y][x-1])
-							--blanks;
-						if(blanks < 0)
-							return true;
-					}
-				}
-				if(y < height - 1)
-				{
-					if(state.getCellContents(x-1,y+1)>= 10 && state.getCellContents(x-1,y+1)< 15)
-					{
-						block = new NumberedBlock(state,x-1,y+1);
-						blanks = block.getUnNeededBlanks();
-						if(state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN && !litup[y+1][x])
-							--blanks;
-						if(state.getCellContents(x-1, y) == LightUp.CELL_UNKNOWN && !litup[y][x-1])
-							--blanks;
-						if(blanks < 0)
-							return true;
+					// Create alternative boardstate to apply other case/contradiction
+					BoardState modified = origBoardState.copy();
+					modified.getBoardCells()[y][x] = LightUp.CELL_LIGHT;
+					for (Contradiction c : contras) {
+						if (c.checkContradictionRaw(modified) != null)
+							return "It is not required for the modified cell(s) to be empty!";
 					}
 				}
 			}
-
-			if(x < width - 1)
-			{
-				if(y > 0)
-				{
-					if(state.getCellContents(x+1,y-1)>= 10 && state.getCellContents(x+1,y-1)< 15)
-					{
-						block = new NumberedBlock(state,x+1,y-1);
-						blanks = block.getUnNeededBlanks();
-						if(state.getCellContents(x, y-1) == LightUp.CELL_UNKNOWN && !litup[y-1][x])
-							--blanks;
-						if(state.getCellContents(x+1, y) == LightUp.CELL_UNKNOWN && !litup[y][x+1])
-							--blanks;
-						if(blanks < 0)
-							return true;
-					}
-				}
-				if(y < height - 1)
-				{
-					if(state.getCellContents(x+1,y+1)>= 10 && state.getCellContents(x+1,y+1)< 15)
-					{
-						block = new NumberedBlock(state,x+1,y+1);
-						blanks = block.getUnNeededBlanks();
-						if(state.getCellContents(x, y+1) == LightUp.CELL_UNKNOWN && !litup[y+1][x])
-							--blanks;
-						if(state.getCellContents(x+1, y) == LightUp.CELL_UNKNOWN && !litup[y][x+1])
-							--blanks;
-						if(blanks < 0)
-							return true;
-					}
-				}
-			}
-			return false;
-	 }
+		}
+		return null;
+	}
 }
