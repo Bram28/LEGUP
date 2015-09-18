@@ -3,6 +3,8 @@ package edu.rpi.phil.legup.puzzles.treetent;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.Set;
+import java.util.LinkedHashSet;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
@@ -49,14 +51,20 @@ public class CaseFillInRow extends CaseRule
 		//System.out.println(num_defaults);
 		if(num_defaults < 0)return null; //state is a contradiction in a way that interferes with the construction of a caserule
 
-		Contradiction contra = new ContradictionTentNotNearTree();
+		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
+		contras.add(new ContradictionTentNotNearTree());
+		contras.add(new ContradictionAdjacentTents());
+		contras.add(new ContradictionMiscount());
 
+		outerloop:
 		while(Permutations.nextPermutation(whatgoesintheblanks,num_defaults))
 		{
 			BoardState modified = cur.copy();
 			modified.fillBlanks(where,row,whatgoesintheblanks);
-			if (contra.checkContradictionRaw(modified) == null) {
-				continue;
+			for (Contradiction contra : contras) {
+				if (contra.checkContradictionRaw(modified) == null) {
+					continue outerloop;
+				}
 			}
 
 			BoardState tmp = cur.addTransitionFrom();
