@@ -651,8 +651,8 @@ public class TreeTent extends PuzzleModule
 
 		contradictionList.add(new ContradictionAdjacentTents());
 		contradictionList.add(new ContradictionMiscount());
-		contradictionList.add(new ContradictionNoTentsForTree());
-		contradictionList.add(new ContradictionTentNotNearTree());
+		contradictionList.add(new ContradictionNoTentForTree());
+		contradictionList.add(new ContradictionNoTreeForTent());
 
 		return contradictionList;
 	}

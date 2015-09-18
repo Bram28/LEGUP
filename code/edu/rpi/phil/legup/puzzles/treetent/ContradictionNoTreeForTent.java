@@ -1,21 +1,19 @@
 package edu.rpi.phil.legup.puzzles.treetent;
 
-import javax.swing.ImageIcon;
 import java.awt.Point;
 import java.util.ArrayList;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
-public class ContradictionTentNotNearTree extends Contradiction
+public class ContradictionNoTreeForTent extends Contradiction
 {
 	static final long serialVersionUID = 9510L;
-	public String getImageName() {return "images/treetent/contra_notree.png";}
-	public ContradictionTentNotNearTree()
+	public String getImageName() {return "images/treetent/contra_NoTreeForTent.png";}
+	public ContradictionNoTreeForTent()
 	 {
-		setName("Tent Not Near Tree");
-		description = "Unlinked tent not near an unlinked tree.";
-		//image = new ImageIcon("images/treetent/contra_notree.png");
+		setName("No Tree For Tent");
+		description = "Each tent must link to a tree.";
 	 }
 
 	 /**

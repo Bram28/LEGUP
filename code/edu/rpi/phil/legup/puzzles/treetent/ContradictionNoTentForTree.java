@@ -1,6 +1,5 @@
 package edu.rpi.phil.legup.puzzles.treetent;
 
-import javax.swing.ImageIcon;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -8,15 +7,14 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
 
 
-public class ContradictionNoTentsForTree extends Contradiction
+public class ContradictionNoTentForTree extends Contradiction
 {
 	static final long serialVersionUID = 9509L;
-	public String getImageName() {return "images/treetent/contra_noNeighbors.png";}
-	public ContradictionNoTentsForTree()
+	public String getImageName() {return "images/treetent/contra_NoTentForTree.png";}
+	public ContradictionNoTentForTree()
 	 {
 		setName("No Tents For Tree");
-		description = "Each tree must have a tent.";
-		//image = new ImageIcon("images/treetent/contra_noNeighbors.png");
+		description = "Each tree must link to a tent.";
 	 }
 
 	 /**

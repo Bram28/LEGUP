@@ -52,7 +52,7 @@ public class CaseFillInRow extends CaseRule
 		if(num_defaults < 0)return null; //state is a contradiction in a way that interferes with the construction of a caserule
 
 		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
-		contras.add(new ContradictionTentNotNearTree());
+		contras.add(new ContradictionNoTreeForTent());
 		contras.add(new ContradictionAdjacentTents());
 		contras.add(new ContradictionMiscount());
 
