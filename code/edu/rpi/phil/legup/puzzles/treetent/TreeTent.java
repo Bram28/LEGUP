@@ -649,10 +649,11 @@ public class TreeTent extends PuzzleModule
 	{
 		Vector <Contradiction>contradictionList = new Vector <Contradiction>();
 
-		contradictionList.add(new ContradictionAdjacentTents());
-		contradictionList.add(new ContradictionMiscount());
 		contradictionList.add(new ContradictionNoTentForTree());
 		contradictionList.add(new ContradictionNoTreeForTent());
+		contradictionList.add(new ContradictionTooFewTents());
+		contradictionList.add(new ContradictionTooManyTents());
+		contradictionList.add(new ContradictionAdjacentTents());
 
 		return contradictionList;
 	}
