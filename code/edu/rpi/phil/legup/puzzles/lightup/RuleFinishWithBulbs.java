@@ -50,9 +50,12 @@ public class RuleFinishWithBulbs extends PuzzleRule
 			for (int x = 0; x < width; x++) {
 				// Check for changes
 				if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
-					//Make sure cells placed are empty cells
+					//Make sure cells placed are light cells
 					if (destBoardState.getCellContents(x, y) != LightUp.CELL_LIGHT) {
 						return "Only empty cells are allowed for this rule!";
+					}
+					if (new ContradictionBulbsInPath().checkContradictionRaw(destBoardState) == null) {
+						return "You cannot place a bulb in an already lit cell!";
 					}
 
 					// Create alternative boardstate to apply other case/contradiction
@@ -60,7 +63,7 @@ public class RuleFinishWithBulbs extends PuzzleRule
 					modified.getBoardCells()[y][x] = LightUp.CELL_EMPTY;
 					for (Contradiction c : contras) {
 						if (c.checkContradictionRaw(modified) != null)
-							return "It is not required for the modified cell(s) to be empty!";
+							return "It is not required for the modified cell(s) to be Lights!";
 					}
 				}
 			}
