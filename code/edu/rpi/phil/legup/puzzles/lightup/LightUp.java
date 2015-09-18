@@ -94,13 +94,13 @@ public class LightUp extends PuzzleModule
 		} else if (cellValue == CELL_LIGHT){
 			return "images/lightup/light.png";
 		} else if (cellValue == CELL_EMPTY){
-			return "images/lightup/blank.gif";
+			return "images/lightup/empty.gif";
 		} else if (cellValue >= 10 && cellValue < 15){
 			return "images/lightup/" + (cellValue-10)+".gif";
 		} else if(cellValue == 15){
 			return "images/lightup/black.gif";
 		} else {
-			return "images/lightup/unknown.gif";
+			return "images/unknown.gif";
 		}
 	}
 
@@ -207,13 +207,10 @@ public class LightUp extends PuzzleModule
 
 	public Vector <PuzzleRule> getRules(){
 		Vector <PuzzleRule>ruleList = new Vector <PuzzleRule>();
-		//ruleList.add(new PuzzleRule());
 		ruleList.add(new RuleFinishWithBulbs());
-		ruleList.add(new RuleFinishWithWhite());
+		ruleList.add(new RuleFinishWithEmpty());
 		ruleList.add(new RuleMustLight());
-		ruleList.add(new RuleWhiteCorners());
-		ruleList.add(new RuleWhiteInLight());
-		//ruleList.add(new RuleOnlyOne());
+		ruleList.add(new RuleEmptyCorners());
 		return ruleList;
 	}
 
@@ -235,7 +232,7 @@ public class LightUp extends PuzzleModule
 	public Vector <CaseRule> getCaseRules()
 	{
 		Vector <CaseRule> caseRules = new Vector <CaseRule>();
-		caseRules.add(new CaseLightOrWhite());
+		caseRules.add(new CaseLightOrEmpty());
 		caseRules.add(new CaseSatisfyNumber());
 
 		return caseRules;
@@ -373,7 +370,7 @@ public class LightUp extends PuzzleModule
 			fillLight(CaseLight);
 			CaseBlank.setCellContents(guess.x, guess.y, CELL_EMPTY);
 			fillLight(CaseBlank);
-			Parent.setCaseSplitJustification(new CaseLightOrWhite());
+			Parent.setCaseSplitJustification(new CaseLightOrEmpty());
 			//System.out.println("Guessed at "+guess.x+","+guess.y);
 
 			return CaseLight;

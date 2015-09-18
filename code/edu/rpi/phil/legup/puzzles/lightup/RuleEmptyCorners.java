@@ -5,17 +5,17 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleWhiteCorners extends PuzzleRule
+public class RuleEmptyCorners extends PuzzleRule
 {
 	static final long serialVersionUID = 9501L;
-	public String getImageName() {return "images/lightup/rules/WhiteCorners.png";}
-	 RuleWhiteCorners()
+	public String getImageName() {return "images/lightup/rules/EmptyCorners.png";}
+	 RuleEmptyCorners()
 	 {
-		setName("White Corners");
-		description = "Cells on the corners of a number must be white if they would prevent the number from acheiving its lights.";
+		setName("Empty Corners");
+		description = "Cells on the corners of a number must be empty if they would prevent the number from acheiving its lights.";
 		//image = new ImageIcon("images/lightup/rules/WhiteCorners.png");
 	 }
-	 
+
 	 /**
      * Checks if the contradiction was applied correctly to this board state
      *
@@ -34,7 +34,7 @@ public class RuleWhiteCorners extends PuzzleRule
     	boolean[][] litup = new boolean[height][width];
     	LightUp.determineLight(destBoardState, litup);
     	int blanks;
-    	
+
     	// Check for only one branch
 		if (destBoardState.getParents().size() != 1)
 		{
@@ -49,40 +49,40 @@ public class RuleWhiteCorners extends PuzzleRule
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
 					foundvalidblock = false;
-					
+
 					if (origState != newState)
 					{
 						changed = true;
-						
+
 						if (newState != LightUp.CELL_EMPTY || origState != LightUp.CELL_UNKNOWN)
 						{
 							error = "This rule only involves adding white cells!";
 							break;
 						}
-						
+
 						foundvalidblock = this.willBlockLights(destBoardState, x, y, litup);
-						
-						
-						
+
+
+
 						if(!foundvalidblock)
 						{
 							error = "A white cell must be placed because if it was a light it would block a number.";
 							break;
 						}
-						
+
 					}
 				}
 			}
-			
+
 			if (error == null && !changed)
 			{
 				error = "You must add a white cell to use this rule!";
 			}
 		}
-		
+
 		return error;
     }
-	 
+
 	 protected boolean doDefaultApplicationRaw(BoardState destBoardState)
 	  {
 		 BoardState origBoardState = destBoardState.getSingleParentState();
@@ -92,7 +92,7 @@ public class RuleWhiteCorners extends PuzzleRule
 	    	NumberedBlock block;
 	    	boolean[][] litup = new boolean[height][width];
 	    	LightUp.determineLight(destBoardState, litup);
-	    	
+
 	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
 	    	{
 	    		for (int y = 0; y < origBoardState.getHeight(); ++y)
@@ -108,31 +108,31 @@ public class RuleWhiteCorners extends PuzzleRule
 						}
 					}
 				}
-	        	
+
 		    	String error = checkRuleRaw(destBoardState);
-		    	
+
 				if (error == null)
 				{
 					changed = true;
 					// valid change
 				}
 	    	}
-	    	
+
 	    	if(!changed)
 	    	{
 	    		destBoardState = origBoardState.copy();
 	    	}
-		    	
+
 		    return changed;
 	  }
-	 
+
 	 protected boolean willBlockLights(BoardState state, int x, int y, boolean[][] litup)
 	 {
 		 int width = state.getWidth();
 		 int height = state.getHeight();
 		 NumberedBlock block;
 		 int blanks;
-		 
+
 		 if(x > 0)
 			{
 				if(y > 0)

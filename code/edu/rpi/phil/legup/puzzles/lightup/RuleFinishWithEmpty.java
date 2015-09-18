@@ -5,14 +5,14 @@ import javax.swing.ImageIcon;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 
-public class RuleFinishWithWhite extends PuzzleRule
+public class RuleFinishWithEmpty extends PuzzleRule
 {
 	static final long serialVersionUID = 2828176895339413023L;
-	public String getImageName() {return "images/lightup/rules/SurroundWhite.png";}
-	 RuleFinishWithWhite()
+	public String getImageName() {return "images/lightup/rules/SurroundEmpty.png";}
+	 RuleFinishWithEmpty()
 	 {
-		setName("Finish with White");
-		description = "The remaining unknowns around a block must be white if the number is satisfied.";
+		setName("Finish with Empty");
+		description = "The remaining unknowns around a block must be empty if the number is satisfied.";
 		//image = new ImageIcon("images/lightup/rules/SurroundWhite.png");
 	 }
 
