@@ -61,7 +61,7 @@ public class RuleSegmentType extends PuzzleRule
 							}
 							if (!contradicts)
 							{
-								System.out.println(curType);
+								System.out.println("no contradiction for cell type: " + curType);
 								return "At least one of these tiles is not forced to be this segment type!";
 							}
 						}

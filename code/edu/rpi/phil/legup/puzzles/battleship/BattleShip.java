@@ -14,7 +14,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 public class BattleShip extends PuzzleModule
@@ -35,6 +37,44 @@ public class BattleShip extends PuzzleModule
 	public static final int CELL_RIGHT_CAP = 13;
 	public static final int CELL_SUBMARINE = 14;
 	public static final int CELL_MIDDLE = 15;
+	
+	private static final Set<Integer> waterSet;
+	private static final Set<Integer> segmentSet;
+    private static final Set<Integer> leftSegmentSet;
+    private static final Set<Integer> rightSegmentSet;
+    private static final Set<Integer> middleSegmentSet;
+    private static final Set<Integer> topSegmentSet;
+    private static final Set<Integer> bottomSegmentSet;
+		
+	static
+	{
+        waterSet = new LinkedHashSet<Integer>();
+        segmentSet = new LinkedHashSet<Integer>();
+        leftSegmentSet = new LinkedHashSet<Integer>();
+        rightSegmentSet = new LinkedHashSet<Integer>();
+        middleSegmentSet = new LinkedHashSet<Integer>();
+        topSegmentSet = new LinkedHashSet<Integer>();
+        bottomSegmentSet = new LinkedHashSet<Integer>();
+        
+        waterSet.add(BattleShip.CELL_WATER);
+        waterSet.add(BattleShip.CELL_UNKNOWN);
+        waterSet.add(PointSetAlgorithms.POINT_OUTSIDE);
+        
+        segmentSet.add(BattleShip.CELL_SEGMENT);
+        segmentSet.add(BattleShip.CELL_UNKNOWN);
+        
+        leftSegmentSet.addAll(segmentSet);
+        rightSegmentSet.addAll(segmentSet);
+        middleSegmentSet.addAll(segmentSet);
+        topSegmentSet.addAll(segmentSet);
+        bottomSegmentSet.addAll(segmentSet);
+        
+        leftSegmentSet.add(BattleShip.CELL_LEFT_CAP);
+        rightSegmentSet.add(BattleShip.CELL_RIGHT_CAP);
+        middleSegmentSet.add(BattleShip.CELL_MIDDLE);
+        topSegmentSet.add(BattleShip.CELL_TOP_CAP);
+        bottomSegmentSet.add(BattleShip.CELL_BOTTOM_CAP);
+	}
 	
     public Map<String, Integer> getSelectableCells()
     {
@@ -248,6 +288,126 @@ public class BattleShip extends PuzzleModule
 
 */
 		return true;
+	}
+	
+	/**
+	 * Finds all possible locations for a specific sized ship aligned horizontally
+	 * 
+	 * @param state The BoardState to check for locations in.
+	 * @param length The length of the ship.
+	 * @return The set of positions that the ship could be in, where an offset <0,0> is the
+	 * position of the left-most segment of the ship. 
+	 */
+	public static Set<Point> possibleHorizontalShipLocations(BoardState state, int length)
+	{
+        Map<Point,Set<Integer>> horizontalShipMask = new LinkedHashMap<Point,Set<Integer>>();
+        // TODO Length 1 case
+		for (int i = -1; i <= length; i++)
+		{
+			Set<Integer> middleHorizSet;
+			if (i == -1)
+				middleHorizSet = waterSet;
+			else if (i == 0)
+				middleHorizSet = leftSegmentSet;
+			else if (i == length - 1)
+				middleHorizSet = rightSegmentSet;
+			else if (i == length)
+				middleHorizSet = waterSet;
+			else
+				middleHorizSet = middleSegmentSet;
+			horizontalShipMask.put(new Point(i, -1), waterSet);
+			horizontalShipMask.put(new Point(i,  0), middleHorizSet);
+			horizontalShipMask.put(new Point(i,  1), waterSet);
+		}
+		
+		return PointSetAlgorithms.getPositionsForPointSet(state.getBoardCells(), horizontalShipMask);
+	}
+	
+	/**
+	 * Finds all possible locations for a specific sized ship aligned vertically
+	 * 
+	 * @param state The BoardState to check for locations in.
+	 * @param length The length of the ship.
+	 * @return The set of positions that the ship could be in, where an offset <0,0> is the
+	 * position of the top-most segment of the ship. 
+	 */
+	public static Set<Point> possibleVerticalShipLocations(BoardState state, int length)
+	{
+        Map<Point,Set<Integer>> verticalShipMask = new LinkedHashMap<Point,Set<Integer>>();
+        // TODO Length 1 case
+		for (int i = -1; i <= length; i++)
+		{
+			Set<Integer> middleVertSet;
+			if (i == -1)
+				middleVertSet = waterSet;
+			else if (i == 0)
+				middleVertSet = topSegmentSet;
+			else if (i == length - 1)
+				middleVertSet = bottomSegmentSet;
+			else if (i == length)
+				middleVertSet = waterSet;
+			else
+				middleVertSet = middleSegmentSet;
+			verticalShipMask.put(new Point(-1, i), waterSet);
+			verticalShipMask.put(new Point( 0, i), middleVertSet);
+			verticalShipMask.put(new Point( 1, i), waterSet);
+		}
+		
+		return PointSetAlgorithms.getPositionsForPointSet(state.getBoardCells(), verticalShipMask);
+	}
+	
+	/**
+	 * Finds the current locations of all ships of a specific size aligned horizontally
+	 * @param state The BoardState the check for ships in.
+	 * @param length The length of the ships.
+	 * @return The set of positions that ships of this length are in, where an offset <0,0> is the
+	 * position of the left-most segment of a ship.
+	 */
+	public static Set<Point> horizontalShipLocations(BoardState state, int length)
+	{
+        Map<Point,Set<Integer>> horizontalShipMask = new LinkedHashMap<Point,Set<Integer>>();
+        if (length > 1)
+			for (int i = 0; i < length; i++)
+			{
+				Set<Integer> curSet;
+				if (i == 0)
+					curSet = new LinkedHashSet<Integer>(CELL_LEFT_CAP);
+				else if (i == length - 1)
+					curSet = new LinkedHashSet<Integer>(CELL_MIDDLE);
+				else
+					curSet = new LinkedHashSet<Integer>(CELL_RIGHT_CAP);
+				horizontalShipMask.put(new Point( 0, i), curSet);
+			}
+        else
+        	horizontalShipMask.put(new Point(0,0), new LinkedHashSet<Integer>(CELL_SUBMARINE));
+		return PointSetAlgorithms.getPositionsForPointSet(state.getBoardCells(), horizontalShipMask);
+	}
+	
+	/**
+	 * Finds the current locations of all ships of a specific size aligned vertically
+	 * @param state The BoardState the check for ships in.
+	 * @param length The length of the ships.
+	 * @return The set of positions that ships of this length are in, where an offset <0,0> is the
+	 * position of the top-most segment of a ship.
+	 */
+	public static Set<Point> verticalShipLocations(BoardState state, int length)
+	{
+        Map<Point,Set<Integer>> verticalShipMask = new LinkedHashMap<Point,Set<Integer>>();
+        if (length > 1)
+			for (int i = 0; i < length; i++)
+			{
+				Set<Integer> curSet;
+				if (i == 0)
+					curSet = new LinkedHashSet<Integer>(CELL_TOP_CAP);
+				else if (i == length - 1)
+					curSet = new LinkedHashSet<Integer>(CELL_MIDDLE);
+				else
+					curSet = new LinkedHashSet<Integer>(CELL_BOTTOM_CAP);
+				verticalShipMask.put(new Point( 0, i), curSet);
+			}
+        else
+        	verticalShipMask.put(new Point(0,0), new LinkedHashSet<Integer>(CELL_SUBMARINE));
+		return PointSetAlgorithms.getPositionsForPointSet(state.getBoardCells(), verticalShipMask);
 	}
 	
 	/**

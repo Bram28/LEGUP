@@ -22,43 +22,6 @@ import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 public class CaseShipLocations extends CaseRule {
 
 	private static final long serialVersionUID = 8581077747266144558L;
-	private static final Set<Integer> waterSet;
-	private static final Set<Integer> segmentSet;
-    private static final Set<Integer> leftSegmentSet;
-    private static final Set<Integer> rightSegmentSet;
-    private static final Set<Integer> middleSegmentSet;
-    private static final Set<Integer> topSegmentSet;
-    private static final Set<Integer> bottomSegmentSet;
-		
-	static
-	{
-        waterSet = new LinkedHashSet<Integer>();
-        segmentSet = new LinkedHashSet<Integer>();
-        leftSegmentSet = new LinkedHashSet<Integer>();
-        rightSegmentSet = new LinkedHashSet<Integer>();
-        middleSegmentSet = new LinkedHashSet<Integer>();
-        topSegmentSet = new LinkedHashSet<Integer>();
-        bottomSegmentSet = new LinkedHashSet<Integer>();
-        
-        waterSet.add(BattleShip.CELL_WATER);
-        waterSet.add(BattleShip.CELL_UNKNOWN);
-        waterSet.add(PointSetAlgorithms.POINT_OUTSIDE);
-        
-        segmentSet.add(BattleShip.CELL_SEGMENT);
-        segmentSet.add(BattleShip.CELL_UNKNOWN);
-        
-        leftSegmentSet.addAll(segmentSet);
-        rightSegmentSet.addAll(segmentSet);
-        middleSegmentSet.addAll(segmentSet);
-        topSegmentSet.addAll(segmentSet);
-        bottomSegmentSet.addAll(segmentSet);
-        
-        leftSegmentSet.add(BattleShip.CELL_LEFT_CAP);
-        rightSegmentSet.add(BattleShip.CELL_RIGHT_CAP);
-        middleSegmentSet.add(BattleShip.CELL_MIDDLE);
-        topSegmentSet.add(BattleShip.CELL_TOP_CAP);
-        bottomSegmentSet.add(BattleShip.CELL_BOTTOM_CAP);
-	}
 
 	public String getImageName() {
 		return "images/defaultRule.png";
@@ -109,48 +72,8 @@ public class CaseShipLocations extends CaseRule {
         	return cur;
         }
         
-        Map<Point,Set<Integer>> horizontalShipMask = new LinkedHashMap<Point,Set<Integer>>();
-        Map<Point,Set<Integer>> verticalShipMask = new LinkedHashMap<Point,Set<Integer>>();
-                
-        for (int i = -1; i <= currNumSelected; i++)
-        {
-        	Set<Integer> middleHorizSet;
-        	Set<Integer> middleVertSet;
-        	if (i == -1)
-        	{
-        		middleHorizSet = waterSet;
-        		middleVertSet = waterSet;
-        	}
-        	else if (i == 0)
-        	{
-        		middleHorizSet = leftSegmentSet;
-        		middleVertSet = topSegmentSet;
-        	}
-        	else if (i == currNumSelected - 1)
-        	{
-        		middleHorizSet = rightSegmentSet;
-        		middleVertSet = bottomSegmentSet;
-        	}
-        	else if (i == currNumSelected)
-        	{
-        		middleHorizSet = waterSet;
-        		middleVertSet = waterSet;
-        	}
-        	else
-        	{
-        		middleHorizSet = middleSegmentSet;
-        		middleVertSet = middleSegmentSet;
-        	}
-        	horizontalShipMask.put(new Point(i, -1), waterSet);
-        	horizontalShipMask.put(new Point(i,  0), middleHorizSet);
-        	horizontalShipMask.put(new Point(i,  1), waterSet);
-        	verticalShipMask.put(new Point(-1, i), waterSet);
-        	verticalShipMask.put(new Point( 0, i), middleVertSet);
-        	verticalShipMask.put(new Point( 1, i), waterSet);
-        }
-        
-        Set<Point> horizShipLocations = PointSetAlgorithms.getPositionsForPointSet(cur.getBoardCells(), horizontalShipMask);
-        Set<Point> vertShipLocations = PointSetAlgorithms.getPositionsForPointSet(cur.getBoardCells(), verticalShipMask);
+        Set<Point> horizShipLocations = BattleShip.possibleHorizontalShipLocations(cur, currNumSelected);
+        Set<Point> vertShipLocations = BattleShip.possibleVerticalShipLocations(cur, currNumSelected);
         
         for (Point curPoint : horizShipLocations)
         {
