@@ -86,7 +86,7 @@ public class BattleShip extends PuzzleModule
         tmp.put("top cap", CELL_TOP_CAP);
         tmp.put("bottom cap", CELL_BOTTOM_CAP);
         tmp.put("right cap", CELL_RIGHT_CAP);
-        tmp.put("center", CELL_SUBMARINE);
+        tmp.put("submarine", CELL_SUBMARINE);
         tmp.put("middle", CELL_MIDDLE);
         return tmp;
     }
