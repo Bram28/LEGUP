@@ -7,20 +7,22 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Contradiction;
 
-public class RuleMustLight extends PuzzleRule
+public class RuleFinishWithEmpty extends PuzzleRule
 {
-	static final long serialVersionUID = 3220052913694553750L;
-	public String getImageName() {return "images/lightup/rules/MustLight.png";}
-	RuleMustLight()
+	static final long serialVersionUID = 2828176895339413023L;
+	public String getImageName() {return "images/lightup/rules/SurroundEmpty.png";}
+	RuleFinishWithEmpty()
 	{
-		setName("Must Light");
-		description = "A cell must be a light if it is the only cell to be able to light another.";
+		setName("Finish with Empty");
+		description = "The remaining unknowns around a block must be empty if the number is satisfied.";
 	}
 
 	/**
-	* Checks if RuleMustLight was correctly applied to this board state.
-	* If declaring a cell to be empty makes it impossible for another cell(s)
-	* on the board to be lit, then that cell must be a light.
+	* Checks if RuleFinishWithEmpty was correctly applied to this board state.
+	* If declaring a cell adjacent to a number to be a bulb causes a contradiction
+	* where too many light bulbs can be placed to satisfy the number the rule
+	* was applied correctly. (i.e. the number of light bulb cells adjacent to number
+	* equals the number).
 	*
 	* @param state The board state
 	* @return null if the contradiction was applied correctly, the error String otherwise
@@ -33,7 +35,7 @@ public class RuleMustLight extends PuzzleRule
 
 		// Add contradictions to check to set contras
 		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
-		contras.add(new ContradictionNoLight());
+		contras.add(new ContradictionTooManyBulbs());
 
 		// Copy the parent state to compare with current state to find changes
 		BoardState origBoardState = destBoardState.getSingleParentState();
@@ -47,21 +49,17 @@ public class RuleMustLight extends PuzzleRule
 			for (int x = 0; x < width; x++) {
 				// Check for changes
 				if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
-					// Make sure cells placed are light cells
-					if (destBoardState.getCellContents(x, y) != LightUp.CELL_LIGHT) {
-						return "Only Light cells are allowed for this rule!";
-					}
-					// Make sure a light bulb is not placed in a lit cell
-					if (new ContradictionBulbsInPath().checkContradictionRaw(destBoardState) == null) {
-						return "You cannot place a bulb in an already lit cell!";
+					//Make sure cells placed are empty cells
+					if (destBoardState.getCellContents(x, y) != LightUp.CELL_EMPTY) {
+						return "Only empty cells are allowed for this rule!";
 					}
 
 					// Create alternative boardstate to apply other case/contradiction
 					BoardState modified = origBoardState.copy();
-					modified.getBoardCells()[y][x] = LightUp.CELL_EMPTY;
+					modified.getBoardCells()[y][x] = LightUp.CELL_LIGHT;
 					for (Contradiction c : contras) {
 						if (c.checkContradictionRaw(modified) != null)
-							return "It is not required for the modified cell(s) to be Lights!";
+							return "It is not required for the modified cell(s) to be empty!";
 					}
 				}
 			}

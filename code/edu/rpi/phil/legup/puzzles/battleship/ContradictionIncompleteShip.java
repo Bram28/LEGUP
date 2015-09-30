@@ -35,25 +35,17 @@ public class ContradictionIncompleteShip extends Contradiction
     			int cellValue = state.getCellContents(i, j);
     			if(BattleShip.isShip(cellValue))
     			{
+    				System.out.println(cellValue);
     				switch(cellValue)
     				{
-    				
     				case BattleShip.CELL_MIDDLE:
-    					// water on north and ship on south
-    					if (BattleShip.checkNorthForWater(state, i, j) &&
-    						BattleShip.checkSouthForSegment(state, i, j))
+    					// ship on 2 non-opposite sides
+    					if ((BattleShip.checkNorthForSegment(state, i, j) || BattleShip.checkSouthForSegment(state, i, j)) &&
+    						(BattleShip.checkWestForSegment(state, i, j) || BattleShip.checkEastForSegment(state, i, j)))
     						return null;
-    					// water on south and ship on north
-    					if (BattleShip.checkSouthForWater(state, i, j) &&
-    						BattleShip.checkNorthForSegment(state, i, j))
-    						return null;
-    					// water on east and ship on west
-    					if (BattleShip.checkEastForWater(state, i, j) &&
-    						BattleShip.checkWestForSegment(state, i, j))
-    						return null;
-    					// water on west and ship on east
-    					if (BattleShip.checkWestForWater(state, i, j) &&
-    						BattleShip.checkEastForSegment(state, i, j))
+    					// water on 2 non-opposite sides
+    					if ((BattleShip.checkNorthForWater(state, i, j) || BattleShip.checkSouthForWater(state, i, j)) &&
+    						(BattleShip.checkWestForWater(state, i, j) || BattleShip.checkEastForWater(state, i, j)))
     						return null;
     					break;
     					

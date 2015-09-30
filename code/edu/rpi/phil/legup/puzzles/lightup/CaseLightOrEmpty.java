@@ -11,19 +11,19 @@ import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.Permutations;
 
-public class CaseLightOrWhite extends CaseRule
+public class CaseLightOrEmpty extends CaseRule
 {
 	static final long serialVersionUID = -1977535413148184084L;
-	public String getImageName() {return "images/lightup/cases/LightOrWhite.png";}
-	public CaseLightOrWhite()
+	public String getImageName() {return "images/lightup/cases/LightOrEmpty.png";}
+	public CaseLightOrEmpty()
 	{
-		setName("Light or White");
-		description = "Each blank cell is either a light or white.";
+		setName("Light or Empty");
+		description = "Each blank cell is either a light or empty.";
 		//image = new ImageIcon("images/lightup/cases/LightOrWhite.png");
-		
+
 		defaultApplicationText= "Select an unknown square.";
 	}
-	
+
 	public String checkCaseRuleRaw(BoardState state)
 	{
 		String rv = null;
@@ -36,9 +36,9 @@ public class CaseLightOrWhite extends CaseRule
 		{
 			BoardState one = parent.getChildren().get(0);
 			BoardState two = parent.getChildren().get(1);
-						
+
 			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
-			
+
 			if (dif.size() > 1)
 			{
 				rv = "Your two-way split is only allowed to change a single cell with this rule.";
@@ -50,10 +50,10 @@ public class CaseLightOrWhite extends CaseRule
 			else
 			{
 				Point p = dif.get(0);
-				
-				if (!((one.getCellContents(p.x,p.y) == LightUp.CELL_LIGHT && 
+
+				if (!((one.getCellContents(p.x,p.y) == LightUp.CELL_LIGHT &&
 					two.getCellContents(p.x,p.y) == LightUp.CELL_EMPTY) ||
-					(two.getCellContents(p.x,p.y) == LightUp.CELL_LIGHT && 
+					(two.getCellContents(p.x,p.y) == LightUp.CELL_LIGHT &&
 						one.getCellContents(p.x,p.y) == LightUp.CELL_EMPTY)))
 				{
 					rv = "In this case rule, one state's cell must be white and the other a light.";
@@ -63,9 +63,9 @@ public class CaseLightOrWhite extends CaseRule
 					rv = "The parent cell that you're applying the case rule on must be a blank cell.";
 				}
 			}
-			
+
 		}
-			
+
 		return rv;
 	}
 
@@ -73,7 +73,7 @@ public class CaseLightOrWhite extends CaseRule
 	{
 		return true;
 	}
-	
+
 	public boolean doDefaultApplicationRaw(BoardState state, PuzzleModule pm ,Point location)
 	{
 		if(location.x < 0 || location.y < 0 || location.x >= state.getWidth( ) || location.y >= state.getHeight( ))
@@ -83,16 +83,16 @@ public class CaseLightOrWhite extends CaseRule
 			Vector<Integer> states = new Vector<Integer>();
 			states.add( LightUp.CELL_EMPTY );
 			states.add( LightUp.CELL_LIGHT );
-			
+
 			Permutations.permutationCell( state, location, states );
-			
+
 			for(int i = 0; i < state.getChildren( ).size( ); ++i)
 			{
 				LightUp.fillLight(state.getChildren( ).get( i ));
 			}
-			
+
 			state.setCaseSplitJustification(this);
-			
+
 			return true;
 		}
 		return false;
