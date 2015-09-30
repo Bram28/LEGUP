@@ -22,11 +22,8 @@ import java.util.Vector;
 public class BattleShip extends PuzzleModule
 {
 	static final long serialVersionUID = 532393951L;
-
-	public static int NUM_SHIPS_SIZE4 = 1;
-	public static int NUM_SHIPS_SIZE3 = 2;
-	public static int NUM_SHIPS_SIZE2 = 3;
-	public static int NUM_SHIPS_SIZE1 = 4;
+	
+	public static int[] numShips = {4, 3, 2, 1};
 
 	public static final int CELL_UNKNOWN = 0;
 	public static final int CELL_WATER = 1;
@@ -224,6 +221,7 @@ public class BattleShip extends PuzzleModule
 		result.add(new ContradictionIncompleteShip());
 		result.add(new ContradictionTooManyRowCol());
 		result.add(new ContradictionTooFewRowCol());
+		result.add(new ContradictionTooFewInFleet());
 		return result;
 	}
 
