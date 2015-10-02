@@ -6,7 +6,7 @@ import edu.rpi.phil.legup.Contradiction;
 public class ContradictionTooManyTents extends Contradiction
 {
 	static final long serialVersionUID = 9508L;
-	public String getImageName() {return "images/treetent/contra_miscount.png";}
+	public String getImageName() {return "images/treetent/too_many_tents.png";}
 	public ContradictionTooManyTents()
 	 {
 		setName("Too Many Tents");
