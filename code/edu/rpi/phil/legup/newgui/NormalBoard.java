@@ -161,7 +161,7 @@ public class NormalBoard extends Board
 					lastMousePoint = new Point(p);
 					if (p.x < w && p.y < h)
 					{ // p.x and p.y hold the grid point now!
-						if (state.isModifiableCell(p.x,p.y) || pm.isRemodifiable(state.getSingleParentState().getCellContents(p.x, p.y)))
+						if (state.isModifiableCell(p.x,p.y) || (state.getSingleParentState() != null && pm.isRemodifiable(state.getSingleParentState().getCellContents(p.x, p.y))))
 						{
 							BoardState next = state.conditionalAddTransition();
 							if(next != null) { pm.mousePressedEvent(next,p); }
