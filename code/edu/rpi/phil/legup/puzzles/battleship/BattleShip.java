@@ -208,7 +208,8 @@ public class BattleShip extends PuzzleModule
 
 	public Vector <PuzzleRule> getRules(){
 		Vector<PuzzleRule> ruleList = new Vector<PuzzleRule>();
-		ruleList.add(new WaterRowRule());
+		ruleList.add(new RuleFinishWithWater());
+		ruleList.add(new RuleFinishWithShips());
 		ruleList.add(new RuleSurroundShip());
 		ruleList.add(new RuleContinueShip());
 		ruleList.add(new RuleSegmentType());
