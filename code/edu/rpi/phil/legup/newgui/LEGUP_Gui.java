@@ -521,6 +521,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				if(!pm.checkProof(root))message += "\nThe board is not solved.";
 			}
 			else message += "There is not a unique non-condradictory leaf state. Incomplete case rules are pale green.";
+			JOptionPane.showMessageDialog(null, message, "Invalid proof.", JOptionPane.ERROR_MESSAGE);
 			
 			showStatus(message, true);
 		}
