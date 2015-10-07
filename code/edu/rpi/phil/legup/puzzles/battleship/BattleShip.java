@@ -383,7 +383,7 @@ public class BattleShip extends PuzzleModule
         }
         else
         {
-        	Set<Integer> submarineSet = new LinkedHashSet<>();
+        	Set<Integer> submarineSet = new LinkedHashSet<Integer>();
         	submarineSet.add(CELL_SUBMARINE);
         	horizontalShipMask.put(new Point(0,0), submarineSet);
         }
@@ -414,7 +414,7 @@ public class BattleShip extends PuzzleModule
 			}
         else
         {
-        	Set<Integer> submarineSet = new LinkedHashSet<>();
+        	Set<Integer> submarineSet = new LinkedHashSet<Integer>();
         	submarineSet.add(CELL_SUBMARINE);
         	verticalShipMask.put(new Point(0,0), submarineSet);
         }
