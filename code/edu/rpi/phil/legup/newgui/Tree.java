@@ -201,7 +201,7 @@ public class Tree extends JPanel implements JustificationAppliedListener, TreeSe
 			{
 				BoardState state = SaveableProof.bytesToState(origInitState);
 				Legup.getInstance().setInitialBoardState(state);
-				while(state.getChildren().size()>0)state = state.getChildren().lastElement();
+				while(state.getChildren().size()>0)state = state.getChildren().get(state.getChildren().size()-1);
 				Legup.setCurrentState(state);
 			}
 		}

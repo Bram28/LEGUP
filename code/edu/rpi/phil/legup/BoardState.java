@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 import java.util.Vector;
 import java.lang.Math;
 import java.awt.Color;
@@ -56,7 +57,7 @@ public class BoardState implements java.io.Serializable
 	private int[][] boardCells;
 	
 	//to keep track of what cells have changed
-	private Vector <Point> changedCells;
+	private ArrayList<Point> changedCells;
 	private boolean[][] modifiableCells;
 	private boolean[][] editedCells;
 	
@@ -78,10 +79,10 @@ public class BoardState implements java.io.Serializable
 	private Point location = new Point(0,0);
 
 	// parents
-	private Vector<BoardState> parents = new Vector<BoardState>();
+	private ArrayList<BoardState> parents = new ArrayList<BoardState>();
 
 	// children
-	private Vector<BoardState> children = new Vector<BoardState>();
+	private ArrayList<BoardState> children = new ArrayList<BoardState>();
 	
 	// a PuzzleRule or Contradiction
 	private Justification justification = null;
@@ -131,7 +132,7 @@ public class BoardState implements java.io.Serializable
 		setRightLabels(new int[height]);
 		modifiableCells = new boolean[height][width];
 		editedCells = new boolean[height][width];
-		changedCells = new Vector<Point>();
+		changedCells = new ArrayList<Point>();
 		extraDataDelta = new ArrayList<Object>();
 		justificationText = null;
 		
@@ -211,7 +212,7 @@ public class BoardState implements java.io.Serializable
 		}
 		extraData = new ArrayList<Object>(copy.extraData);
 		justificationText = null;
-		changedCells = copy.getChangedCells();
+		changedCells = new ArrayList<Point>(copy.changedCells);
 		
 		parents.clear();
 		for (int i=0;i<copy.parents.size();i++)
@@ -514,7 +515,7 @@ public class BoardState implements java.io.Serializable
 			{
 				editedCells[y][x] = false;
 				if(changedCells.contains(new Point(x,y)))
-					changedCells.removeElement(new Point(x,y));
+					changedCells.remove(new Point(x,y));
 			}
 		}
 		
@@ -757,9 +758,9 @@ public class BoardState implements java.io.Serializable
 	/**
 	 * Gets the vector of all Transitions to this board state
 	 *
-	 * @return A Vector of the Transitions to this board state which are BoardStates
+	 * @return A List of the parents of this BoardState
 	 */
-	public Vector<BoardState> getParents()
+	public List<BoardState> getParents()
 	{
 		return parents;
 	}
@@ -767,26 +768,10 @@ public class BoardState implements java.io.Serializable
 	/**
 	 * Gets the vector of all Transitions from this board state
 	 *
-	 * @return A Vector of the Transitions from this board state which are BoardStates
+	 * @return A List of the children of the BoardState
 	 */
-	public Vector<BoardState> getChildren(){
+	public List<BoardState> getChildren(){
 		return children;
-	}
-	
-	/**
-	 * Sets the transitions to this BoardState
-	 * @param to Vector<BoardState> containing new parents
-	 */
-	public void setTransitionsTo(Vector<BoardState> to) {
-		parents = to;
-	}
-	
-	/**
-	 * Sets the transitions from this BoardState
-	 * @param from Vector<BoardState> containing new children
-	 */
-	public void setTransitionsFrom(Vector<BoardState> from) {
-		children = from;
 	}
 	
 	public ArrayList<Integer> getPathToNode()
@@ -899,7 +884,7 @@ public class BoardState implements java.io.Serializable
 		}
 		else if(s.getChildren().size() >= 1)
 		{
-			next = s.getChildren().firstElement();
+			next = s.getChildren().get(0);
 			if((next.getCaseRuleJustification() != null) && (!Legup.getInstance().getGui().checkCaseRuleGen()))
 			{
 				next = s.addTransitionFrom();
@@ -1483,7 +1468,7 @@ public class BoardState implements java.io.Serializable
 	{
 		BoardState rv = null;
 
-		Vector<BoardState> parents = getParents();
+		List<BoardState> parents = getParents();
 
 		if (parents.size() == 1)
 			rv = parents.get(0);
@@ -1493,7 +1478,7 @@ public class BoardState implements java.io.Serializable
 	
 	public BoardState getFirstChild()
 	{
-		return getChildren().firstElement();
+		return getChildren().get(0);
 	}
 
 	/**
@@ -1800,50 +1785,6 @@ public class BoardState implements java.io.Serializable
 			return (next != null) ? next.leadsToContradiction() : (getJustification() instanceof Contradiction);
 		}
 		else return (getJustification() instanceof Contradiction); //if there are no children
-		/*if (status != -1)
-			return leadContradiction;
-
-		if (justification instanceof Contradiction && ((Contradiction)justification).checkContradiction(this) == null)
-		{
-			status = STATUS_CONTRADICTION_CORRECT;
-			return (leadContradiction = true);
-		}
-
-		// does this boardstate lead to a contradiction?
-		Vector <BoardState> children = this.getChildren();
-		boolean rv = false;
-
-		if (children.size() == 1)
-		{
-			BoardState child = children.get(0);
-
-			if (child.getStatus() == BoardState.STATUS_CONTRADICTION_CORRECT)
-				rv = true;
-			else if (child.getStatus() == BoardState.STATUS_RULE_CORRECT)
-				rv = child.leadsToContradiction();
-		}
-		else if (children.size() > 1)
-		{
-			if (this.isJustifiedCaseSplit() == null) // if it's valid
-			{
-				rv = true; // we're valid until we find a child that doesn't lead to a contradiction
-
-				for (int c = 0; c < children.size(); ++c)
-				{
-					BoardState child = children.get(c);
-
-					if (child.getStatus() == BoardState.STATUS_CONTRADICTION_CORRECT)
-						continue;
-					else if (!child.leadsToContradiction()) // we've found an invalid one
-					{
-						rv = false;
-						break;
-					}
-				}
-			}
-		}
-
-		return (leadContradiction = rv);*/
 	}
 	//checks all children, returns the BoardState that does not lead to a contradiction
 	//returns null if the number of children that do not lead to a contradiction is not exactly 1
@@ -1899,7 +1840,7 @@ public class BoardState implements java.io.Serializable
 		if(this.isSolution)
 			return (leadSolution = true);
 
-		Vector <BoardState> children = this.getChildren();
+		List<BoardState> children = this.getChildren();
 
 		if (children.size() == 1)
 		{
@@ -2163,7 +2104,7 @@ public class BoardState implements java.io.Serializable
 	{
 		if(this.leadsToContradiction())return null;
 		else if(this.children.size() == 0)return this; //leaf node
-		else if(this.children.size() == 1)return this.children.lastElement().getFinalState();
+		else if(this.children.size() == 1)return this.children.get(0).getFinalState();
 		else return (doesNotLeadToContradiction() != null)?doesNotLeadToContradiction().getFinalState():null;
 	}
 
@@ -2398,11 +2339,7 @@ public class BoardState implements java.io.Serializable
 		return boardCells;
 	}
 
-	public void setChangedCells(Vector <Point> changedCells) {
-		this.changedCells = changedCells;
-	}
-
-	public Vector <Point> getChangedCells() {
+	public List<Point> getChangedCells() {
 		return changedCells;
 	}
 	

@@ -9,6 +9,7 @@ import java.util.Vector;
 //import java.lang.Integer;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.Point;
 
 /**
@@ -372,7 +373,7 @@ public class AI implements Runnable {
 
 				// hunt down the first child that does not lead to a
 				// contradiction
-				Vector<BoardState> Children = Search.getChildren();
+				List<BoardState> Children = Search.getChildren();
 				boolean found = false;
 				for (int i = 0; i < Children.size(); i++) {
 					BoardState child = Children.get(i);

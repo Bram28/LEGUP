@@ -3,6 +3,7 @@ package edu.rpi.phil.legup.puzzles.treetent;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Vector;
 
 import edu.rpi.phil.legup.BoardState;
@@ -56,7 +57,7 @@ public class CaseLinkTent extends CaseRule
 		else if(p2 == null)return false;
 		return (p1.x==p2.x)&&(p1.y==p2.y);
 	}
-	public Point findOnlyCommonTile(Vector<BoardState> states, int type)
+	public Point findOnlyCommonTile(List<BoardState> states, int type)
 	{
 		Point rv = null;
 		int num_trees = 0;

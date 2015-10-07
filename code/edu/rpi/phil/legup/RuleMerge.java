@@ -1,6 +1,6 @@
 package edu.rpi.phil.legup;
 
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -41,7 +41,7 @@ public final class RuleMerge extends PuzzleRule
     	}
     	else
     	{
-    		Vector <BoardState> parents = state.getParents();
+    		List<BoardState> parents = state.getParents();
     		
     		// make sure all of our information is in the parent
     		for (int i = 0; i < parents.size(); ++i)

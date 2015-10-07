@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
+import java.util.List;
 import javax.swing.JComponent;
 import edu.rpi.phil.legup.BoardDrawingHelper;
 import edu.rpi.phil.legup.BoardState;
@@ -82,7 +83,7 @@ public class NormalBoard extends Board
 		}
 
 		BoardState state = selection.getState();
-		Vector<BoardState> parentStates = state.getParents();
+		List<BoardState> parentStates = state.getParents();
 
 		PuzzleModule pm = Legup.getInstance().getPuzzleModule();
 
@@ -206,7 +207,7 @@ public class NormalBoard extends Board
 		else if (e.getButton() == MouseEvent.BUTTON1)
 		{
 			BoardState state = selection.getState();
-			Vector<BoardState> parentStates = state.getParents();
+			List<BoardState> parentStates = state.getParents();
 
 			if (lastMousePoint != null && parentStates.size() > 0) // not root state
 			{

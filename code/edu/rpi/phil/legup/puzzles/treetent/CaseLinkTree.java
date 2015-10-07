@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Vector;
+import java.util.List;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
@@ -89,7 +90,7 @@ public class CaseLinkTree extends CaseRule
 		else if(p2 == null)return false;
 		return (p1.x==p2.x)&&(p1.y==p2.y);
 	}
-	public static Point findOnlyCommonTile(Vector<BoardState> states, int type)
+	public static Point findOnlyCommonTile(List<BoardState> states, int type)
 	{
 		Point rv = null;
 		int num_trees = 0;
