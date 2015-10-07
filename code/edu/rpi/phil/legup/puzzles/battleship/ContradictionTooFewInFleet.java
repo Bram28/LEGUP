@@ -47,7 +47,7 @@ public class ContradictionTooFewInFleet extends Contradiction
             			value = BattleShip.CELL_RIGHT_CAP;
 
             		// TODO SetCellContents on a virtual board triggered a stack overflow, must fix
-            		transition.getBoardCells()[y][x+curLength] = value;
+        			transition.getBoardCells()[y][x+i] = value;
             	}
             	if (contra.checkContradictionRaw(transition) != null)
             		totalShipLocations++;
@@ -71,7 +71,7 @@ public class ContradictionTooFewInFleet extends Contradiction
 	            			value = BattleShip.CELL_BOTTOM_CAP;
 	            		
 	            		// TODO SetCellContents on a virtual board triggered a stack overflow, must fix
-	            		transition.getBoardCells()[y+i][x] = value;
+            			transition.getBoardCells()[y+i][x] = value;
 	            	}
 	            	if (contra.checkContradictionRaw(transition) != null)
 	            		totalShipLocations++;
@@ -80,7 +80,6 @@ public class ContradictionTooFewInFleet extends Contradiction
 	            }
     		}
     		
-    		System.out.println("There are " + totalShipLocations + " locations for a ship of size " + curLength);
     		if (totalShipLocations < BattleShip.numShips[curLength - 1])
     			return null;
     	}

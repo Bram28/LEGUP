@@ -12,6 +12,7 @@ import edu.rpi.phil.legup.*;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -222,6 +223,7 @@ public class BattleShip extends PuzzleModule
 		result.add(new ContradictionTooManyRowCol());
 		result.add(new ContradictionTooFewRowCol());
 		result.add(new ContradictionTooFewInFleet());
+		result.add(new ContradictionTooManyInFleet());
 		return result;
 	}
 
@@ -365,19 +367,25 @@ public class BattleShip extends PuzzleModule
 	{
         Map<Point,Set<Integer>> horizontalShipMask = new LinkedHashMap<Point,Set<Integer>>();
         if (length > 1)
+        {
 			for (int i = 0; i < length; i++)
 			{
-				Set<Integer> curSet;
+				Set<Integer> curSet = new LinkedHashSet<Integer>();
 				if (i == 0)
-					curSet = new LinkedHashSet<Integer>(CELL_LEFT_CAP);
+					curSet.add(CELL_LEFT_CAP);
 				else if (i == length - 1)
-					curSet = new LinkedHashSet<Integer>(CELL_MIDDLE);
+					curSet.add(CELL_RIGHT_CAP);
 				else
-					curSet = new LinkedHashSet<Integer>(CELL_RIGHT_CAP);
-				horizontalShipMask.put(new Point( 0, i), curSet);
+					curSet.add(CELL_MIDDLE);
+				horizontalShipMask.put(new Point(i, 0), curSet);
 			}
+        }
         else
-        	horizontalShipMask.put(new Point(0,0), new LinkedHashSet<Integer>(CELL_SUBMARINE));
+        {
+        	Set<Integer> submarineSet = new LinkedHashSet<>();
+        	submarineSet.add(CELL_SUBMARINE);
+        	horizontalShipMask.put(new Point(0,0), submarineSet);
+        }
 		return PointSetAlgorithms.getPositionsForPointSet(state.getBoardCells(), horizontalShipMask);
 	}
 	
@@ -394,17 +402,21 @@ public class BattleShip extends PuzzleModule
         if (length > 1)
 			for (int i = 0; i < length; i++)
 			{
-				Set<Integer> curSet;
+				Set<Integer> curSet = new LinkedHashSet<Integer>();
 				if (i == 0)
-					curSet = new LinkedHashSet<Integer>(CELL_TOP_CAP);
+					curSet.add(CELL_TOP_CAP);
 				else if (i == length - 1)
-					curSet = new LinkedHashSet<Integer>(CELL_MIDDLE);
+					curSet.add(CELL_BOTTOM_CAP);
 				else
-					curSet = new LinkedHashSet<Integer>(CELL_BOTTOM_CAP);
-				verticalShipMask.put(new Point( 0, i), curSet);
+					curSet.add(CELL_MIDDLE);
+				verticalShipMask.put(new Point(0, i), curSet);
 			}
         else
-        	verticalShipMask.put(new Point(0,0), new LinkedHashSet<Integer>(CELL_SUBMARINE));
+        {
+        	Set<Integer> submarineSet = new LinkedHashSet<>();
+        	submarineSet.add(CELL_SUBMARINE);
+        	verticalShipMask.put(new Point(0,0), submarineSet);
+        }
 		return PointSetAlgorithms.getPositionsForPointSet(state.getBoardCells(), verticalShipMask);
 	}
 	
