@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
@@ -41,6 +43,9 @@ public class LightUp extends PuzzleModule
 	public static int CELL_BLOCK4 = 14;
 	public static int CELL_BLOCK = 15; //the blank black block
 
+	private int[][] litCells; // holds how many bulbs are lighting each board cell
+	private Set<Point> autoEmpty; // set contiaining all cells that are empty
+
     public Map<String, Integer> getSelectableCells()
     {
         Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
@@ -62,7 +67,16 @@ public class LightUp extends PuzzleModule
     }
 	public int getNonunknownBlank() {return 2;} //the index into getStateName of empty
 
-	public LightUp(){
+	public LightUp() {
+		litCells = null;
+		autoEmpty = null;
+	}
+
+	private void init() {
+		int width = Legup.getInstance().getInitialBoardState().getWidth();
+		int height = Legup.getInstance().getInitialBoardState().getHeight();
+		litCells = new int[width][height]; // initializes litCells to all 0's
+		autoEmpty = new LinkedHashSet<Point>();
 	}
 
 	public boolean checkBoardComplete(BoardState finalstate)
@@ -83,9 +97,79 @@ public class LightUp extends PuzzleModule
 
 	public void mousePressedEvent(BoardState state, Point where)
 	{
+		if (litCells == null) init();
 		int next = getNextCellValue(where.x,where.y,state);
 		state.setCellContents(where.x,where.y,next);
-		fillLight(state);
+		if (next == CELL_LIGHT) {
+			LightAdded(state, where);
+		} else if (next == CELL_EMPTY) {
+			LightRemoved(state, where);
+		}
+		updateLight(state);
+		updateAutoEmptyCells(state);
+		// fillLight(state);
+	}
+
+	private void LightAdded(BoardState state, Point loc) {
+		int width = state.getWidth();
+		int height = state.getHeight();
+		for (int i = -1; i <= 1; i += 2) {
+			// Increment lit in row of changed cell
+			int j = loc.x;
+			do {
+				litCells[j][loc.y]++; // increment lit cell
+				j += i; // increment or decrement j
+			} while (j >= 0 && j < width && state.getCellContents(j, loc.y) < CELL_BLOCK0);
+			j = loc.y;
+			do {
+				litCells[loc.x][j]++;
+				j += i;
+			} while (j >= 0 && j < height && state.getCellContents(loc.x, j) < CELL_BLOCK0);
+		}
+		litCells[loc.x][loc.y] -= 3;
+	}
+
+	private void LightRemoved(BoardState state, Point loc) {
+		int width = state.getWidth();
+		int height = state.getHeight();
+		for (int i = -1; i <= 1; i += 2) {
+			// Increment lit in row of changed cell
+			int j = loc.x;
+			do {
+				litCells[j][loc.y]--;
+				j += i; // increment or decrement j
+			} while (j >= 0 && j < width && state.getCellContents(j, loc.y) < CELL_BLOCK0);
+			j = loc.y;
+			do {
+				litCells[loc.x][j]--;
+				j += i;
+			} while (j >= 0 && j < height && state.getCellContents(loc.x, j) < CELL_BLOCK0);
+		}
+		litCells[loc.x][loc.y] += 3;
+	}
+
+	private void updateLight(BoardState state) {
+		ArrayList<Object> extra = state.getExtraData();
+		extra.clear();
+		for (int x = 0; x < state.getWidth(); ++x) {
+			for (int y = 0; y < state.getHeight(); ++y) {
+				if(litCells[x][y] > 0)
+					extra.add(new Point(x,y));
+			}
+		}
+	}
+
+	private void updateAutoEmptyCells(BoardState state) {
+		for (int x = 0; x < state.getWidth(); ++x) {
+			for (int y = 0; y < state.getHeight(); ++y) {
+				if(litCells[x][y] > 0 && state.getCellContents(x, y) == CELL_UNKNOWN) {
+					state.setCellContents(x, y, CELL_EMPTY);
+					autoEmpty.add(new Point(x, y));
+				} else if (litCells[x][y] == 0 && state.getCellContents(x, y) == CELL_EMPTY && autoEmpty.remove(new Point(x, y))) {
+					state.setCellContents(x, y, CELL_UNKNOWN);
+				}
+			}
+		}
 	}
 
 	public String getImageLocation(int cellValue){
@@ -106,6 +190,7 @@ public class LightUp extends PuzzleModule
 
 	public void initBoard(BoardState state)
 	{
+
 	}
 
 	/**
@@ -278,10 +363,11 @@ public class LightUp extends PuzzleModule
 		}
 	}
 
-	public void boardDataChanged(BoardState state)
-	{
-		fillLight(state);
-	}
+	// public void boardDataChanged(BoardState state)
+	// {
+	// 	System.out.println("boardDataChanged");
+	// 	fillLight(state);
+	// }
 
 	public static void fillLight(BoardState state)
 	{

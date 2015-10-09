@@ -46,11 +46,15 @@ public class RuleMustLight extends PuzzleRule
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				// Check for changes
-				if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
+				if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)
+						&& destBoardState.getCellContents(x, y) == LightUp.CELL_LIGHT) {
+					//** -------------------------------------------------------------------------------
+					//** DOES NOT WORK WITH MODIFIED BULB PLACEMENT (where empty cells are added as well)
 					// Make sure cells placed are light cells
-					if (destBoardState.getCellContents(x, y) != LightUp.CELL_LIGHT) {
-						return "Only Light cells are allowed for this rule!";
-					}
+					// if (destBoardState.getCellContents(x, y) != LightUp.CELL_LIGHT) {
+					// 	return "Only Light cells are allowed for this rule!";
+					// }
+					//** -------------------------------------------------------------------------------
 					// Make sure a light bulb is not placed in a lit cell
 					if (new ContradictionBulbsInPath().checkContradictionRaw(destBoardState) == null) {
 						return "You cannot place a bulb in an already lit cell!";
