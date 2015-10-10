@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.Vector;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 import edu.rpi.phil.legup.BoardState;
@@ -116,7 +117,7 @@ public class CasePossibleCellsForNumber extends CaseRule
 		if (parent != null && parent.getChildren().size() < 2){
 			return "This case rule can only be applied on a split transition";
 		}
-// 		Vector<BoardState> states = parent.getChildren();
+// 		List<BoardState> states = parent.getChildren();
 // 		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
 // 		if (dif.size() != 1){
 // 			return "Case rule only applies to a split transition of one cell";

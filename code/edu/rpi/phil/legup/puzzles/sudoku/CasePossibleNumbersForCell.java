@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import edu.rpi.phil.legup.Legup;
@@ -64,7 +65,7 @@ public class CasePossibleNumbersForCell extends CaseRule
 		if (parent != null && parent.getChildren().size() < 2){
 			return "This case rule can only be applied on a split transition";
 		}
-		Vector<BoardState> states = parent.getChildren();
+		List<BoardState> states = parent.getChildren();
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
 		if (dif.size() != 1){
 			return "Case rule only applies to a split transition of one cell";

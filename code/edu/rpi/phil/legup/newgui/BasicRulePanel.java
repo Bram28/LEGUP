@@ -159,7 +159,7 @@ public class BasicRulePanel extends JustificationPanel
 			}
 			else if (cur.getChildren().size() == 1) //change justification on existing node
 			{
-				next = cur.getChildren().lastElement();
+				next = cur.getChildren().get(0);
 			}
 			else return null; //don't do anything if there's already a split (since this is a basic rule)
 			next.setJustification(rules.get(button));

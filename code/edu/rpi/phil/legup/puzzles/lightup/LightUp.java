@@ -211,6 +211,7 @@ public class LightUp extends PuzzleModule
 		ruleList.add(new RuleFinishWithEmpty());
 		ruleList.add(new RuleMustLight());
 		ruleList.add(new RuleEmptyCorners());
+		ruleList.add(new RuleWhiteInLight());
 		return ruleList;
 	}
 

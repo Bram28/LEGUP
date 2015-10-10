@@ -564,7 +564,7 @@ public class Sudoku extends PuzzleModule
 
 		Point randomLoc = bestGuesses.get(0);
 		BoardState parent = B.getSingleParentState();
-		Vector<BoardState> cases = new Vector<BoardState>();
+		List<BoardState> cases = new ArrayList<BoardState>();
 		cases.add(B);
 
 		for (int i = 1; i < bestGuess; i++)

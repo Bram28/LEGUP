@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.Set;
+import java.util.List;
 import java.util.LinkedHashSet;
 
 import edu.rpi.phil.legup.BoardState;
@@ -222,7 +223,7 @@ public class CaseFillInRow extends CaseRule
 		// if(numChildStates != numCombinations){
 		// 	return "The number of branches must be equal to the number of possible\nconfigurations for "+numTentsNeeded+" tents in "+numEmptySpaces+" empty spaces";
 		// }
-		Vector<BoardState> allChildStates = parent.getChildren();
+		List<BoardState> allChildStates = parent.getChildren();
 		for(int i = 0; i < allChildStates.size(); i++){
 			BoardState currentChildState = allChildStates.get(i);
 			ArrayList<Point> pointsChanged = BoardState.getDifferenceLocations(parent,currentChildState);

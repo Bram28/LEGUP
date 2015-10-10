@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -105,7 +106,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 	private BoardState getLastCollapsed(BoardState s, int[] outptrNumTransitions)
 	{
-		Vector <BoardState> children = s.getChildren();
+		List<BoardState> children = s.getChildren();
 		BoardState rv = s;
 		int numTransitions = 0;
 	
@@ -132,7 +133,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		float scale = (100/(float)getZoom());
 		b.setBounds((int)b.getX()-(int)(100*scale), (int)b.getY(), (int)b.getWidth()+(int)(400*scale), (int)b.getHeight()+(int)(200*scale));
 		// get the relevant child nodes
-		Vector <BoardState> children = state.isCollapsed()
+		List<BoardState> children = state.isCollapsed()
 			? getLastCollapsed(state).getChildren()
 			: state.getChildren();
 		// compute the union of the child bounding boxes recursively
@@ -240,7 +241,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 		if (stateSelected && isCollapsed)
 		{
-			Vector <BoardState> parents = state.getParents();
+			List<BoardState> parents = state.getParents();
 
 			if (parents.size() == 1 && parents.get(0).isCollapsed())
 				stateSelected = false; // can't select a collapsed state
@@ -646,7 +647,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		if (s.isState())
 		{ // state
 			// make sure we don't delete the initial board state
-			Vector<BoardState> parentStates = state.getParents();
+			List<BoardState> parentStates = state.getParents();
 			if (parentStates.size() == 0)
 				return;
 				
@@ -664,7 +665,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 			Legup.getInstance().getSelections().setSelection(new Selection(state, false));
 
 			// delete children states
-			Vector <BoardState> children = state.getChildren();
+			List<BoardState> children = state.getChildren();
 
 			while (children.size() > 0)
 			{
@@ -745,7 +746,7 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 		BoardState lastCollapsed = null;
 		
 		boolean flag = LEGUP_Gui.profFlag(LEGUP_Gui.IMD_FEEDBACK);
-		Vector <BoardState> children = null;
+		List<BoardState> children = null;
 		Point draw;
 
 		g.setColor(Color.black);

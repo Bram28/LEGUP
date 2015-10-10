@@ -7,6 +7,7 @@ import edu.rpi.phil.legup.PuzzleModule;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -34,7 +35,7 @@ public class CaseWhiteOrBlack extends CaseRule
 		if (state.getChildren().size() < 2)
 			return "This case rule can only be applied on a split transition";
 
-		Vector<BoardState> states = state.getChildren();
+		List<BoardState> states = state.getChildren();
 		if (states.size() != 2) return "This case rule can only be applied to two child states";
 		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
 		if (dif.size() != 1)
