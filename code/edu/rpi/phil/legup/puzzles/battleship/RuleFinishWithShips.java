@@ -21,7 +21,7 @@ public class RuleFinishWithShips extends PuzzleRule
 
 	public String getImageName()
 	{
-		return "images/defaultRule.png";
+		return "images/battleship/rules/finishShip.png";
 	}
 
 	protected String checkRuleRaw(BoardState state)
