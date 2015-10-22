@@ -40,10 +40,10 @@ import javax.swing.UIManager;
 public class Legup
 {
 	private static Legup instance = null;
-	
+
 	public static ArrayList<BoardDataChangeListener> boardDataChangeListeners = new ArrayList<BoardDataChangeListener>();
 	public static ArrayList<TransitionChangeListener> transitionChangeListeners = new ArrayList<TransitionChangeListener>();
-	
+
 	public static void renewListeners()
 	{
 		Legup legup = getInstance();
@@ -121,17 +121,17 @@ public class Legup
 	{
 		this.initialBoardState = state;
 	}
-	
+
 	public static BoardState getCurrentState()
 	{
 		return Legup.getInstance().getSelections().getFirstSelection().getState();
 	}
-	
+
 	public static void setCurrentState(BoardState b)
 	{
 		Legup.getInstance().getSelections().setSelection(new Selection(b,false));
 	}
-	
+
 	public void loadRandomBoard(String puzzle)
 	{
 		Vector<String> allBoards = config.getBoardsForPuzzle(puzzle);
@@ -139,6 +139,18 @@ public class Legup
 		String filename = allBoards.get(random.nextInt(allBoards.size()));
 		System.out.println(filename + " selected");
 		loadBoardFile(filename);
+	}
+
+	public void setWindowTitle(String filename, String puzzleName) {
+		// Set window title to "puzzle_type - filename (w/o path or extension)"
+		String fileNameNoExt = filename;
+		if (filename.substring(filename.length()-4).equals(".xml")) {
+			fileNameNoExt = filename.substring(0, filename.length()-4);
+		} else if (filename.substring(filename.length()-6).equals(".proof")) {
+			fileNameNoExt = filename.substring(0, filename.length()-6);
+		}
+		String[] filePath = fileNameNoExt.split("/");
+		gui.setTitle(puzzleName + " - " + filePath[filePath.length-1]);
 	}
 
 	public void loadBoardFile(String filename)
@@ -164,6 +176,7 @@ public class Legup
 			System.out.println("Loading puzzle module: " + puzzle);
 
 			if(loadPuzzleModule(puzzle)) {
+				setWindowTitle(filename, puzzle);
 				this.initialBoardState = b;
 				setCurrentState(b);
 				gui.reloadGui();
@@ -199,6 +212,7 @@ public class Legup
 		if(puzzle == null)return;
 		System.out.println("Loading puzzle module: " + puzzle);
 		if(loadPuzzleModule(puzzle)) {
+			setWindowTitle(filename, puzzle);
 			gui.reloadGui();
 			Tree.colorTransitions();
 		}
@@ -294,17 +308,17 @@ public class Legup
 	private Login login = null;
 	private String user = null;
 	private String[] admins = {"heuveb"};
-	
+
 	public String getUser()
 	{
 		return user;
 	}
-	
+
 	public void setUser(String user)
 	{
-		this.user = user;  
+		this.user = user;
 	}
-	
+
 	public String[] getAdmins()
 	{
 		return this.admins;
@@ -314,7 +328,7 @@ public class Legup
 	{
 		gui.repaintBoard();
 	}
-	
+
 	/**
 	 * Starts up the program and the GUI
 	 */
@@ -322,7 +336,7 @@ public class Legup
 	{
 		GlobalPopupExceptionHandler.registerExceptionHandler();
 		Legup legup = Legup.getInstance();
-		
+
 		// TODO system look & feel
 		// Set System L&F
 		try {
@@ -332,7 +346,7 @@ public class Legup
 		legup.login = new Login(legup);
 		//legup.login.promptLogin();
 		legup.gui = new LEGUP_Gui(legup);
-		
+
 		//legup.gui.promptPuzzle();
 
 		// This is for the animation - Daniel P

@@ -61,7 +61,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.IOException;
 
-import javax.swing.BorderFactory; 
+import javax.swing.BorderFactory;
 //import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -85,7 +85,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 */
 	private static int CONFIG_INDEX = 0;
 	public static final int ALLOW_HINTS = 1;
-	public static final int ALLOW_DEFAPP = 2; 
+	public static final int ALLOW_DEFAPP = 2;
 	public static final int ALLOW_FULLAI = 4;
 	public static final int ALLOW_JUST = 8;
 	public static final int REQ_STEP_JUST = 16;
@@ -194,27 +194,27 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	{
 		this.legupMain = legupMain;
 		legupMain.getSelections().addTreeSelectionListener(this);
-		
+
 		setTitle("LEGUP");
 		setLayout( new BorderLayout() );
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		setupMenu();
 		setupToolBar();
 		setupContent();
 		pack();
-		
+
 		setVisible(true);
-		
+
 		// http://stackoverflow.com/questions/479523/java-swing-maximize-window
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		// Centers the window
 		setLocationRelativeTo( null );
 
 		fileChooser = new FileDialog(this);
-	
+
 	}
-	
+
 	// menubar related fields
 	private JMenuBar bar = new JMenuBar();
 	private JMenu file = new JMenu("File");
@@ -347,7 +347,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_SUBMIT].setEnabled(false);
 		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(false);
 		toolBarButtons[TOOLBAR_ANNOTATIONS].setEnabled(false);
-		
+
 		add( toolBar, BorderLayout.NORTH );
 	}
 
@@ -394,29 +394,29 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
     }
 	// contains all the code to setup the main content
 	private void setupContent(){
-		
+
 		JPanel consoleBox = new JPanel( new BorderLayout() );
 		JPanel treeBox = new JPanel( new BorderLayout() );
 		JPanel ruleBox = new JPanel( new BorderLayout() );
-		
+
 		// TODO Console
 		console = new Console();
 		//consoleBox.add( console, BorderLayout.SOUTH );
-		
+
 		// TODO experimental floating toolbar
-		
+
 		//((BasicToolBarUI) console.getUI()).setFloatingLocation(500,500);
 		//((BasicToolBarUI) console.getUI()).setFloating(true, new Point(500,500));
-		
-		
+
+
 		tree = new Tree( this );
-		
+
 		justificationFrame = new JustificationFrame( this );
 		//ruleBox.add( justificationFrame, BorderLayout.WEST );
-		
+
 		board = new NormalBoard( this );
 		board.setPreferredSize( new Dimension( 600, 400 ) );
-		
+
 		JPanel boardPanel = new JPanel( new BorderLayout() );
 		topHalfPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, justificationFrame, board);
 		mainPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, topHalfPanel, tree);
@@ -426,7 +426,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		boardBorder = BorderFactory.createTitledBorder("Board");
 		boardBorder.setTitleJustification(TitledBorder.CENTER);
 		board.setBorder(boardBorder);
-		
+
 		ruleBox.add( boardPanel );
 		treeBox.add( ruleBox );
 		consoleBox.add( treeBox );
@@ -482,8 +482,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		{
 			filename = fileChooser.getDirectory() + filename;
 
-			if (!filename.toLowerCase().endsWith(".proof"))
+			if (!filename.toLowerCase().endsWith(".proof")) {
+				legupMain.setWindowTitle(filename, root.getPuzzleName());
 				filename = filename + ".proof";
+			}
+			legupMain.setWindowTitle(filename.substring(0, filename.length()-6), root.getPuzzleName());
 
 			try {
 				SaveableProof.saveProof(root, filename);
@@ -522,11 +525,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			}
 			else message += "There is not a unique non-condradictory leaf state. Incomplete case rules are pale green.";
 			JOptionPane.showMessageDialog(null, message, "Invalid proof.", JOptionPane.ERROR_MESSAGE);
-			
+
 			showStatus(message, true);
 		}
-	} 
-	 
+	}
+
 	private void submit()
 	{
 		BoardState root = legupMain.getInitialBoardState();
@@ -549,14 +552,14 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			Submission submit = new Submission(root, false);
 		}
 	}
-	
+
 	private void directions()
 	{
 		JOptionPane.showMessageDialog(null, "For ever move you make, you must provide a justification for it (located in the Rules panel).\n"
-				+ "While working on the puzzle, you may click on the \"Check\" button to test your proof for correctness.", 
+				+ "While working on the puzzle, you may click on the \"Check\" button to test your proof for correctness.",
 				"Directions", JOptionPane.PLAIN_MESSAGE);
 	}
-	
+
 	private void showAll() {
 		getBoard().initSize();
 		// TODO disable buttons
@@ -571,7 +574,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		///
 		this.pack();
 	}
- 
+
 	private void repaintAll(){
 		getBoard().repaint();
 		getJustificationFrame().repaint();
@@ -583,7 +586,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 * ILegupGui interface methods
 	 * @see edu.rpi.phil.legup.ILegupGui
 	 */
-	
+
 	public void showStatus(String status, boolean error)
 	{
 		showStatus(status,error,1);
@@ -627,7 +630,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	{
 		getJustificationFrame().setJustifications(Legup.getInstance().getPuzzleModule());
 		getJustificationFrame().resetSize();
-		
+
 		// AI setup
 		myAI.setBoard(Legup.getInstance().getPuzzleModule());
 
@@ -667,7 +670,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			return true;
 		}
 	}
-	
+
 	public void actionPerformed(ActionEvent e)
 	{
 		if (e.getSource() == newPuzzle || e.getSource() == toolBarButtons[TOOLBAR_NEW])
@@ -732,7 +735,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == toolBarButtons[TOOLBAR_SUBMIT])
 		{
 			submit();
-		} 
+		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_DIRECTIONS])
 		{
 			directions();
@@ -763,7 +766,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == toolBarButtons[TOOLBAR_ANNOTATIONS])
 		{
 			legupMain.getPuzzleModule().toggleAnnotations();
-			repaintAll(); 
+			repaintAll();
 		}
 		else if (e.getSource() == allowDefault)
 		{
@@ -809,7 +812,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			}
 		}
 	}
-	
+
 	public void resetUndoRedo()
 	{
 		undo.setEnabled(getTree().undoStack.size() > 1);
@@ -817,7 +820,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		redo.setEnabled(getTree().redoStack.size() > 0);
 		toolBarButtons[TOOLBAR_REDO].setEnabled(getTree().redoStack.size() > 0);
 	}
-	
+
 	public void treeSelectionChanged(ArrayList <Selection> s)
 	{
 		resetUndoRedo();
@@ -841,12 +844,12 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowClosed(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowClosing(WindowEvent e) {
@@ -858,27 +861,27 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		}
 		else
 			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
 	}
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowDeiconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowIconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
