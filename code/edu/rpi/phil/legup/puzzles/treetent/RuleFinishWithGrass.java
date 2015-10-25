@@ -12,9 +12,12 @@
 
 package edu.rpi.phil.legup.puzzles.treetent;
 import javax.swing.ImageIcon;
+import java.util.Set;
+import java.util.HashSet;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.Contradiction;
 
 public class RuleFinishWithGrass extends PuzzleRule
 {
@@ -27,172 +30,37 @@ public class RuleFinishWithGrass extends PuzzleRule
     	//image = new ImageIcon("images/treetent/finishGrass.png");
     }
 
+		protected String checkRuleRaw(BoardState destBoardState) {
+			Set<Contradiction> contras = new HashSet<Contradiction>();
+			contras.add(new ContradictionTooManyTents());
 
-    private boolean checkRow(BoardState boardState, int y)
-    {
-		int width = boardState.getWidth();
-		int label = boardState.getLabel(BoardState.LABEL_RIGHT, y);
-		int numTents = TreeTent.translateNumTents(label);
+			BoardState origBoardState = destBoardState.getSingleParentState();
+			int width = origBoardState.getWidth();
+			int height = origBoardState.getHeight();
 
-		//Iterate through each cell in this row
-		for (int i = 0; i < width; i++)
-		{
-			//If the cell is a tent, subtract from the total tents remaining
-			if (boardState.getCellContents(i,y) == 2)
-			{
-			    numTents--;
+			// Check for only one branch
+			if (destBoardState.getParents().size() != 1) {
+				return "This rule only involves having a single branch!";
 			}
-		}
 
-		//True, if no more tents are remaining.
-		return numTents == 0;
-    }
-
-    private boolean checkCol(BoardState boardState, int x)
-    {
-		int height = boardState.getHeight();
-		int numTents = TreeTent.translateNumTents(boardState.getLabel(BoardState.LABEL_BOTTOM, x));
-
-		//Iterate through each cell in this column
-		for (int i = 0; i < height; i++)
-		{
-			if (boardState.getCellContents(x,i) == 2)
-			{
-			    numTents--;
-			}
-		}
-
-		//True, if no more tents are remaining
-		return numTents == 0;
-    }
-
-    protected String checkRuleRaw(BoardState destBoardState)
-    {
-    	String error = null;
-    	boolean changed = false;
-    	BoardState origBoardState = destBoardState.getSingleParentState();
-
-    	// Check for only one branch
-		if (destBoardState.getParents().size() != 1)
-		{
-			error = "This rule only involves having a single branch!";
-		}
-		else if (!destBoardState.getExtraData().equals(origBoardState.getExtraData()))
-		{
-			error = "This rule does not involve changing tree-tent links.";
-		}
-		else
-		{
-			// For each cell, check if the row or column has a sufficient number of tents in it
-			for (int y = 0; y < origBoardState.getHeight() && error == null; ++y)
-			{
-				for (int x = 0; x < origBoardState.getWidth(); ++x)
-				{
+			for (int y = 0; y < height; ++y) {
+				for (int x = 0; x < width; ++x) {
 					int origState = origBoardState.getCellContents(x,y);
 					int newState = destBoardState.getCellContents(x,y);
-
-					if (origState != newState)
-					{
-						changed = true;
-
-						if (newState != TreeTent.CELL_GRASS || origState != TreeTent.CELL_UNKNOWN)
-						{
-							error = "This rule only involves adding grass!";
-							break;
+					if (origState != newState) {
+						if (destBoardState.getCellContents(x, y) != TreeTent.CELL_GRASS) {
+							return "Only Grass cells are allowed for this rule!";
 						}
 
-						if (!checkRow(destBoardState, y) && !checkCol(destBoardState, x))
-						{
-							error = "Neither the row nor column at " + (char)(y + (int)'A') + "" + (x + 1)
-									+ " has its maximum number of tents.";
-							break;
+						BoardState modified = origBoardState.copy();
+						modified.getBoardCells()[y][x] = TreeTent.CELL_TENT;
+						for (Contradiction c : contras) {
+							if (c.checkContradictionRaw(modified) != null)
+								return "You can still add more tents to this row/column!";
 						}
 					}
 				}
 			}
-
-			if (error == null && !changed)
-			{
-				error = "You must add grass to use this rule!";
-			}
+			return null;
 		}
-
-		TreeTent.setAnnotations(destBoardState);
-
-		return error;
-	}
-	protected boolean doDefaultApplicationRaw(BoardState destBoardState)
-	{
-		BoardState origBoardState = destBoardState.getSingleParentState();
-		boolean changed = false;
-	    	int width = destBoardState.getWidth();
-	    	int height = destBoardState.getHeight();
-
-	    	if (origBoardState != null && destBoardState.getParents().size() == 1)
-	    	{
-	        	for(int x = 0; x < width; ++x)
-	        	{
-	        		int num_empty = 0;
-	    			int total = TreeTent.translateNumTents(destBoardState.getLabel(BoardState.LABEL_BOTTOM, x));
-	        		for(int y = 0; y < height; ++y)
-	    			{
-	    				if(destBoardState.getCellContents(x, y)==TreeTent.CELL_TENT)
-	    				{
-	    					num_empty++;
-	    				}
-	    			}
-	        		if(total==num_empty)
-		    		{
-		    			//System.out.println(total + "=" + num_empty);
-		    			for(int y = 0; y < height; ++y)
-		    			{
-		    				if(destBoardState.getCellContents(x, y)==0)
-		    				{
-		    					destBoardState.setCellContents(x, y, TreeTent.CELL_GRASS);
-		    					changed = true;
-		    				}
-		    			}
-		    		}
-	        	}
-	        	for(int y = 0; y < height; ++y)
-	        	{
-	        		int num_empty = 0;
-	    			int total = TreeTent.translateNumTents(destBoardState.getLabel(BoardState.LABEL_RIGHT, y));
-	        		for(int x = 0; x < width; ++x)
-	    			{
-	    				if(destBoardState.getCellContents(x, y)==TreeTent.CELL_TENT)
-	    				{
-	    					num_empty++;
-	    				}
-	    			}
-	        		if(total==num_empty)
-		    		{
-		    			for(int x = 0; x < width; ++x)
-		    			{
-		    				if(destBoardState.getCellContents(x, y)==0)
-		    				{
-		    					destBoardState.setCellContents(x, y, TreeTent.CELL_GRASS);
-		    					changed = true;
-		    				}
-		    			}
-		    		}
-	        	}
-
-		    	String error = checkRuleRaw(destBoardState);
-
-				if (error != null)
-				{
-					System.out.println(error);
-					changed = false;
-					// valid change
-				}
-	    	}
-
-	    	if(!changed)
-	    	{
-	    		destBoardState = origBoardState.copy();
-	    	}
-
-		    return changed;
-	}
 }
