@@ -206,7 +206,7 @@ public class Legup
 		catch (Exception e)
 		{
 			initialBoardState = null;
-			errorMessage("Error loading proof: " + e.toString());
+			errorMessage("Error loading proof: " + GlobalPopupExceptionHandler.throwableToString(e));
 			return;
 		}
 

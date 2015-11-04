@@ -9,7 +9,7 @@ public class SavedBoardStates implements java.io.Serializable {
   static final long serialVersionUID = 90019087116L;
 
   public SavedBoardStates(BoardState init, BoardState curr) {
-    init = init;
-    curr = curr;
+    this.init = init;
+    this.curr = curr;
   }
 }
