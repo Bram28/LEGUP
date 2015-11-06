@@ -472,7 +472,7 @@ public class TreeTent extends PuzzleModule
 		Graphics2D g = (Graphics2D)gr;
 		Stroke preStroke = g.getStroke();
 		Color preColor = g.getColor();
-		g.setColor(Color.red);
+		g.setColor(Color.white);
 		g.setStroke(med);
 		Stroke highlightStroke = new BasicStroke(2f);
 		double dx = bounds.width / (double)w;
