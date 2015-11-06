@@ -18,8 +18,8 @@ public class SaveableProof
 {
 	private SaveableProof(BoardState state)
 	{}
-	
-	public static BoardState loadProof(String filename) throws ClassNotFoundException, IOException
+
+	public static SavedBoardStates loadProof(String filename) throws ClassNotFoundException, IOException
 	{
 		FileInputStream f_in = new FileInputStream(filename);
 
@@ -28,13 +28,14 @@ public class SaveableProof
 
 		// Read an object
 		Object obj = obj_in.readObject();
-		
+
 		obj_in.close();
 		f_in.close();
-		if (obj instanceof BoardState)
+		if (obj instanceof SavedBoardStates)
 		{
-			// Cast object to a BoardState
-			BoardState state = (BoardState) obj;
+			// Cast object to a SaveableBoardState
+			SavedBoardStates savedState = (SavedBoardStates) obj;
+			BoardState state = savedState.init; // Get the initial board state
 			String user = Legup.getInstance().getUser();
 			String boardUser = state.getUser();
 			user = (user != null) ? user : "null";
@@ -49,14 +50,14 @@ public class SaveableProof
 			{
 				//Legup.getInstance().loadPuzzleModule(state.getPuzzleName());
 				Legup.getInstance().getGui().repaint();
-				return state;
+				return savedState;
 			}
 		}
 		return null;
 
 	}
-	
-	public static boolean saveProof(BoardState state, String filename) throws IOException
+
+	public static boolean saveProof(BoardState initState, BoardState currState, String filename) throws IOException
 	{
 		// Write to disk with FileOutputStream
 		FileOutputStream f_out = new FileOutputStream(filename);
@@ -65,15 +66,15 @@ public class SaveableProof
 		ObjectOutputStream obj_out = new ObjectOutputStream (f_out);
 
 		// Write object out to disk
-		obj_out.writeObject ( state );
-		
+		obj_out.writeObject ( new SavedBoardStates(initState, currState) );
+
 		obj_out.close();
-		
+
 		f_out.close();
-		
+
 		return true;
 	}
-	
+
 	public static BoardState bytesToState(byte[] bytes)// throws ClassNotFoundException, IOException
 	{
 		try
@@ -95,7 +96,7 @@ public class SaveableProof
 		}
 		return null;
 	}
-	
+
 	public static byte[] stateToBytes(BoardState state)// throws IOException
 	{
 		try
@@ -114,4 +115,3 @@ public class SaveableProof
 		return null;
 	}
 }
-

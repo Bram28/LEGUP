@@ -24,6 +24,7 @@ import edu.rpi.phil.legup.newgui.TreeSelectionListener;
 import edu.rpi.phil.legup.newgui.BoardDataChangeListener;
 import edu.rpi.phil.legup.newgui.TransitionChangeListener;
 import edu.rpi.phil.legup.saveable.SaveableProof;
+import edu.rpi.phil.legup.saveable.SavedBoardStates;
 
 
 //TODO system l&f
@@ -194,17 +195,18 @@ public class Legup
 	{
 		try
 		{
-			initialBoardState = SaveableProof.loadProof(filename);
+			SavedBoardStates s = SaveableProof.loadProof(filename);
+			initialBoardState = s.init;
 			selections = new Selections();
 			BoardState b = initialBoardState;
 			if(b!=null)while(b.getChildren().size() > 0)b = b.getChildren().get(b.getChildren().size()-1);
-			setCurrentState(b);
+			setCurrentState(s.curr);
 		}
 		//catch (NullPointerException e1) {}
 		catch (Exception e)
 		{
 			initialBoardState = null;
-			errorMessage("Error loading proof: " + e.toString());
+			errorMessage("Error loading proof: " + GlobalPopupExceptionHandler.throwableToString(e));
 			return;
 		}
 
