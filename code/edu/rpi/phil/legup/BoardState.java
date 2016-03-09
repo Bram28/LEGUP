@@ -639,6 +639,11 @@ public class BoardState implements java.io.Serializable
 		//if (boardCells[y][x] == 0)System.out.println("WARNING: tried to make 0 value negative");
 	 }
 	 
+	 public boolean getModifiableCell(int x, int y)
+	 {
+		 return modifiableCells[y][x];
+	 }
+	 
 	
 	//Moves editedCells into modifiableCells. Called during endTranstion().
 	public void editedToModifiable()
@@ -1000,6 +1005,43 @@ public class BoardState implements java.io.Serializable
 		else
 			return states.get(0);
 	}
+	
+	/**
+	 * @param child A possible descendant of the given ancestor
+	 * @param descendant A possible ancestor of the given descendant
+	 * @return true if the given BoardState is a descendant of the given ancestor, otherwise false
+	 */
+	public static boolean isAncestor(BoardState descendant, BoardState ancestor)
+	{
+		BoardState curAncestor = descendant;
+		while (curAncestor != ancestor)
+		{
+			if (curAncestor.getSingleParentState() != null)
+				curAncestor = curAncestor.getSingleParentState();
+			else
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Finds the common ancestor of a list of BoardStates
+	 * @return The first common ancestor of these states
+	 */
+	public static BoardState commonAncestor(List<BoardState> states)
+	{
+		// TODO reduce running time of algorithm if possible
+		BoardState ancestor = states.get(0);
+		for (BoardState curDescendent : states)
+		{
+			while (!isAncestor(curDescendent, ancestor))
+				if (ancestor.getSingleParentState() != null)
+					ancestor = ancestor.getSingleParentState();
+				else
+					return null;
+		}
+		return ancestor;
+	}
 
 	/**
 	 * Merge some board states
@@ -1027,6 +1069,8 @@ public class BoardState implements java.io.Serializable
 		
 		BoardState child = states.get(0).copy();
 		
+		BoardState commonAncestor = commonAncestor(states);
+		
 		for (int c = 1; c < states.size(); ++c)
 		{
 			BoardState parent = states.get(c);
@@ -1046,9 +1090,12 @@ public class BoardState implements java.io.Serializable
 					else
 					{
 						// clear all differences
-						if (childCell != PuzzleModule.CELL_UNKNOWN && childCell != parentCell)
+						if (!(child.getModifiableCell(x, y) || Legup.getInstance().getPuzzleModule().isRemodifiable(childCell))
+								&& childCell != parentCell)
 						{
-							child.setCellContents(x, y, PuzzleModule.CELL_UNKNOWN);
+							System.out.println(x + "," + y + ":" + commonAncestor.getModifiableCell(x, y));;
+							child.setCellContents(x, y, commonAncestor.getCellContents(x, y));
+							child.setModifiableCell(x, y, commonAncestor.getModifiableCell(x, y));
 						}
 					}
 				}
@@ -2035,9 +2082,9 @@ public class BoardState implements java.io.Serializable
 					isMerged = true;
 				}
 				
-				this.location.x = mergeOverlord.location.x + fixedOffset.x;
+				this.location.x = getParents().get(0).getLocation().y + offset.x;//mergeOverlord.location.x + fixedOffset.x;
 				//makes distance between nodes equal
-				this.location.y = mergeOverlord.location.y + fixedOffset.y - 5*TreePanel.NODE_RADIUS; 
+				this.location.y = mergeOverlord.location.y + fixedOffset.y - 5*TreePanel.NODE_RADIUS;
 			}
 		}
 	

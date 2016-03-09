@@ -22,7 +22,7 @@ public class CaseShipLocations extends CaseRule {
 	private static final long serialVersionUID = 8581077747266144558L;
 
 	public String getImageName() {
-		return "images/defaultRule.png";
+		return "images/battleship/cases/ShipLocations.png";
 	}
 	
 	public CaseRuleSelectionHelper getSelectionHelper()

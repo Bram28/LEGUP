@@ -42,6 +42,7 @@ public final class RuleMerge extends PuzzleRule
     	else
     	{
     		List<BoardState> parents = state.getParents();
+    		BoardState commonAncestor = BoardState.commonAncestor(parents);
     		
     		// make sure all of our information is in the parent
     		for (int i = 0; i < parents.size(); ++i)
@@ -55,8 +56,10 @@ public final class RuleMerge extends PuzzleRule
     			for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x)
     			{
     				int myContents = state.getCellContents(x,y);
-    				
-    				if (myContents != PuzzleModule.CELL_UNKNOWN)
+    				int ancestorContents = commonAncestor.getCellContents(x, y);
+//    				System.out.println((x+1) + "," + (y+1) + ":" + state.getModifiableCell(x, y));
+    				if (!(state.getModifiableCell(x, y) || 
+    						Legup.getInstance().getPuzzleModule().isRemodifiable(myContents)))
     				{
     					int parentContents = parent.getCellContents(x,y);
     					
@@ -65,6 +68,12 @@ public final class RuleMerge extends PuzzleRule
     						return "The current cell at (" + (x+1) + ", " + (y+1) 
     							+ ") is different than parent #" + (i + 1) + "'s cell.";
     					}
+    				}
+    				else if (!(commonAncestor.getModifiableCell(x, y) ||
+    						Legup.getInstance().getPuzzleModule().isRemodifiable(ancestorContents)))
+    				{
+    					return "The current cell at (" + (x+1) + "," + (y+1)
+    							+ ") is modifiable, but is not in the common ancestor.";
     				}
     			}
     		}

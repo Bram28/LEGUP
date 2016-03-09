@@ -16,7 +16,6 @@
 		    <name>Sudoku</name>
 			<class>edu.rpi.phil.legup.puzzles.sudoku.Sudoku</class>
 		</puzzle>
-        <!--
 		<puzzle>
 		    <name>BattleShip</name>
 			<class>edu.rpi.phil.legup.puzzles.battleship.BattleShip</class>
@@ -33,6 +32,5 @@
 		    <name>Fillapix</name>
 			<class>edu.rpi.phil.legup.puzzles.fillapix.Fillapix</class>
 		</puzzle>
-        -->
 	</puzzles>
 </legupconfig>
