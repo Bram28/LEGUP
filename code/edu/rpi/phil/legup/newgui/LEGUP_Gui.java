@@ -7,8 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.GroupLayout;
 import java.awt.Insets;
-import java.io.File;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -59,7 +58,6 @@ import javax.swing.plaf.ToolBarUI;
 import javax.swing.plaf.basic.BasicToolBarUI;
 import java.awt.Color;
 import java.awt.Point;
-import java.io.IOException;
 
 import javax.swing.BorderFactory;
 //import javax.swing.border.Border;
@@ -222,6 +220,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		private JMenuItem genPuzzle = new JMenuItem("Puzzle Generators");
 		private JMenuItem openProof = new JMenuItem("Open Proof");
 		private JMenuItem saveProof = new JMenuItem("Save Proof");
+		private JMenuItem instructerCheck = new JMenuItem("Instructor Check");
 		private JMenuItem exit = new JMenuItem("Exit");
 	private JMenu edit = new JMenu("Edit");
 		private JMenuItem undo = new JMenuItem("Undo");
@@ -260,6 +259,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			file.add(saveProof);
 				saveProof.addActionListener(this);
 				saveProof.setAccelerator(KeyStroke.getKeyStroke('S',2));
+			file.add(instructerCheck);
+				instructerCheck.addActionListener(this);
 			file.addSeparator();
 			file.add(exit);
 				exit.addActionListener(this);
@@ -446,7 +447,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private void openProof()
 	{
 		if(Legup.getInstance().getInitialBoardState() != null){if(!noquit("opening a new proof?"))return;}
-		JFileChooser proofchooser = new JFileChooser("boards");
 		fileChooser.setMode(FileDialog.LOAD);
 		fileChooser.setTitle("Select Proof");
 		fileChooser.setVisible(true);
@@ -528,6 +528,56 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			JOptionPane.showMessageDialog(null, message, "Invalid proof.", JOptionPane.ERROR_MESSAGE);
 
 			showStatus(message, true);
+		}
+	}
+
+	private boolean basicCheckProof() {
+		BoardState root = legupMain.getInitialBoardState();
+		boolean delayStatus = root.evalDelayStatus();
+		repaintAll();
+
+		PuzzleModule pm = legupMain.getPuzzleModule();
+		if (pm.checkProof(root) && delayStatus) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void instructorCheck() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Choose directory with submissions");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+		chooser.setVisible(true);
+
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File dir = new File(chooser.getSelectedFile().toString());
+			File[] directoryListing = dir.listFiles();
+			if (directoryListing != null) {
+				String results = "";
+				for (File child : directoryListing) {
+					if (!child.toString().toLowerCase().endsWith(".proof"))
+					{
+						JOptionPane.showMessageDialog(null,"File selected does not have the suffix \".proof\".");
+						return;
+					}
+					Legup.getInstance().loadProofFile(child.toString());
+					if (basicCheckProof()) {
+						results += child.toString() + ": Correct!\n";
+					} else {
+						results += child.toString() + ": Incorrect\n";
+					}
+				}
+				try(PrintStream ps = new PrintStream("results.txt")) {
+					ps.println(results);
+				} catch (FileNotFoundException e) {
+					System.out.println("Can't find file");
+				}
+			}
+		} else {
+			System.out.println("No Selection");
 		}
 	}
 
@@ -687,6 +737,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		else if (e.getSource() == saveProof || e.getSource() == toolBarButtons[TOOLBAR_SAVE])
 		{
 			saveProof();
+		}
+		else if (e.getSource() == instructerCheck) {
+			instructorCheck();
 		}
 		else if (e.getSource() == genPuzzle)
 		{
