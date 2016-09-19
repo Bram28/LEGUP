@@ -82,6 +82,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 *	IMD_FEEDBACK:	Shows green and red arrows in Proof-Tree for correct/incorrect justifications in real-time.
 	 *	INTERN_RO:		Internal nodes (in the Proof-Tree) are Read-Only, only leaf nodes can be modified.  Ideal safety feature
 	 *	AUTO_JUST:		AI automatically justifies moves as you make them.
+	 *  LIGHT_UP_LEGACY: Uses white panels in the Light Up game board.
 	 */
 	private static int CONFIG_INDEX = 0;
 	public static final int ALLOW_HINTS = 1;
@@ -92,7 +93,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	public static final int IMD_FEEDBACK = 32;
 	public static final int INTERN_RO = 64;
 	public static final int AUTO_JUST = 128;
-
+	public static boolean LIGHT_UP_LEGACY = false;
 	public static boolean profFlag( int flag ){
 		return !((PROF_FLAGS[CONFIG_INDEX] & flag) == 0);
 	}
@@ -245,6 +246,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		private JMenuItem Test = new JMenuItem("Test AI!");
 		private JMenuItem hint = new JMenuItem("Hint");
 	private JMenu help = new JMenu("Help");
+	private JMenu settings = new JMenu("Settings");
+		private JMenuItem LightUpLegacy = new JMenuItem("LightUpLegacy");
 	// contains all the code to setup the menubar
 	private void setupMenu(){
 		bar.add(file);
@@ -307,6 +310,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				hint.setAccelerator(KeyStroke.getKeyStroke('H',0));*/
 
 		bar.add(help);
+		bar.add(settings);
+			settings.add(LightUpLegacy);
+			LightUpLegacy.addActionListener(this);
+			
 
 		setJMenuBar(bar);
 		this.addWindowListener(this);
@@ -803,6 +810,22 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				//myAI.test(current);
 				BoardState current = legupMain.getSelections().getFirstSelection().getState();
 				myAI.findRuleApplication(current);
+			}
+		}
+		//Switches LightUp Board from White to Blue
+		else if (e.getSource() == LightUpLegacy)
+		{
+			if(LIGHT_UP_LEGACY == false)
+			{
+				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be white."
+						,"Light Up Legacy", JOptionPane.PLAIN_MESSAGE);
+				LIGHT_UP_LEGACY = true;
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be light blue."
+						,"Light Up Legacy", JOptionPane.PLAIN_MESSAGE);
+				LIGHT_UP_LEGACY = false;
 			}
 		}
 		else
