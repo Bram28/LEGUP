@@ -7,7 +7,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.GroupLayout;
 import java.awt.Insets;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -60,6 +63,8 @@ import javax.swing.plaf.basic.BasicToolBarUI;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.BorderFactory;
 //import javax.swing.border.Border;
@@ -190,8 +195,44 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	{
 		if (getBoard() != null) getBoard().boardDataChanged(null);
 	}
+	public void readSettings() throws IOException
+	{
+		File temp = new File("Settings.txt");
+		boolean exists = temp.exists();
+		if(exists)
+		{
+			String line = null;
+			FileReader reader = null;
+			try{
+				reader = new FileReader("Settings.txt");
+	            BufferedReader bufferedReader = 
+	                    new BufferedReader(reader);
+	            while((line = bufferedReader.readLine()) != null) {
+	            	if(line.contains("LightUpLegacy"))
+	            	{
+	            		if(line.contains("True"))
+	            		{
+	            			LIGHT_UP_LEGACY = true;
+	            		}
+	            		else
+	            		{
+	            			LIGHT_UP_LEGACY = false;
+	            		}
+	            	}
+	                System.out.println(line);
+	            }   
 
-	public LEGUP_Gui(Legup legupMain)
+	            // Always close files.
+	            bufferedReader.close();  
+			}
+	        catch(FileNotFoundException ex) {
+	            System.out.println(
+	                "Unable to open file Settings.txt");                
+	        }			
+		}
+	}
+
+	public LEGUP_Gui(Legup legupMain) throws IOException
 	{
 		this.legupMain = legupMain;
 		legupMain.getSelections().addTreeSelectionListener(this);
@@ -199,7 +240,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		setTitle("LEGUP");
 		setLayout( new BorderLayout() );
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		readSettings();
 		setupMenu();
 		setupToolBar();
 		setupContent();
@@ -820,6 +861,19 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be white."
 						,"Light Up Legacy", JOptionPane.PLAIN_MESSAGE);
 				LIGHT_UP_LEGACY = true;
+				File temp = new File("Settings.txt");
+				boolean exists = temp.exists();
+				if(!exists)
+				{
+					PrintWriter writer = null;
+					try {
+						writer = new PrintWriter("Settings.txt", "UTF-8");
+					} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+						e1.printStackTrace();
+					}
+					writer.println("LightUpLegacy: True");
+					writer.close();
+				}				
 			}
 			else
 			{
