@@ -335,7 +335,7 @@ public class Legup
 	 * Starts up the program and the GUI
 	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args)
 	{
 		GlobalPopupExceptionHandler.registerExceptionHandler();
 		Legup legup = Legup.getInstance();

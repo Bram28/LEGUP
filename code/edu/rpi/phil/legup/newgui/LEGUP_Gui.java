@@ -197,6 +197,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 	public void readSettings() throws IOException
 	{
+		//Read all other settings as well.
 		File temp = new File("Settings.txt");
 		boolean exists = temp.exists();
 		if(exists)
@@ -205,9 +206,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			FileReader reader = null;
 			try{
 				reader = new FileReader("Settings.txt");
-	            BufferedReader bufferedReader = 
-	                    new BufferedReader(reader);
-	            while((line = bufferedReader.readLine()) != null) {
+				BufferedReader bufferedReader = null;
+	            bufferedReader = new BufferedReader(reader);
+				while((line = bufferedReader.readLine()) != null) {
 	            	if(line.contains("LightUpLegacy"))
 	            	{
 	            		if(line.contains("True"))
@@ -219,10 +220,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	            			LIGHT_UP_LEGACY = false;
 	            		}
 	            	}
-	                System.out.println(line);
+	                //System.out.println(line);
 	            }   
-
-	            // Always close files.
 	            bufferedReader.close();  
 			}
 	        catch(FileNotFoundException ex) {
@@ -232,7 +231,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		}
 	}
 
-	public LEGUP_Gui(Legup legupMain) throws IOException
+	public LEGUP_Gui(Legup legupMain)
 	{
 		this.legupMain = legupMain;
 		legupMain.getSelections().addTreeSelectionListener(this);
@@ -240,7 +239,12 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		setTitle("LEGUP");
 		setLayout( new BorderLayout() );
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		readSettings();
+		try {
+			readSettings();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setupMenu();
 		setupToolBar();
 		setupContent();
@@ -861,25 +865,36 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be white."
 						,"Light Up Legacy", JOptionPane.PLAIN_MESSAGE);
 				LIGHT_UP_LEGACY = true;
-				File temp = new File("Settings.txt");
+				/*File temp = new File("Settings.txt");
 				boolean exists = temp.exists();
 				if(!exists)
-				{
+				{*/
 					PrintWriter writer = null;
 					try {
 						writer = new PrintWriter("Settings.txt", "UTF-8");
 					} catch (FileNotFoundException | UnsupportedEncodingException e1) {
 						e1.printStackTrace();
 					}
+					/* Check all other settings current value and write them
+					to the file as well */
 					writer.println("LightUpLegacy: True");
 					writer.close();
-				}				
 			}
 			else
 			{
 				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be light blue."
 						,"Light Up Legacy", JOptionPane.PLAIN_MESSAGE);
 				LIGHT_UP_LEGACY = false;
+				PrintWriter writer = null;
+				try {
+					writer = new PrintWriter("Settings.txt", "UTF-8");
+				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+				/* Check all other settings current value and write them
+				to the file as well */
+				writer.println("LightUpLegacy: False");
+				writer.close();
 			}
 		}
 		else
