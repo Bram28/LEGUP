@@ -7,11 +7,22 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 
 public class ContradictionNoLight extends Contradiction
 {
 	static final long serialVersionUID = -7418828924174890795L;
-	public String getImageName() {return "images/lightup/contradictions/NoLight.png";}
+	public String getImageName() 
+	{
+		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
+		{
+			return "images/lightup/contradictions/NoLightLegacy.png";
+		}
+		else
+		{
+			return "images/lightup/contradictions/NoLight.png";
+		}
+	}
 	 ContradictionNoLight()
 	 {
 		setName("Can't Light A Cell");

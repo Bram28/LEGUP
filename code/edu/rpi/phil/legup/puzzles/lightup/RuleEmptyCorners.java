@@ -5,12 +5,23 @@ import java.util.Set;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.Contradiction;
 
 public class RuleEmptyCorners extends PuzzleRule
 {
 	static final long serialVersionUID = 9501L;
-	public String getImageName() { return "images/lightup/rules/EmptyCorners.png"; }
+	public String getImageName() 
+	{ 
+		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
+		{
+			return "images/lightup/rules/EmptyCornersLegacy.png"; 
+		}
+		else
+		{
+			return "images/lightup/rules/EmptyCorners.png"; 
+		}
+	}
 	RuleEmptyCorners()
 	{
 		setName("Empty Corners");

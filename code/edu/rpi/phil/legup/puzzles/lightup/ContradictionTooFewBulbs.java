@@ -4,11 +4,22 @@ import javax.swing.ImageIcon;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.Contradiction;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 
 public class ContradictionTooFewBulbs extends Contradiction
 {
 	static final long serialVersionUID = 9500L;
-	public String getImageName() {return "images/lightup/contradictions/TooFewBulbs.png";}
+	public String getImageName() 
+	{
+		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
+		{
+			return "images/lightup/contradictions/TooFewBulbsLegacy.png";
+		}
+		else
+		{
+			return "images/lightup/contradictions/TooFewBulbs.png";
+		}
+	}
 	 ContradictionTooFewBulbs()
 	 {
 		setName("Too Few Bulbs");
