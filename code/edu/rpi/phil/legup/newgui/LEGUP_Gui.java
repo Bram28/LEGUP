@@ -87,7 +87,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	 *	IMD_FEEDBACK:	Shows green and red arrows in Proof-Tree for correct/incorrect justifications in real-time.
 	 *	INTERN_RO:		Internal nodes (in the Proof-Tree) are Read-Only, only leaf nodes can be modified.  Ideal safety feature
 	 *	AUTO_JUST:		AI automatically justifies moves as you make them.
-	 *  LIGHT_UP_LEGACY: Uses white panels in the Light Up game board.
+	 *  LIGHT_UP_LEGACY: Uses white or light blue empty spaces in the Light Up game board.
 	 */
 	private static int CONFIG_INDEX = 0;
 	public static final int ALLOW_HINTS = 1;
@@ -98,6 +98,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	public static final int IMD_FEEDBACK = 32;
 	public static final int INTERN_RO = 64;
 	public static final int AUTO_JUST = 128;
+	//Default color for light up boards will be light blue from now on.
 	public static boolean LIGHT_UP_LEGACY = false;
 	public static boolean profFlag( int flag ){
 		return !((PROF_FLAGS[CONFIG_INDEX] & flag) == 0);
@@ -197,7 +198,25 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 	public void readSettings() throws IOException
 	{
-		//Read all other settings as well.
+		/* A global setting will be saved even after the program shuts
+		 down and is reopened through this function.
+		 You can read all other settings as well, right now it only
+		 reads the LightUpLegacy Setting. Whenever you want to add a new
+		 setting make sure you edit the parts where the previous settings
+		 create a Settings.txt and store the current value of the 
+		 setting you are trying to add/append it when they are called 
+		 as well. Likewise, make sure your new setting will store all
+		 the values of previous global settings in its Settings.txt file.
+		 Please try to preserve the ordering in this settings file.
+		 Control + F Global_Settings_Text to find all relevant parts
+		 of the code you will have to change to implement a new global 
+		 setting.
+		*/
+		/*
+		 *********CURRENT GLOBAL SETTINGS IN SETTINGS.TXT****************
+		 		  (Add to this as you go along)
+		1) LightUpLegacy		  
+		 */
 		File temp = new File("Settings.txt");
 		boolean exists = temp.exists();
 		if(exists)
@@ -211,7 +230,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				while((line = bufferedReader.readLine()) != null) {
 	            	if(line.contains("LightUpLegacy"))
 	            	{
-	            		if(line.contains("True"))
+	            		if(line.contains("true"))
 	            		{
 	            			LIGHT_UP_LEGACY = true;
 	            		}
@@ -220,7 +239,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	            			LIGHT_UP_LEGACY = false;
 	            		}
 	            	}
-	                //System.out.println(line);
 	            }   
 	            bufferedReader.close();  
 			}
@@ -291,6 +309,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		private JMenuItem Test = new JMenuItem("Test AI!");
 		private JMenuItem hint = new JMenuItem("Hint");
 	private JMenu help = new JMenu("Help");
+	//Place all global settings onto this menu item.
 	private JMenu settings = new JMenu("Settings");
 		private JMenuItem LightUpLegacy = new JMenuItem("LightUpLegacy");
 	// contains all the code to setup the menubar
@@ -355,6 +374,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				hint.setAccelerator(KeyStroke.getKeyStroke('H',0));*/
 
 		bar.add(help);
+		//Used for global settings.
 		bar.add(settings);
 			settings.add(LightUpLegacy);
 			LightUpLegacy.addActionListener(this);
@@ -860,31 +880,15 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		//Switches LightUp Board from White to Blue
 		else if (e.getSource() == LightUpLegacy)
 		{
+			//Global_Settings_Text
 			if(LIGHT_UP_LEGACY == false)
 			{
-				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be white."
-						,"Light Up Legacy", JOptionPane.PLAIN_MESSAGE);
-				LIGHT_UP_LEGACY = true;
-				/*File temp = new File("Settings.txt");
-				boolean exists = temp.exists();
-				if(!exists)
-				{*/
-					PrintWriter writer = null;
-					try {
-						writer = new PrintWriter("Settings.txt", "UTF-8");
-					} catch (FileNotFoundException | UnsupportedEncodingException e1) {
-						e1.printStackTrace();
-					}
-					/* Check all other settings current value and write them
-					to the file as well */
-					writer.println("LightUpLegacy: True");
-					writer.close();
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be light blue."
-						,"Light Up Legacy", JOptionPane.PLAIN_MESSAGE);
-				LIGHT_UP_LEGACY = false;
+                ImageIcon icon = new ImageIcon("images/lightup/emptyLegacy.gif");
+				JOptionPane.showMessageDialog(null,
+                        "You have changed the empty space tiles in all light up boards to be white. " +
+        				"Please restart this application or open the puzzle again for all changes to take effect.",						
+						"Light Up Legacy", JOptionPane.INFORMATION_MESSAGE, icon);
+				LIGHT_UP_LEGACY = true;		
 				PrintWriter writer = null;
 				try {
 					writer = new PrintWriter("Settings.txt", "UTF-8");
@@ -893,7 +897,26 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				}
 				/* Check all other settings current value and write them
 				to the file as well */
-				writer.println("LightUpLegacy: False");
+				writer.println("LightUpLegacy: " + LIGHT_UP_LEGACY);
+				writer.close();
+			}
+			//Global_Settings_Text
+			else
+			{
+                ImageIcon icon = new ImageIcon("images/lightup/empty.gif");
+				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be light blue."
+						+ " Please restart this application or open the puzzle again for all changes to take effect."
+						,"Light Up Legacy", JOptionPane.INFORMATION_MESSAGE, icon);
+				LIGHT_UP_LEGACY = false;
+				PrintWriter writer = null;
+				try {
+					writer = new PrintWriter("Settings.txt", "UTF-8");
+				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+				/* Check all other settings current value and write them
+				to the file as well. */
+				writer.println("LightUpLegacy:" + LIGHT_UP_LEGACY);
 				writer.close();
 			}
 		}
