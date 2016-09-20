@@ -33,7 +33,7 @@ public class RuleMustLight extends PuzzleRule
 
 		// Add contradictions to check to set contras
 		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
-		contras.add(new ContradictionNoLight());
+		contras.add(new ContradictionCannotLightACell());
 
 		// Copy the parent state to compare with current state to find changes
 		BoardState origBoardState = destBoardState.getSingleParentState();
