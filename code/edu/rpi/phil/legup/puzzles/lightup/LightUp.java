@@ -101,8 +101,10 @@ public class LightUp extends PuzzleModule
 			{
 				return "images/lightup/emptyLegacy.gif";
 			}
-			else
-			{return "images/lightup/empty.gif";}
+			else			
+			{
+				return "images/lightup/empty.gif";
+			}
 		} else if (cellValue >= 10 && cellValue < 15){
 			return "images/lightup/" + (cellValue-10)+".gif";
 		} else if(cellValue == 15){
