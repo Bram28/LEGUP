@@ -243,7 +243,7 @@ public class LightUp extends PuzzleModule
 		contradictionList.add(new ContradictionTooFewBulbs());
 		contradictionList.add(new ContradictionTooManyBulbs());
 		contradictionList.add(new ContradictionBulbsInPath());
-		contradictionList.add(new ContradictionNoLight());
+		contradictionList.add(new ContradictionCannotLightACell());
 		return contradictionList;
 	}
 
