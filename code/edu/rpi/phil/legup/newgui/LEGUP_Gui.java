@@ -311,7 +311,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private JMenu help = new JMenu("Help");
 	//Place all global settings onto this menu item.
 	private JMenu settings = new JMenu("Settings");
-		private JMenuItem LightUpLegacy = new JMenuItem("LightUpLegacy");
+		private JMenuItem LightUpLegacy = new JMenuItem("Light Up Legacy Mode");
 	// contains all the code to setup the menubar
 	private void setupMenu(){
 		bar.add(file);
@@ -887,7 +887,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 				JOptionPane.showMessageDialog(null,
                         "You have changed the empty space tiles in all light up boards to be white. " +
         				"Please restart this application or open the puzzle again for all changes to take effect.",						
-						"Light Up Legacy", JOptionPane.INFORMATION_MESSAGE, icon);
+						"Light Up Legacy Mode", JOptionPane.INFORMATION_MESSAGE, icon);
 				LIGHT_UP_LEGACY = true;		
 				PrintWriter writer = null;
 				try {
@@ -906,7 +906,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
                 ImageIcon icon = new ImageIcon("images/lightup/empty.gif");
 				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be light blue."
 						+ " Please restart this application or open the puzzle again for all changes to take effect."
-						,"Light Up Legacy", JOptionPane.INFORMATION_MESSAGE, icon);
+						,"Light Up Legacy Mode", JOptionPane.INFORMATION_MESSAGE, icon);
 				LIGHT_UP_LEGACY = false;
 				PrintWriter writer = null;
 				try {
