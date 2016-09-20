@@ -67,7 +67,10 @@ public class CaseLightOrEmpty extends CaseRule
 					(two.getCellContents(p.x,p.y) == LightUp.CELL_LIGHT &&
 						one.getCellContents(p.x,p.y) == LightUp.CELL_EMPTY)))
 				{
-					rv = "In this case rule, one state's cell must be white and the other a light.";
+					if(LEGUP_Gui.LIGHT_UP_LEGACY == true)
+					{rv = "In this case rule, one state's cell must be white and the other a light.";}
+					else
+					{rv = "In this case rule, one state's cell must be light blue and the other a light.";}
 				}
 				else if (parent.getCellContents(p.x,p.y) != LightUp.CELL_UNKNOWN)
 				{
