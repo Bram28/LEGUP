@@ -7,11 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.GroupLayout;
 import java.awt.Insets;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -62,9 +58,6 @@ import javax.swing.plaf.ToolBarUI;
 import javax.swing.plaf.basic.BasicToolBarUI;
 import java.awt.Color;
 import java.awt.Point;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 
 import javax.swing.BorderFactory;
 //import javax.swing.border.Border;
@@ -203,19 +196,19 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		 You can read all other settings as well, right now it only
 		 reads the LightUpLegacy Setting. Whenever you want to add a new
 		 setting make sure you edit the parts where the previous settings
-		 create a Settings.txt and store the current value of the 
-		 setting you are trying to add/append it when they are called 
+		 create a Settings.txt and store the current value of the
+		 setting you are trying to add/append it when they are called
 		 as well. Likewise, make sure your new setting will store all
 		 the values of previous global settings in its Settings.txt file.
 		 Please try to preserve the ordering in this settings file.
 		 Control + F Global_Settings_Text to find all relevant parts
-		 of the code you will have to change to implement a new global 
+		 of the code you will have to change to implement a new global
 		 setting.
 		*/
 		/*
 		 *********CURRENT GLOBAL SETTINGS IN SETTINGS.TXT****************
 		 		  (Add to this as you go along)
-		1) LightUpLegacy		  
+		1) LightUpLegacy
 		 */
 		File temp = new File("Settings.txt");
 		boolean exists = temp.exists();
@@ -239,13 +232,13 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	            			LIGHT_UP_LEGACY = false;
 	            		}
 	            	}
-	            }   
-	            bufferedReader.close();  
+	            }
+	            bufferedReader.close();
 			}
 	        catch(FileNotFoundException ex) {
 	            System.out.println(
-	                "Unable to open file Settings.txt");                
-	        }			
+	                "Unable to open file Settings.txt");
+	        }
 		}
 	}
 
@@ -286,6 +279,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		private JMenuItem genPuzzle = new JMenuItem("Puzzle Generators");
 		private JMenuItem openProof = new JMenuItem("Open Proof");
 		private JMenuItem saveProof = new JMenuItem("Save Proof");
+		private JMenuItem instructerCheck = new JMenuItem("Instructor Check");
 		private JMenuItem exit = new JMenuItem("Exit");
 	private JMenu edit = new JMenu("Edit");
 		private JMenuItem undo = new JMenuItem("Undo");
@@ -327,6 +321,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			file.add(saveProof);
 				saveProof.addActionListener(this);
 				saveProof.setAccelerator(KeyStroke.getKeyStroke('S',2));
+			file.add(instructerCheck);
+				instructerCheck.addActionListener(this);
 			file.addSeparator();
 			file.add(exit);
 				exit.addActionListener(this);
@@ -378,7 +374,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		bar.add(settings);
 			settings.add(LightUpLegacy);
 			LightUpLegacy.addActionListener(this);
-			
+
 
 		setJMenuBar(bar);
 		this.addWindowListener(this);
@@ -518,7 +514,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private void openProof()
 	{
 		if(Legup.getInstance().getInitialBoardState() != null){if(!noquit("opening a new proof?"))return;}
-		JFileChooser proofchooser = new JFileChooser("boards");
 		fileChooser.setMode(FileDialog.LOAD);
 		fileChooser.setTitle("Select Proof");
 		fileChooser.setVisible(true);
@@ -600,6 +595,87 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			JOptionPane.showMessageDialog(null, message, "Invalid proof.", JOptionPane.ERROR_MESSAGE);
 
 			showStatus(message, true);
+		}
+	}
+
+	private boolean basicCheckProof(int[][] origCells) {
+		BoardState root = legupMain.getInitialBoardState();
+		int[][] submitCells = root.getBoardCells();
+		if (submitCells.length != origCells.length || submitCells[0].length != origCells[0].length) {
+			return false;
+		}
+		for (int i = 0; i < origCells.length; ++i) {
+			for (int j = 0; j < origCells.length; ++j) {
+				if (origCells[i][j] != submitCells[i][j]) {
+					return false;
+				}
+			}
+		}
+
+		boolean delayStatus = root.evalDelayStatus();
+		repaintAll();
+
+		PuzzleModule pm = legupMain.getPuzzleModule();
+		if (pm.checkProof(root) && delayStatus) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void instructorCheck() {
+		promptPuzzle();
+		int[][] origCells = Legup.getInstance().getInitialBoardState().getBoardCells();
+//		for(int i = 0; i < origCells.length; i++) {
+//			for (int j = 0; j < origCells[i].length; j++) {
+//				System.out.print(origCells[i][j]);
+//			}
+//			System.out.print("\n");
+//		}
+//		System.out.println("done");
+
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Choose directory with submissions");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+		chooser.setVisible(true);
+
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File dir = new File(chooser.getSelectedFile().toString());
+			File[] directoryListing = dir.listFiles();
+			if (directoryListing != null) {
+				String results = "";
+				for (File child : directoryListing) {
+					if (!child.toString().toLowerCase().endsWith(".proof"))
+					{
+						JOptionPane.showMessageDialog(null,"File selected does not have the suffix \".proof\".");
+						return;
+					}
+					Legup.getInstance().loadProofFile(child.toString());
+					if (basicCheckProof(origCells)) {
+						results += child.toString() + ": Correct!\n";
+					} else {
+						results += child.toString() + ": Incorrect\n";
+					}
+				}
+
+				fileChooser.setMode(FileDialog.SAVE);
+				fileChooser.setTitle("Select Proof");
+				fileChooser.setVisible(true);
+				String filename = fileChooser.getFile();
+				if (filename != null) // user didn't pressed cancel
+				{
+					String savepath = fileChooser.getDirectory() + filename;
+					try (PrintStream ps = new PrintStream(savepath)) {
+						ps.println(results);
+					} catch (FileNotFoundException e) {
+						System.out.println("Can't find file");
+			}
+		}
+			}
+		} else {
+			System.out.println("No Selection");
 		}
 	}
 
@@ -760,6 +836,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		{
 			saveProof();
 		}
+		else if (e.getSource() == instructerCheck) {
+			instructorCheck();
+		}
 		else if (e.getSource() == genPuzzle)
 		{
 			PuzzleGeneratorDialog pgd = new PuzzleGeneratorDialog(this);
@@ -886,9 +965,9 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
                 ImageIcon icon = new ImageIcon("images/lightup/emptyLegacy.gif");
 				JOptionPane.showMessageDialog(null,
                         "You have changed the empty space tiles in all light up boards to be white. " +
-        				"Please restart this application or open the puzzle again for all changes to take effect.",						
+        				"Please restart this application or open the puzzle again for all changes to take effect.",
 						"Light Up Legacy Mode", JOptionPane.INFORMATION_MESSAGE, icon);
-				LIGHT_UP_LEGACY = true;		
+				LIGHT_UP_LEGACY = true;
 				PrintWriter writer = null;
 				try {
 					writer = new PrintWriter("Settings.txt", "UTF-8");

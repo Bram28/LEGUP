@@ -1,0 +1,3 @@
+/home/mitchell/Documents/LEGUP/proofs/test/proof1.proof: Correct!
+/home/mitchell/Documents/LEGUP/proofs/test/proof2.proof: Correct!
+
