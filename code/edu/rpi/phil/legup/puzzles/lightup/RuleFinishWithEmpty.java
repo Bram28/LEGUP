@@ -5,12 +5,23 @@ import java.util.LinkedHashSet;
 
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.Contradiction;
 
 public class RuleFinishWithEmpty extends PuzzleRule
 {
 	static final long serialVersionUID = 2828176895339413023L;
-	public String getImageName() {return "images/lightup/rules/SurroundEmpty.png";}
+	public String getImageName() 
+	{
+		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
+		{
+			return "images/lightup/rules/FinishWithEmptyLegacy.png"; 
+		}
+		else
+		{
+			return "images/lightup/rules/FinishWithEmpty.png"; 
+		}
+	}
 	RuleFinishWithEmpty()
 	{
 		setName("Finish with Empty");

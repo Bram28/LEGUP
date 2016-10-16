@@ -26,6 +26,7 @@ import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree; //avoid duplicating helper functions
 
 
@@ -94,7 +95,16 @@ public class LightUp extends PuzzleModule
 		} else if (cellValue == CELL_LIGHT){
 			return "images/lightup/light.png";
 		} else if (cellValue == CELL_EMPTY){
-			return "images/lightup/empty.gif";
+			/*This check works, all old images will have Legacy added to 
+			their ending. */
+			if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
+			{
+				return "images/lightup/emptyLegacy.gif";
+			}
+			else			
+			{
+				return "images/lightup/empty.gif";
+			}
 		} else if (cellValue >= 10 && cellValue < 15){
 			return "images/lightup/" + (cellValue-10)+".gif";
 		} else if(cellValue == 15){
@@ -211,7 +221,14 @@ public class LightUp extends PuzzleModule
 		ruleList.add(new RuleFinishWithEmpty());
 		ruleList.add(new RuleMustLight());
 		ruleList.add(new RuleEmptyCorners());
-		ruleList.add(new RuleWhiteInLight());
+		if(LEGUP_Gui.LIGHT_UP_LEGACY == true)
+		{
+			ruleList.add(new RuleWhiteInLight());
+		}
+		else
+		{
+			ruleList.add(new RuleLightBlueInLight());
+		}
 		return ruleList;
 	}
 
@@ -226,7 +243,7 @@ public class LightUp extends PuzzleModule
 		contradictionList.add(new ContradictionTooFewBulbs());
 		contradictionList.add(new ContradictionTooManyBulbs());
 		contradictionList.add(new ContradictionBulbsInPath());
-		contradictionList.add(new ContradictionNoLight());
+		contradictionList.add(new ContradictionCannotLightACell());
 		return contradictionList;
 	}
 

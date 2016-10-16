@@ -18,11 +18,23 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.Permutations;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.newgui.CaseRuleSelectionHelper;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree;
 
 public class CaseSatisfyNumber extends CaseRule
 {
 	static final long serialVersionUID = 5238481899970588295L;
+	public String getImageName() 
+	{
+		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
+		{
+			return "images/lightup/cases/SatisfyNumberLegacy.png";
+		}
+		else
+		{
+			return "images/lightup/cases/SatisfyNumber.png";
+		}
+	}
 
 	// CaseRuleSelectionHelper Methods to highlight cells with a number in them
 	public CaseRuleSelectionHelper getSelectionHelper()
@@ -90,7 +102,6 @@ public class CaseSatisfyNumber extends CaseRule
 		return Legup.getCurrentState();
 	}
 
-	public String getImageName() {return "images/lightup/cases/SatisfyNumber.png";}
 	public CaseSatisfyNumber()
 	{
 		setName("Satisfy Number");

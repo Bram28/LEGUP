@@ -7,12 +7,23 @@ import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.RuleApplication;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 import edu.rpi.phil.legup.Contradiction;
 
 public class RuleFinishWithBulbs extends PuzzleRule
 {
 	static final long serialVersionUID = 5613497586353427743L;
-	public String getImageName() {return "images/lightup/rules/SurroundBulbs.png";}
+	public String getImageName() 
+	{
+		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
+		{
+			return "images/lightup/rules/FinishWithBulbsLegacy.png"; 
+		}
+		else
+		{
+			return "images/lightup/rules/FinishWithBulbs.png"; 
+		}
+	}
 	RuleFinishWithBulbs() {
 		setName("Finish with Bulbs");
 		description = "The remaining unknowns around a block must be bulbs to satisfy the number.";
