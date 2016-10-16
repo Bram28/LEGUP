@@ -531,8 +531,20 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		}
 	}
 
-	private boolean basicCheckProof() {
+	private boolean basicCheckProof(int[][] origCells) {
 		BoardState root = legupMain.getInitialBoardState();
+		int[][] submitCells = root.getBoardCells();
+		if (submitCells.length != origCells.length || submitCells[0].length != origCells[0].length) {
+			return false;
+		}
+		for (int i = 0; i < origCells.length; ++i) {
+			for (int j = 0; j < origCells.length; ++j) {
+				if (origCells[i][j] != submitCells[i][j]) {
+					return false;
+				}
+			}
+		}
+
 		boolean delayStatus = root.evalDelayStatus();
 		repaintAll();
 
@@ -545,6 +557,16 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	}
 
 	private void instructorCheck() {
+		promptPuzzle();
+		int[][] origCells = Legup.getInstance().getInitialBoardState().getBoardCells();
+//		for(int i = 0; i < origCells.length; i++) {
+//			for (int j = 0; j < origCells[i].length; j++) {
+//				System.out.print(origCells[i][j]);
+//			}
+//			System.out.print("\n");
+//		}
+//		System.out.println("done");
+
 		JFileChooser chooser = new JFileChooser();
 		chooser.setCurrentDirectory(new java.io.File("."));
 		chooser.setDialogTitle("Choose directory with submissions");
@@ -564,17 +586,26 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 						return;
 					}
 					Legup.getInstance().loadProofFile(child.toString());
-					if (basicCheckProof()) {
+					if (basicCheckProof(origCells)) {
 						results += child.toString() + ": Correct!\n";
 					} else {
 						results += child.toString() + ": Incorrect\n";
 					}
 				}
-				try(PrintStream ps = new PrintStream("results.txt")) {
-					ps.println(results);
-				} catch (FileNotFoundException e) {
-					System.out.println("Can't find file");
-				}
+
+				fileChooser.setMode(FileDialog.SAVE);
+				fileChooser.setTitle("Select Proof");
+				fileChooser.setVisible(true);
+				String filename = fileChooser.getFile();
+				if (filename != null) // user didn't pressed cancel
+				{
+					String savepath = fileChooser.getDirectory() + filename;
+					try (PrintStream ps = new PrintStream(savepath)) {
+						ps.println(results);
+					} catch (FileNotFoundException e) {
+						System.out.println("Can't find file");
+			}
+		}
 			}
 		} else {
 			System.out.println("No Selection");

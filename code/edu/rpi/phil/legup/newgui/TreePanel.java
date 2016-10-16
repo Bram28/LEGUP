@@ -146,6 +146,9 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 
 	public void updateTreeSize()
 	{
+		if (Legup.getInstance().getInitialBoardState() == null) {
+			return;
+		}
 		bounds = getTreeBounds(Legup.getInstance().getInitialBoardState());
 		setSize(bounds.getSize());
 		BoardState state = Legup.getInstance().getInitialBoardState();
@@ -265,7 +268,6 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	/**
 	* Toggle a state in a selection (something was ctrl + clicked)
 	* @param state the state to check now (starts at root)
-	* @param bounds the bounds of the state and all it's children
 	* @param where the point where the user ctrl + clicked
 	*/
 	private void toggleSelection(BoardState state, Point where)
@@ -276,7 +278,6 @@ public class TreePanel extends DynamicViewer implements TransitionChangeListener
 	/**
 	* Select a new state or transition that the user clicked on
 	* @param state the state we're at
-	* @param bounds the bounds of the state and all it's children
 	* @param where the point where the user clicked
 	* @return the new Selection
 	*/

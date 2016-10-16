@@ -1,6 +1,7 @@
 # Compiled files
 *.class
 *.jar
+*.zip
 
 # OS generated files
 .DS_Store
@@ -19,3 +20,9 @@ Thumbs.db
 *.sh
 *.swp
 /bin
+/reports
+.idea
+LEGUP.iml
+/proofs/test
+
+transpose.py
