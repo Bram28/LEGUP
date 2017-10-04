@@ -18,7 +18,7 @@ public class RuleLastCellForNumber extends PuzzleRule
 	RuleLastCellForNumber()
     {
 		setName("Last Cell for Number");
-		description = "This is the only spot left for a number to go in this row, column, or square";
+		description = "This is the only cell open in its group for some number.";
 		image = new ImageIcon("images/sudoku/forcedByElimination.png");
 
 		groupToCellRef = Sudoku.getGroups();
@@ -87,7 +87,11 @@ public class RuleLastCellForNumber extends PuzzleRule
 	  */
     boolean checkForced(int nx, int ny, int val, BoardState origBoardState)
     {
-    	//Determine which cells were empty
+    	// this is exactly one case of possible cells for number
+		// therefore use CasePossibleCellsForNumber and make sure it returns a number of 1
+
+
+		//Determine which cells were empty
 		boolean[] possible = new boolean[81];
 		for (int i = 0; i < 81; possible[i] = (origBoardState.getCellContents(i%9, i++/9) == Sudoku.CELL_UNKNOWN));
 
