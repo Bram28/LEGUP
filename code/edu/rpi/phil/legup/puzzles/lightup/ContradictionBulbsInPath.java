@@ -12,7 +12,7 @@ public class ContradictionBulbsInPath extends Contradiction
 	 ContradictionBulbsInPath()
 	 {
 		setName("Bulbs In Path");
-		description = "A bulb cannot be placed in another's light path.";
+		description = "A bulb cannot be placed in another bulb's path.";
 		//image = new ImageIcon("images/lightup/contradictions/BulbsInPath.png");
 	 }
 	 

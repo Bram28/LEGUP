@@ -14,8 +14,8 @@ public class RuleLightBlueInLight extends PuzzleRule
 	public String getImageName() {return "images/lightup/rules/LightBlueInLight.png";}
 	RuleLightBlueInLight()
 	 {
-		setName("Light Blue In Light");
-		description = "Cells in light must be light blue.";
+		setName("Empty Cells in Light");
+		description = "Cells in light must be empty.";
 		image = new ImageIcon("images/lightup/rules/LightBlueInLight.png");
 	 }
 	 
@@ -52,13 +52,13 @@ public class RuleLightBlueInLight extends PuzzleRule
 						
 						if (newState != LightUp.CELL_EMPTY || origState != LightUp.CELL_UNKNOWN)
 						{
-							error = "This rule only involves adding light blue cells!";
+							error = "This rule only involves adding empty cells!";
 							break;
 						}
 						
 						if(!extra.contains(new Point(x,y)))
 						{
-							error = "A light blue cell must be placed in an unknown lit cell.";
+							error = "An empty cell must be placed in an unknown lit cell.";
 							break;
 						}
 						
@@ -70,7 +70,7 @@ public class RuleLightBlueInLight extends PuzzleRule
 			
 			if (error == null && !changed)
 			{
-				error = "You must add a light blue cell to use this rule!";
+				error = "You must add an empty cell to use this rule!";
 			}
 		}
 		
