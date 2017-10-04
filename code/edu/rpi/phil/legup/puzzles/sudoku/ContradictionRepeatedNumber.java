@@ -12,13 +12,13 @@ public class ContradictionRepeatedNumber extends Contradiction
 	 ContradictionRepeatedNumber()
 	 {
 		setName("Repeated Number");
-		description = "Two identical numbers are placed in the same group, which is illegal.";
-		image = new ImageIcon("images/sudoku/BoardStateViolated.png");
+		description = "Two identical numbers are placed in the same group.";
+		image = new ImageIcon("images/sudoku/RepeatedNumber.png");
 	 }
 		
 	public String getImageName()
 	{
-		return "images/sudoku/BoardStateViolated.png";
+		return "images/sudoku/RepeatedNumber.png";
 	}
 
 
