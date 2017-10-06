@@ -11,7 +11,7 @@ This project brings about the idea that there are more pedagogically effective w
 
 LEGUP uses a more visual representation in a more concrete and engaging environment. These and other features of the LEGUP interface are suspected to have several advantages over more traditional interfaces in terms of learning logic.
 
-# Use Cases
+## Use Cases
 
 The LEGUP interface allows the user to solve different types of grid-based logical puzzles. Probably the best known example of such a puzzle is the popular Sudoku puzzle, but there are many other types of puzzles that are based on the principle of filling in cells of a square or rectangular grid with different kinds of objects. In all cases, the user is provided certain clues that will force a unique configuration of objects in the grid. These types of puzzles are often advertised as 'logic puzzles', and are claimed to train one's logical mind as, using deduction, users should be able to infer which object goes where.
 
