@@ -1,5 +1,6 @@
 # LEGUP
+### Research Project of Dr. van Heuveln
 Logic Engine for Grid-Using Puzzles - a better way to learn formal logic
 
-## TO-DO:
-Add a better readme.
+## GOAL
+The main goal of the LEGUP project is to provide a better interface for students to learn basic principles of logical reasoning. Dr. van Heuveln has taught logic courses on a frequent basis for the past 15 years, and noted that a good number of students struggle with the systems of modern formal logic that were developed in the late 1800's and early 1900's, and that have been universally used in logic courses since. These traditional systems use abstract linear symbol strings such as (P & Q) -> (R v S), and deploy even more abstract rules such as & Elim to infer new symbol strings from old ones, thus engaging the user in logical reasoning. However, Dr. van Heuveln believes that there are more pedagogically effective ways for students to learn the basic and important principles of logical reasoning. The development of such a system and interface is the focus of the LEGUP project. In particular, the LEGUP system uses more visual representations in a more concrete and engaging environment. These and other features of the LEGUP interface are suspected to have several advantages over more traditional interfaces in terms of learning logic. For more detail on the suspected pedagogical virtues of the LEGUP project, and the various assumptions behind them, please read the Intellectual Background section.
