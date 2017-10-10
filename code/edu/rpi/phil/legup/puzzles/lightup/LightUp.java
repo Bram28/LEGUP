@@ -11,12 +11,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import edu.rpi.phil.legup.BoardImage;
@@ -27,7 +23,6 @@ import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Selection;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
-import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree; //avoid duplicating helper functions
 
 
 public class LightUp extends PuzzleModule
@@ -227,7 +222,7 @@ public class LightUp extends PuzzleModule
 		}
 		else
 		{
-			ruleList.add(new RuleLightBlueInLight());
+			ruleList.add(new RuleEmptyCellInLight());
 		}
 		return ruleList;
 	}

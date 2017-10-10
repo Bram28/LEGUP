@@ -11,12 +11,12 @@ import edu.rpi.phil.legup.PuzzleRule;
 public class RuleEmptyCellInLight extends PuzzleRule
 {
 	static final long serialVersionUID = 9502L;
-	public String getImageName() {return "images/lightup/rules/LightBlueInLight.png";}
+	public String getImageName() {return "images/lightup/rules/EmptyCellInLight.png";}
 	RuleEmptyCellInLight()
 	 {
 		setName("Empty Cells in Light");
 		description = "Cells in light must be empty.";
-		image = new ImageIcon("images/lightup/rules/LightBlueInLight.png");
+		image = new ImageIcon("images/lightup/rules/EmptyCellInLight.png");
 	 }
 	 
 	 /**
