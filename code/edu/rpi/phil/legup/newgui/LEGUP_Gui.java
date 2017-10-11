@@ -131,15 +131,15 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private static final int TOOLBAR_CONSOLE = 5;
 	private static final int TOOLBAR_HINT = 6;
 	private static final int TOOLBAR_CHECK = 7;
-	private static final int TOOLBAR_SUBMIT = 8;
+//	private static final int TOOLBAR_SUBMIT = 8;
 	/* --- */
-	private static final int TOOLBAR_DIRECTIONS = 9;
-	private static final int TOOLBAR_ZOOMIN = 10;
-	private static final int TOOLBAR_ZOOMOUT = 11;
-	private static final int TOOLBAR_ZOOMRESET = 12;
-	private static final int TOOLBAR_ZOOMFIT = 13;
+	private static final int TOOLBAR_DIRECTIONS = 8;
+	private static final int TOOLBAR_ZOOMIN = 9;
+	private static final int TOOLBAR_ZOOMOUT = 10;
+	private static final int TOOLBAR_ZOOMRESET = 11;
+	private static final int TOOLBAR_ZOOMFIT = 12;
 	/* --- */
-	private static final int TOOLBAR_ANNOTATIONS = 14;
+	private static final int TOOLBAR_ANNOTATIONS = 13;
 
 	final static String[] toolBarNames =
 	{
@@ -171,7 +171,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		new JButton(toolBarNames[5], new ImageIcon("images/" + toolBarNames[5] + ".png")),
 		new JButton(toolBarNames[6], new ImageIcon("images/" + toolBarNames[6] + ".png")),
 		new JButton(toolBarNames[7], new ImageIcon("images/" + toolBarNames[7] + ".png")), //Check
-		new JButton(toolBarNames[8], new ImageIcon("images/" + toolBarNames[8] + ".png")), //Submit
+//		new JButton(toolBarNames[8], new ImageIcon("images/" + toolBarNames[8] + ".png")), //Submit
 		new JButton(toolBarNames[9], new ImageIcon("images/" + toolBarNames[9] + ".png")), //Directions
 		new JButton(/*toolBarNames[10],*/ new ImageIcon("images/" + toolBarNames[10] + ".png")),
 		new JButton(/*toolBarNames[11],*/ new ImageIcon("images/" + toolBarNames[11] + ".png")),
@@ -412,7 +412,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
 		toolBarButtons[TOOLBAR_HINT].setEnabled(false);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(false);
-		toolBarButtons[TOOLBAR_SUBMIT].setEnabled(false);
+	//	toolBarButtons[TOOLBAR_SUBMIT].setEnabled(false);
 		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(false);
 		toolBarButtons[TOOLBAR_ANNOTATIONS].setEnabled(false);
 
@@ -717,7 +717,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		toolBarButtons[TOOLBAR_REDO].setEnabled(false);
 		toolBarButtons[TOOLBAR_HINT].setEnabled(true);
 		toolBarButtons[TOOLBAR_CHECK].setEnabled(true);
-		toolBarButtons[TOOLBAR_SUBMIT].setEnabled(true);
+	//	toolBarButtons[TOOLBAR_SUBMIT].setEnabled(true);
 		toolBarButtons[TOOLBAR_DIRECTIONS].setEnabled(true);
 		toolBarButtons[TOOLBAR_ANNOTATIONS].setEnabled(true);
 		///
@@ -884,10 +884,10 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		{
 			checkProof();
 		}
-		else if (e.getSource() == toolBarButtons[TOOLBAR_SUBMIT])
-		{
-			submit();
-		}
+//		else if (e.getSource() == toolBarButtons[TOOLBAR_SUBMIT])
+//		{
+//			submit();
+//		}
 		else if (e.getSource() == toolBarButtons[TOOLBAR_DIRECTIONS])
 		{
 			directions();
