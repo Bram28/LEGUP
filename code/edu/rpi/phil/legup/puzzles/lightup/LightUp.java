@@ -216,6 +216,7 @@ public class LightUp extends PuzzleModule
 		ruleList.add(new RuleFinishWithEmpty());
 		ruleList.add(new RuleMustLight());
 		ruleList.add(new RuleEmptyCorners());
+		ruleList.add(new RuleBulbsOutsideDiagonal());
 		if(LEGUP_Gui.LIGHT_UP_LEGACY == true)
 		{
 			ruleList.add(new RuleWhiteInLight());
