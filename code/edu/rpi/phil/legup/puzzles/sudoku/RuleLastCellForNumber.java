@@ -30,7 +30,53 @@ public class RuleLastCellForNumber extends PuzzleRule
 		return "images/sudoku/forcedByElimination.png";
 	}
 
-	 protected String checkRuleRaw(BoardState destBoardState)
+	protected String checkRuleViaCase(BoardState destBoardState) {
+		String error = null;
+		BoardState origBoardState = destBoardState.getSingleParentState();
+
+		boolean anychange = false;
+//    	 Check for only one branch
+		if (destBoardState.getParents().size() != 1)
+		{
+			error = "This rule only involves having a single branch!";
+		}
+		else
+		{
+			for (int y = 0; y < 9 ;++y)
+			{
+				for (int x = 0; x < 9 ;++x)
+				{
+					int o = origBoardState.getCellContents(x,y);
+					int n = destBoardState.getCellContents(x,y);
+
+					if (o != n)
+					{
+						anychange = true;
+						if (o != Sudoku.CELL_UNKNOWN)
+						{
+							error = "You can not change numbers, only insert them.";
+						}
+						else
+						{
+							if (!checkForced(x, y, n, origBoardState))
+							{
+								error = "The number "+n+" at ("+x+", "+y+") is not forced";
+							}
+						}
+					}
+				}
+			}
+
+			if (!anychange)
+				error = "You must insert a number to apply this rule!";
+		}
+
+		Sudoku.setAnnotations(destBoardState);
+
+		return error;
+	}
+
+	protected String checkRuleRaw(BoardState destBoardState)
     {
     	String error = null;
     	BoardState origBoardState = destBoardState.getSingleParentState();

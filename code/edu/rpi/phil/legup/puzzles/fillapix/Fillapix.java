@@ -1,23 +1,12 @@
 package edu.rpi.phil.legup.puzzles.fillapix;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Stroke;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -230,8 +219,8 @@ public class Fillapix extends PuzzleModule
 		if (!unique) return PuzzleGeneration.UNSOLVEABLE;
 
 		// Difficulty is classified by move intensity:
-		// If the move is RuleForcedFill and reveals at least 3 squares or 1/20 of the remaining, it is Easy
-		// If the move is RuleForcedFill and reveals at least 2 squares of 1/30 of the remaining, it is Medium
+		// If the move is RuleFinishWithBlack and reveals at least 3 squares or 1/20 of the remaining, it is Easy
+		// If the move is RuleFinishWithBlack and reveals at least 2 squares of 1/30 of the remaining, it is Medium
 		//	It is also Medium if the RuleSharedCells rule occurs, but never twice within 5 turns, and always revealing at least 10 squares or 1/6 of the remaining
 		// If guessing is not required, it is hard
 		// If the puzzle requires guessing, it is optimal
@@ -251,7 +240,7 @@ public class Fillapix extends PuzzleModule
 				if (runningDifficulty == PuzzleGeneration.EASY)
 				{
 					Object just = test.getJustification();
-					if (just instanceof RuleForcedFill)
+					if (just instanceof RuleFinishWithBlack)
 					{
 						int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 						if (unknown1-unknown2 < 2 && (unknown1-unknown2)*30 < unknown1)
@@ -269,7 +258,7 @@ public class Fillapix extends PuzzleModule
 				{
 					if (lastShared < 5) lastShared++;
 					Object just = test.getJustification();
-					if (just instanceof RuleForcedFill)
+					if (just instanceof RuleFinishWithBlack)
 					{
 						int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
 						if (unknown1-unknown2 < 2 && (unknown1-unknown2)*40 < unknown1)
