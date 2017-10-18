@@ -10,27 +10,22 @@ package edu.rpi.phil.legup.puzzles.sudoku;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 
 import edu.rpi.phil.legup.AI;
-import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.CellPredicate;
@@ -40,7 +35,6 @@ import edu.rpi.phil.legup.Legup;
 import edu.rpi.phil.legup.PuzzleGeneration;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
-import edu.rpi.phil.legup.puzzles.sudoku.Sudoku;
 
 public class Sudoku extends PuzzleModule
 {
@@ -198,7 +192,7 @@ public class Sudoku extends PuzzleModule
 		ruleList.add(new RuleLastCellForNumber());
 		ruleList.add(new RuleLastNumberForCell());
 		//ruleList.add(new RuleAdvancedDeduction());
-		contraList.add(new ContradictionBoardStateViolated());
+		contraList.add(new ContradictionRepeatedNumber());
 		contraList.add(new ContradictionNoSolutionForCell());
 		caseList.add(new CasePossibleNumbersForCell());
 		caseList.add(new CasePossibleCellsForNumber());

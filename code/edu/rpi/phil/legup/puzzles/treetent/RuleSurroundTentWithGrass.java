@@ -25,7 +25,7 @@ public class RuleSurroundTentWithGrass extends PuzzleRule
     public RuleSurroundTentWithGrass()
     {
     	setName("Surround Tent with Grass");
-    	description = "Cells next to a tent are grass.";
+    	description = "Blank cells adjacent or diagonal to a tent are grass.";
     	//image = new ImageIcon("images/treetent/aroundTent.png");
     }
 

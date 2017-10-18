@@ -25,8 +25,8 @@ public class CasePossibleNumbersForCell extends CaseRule
 
 	public CasePossibleNumbersForCell()
 	{
-		setName("Possible Numbers For Cell");
-		description = "A blank cell has a limited set of solutions, based on elimination";
+		setName("Possible Numbers for Cell");
+		description = "An empty cell has a limited set of possible numbers that can fill it.";
 		image = new ImageIcon("images/sudoku/PossibleValues.png");
 
 		defaultApplicationText= "Select an unknown square.";
@@ -39,7 +39,7 @@ public class CasePossibleNumbersForCell extends CaseRule
 
 	public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
-		Contradiction contra = new ContradictionBoardStateViolated();
+		Contradiction contra = new ContradictionRepeatedNumber();
 
 		for (int i = 1; i <= 9; i++)
 		{

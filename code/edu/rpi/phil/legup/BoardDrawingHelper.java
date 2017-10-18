@@ -70,7 +70,7 @@ public abstract class BoardDrawingHelper
 			//showOrange = true;
 		}
 
-		//only gets redrawn intermittently, enable when an elegent way to force redraws is found (and possibly change base)
+		//only gets redrawn intermittently, enable when an elegant way to force redraws is found (and possibly change base)
 		/*if (ANIMATE_SPLIT_CASE && origState != null)
 		{
 			int whichChild = (int)((System.currentTimeMillis()/1000)%origState.getChildren().size());

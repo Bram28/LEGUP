@@ -26,7 +26,7 @@ public class RuleLastNumberForCell extends PuzzleRule
 	RuleLastNumberForCell()
     {
 		setName("Last Number for Cell");
-		description = "This is the only the number left that can validly fit in the row, column, and square";
+		description = "This is the only the number left that can fit in the cell of a group.";
 		image = new ImageIcon("images/sudoku/forcedByDeduction.png");
 
 		groupToCellRef = Sudoku.getGroups();
@@ -87,6 +87,9 @@ public class RuleLastNumberForCell extends PuzzleRule
 
 	boolean checkDeduced(int x, int y, int n, BoardState origBoardState)
 	{
+		// this is exactly one case of possible numbers for cell
+		// therefore use CasePossibleNumbersForCell and make sure it returns a number of 1
+
 		int index = 9*y+x;
 
 		//Add all integers to the list that don't equal the newly added value (n)

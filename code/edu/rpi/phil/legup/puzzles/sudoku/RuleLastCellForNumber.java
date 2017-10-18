@@ -18,7 +18,7 @@ public class RuleLastCellForNumber extends PuzzleRule
 	RuleLastCellForNumber()
     {
 		setName("Last Cell for Number");
-		description = "This is the only spot left for a number to go in this row, column, or square";
+		description = "This is the only cell open in its group for some number.";
 		image = new ImageIcon("images/sudoku/forcedByElimination.png");
 
 		groupToCellRef = Sudoku.getGroups();
@@ -30,7 +30,53 @@ public class RuleLastCellForNumber extends PuzzleRule
 		return "images/sudoku/forcedByElimination.png";
 	}
 
-	 protected String checkRuleRaw(BoardState destBoardState)
+	protected String checkRuleViaCase(BoardState destBoardState) {
+		String error = null;
+		BoardState origBoardState = destBoardState.getSingleParentState();
+
+		boolean anychange = false;
+//    	 Check for only one branch
+		if (destBoardState.getParents().size() != 1)
+		{
+			error = "This rule only involves having a single branch!";
+		}
+		else
+		{
+			for (int y = 0; y < 9 ;++y)
+			{
+				for (int x = 0; x < 9 ;++x)
+				{
+					int o = origBoardState.getCellContents(x,y);
+					int n = destBoardState.getCellContents(x,y);
+
+					if (o != n)
+					{
+						anychange = true;
+						if (o != Sudoku.CELL_UNKNOWN)
+						{
+							error = "You can not change numbers, only insert them.";
+						}
+						else
+						{
+							if (!checkForced(x, y, n, origBoardState))
+							{
+								error = "The number "+n+" at ("+x+", "+y+") is not forced";
+							}
+						}
+					}
+				}
+			}
+
+			if (!anychange)
+				error = "You must insert a number to apply this rule!";
+		}
+
+		Sudoku.setAnnotations(destBoardState);
+
+		return error;
+	}
+
+	protected String checkRuleRaw(BoardState destBoardState)
     {
     	String error = null;
     	BoardState origBoardState = destBoardState.getSingleParentState();
@@ -87,7 +133,11 @@ public class RuleLastCellForNumber extends PuzzleRule
 	  */
     boolean checkForced(int nx, int ny, int val, BoardState origBoardState)
     {
-    	//Determine which cells were empty
+    	// this is exactly one case of possible cells for number
+		// therefore use CasePossibleCellsForNumber and make sure it returns a number of 1
+
+
+		//Determine which cells were empty
 		boolean[] possible = new boolean[81];
 		for (int i = 0; i < 81; possible[i] = (origBoardState.getCellContents(i%9, i++/9) == Sudoku.CELL_UNKNOWN));
 
