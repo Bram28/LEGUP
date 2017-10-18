@@ -47,8 +47,10 @@ public class Fillapix extends PuzzleModule
 		caseList = new Vector <CaseRule>();
 
 		ruleList.add(new RuleFinishWithBlack());
+		ruleList.add(new RuleFinishWithWhite());
 		ruleList.add(new RuleSharedCells());
 		contraList.add(new ContradictionTooManyBlackCells());
+		contraList.add(new ContradictionTooFewBlackCells());
 		caseList.add(new CaseBlackOrWhite());
 	}
 
