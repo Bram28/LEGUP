@@ -21,7 +21,6 @@ public class CasePossibleCellsForNumber extends CaseRule
 	private static final long serialVersionUID = 174002227L;
 
 	private int currNumSelected = -1;
-	private int numCases;
 
 	public CasePossibleCellsForNumber()
 	{
@@ -65,7 +64,6 @@ public class CasePossibleCellsForNumber extends CaseRule
 
   public BoardState autoGenerateCases(BoardState cur, Point pointSelected)
 	{
-		numCases = 0;
 		Contradiction contra = new ContradictionRepeatedNumber();
 		int xLo, xHi, yLo, yHi;
 		if (pointSelected.x < 0) {
@@ -102,15 +100,10 @@ public class CasePossibleCellsForNumber extends CaseRule
 				tmp.setCaseSplitJustification(this);
 				tmp.setCellContents(x, y, num);
 				tmp.endTransition();
-				numCases+=1;
 			}
 		}
 
 		return Legup.getCurrentState();
-	}
-
-	public boolean isSingleCase() {
-		return numCases==1;
 	}
 
 	public String checkCaseRuleRaw(BoardState state)
