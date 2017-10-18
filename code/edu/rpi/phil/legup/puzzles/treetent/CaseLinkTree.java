@@ -77,7 +77,7 @@ public class CaseLinkTree extends CaseRule
 	public CaseLinkTree()
 	{
 		setName("Links from tree");
-		description = "A tree has one linked tent.";//, other adjacents are grass/tree.";
+		description = "A tree must link to exactly one adjacent tent.";//, other adjacents are grass/tree.";
 	}
 	
 	public static boolean pointEquals(Point p1, Point p2)

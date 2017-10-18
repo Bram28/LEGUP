@@ -27,7 +27,8 @@ public class RuleLastCampingSpot extends PuzzleRule
 	public RuleLastCampingSpot()
     {
 		setName("Last Camping Spot");
-		description = "If there is one unknown cell next to a tentless unlinked tree, it is a tent which must be linked to the tree.";
+		//description = "If there is one unknown cell next to a tentless unlinked tree, it is a tent which must be linked to the tree.";
+		description = "If an unlinked tree is adjacent to only one blank cell and not adjacent to any unlinked tents, the blank cell must be a tent";
 		//image = new ImageIcon("images/treetent/oneTentPosition.png");
     }
 

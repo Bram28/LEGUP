@@ -24,7 +24,7 @@ public class ContradictionAdjacentTents extends Contradiction
      */
     public String checkContradictionRaw(BoardState state)
     {
-    	String error = "No two tents are adjacent to each other.";
+    	String error = "No two tents are adjacent or diagonal to each other.";
     	int height = state.getHeight();
     	int width = state.getWidth();
 

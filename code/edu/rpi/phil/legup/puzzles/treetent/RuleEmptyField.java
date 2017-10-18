@@ -24,7 +24,8 @@ public class RuleEmptyField extends PuzzleRule
 	public RuleEmptyField()
     {
 		setName("Empty Field");
-		description = "Any cell not next to an unlinked tree can be marked grass.";
+		//description = "Any cell not next to an unlinked tree can be marked grass.";
+		description = "blank cells not adjacent to an unliked tree are grass.";
 		//image = new ImageIcon("images/treetent/noTreesAround.png");
     }
 
