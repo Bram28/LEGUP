@@ -12,7 +12,7 @@ public class ContradictionAdjacentTents extends Contradiction
 	public ContradictionAdjacentTents()
 	 {
 		setName("Adjacent Tents");
-		description = "Tents cannot be adjacent or diagonal to other tents.";
+		description = "Tents cannot touch other tents.";
 		//image = new ImageIcon("images/treetent/contra_adjacentTents.png");
 	 }
 	 
@@ -24,8 +24,9 @@ public class ContradictionAdjacentTents extends Contradiction
      */
     public String checkContradictionRaw(BoardState state)
     {
-    	String error = "No two tents are adjacent or diagonal to each other.";
-    	int height = state.getHeight();
+    	//String error = "No two tents are adjacent or diagonal to each other.";
+    	String error = "There are no touching tents";
+		int height = state.getHeight();
     	int width = state.getWidth();
 
     	// Check all tents to see if they are adjacent to a tree
