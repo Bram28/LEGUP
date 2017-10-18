@@ -44,7 +44,7 @@ public class CaseLinkTent extends CaseRule
 	public CaseLinkTent()
 	{
 		setName("Links from tent");
-		description = "A tent can link to exactly one adjacent tree.";
+		description = "A tent must link to exactly one adjacent tree.";
 	}
 	
 	public boolean pointEquals(Point p1, Point p2)
