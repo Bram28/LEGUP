@@ -165,67 +165,67 @@ public class Fillapix extends PuzzleModule {
 		}
 		// unknown cells with a clue
 		else if (cellValue == 10) {
-			return "images/fillapix/unknown0";
+			return "images/fillapix/unknown0.gif";
 		} else if (cellValue == 11) {
-			return "images/fillapix/unknown1";
+			return "images/fillapix/unknown1.gif";
 		} else if (cellValue == 12) {
-			return "images/fillapix/unknown2";
+			return "images/fillapix/unknown2.gif";
 		} else if (cellValue == 13) {
-			return "images/fillapix/unknown3";
+			return "images/fillapix/unknown3.gif";
 		} else if (cellValue == 14) {
-			return "images/fillapix/unknown4";
+			return "images/fillapix/unknown4.gif";
 		} else if (cellValue == 15) {
-			return "images/fillapix/unknown5";
+			return "images/fillapix/unknown5.gif";
 		} else if (cellValue == 16) {
-			return "images/fillapix/unknown6";
+			return "images/fillapix/unknown6.gif";
 		} else if (cellValue == 17) {
-			return "images/fillapix/unknown7";
+			return "images/fillapix/unknown7.gif";
 		} else if (cellValue == 18) {
-			return "images/fillapix/unknown8";
+			return "images/fillapix/unknown8.gif";
 		} else if (cellValue == 19) {
-			return "images/fillapix/unknown9";
+			return "images/fillapix/unknown9.gif";
 			// black cells with a clue
 		} else if (cellValue == 30) {
-			return "images/fillapix/black0";
+			return "images/fillapix/black0.gif";
 		} else if (cellValue == 31) {
-			return "images/fillapix/black1";
+			return "images/fillapix/black1.gif";
 		} else if (cellValue == 32) {
-			return "images/fillapix/black2";
+			return "images/fillapix/black2.gif";
 		} else if (cellValue == 33) {
-			return "images/fillapix/black3";
+			return "images/fillapix/black3.gif";
 		} else if (cellValue == 34) {
-			return "images/fillapix/black4";
+			return "images/fillapix/black4.gif";
 		} else if (cellValue == 35) {
-			return "images/fillapix/black5";
+			return "images/fillapix/black5.gif";
 		} else if (cellValue == 36) {
-			return "images/fillapix/black6";
+			return "images/fillapix/black6.gif";
 		} else if (cellValue == 37) {
-			return "images/fillapix/black7";
+			return "images/fillapix/black7.gif";
 		} else if (cellValue == 38) {
-			return "images/fillapix/black8";
+			return "images/fillapix/black8.gif";
 		} else if (cellValue == 39) {
-			return "images/fillapix/black9";
+			return "images/fillapix/black9.gif";
 			// white cells with a clue
 		} else if (cellValue == 60) {
-			return "images/fillapix/white0";
+			return "images/fillapix/white0.gif";
 		} else if (cellValue == 61) {
-			return "images/fillapix/white1";
+			return "images/fillapix/white1.gif";
 		} else if (cellValue == 62) {
-			return "images/fillapix/white2";
+			return "images/fillapix/white2.gif";
 		} else if (cellValue == 63) {
-			return "images/fillapix/white3";
+			return "images/fillapix/white3.gif";
 		} else if (cellValue == 64) {
-			return "images/fillapix/white4";
+			return "images/fillapix/white4.gif";
 		} else if (cellValue == 65) {
-			return "images/fillapix/white5";
+			return "images/fillapix/white5.gif";
 		} else if (cellValue == 66) {
-			return "images/fillapix/white6";
+			return "images/fillapix/white6.gif";
 		} else if (cellValue == 67) {
-			return "images/fillapix/white7";
+			return "images/fillapix/white7.gif";
 		} else if (cellValue == 68) {
-			return "images/fillapix/white8";
+			return "images/fillapix/white8.gif";
 		} else if (cellValue == 69) {
-			return "images/fillapix/white9";
+			return "images/fillapix/white9.gif";
 		}
 		return "";
 	}
