@@ -15,9 +15,7 @@ import javax.swing.ImageIcon;
 public class CaseBlackOrWhite extends CaseRule
 {
 	static final long serialVersionUID = 779450537L;
-	
-    public CaseBlackOrWhite()
-	{
+    public CaseBlackOrWhite() {
 		setName("Black or White");
 		description = "Every cell is either black or white.";
 		image = new ImageIcon("images/fillapix/cases/BlackOrWhite.png");
@@ -25,13 +23,44 @@ public class CaseBlackOrWhite extends CaseRule
 		defaultApplicationText= "Select an unknown square.";
 	}
 
-	public String getImageName()
-	{
+	public String getImageName() {
 		return "images/fillapix/cases/BlackOrWhite.png";
 	}
 
 	public String checkCaseRuleRaw(BoardState state)
 	{
+		String rv = null;
+		BoardState parent = state.getSingleParentState();
+		if (parent.getChildren().size() != 2) {
+			rv = "This case rule can only be applied on a two-way split.";
+		} else {
+			BoardState one = parent.getChildren().get(0);
+			BoardState two = parent.getChildren().get(1);
+
+			ArrayList<Point> dif = BoardState.getDifferenceLocations(one,two);
+			if (dif.size() > 1) {
+				rv = "Your two-way split is only allowed to change a single cell with this rule.";
+			} else if (dif.size() == 0) {
+				rv = "Your two-way split must change a single cell with this rule.";
+			} else {
+				Point p = dif.get(0);
+
+				if (!((Fillapix.isBlack(one.getCellContents(p.x,p.y)) &&
+						Fillapix.isWhite(two.getCellContents(p.x,p.y))) ||
+						(Fillapix.isBlack(two.getCellContents(p.x,p.y)) &&
+								Fillapix.isWhite(one.getCellContents(p.x,p.y))))) {
+					// if(LEGUP_Gui.LIGHT_UP_LEGACY == true)
+					// {rv = "In this case rule, one state's cell must be white and the other a light.";}
+					// else
+					// {rv = "In this case rule, one state's cell must be light blue and the other a light.";}
+				} else if (Fillapix.isUnknown(parent.getCellContents(p.x,p.y))) {
+					rv = "The parent cell that you're applying the case rule on must be a blank cell.";
+				}
+			}
+		}
+
+		return rv;
+		/*
 		if (state.getChildren().size() < 2)
 			return "This case rule can only be applied on a split transition";
 
@@ -50,7 +79,7 @@ public class CaseBlackOrWhite extends CaseRule
 		if ((val0 == Fillapix.FILLED && val1 == Fillapix.EMPTY) || (val0 == Fillapix.EMPTY && val1 == Fillapix.FILLED))
 			return null;
 
-		return "Case rule only applies to splitting a single unknown cell into Black and White";
+		return "Case rule only applies to splitting a single unknown cell into Black and White";*/
 	}
 
 	public boolean startDefaultApplicationRaw(BoardState state)
@@ -63,20 +92,14 @@ public class CaseBlackOrWhite extends CaseRule
 		if(location.x < 0 || location.y < 0 || location.x >= state.getWidth( ) || location.y >= state.getHeight( ))
 			return false;
 
-		if(state.getCellContents(location.x, location.y) == Fillapix.CELL_UNKNOWN)
-		{
+		if(Fillapix.isUnknown(state.getCellContents(location.x, location.y))) {
 			Vector<Integer> states = new Vector<Integer>();
-			states.add(new Integer(Fillapix.FILLED));
-			states.add(new Integer(Fillapix.EMPTY));
-
+			states.add(new Integer(Fillapix.CELL_BLACK));
+			states.add(new Integer(Fillapix.CELL_WHITE));
 			Permutations.permutationCell( state, location, states );
-
 			state.setCaseSplitJustification(this);
-
 			return true;
 		}
-
 		return false;
 	}
-
 }
