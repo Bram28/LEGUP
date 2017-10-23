@@ -102,6 +102,27 @@ public class Fillapix extends PuzzleModule {
 	public Fillapix() {
 	}
 
+	public void drawCell( Graphics2D g, int x, int y, int state ){
+		// unknown
+		if (state==-50 || state/10==1) {
+			g.setColor(Color.lightGray);
+		}
+		// black
+		else if (state==-30 || state/10==3) {
+			g.setColor(Color.black);
+		}
+		// white
+		else if (state==-20 || state/10==6) {
+			g.setColor(Color.white);
+		} else {
+			System.out.println("This state shouldn't exist. It's impossible. It's preposterous");
+		}
+
+		if (state > 0) {
+			drawText( g, x, y, String.valueOf(state%10) );
+		}
+	}
+
 	public boolean checkBoardComplete(BoardState finalstate) {
 		boolean[][] colored = new boolean[finalstate.getHeight()][finalstate.getWidth()];
 		int width = finalstate.getWidth();
@@ -153,81 +174,6 @@ public class Fillapix extends PuzzleModule {
 			String error = "The value in the cell is outside the set of possible values.";
 		}
 		state.setCellContents(where.x, where.y, value);
-	}
-
-	public String getImageLocation(int cellValue) {
-		if (cellValue == -50) { // unknown unknown
-			return "images/unknown.gif";
-		} else if (cellValue == -30) { // unknown black
-			return "images/fillapix/unknownBlack.gif";
-		} else if (cellValue == -20) { // unknown white
-			return "images/fillapix/unknownWhite.gif";
-		}
-		// unknown cells with a clue
-		else if (cellValue == 10) {
-			return "images/fillapix/unknown0.gif";
-		} else if (cellValue == 11) {
-			return "images/fillapix/unknown1.gif";
-		} else if (cellValue == 12) {
-			return "images/fillapix/unknown2.gif";
-		} else if (cellValue == 13) {
-			return "images/fillapix/unknown3.gif";
-		} else if (cellValue == 14) {
-			return "images/fillapix/unknown4.gif";
-		} else if (cellValue == 15) {
-			return "images/fillapix/unknown5.gif";
-		} else if (cellValue == 16) {
-			return "images/fillapix/unknown6.gif";
-		} else if (cellValue == 17) {
-			return "images/fillapix/unknown7.gif";
-		} else if (cellValue == 18) {
-			return "images/fillapix/unknown8.gif";
-		} else if (cellValue == 19) {
-			return "images/fillapix/unknown9.gif";
-			// black cells with a clue
-		} else if (cellValue == 30) {
-			return "images/fillapix/black0.gif";
-		} else if (cellValue == 31) {
-			return "images/fillapix/black1.gif";
-		} else if (cellValue == 32) {
-			return "images/fillapix/black2.gif";
-		} else if (cellValue == 33) {
-			return "images/fillapix/black3.gif";
-		} else if (cellValue == 34) {
-			return "images/fillapix/black4.gif";
-		} else if (cellValue == 35) {
-			return "images/fillapix/black5.gif";
-		} else if (cellValue == 36) {
-			return "images/fillapix/black6.gif";
-		} else if (cellValue == 37) {
-			return "images/fillapix/black7.gif";
-		} else if (cellValue == 38) {
-			return "images/fillapix/black8.gif";
-		} else if (cellValue == 39) {
-			return "images/fillapix/black9.gif";
-			// white cells with a clue
-		} else if (cellValue == 60) {
-			return "images/fillapix/white0.gif";
-		} else if (cellValue == 61) {
-			return "images/fillapix/white1.gif";
-		} else if (cellValue == 62) {
-			return "images/fillapix/white2.gif";
-		} else if (cellValue == 63) {
-			return "images/fillapix/white3.gif";
-		} else if (cellValue == 64) {
-			return "images/fillapix/white4.gif";
-		} else if (cellValue == 65) {
-			return "images/fillapix/white5.gif";
-		} else if (cellValue == 66) {
-			return "images/fillapix/white6.gif";
-		} else if (cellValue == 67) {
-			return "images/fillapix/white7.gif";
-		} else if (cellValue == 68) {
-			return "images/fillapix/white8.gif";
-		} else if (cellValue == 69) {
-			return "images/fillapix/white9.gif";
-		}
-		return "";
 	}
 
 	public void initBoard(BoardState state) {
@@ -309,37 +255,23 @@ public class Fillapix extends PuzzleModule {
 
 
 	public boolean checkValidBoardState(BoardState boardState) {
+		/*
 		BoardState clone = new BoardState(boardState);
 		boardState = clone.addTransitionFrom();
 		Vector<Contradiction> contras = getContradictions();
 		for (Contradiction con : contras) if (con.checkContradiction(clone) == null) return false;
 		return true;
-	}
-
-	// CAN PROBABLY REMOVE THIS DRAWEXTRADATA FUNCTION I DON'T THINK FILLAPIX USES IT
-	private final Color light = new Color(255,255,0,63);
-	public void drawExtraData(Graphics gr, ArrayList<Object> extraData, ArrayList<Object> extraDataDelta, Rectangle bounds, int w, int h) {
-		/*
-		Graphics2D g = (Graphics2D)gr;
-		g.setColor( light );
-
-		Dimension d = this.getImageSize();
-		int imW = d.width;
-		int imH = d.height;
-
-		if(extraData.size() > 0) {
-			for(int cnt = 0; cnt < extraData.size(); ++cnt) {
-				g.fillRect(imW + ((Point)extraData.get(cnt)).x * imW, imH + ((Point)extraData.get(cnt)).y * imH, imW, imH);
-			}
-		}
 		*/
+		return true;
 	}
 
 	public void treeSelectionChanged(ArrayList <Selection> newSelection) {
+		/*
 		if(newSelection.size() != 0) {
 			BoardState b = newSelection.get(0).getState();
 			// fillLight(b); SOMETHING ELSE SHOULD PROBABLY GO HERE
 		}
+		*/
 	}
 
 	public void boardDataChanged(BoardState state) {
@@ -486,6 +418,7 @@ public class Fillapix extends PuzzleModule {
 
 	// DON'T THINK WE NEED THIS
 	// function for finding blank squares around a black square
+	/*
 	private Point FindEmpty (int r, int c, BoardState Board) {
 		int width = Board.getHeight();
 		int height = Board.getWidth();
@@ -515,7 +448,7 @@ public class Fillapix extends PuzzleModule {
 		}
 		// If we havn't returned by now, something is seriously wrong
 		return new Point(r,c);
-	}
+	}*/
 
 
 	//finds the number of squares that will be filled by putting a light in an unfilled square
@@ -598,6 +531,7 @@ public class Fillapix extends PuzzleModule {
 	}
 
 	// ?? WHAT'S THIS FOR
+	/*
 	static Vector<Point> findDiagonalNumbers(BoardState state, Point at) {
 		Vector<Point> ret = new Vector<Point>();
 		int x;
@@ -629,9 +563,10 @@ public class Fillapix extends PuzzleModule {
 		}
 
 		return ret;
-	}
+	}*/
 
 	// ?? WHAT IS THIS FOR
+	/*
 	static Vector<Point> findAdjacentNumbers(BoardState state, Point at)
 	{
 		Vector<Point> ret = new Vector<Point>();
@@ -673,5 +608,5 @@ public class Fillapix extends PuzzleModule {
 
 	public void updateState(BoardState state) {
 		//LightUp.fillLight(state);
-	}
+	}*/
 }
