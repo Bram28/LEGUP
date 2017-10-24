@@ -70,8 +70,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	/**
 	 * Take an action when the left mouse button is pressed
 	 * @param state the current board state
-	 * @param x the x position where the pressed event occurred
-	 * @param y the y position where the pressed event occurred
+	 * @param where the point where the pressed event occurred
 	 */
 	public void mousePressedEvent(BoardState state, Point where)
 	{
@@ -81,7 +80,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 
 	/**
 	 * Is this puzzle provably solved in any of these board states?
-	 * @param states The set of board states to check
+	 * @param initialState The set of board states to check
 	 * @return true iff there is a proven path from the root to the solution
 	 */
 	public boolean checkProof(BoardState initialState)
@@ -467,7 +466,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 	}
 	/* AI stuff */
 	/**
-	 * @param Board the boardstate to make a guess on
+	 * @param B the boardstate to make a guess on
 	 * @return the board after the guess has been made
 	 */
 	public BoardState guess(BoardState B) {
@@ -571,16 +570,7 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 
 	protected Font font = new Font( "Arial", Font.BOLD, 20 );
 	protected Color fontColor = Color.black;
-	protected void drawText( Graphics2D g, int x, int y, String text ){
-		g.setColor( fontColor );
-		g.setFont( font );
-		FontMetrics fm = g.getFontMetrics();
-		int w = ( cellSize.width - fm.stringWidth(text) ) / 2;
-		int h = ( cellSize.height - fm.getAscent() ) / 2 + fm.getAscent();
-		g.drawString( text,
-			cellSize.width * (x + 1) + w,
-			cellSize.height * (y + 1) + h );
-	}
+
 	
 	/**
 	 * Currently used to draw small anotations
@@ -614,6 +604,17 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 		return new Rectangle(
 			cellSize.width * (x + 1), cellSize.height * (y + 1),
 			cellSize.width, cellSize.height );
+	}
+
+	public void drawText( Graphics2D g, int x, int y, String text ){
+		g.setColor( fontColor );
+		g.setFont( font );
+		FontMetrics fm = g.getFontMetrics();
+		int w = ( cellSize.width - fm.stringWidth(text) ) / 2;
+		int h = ( cellSize.height - fm.getAscent() ) / 2 + fm.getAscent();
+		g.drawString( text,
+				cellSize.width * (x + 1) + w,
+				cellSize.height * (y + 1) + h );
 	}
 
 	/**
