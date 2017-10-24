@@ -14,7 +14,7 @@ public class RuleMustLight extends PuzzleRule
 	RuleMustLight()
 	{
 		setName("Must Light");
-		description = "A cell must be a light if it is the only cell to be able to light another.";
+		description = "A cell must be a bulb if it is the only cell to be able to light another.";
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class RuleMustLight extends PuzzleRule
 				if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
 					// Make sure cells placed are light cells
 					if (destBoardState.getCellContents(x, y) != LightUp.CELL_LIGHT) {
-						return "Only Light cells are allowed for this rule!";
+						return "Only bulbs are allowed for this rule!";
 					}
 					// Make sure a light bulb is not placed in a lit cell
 					if (new ContradictionBulbsInPath().checkContradictionRaw(destBoardState) == null) {
@@ -61,7 +61,7 @@ public class RuleMustLight extends PuzzleRule
 					modified.getBoardCells()[y][x] = LightUp.CELL_EMPTY;
 					for (Contradiction c : contras) {
 						if (c.checkContradictionRaw(modified) != null)
-							return "It is not required for the modified cell(s) to be Lights!";
+							return "It is not required for the modified cell(s) to be bulbs!";
 					}
 				}
 			}

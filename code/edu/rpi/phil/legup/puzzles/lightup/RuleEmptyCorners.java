@@ -25,7 +25,7 @@ public class RuleEmptyCorners extends PuzzleRule
 	RuleEmptyCorners()
 	{
 		setName("Empty Corners");
-		description = "Cells on the corners of a number must be empty if they would prevent the number from acheiving its lights.";
+		description = "Cells on the corners of a number must be empty if placing bulbs would prevent the number from being satisfied.";
 	}
 
 	/**
