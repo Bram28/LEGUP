@@ -4,12 +4,7 @@
 
 package edu.rpi.phil.legup.puzzles.fillapix;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,18 +35,6 @@ public class Fillapix extends PuzzleModule {
 	// Therefore cells with clues are a little tricky
 	// To capture both the color and the clue number, a special number system is implemented
 
-	// natural values for cells with clues. Mod 10 gives the clue number
-	public static int CELL_ZERO = 10;
-	public static int CELL_ONE = 11;
-	public static int CELL_TWO = 12;
-	public static int CELL_THREE = 13;
-	public static int CELL_FOUR = 14;
-	public static int CELL_FIVE = 15;
-	public static int CELL_SIX = 16;
-	public static int CELL_SEVEN = 17;
-	public static int CELL_EIGHT = 18;
-	public static int CELL_NINE = 19;
-
 	// cell colors
 	public static int CELL_UNKNOWN = -50;
 	public static int CELL_BLACK = 20;
@@ -65,30 +48,35 @@ public class Fillapix extends PuzzleModule {
 	// clues with white cells: 60, 61, 62, 63, 64, 65, 66, 67, 68, 69
 
 	public Map<String, Integer> getSelectableCells() {
+		// FIX LATER
 		Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
-		tmp.put("blank", CELL_UNKNOWN);
-		tmp.put("black", CELL_BLACK);
-		tmp.put("white", CELL_WHITE);
+		String tmpname = "";
+		for (int i = -50; i < 70; i++) {
+			tmpname+="a";
+			tmp.put(tmpname, i);
+		}
+		// tmp.put("blank", CELL_UNKNOWN);
+		// tmp.put("black", CELL_BLACK);
+		// tmp.put("white", CELL_WHITE);
 		return tmp;
 	}
 
 	public Map<String, Integer> getUnselectableCells() {
-		return null;
+		Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+		tmp.put("hmm", -100); // BOGUS VALUE, EVERYTHING'S SELECTABLE
+		return tmp;
 	}
 
 	public static boolean isUnknown(int value) {
-		return (value == -50 || value == 10 || value == 11 || value == 12 || value == 13 || value == 14
-				|| value == 15 || value == 16 || value == 17 || value == 18 || value == 19);
+		return (value == -50 || value == 50 || (value/10)==1);
 	}
 
 	public static boolean isBlack(int value) {
-		return (value == -30 || value == 30 || value == 31 || value == 32 || value == 33 || value == 34
-				|| value == 35 || value == 36 || value == 37 || value == 38 || value == 39);
+		return (value == -30 || value == 70 || (value/10)==3);
 	}
 
 	public static boolean isWhite(int value) {
-		return (value == -20 || value == 60 || value == 61 || value == 62 || value == 63 || value == 64
-				|| value == 65 || value == 66 || value == 67 || value == 68 || value == 69);
+		return (value == -20 || value == 100 || (value/10)==6);
 	}
 
 	protected boolean inBounds(int width, int height, int x, int y) {
@@ -103,25 +91,51 @@ public class Fillapix extends PuzzleModule {
 	}
 
 	public void drawCell( Graphics2D g, int x, int y, int state ){
-		// unknown
-		if (state==-50 || state/10==1) {
+		if (isUnknown(state)) {
 			g.setColor(Color.lightGray);
-		}
-		// black
-		else if (state==-30 || state/10==3) {
-			g.setColor(Color.black);
-		}
-		// white
-		else if (state==-20 || state/10==6) {
+		} else if (isBlack(state)) {
+			g.setColor(Color.darkGray);
+		} else if (isWhite(state)) {
 			g.setColor(Color.white);
 		} else {
 			System.out.println("This state shouldn't exist. It's impossible. It's preposterous");
 		}
-
 		if (state > 0) {
 			drawText( g, x, y, String.valueOf(state%10) );
 		}
 	}
+
+	public void drawCell( Graphics2D g, int x, int y, BoardState state ){
+		// make sure the user can click on the cell
+		state.setModifiableCell(x,y,true);
+		int val = state.getCellContents( x, y );
+		// draw the background color
+
+		g.setColor(Color.lightGray);
+		System.out.println("VAAAAAAAAAAAAAAAL: " + val);
+		if (isUnknown(val)) {
+			System.out.println("IS UNKNOWN");
+		} else if (isBlack(val)) {
+			System.out.println("IS BLACK");
+			g.setColor(Color.darkGray);
+		} else if (isWhite(val)) {
+			System.out.println("IS WHITE");
+			g.setColor(Color.white);
+		} else {
+			System.out.println("Odddd: " + val);
+			state.setModifiableCell(x,y,true);
+		}
+		g.fill(getCellBounds(x,y));
+
+		// draw the number
+		if (val!=50 && val!=70 && val!=100 && val!=0) {
+			drawText(g, x, y, String.valueOf(val%10));
+		} else {
+			drawText(g, x, y, "");
+		}
+	}
+
+
 
 	public boolean checkBoardComplete(BoardState finalstate) {
 		boolean[][] colored = new boolean[finalstate.getHeight()][finalstate.getWidth()];
