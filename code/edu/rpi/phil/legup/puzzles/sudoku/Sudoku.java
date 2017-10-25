@@ -7,14 +7,7 @@
 
 package edu.rpi.phil.legup.puzzles.sudoku;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Stroke;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -472,7 +465,7 @@ public class Sudoku extends PuzzleModule
 
 	/**
 	 * Draw the grid for the puzzle in the specified coords
-	 * @param g the Graphics to draw with
+	 * @param gr the Graphics to draw with
 	 * @param bounds the bounds of the grid
 	 * @param w the width (in boxes) of the puzzle
 	 * @param h the height (in boxes) of the puzzle
@@ -512,6 +505,17 @@ public class Sudoku extends PuzzleModule
 
 			g.drawLine(bounds.x, drawY, bounds.x + bounds.width, drawY);
 		}
+	}
+
+	public void drawText( Graphics2D g, int x, int y, String text ){
+		g.setColor( Color.blue );
+		g.setFont( font );
+		FontMetrics fm = g.getFontMetrics();
+		int w = ( cellSize.width - fm.stringWidth(text) ) / 2;
+		int h = ( cellSize.height - fm.getAscent() ) / 2 + fm.getAscent();
+		g.drawString( text,
+				cellSize.width * (x + 1) + w,
+				cellSize.height * (y + 1) + h );
 	}
 
 	/**

@@ -1,303 +1,213 @@
+//
+//  Fillapix.java
+//  LEGUP
+
 package edu.rpi.phil.legup.puzzles.fillapix;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 
-import edu.rpi.phil.legup.AI;
 import edu.rpi.phil.legup.BoardImage;
 import edu.rpi.phil.legup.BoardState;
 import edu.rpi.phil.legup.CaseRule;
 import edu.rpi.phil.legup.Contradiction;
-import edu.rpi.phil.legup.PuzzleGeneration;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
+import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.newgui.LEGUP_Gui;
+// import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree; //avoid duplicating helper functions
 
-public class Fillapix extends PuzzleModule
-{
-    // should these be prefixed with "CELL_", and "UNKNOWN" removed, to be consistant with others?
-	public static int UNKNOWN = 0, FILLED = 1, EMPTY = 2;
+public class Fillapix extends PuzzleModule {
+	// Cells can be unknown, black, white, black with a clue, or white with a clue
+	// Values are stored depending on the type of cell it is
+	// First click: cell turns black
+	// Second click: cell turns white
+	// Third click: cell resets to unknown
 
-    public Map<String, Integer> getSelectableCells()
-    {
-        Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
-        tmp.put("blank", CELL_UNKNOWN);
-        tmp.put("filled", FILLED);
-        tmp.put("empty", EMPTY);
-        return tmp;
-    }
-    public Map<String, Integer> getUnselectableCells()
-    { Map<String, Integer> tmp = new LinkedHashMap<String, Integer>(); return tmp; }
+	// Only one value can be stored in the board
+	// Therefore cells with clues are a little tricky
+	// To capture both the color and the clue number, a special number system is implemented
 
+	// cell colors
+	public static int CELL_UNKNOWN = -50;
+	public static int CELL_BLACK = 20;
+	public static int CELL_WHITE = 30;
 
-	Vector <PuzzleRule> ruleList;
-	Vector <Contradiction> contraList;
-	Vector <CaseRule> caseList;
+	// unknown unknown: -50
+	// unknown black: -30
+	// unknown white: -20
+	// clues with unknown cells: 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+	// clues with black cells: 30, 31, 32, 33, 34, 35, 36, 37, 38, 39
+	// clues with white cells: 60, 61, 62, 63, 64, 65, 66, 67, 68, 69
 
-	public Fillapix()
-	{
-		ruleList = new Vector <PuzzleRule>();
-		contraList = new Vector <Contradiction>();
-		caseList = new Vector <CaseRule>();
+	public Map<String, Integer> getSelectableCells() {
+		// FIX LATER
+		Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+		String tmpname = "";
+		for (int i = -50; i < 70; i++) {
+			tmpname+="a";
+			tmp.put(tmpname, i);
+		}
+		// tmp.put("blank", CELL_UNKNOWN);
+		// tmp.put("black", CELL_BLACK);
+		// tmp.put("white", CELL_WHITE);
+		return tmp;
+	}
 
-		ruleList.add(new RuleFinishWithBlack());
-		ruleList.add(new RuleSharedCells());
-		contraList.add(new ContradictionTooManyBlackCells());
-		caseList.add(new CaseBlackOrWhite());
+	public Map<String, Integer> getUnselectableCells() {
+		Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+		tmp.put("hmm", -100); // BOGUS VALUE, EVERYTHING'S SELECTABLE
+		return tmp;
+	}
+
+	public static boolean isUnknown(int value) {
+		return (value == -50 || value == 50 || (value/10)==1);
+	}
+
+	public static boolean isBlack(int value) {
+		return (value == -30 || value == 70 || (value/10)==3);
+	}
+
+	public static boolean isWhite(int value) {
+		return (value == -20 || value == 100 || (value/10)==6);
+	}
+
+	protected boolean inBounds(int width, int height, int x, int y) {
+		return (((0 <= x) && (x < width)) && ((0 <= y) && (y < height)));
+	}
+
+	public boolean isCellWithClue(int value) {
+		return value > 0;
+	}
+
+	public Fillapix() {
+	}
+
+	public void drawCell( Graphics2D g, int x, int y, int state ){
+		if (isUnknown(state)) {
+			g.setColor(Color.lightGray);
+		} else if (isBlack(state)) {
+			g.setColor(Color.darkGray);
+		} else if (isWhite(state)) {
+			g.setColor(Color.white);
+		} else {
+			System.out.println("This state shouldn't exist. It's impossible. It's preposterous");
+		}
+		if (state > 0) {
+			drawText( g, x, y, String.valueOf(state%10) );
+		}
 	}
 
 	public void drawCell( Graphics2D g, int x, int y, BoardState state ){
+		// make sure the user can click on the cell
+		state.setModifiableCell(x,y,true);
 		int val = state.getCellContents( x, y );
 		// draw the background color
-		if( val != 0 ){
-			g.setColor( (val==1) ? Color.black : Color.white );
-			g.fill( getCellBounds(x,y) );
+
+		g.setColor(Color.lightGray);
+		System.out.println("VAAAAAAAAAAAAAAAL: " + val);
+		if (isUnknown(val)) {
+			System.out.println("IS UNKNOWN");
+		} else if (isBlack(val)) {
+			System.out.println("IS BLACK");
+			g.setColor(Color.darkGray);
+		} else if (isWhite(val)) {
+			System.out.println("IS WHITE");
+			g.setColor(Color.white);
+		} else {
+			System.out.println("Odddd: " + val);
+			state.setModifiableCell(x,y,true);
 		}
-		// find the number to display
-		int num = 10;  Point p = new Point(x, y);
-		for (ExtraCellNumber ecn : getECNs(state))
-			if( ecn.getPoint().equals(p) )
-                        {
-				num = ecn.getVal();
-				break;
-			}
-		// set the text color
-		fontColor = (val==1) ? Color.white : Color.black;
+		g.fill(getCellBounds(x,y));
+
 		// draw the number
-		if( num < 10 )
-			drawText( g, x, y, String.valueOf(num) );
+		if (val!=50 && val!=70 && val!=100 && val!=0) {
+			drawText(g, x, y, String.valueOf(val%10));
+		} else {
+			drawText(g, x, y, "");
+		}
 	}
 
-	public static ArrayList<ExtraCellNumber> getECNs(BoardState state)
-	{
-		for (int i = 0; i < state.getExtraData().size(); i++)
-			if (!(state.getExtraData().get(i) instanceof ExtraCellNumber))
-				state.getExtraData().remove(i--);
 
-		ArrayList<ExtraCellNumber> arr = new ArrayList<ExtraCellNumber>();
-		for (int i = 0; i < state.getExtraData().size(); i++) arr.add((ExtraCellNumber)state.getExtraData().get(i));
 
-		return arr;
-	}
+	public boolean checkBoardComplete(BoardState finalstate) {
+		boolean[][] colored = new boolean[finalstate.getHeight()][finalstate.getWidth()];
+		int width = finalstate.getWidth();
+		int height = finalstate.getHeight();
 
-	public void addExtra(ExtraCellNumber ecn, BoardState state)
-	{
-		state.addExtraData(ecn);
-	}
-	public void removeExtra(ExtraCellNumber ecn, BoardState state)
-	{
-		state.getExtraData().remove(ecn);
-		state.boardDataChanged();
-	}
-
-	public void initBoard(BoardState state)
-	{
-		// blank board is a fine initial board for Fill-a-Pix
-	}
-
-	private static final int[] dim = {15, 15, 15, 15};
-	public BoardState generatePuzzle(int difficulty, JFrame host)
-	{
-		BoardState solution = null;
-		int diff = -1;
-
-		JDialog loadPane = new JDialog(host, "Loading...", false);
-		loadPane.setBounds(150, 150, 250, 50);
-		loadPane.setVisible(true);
-
-		int attmpt = 0;
-		while (diff < difficulty)
-		{
-			attmpt++;
-			loadPane.setTitle("Loading: Initializing Attempt " + attmpt);
-			loadPane.repaint();
-
-			diff = -1;
-			solution = new BoardState(dim[difficulty], dim[difficulty]);
-			solution.setVirtual(true);
-			randomSeed(solution);
-
-			for (int i = PuzzleGeneration.OPTIMAL; i > difficulty; i--) solution = clusterMechanics(solution);
-			finalizeBoard(solution);
-
-			ArrayList<Point> toRemove = new ArrayList<Point>();
-			for (int x = 0; x < solution.getWidth(); x++) for (int y = 0; y < solution.getHeight(); y++)
-			{
-				solution.setModifiableCell(x, y, true);
-				toRemove.add(new Point(x, y));
-			}
-
-			int DIFF = computeDifficulty(solution);
-			if (DIFF > difficulty) { continue;	}
-
-			int numRemovals = 1; //solution.getWidth();
-			while (toRemove.size() > 0)
-			{
-				ArrayList<ExtraCellNumber> removals = new ArrayList<ExtraCellNumber>(numRemovals);
-				for (int i = 0; i < numRemovals; i++)
-				{
-					Point p = toRemove.remove((int)(Math.random()*toRemove.size()));
-					removals.add(getECNAt(p, solution));
+		//Loop through and see if all cells are filled
+		for (int x = 0; x < width; ++x) {
+			for (int y = 0; y < height; ++y) {
+				int value = finalstate.getCellContents(x, y);
+				// return false if the cell is still marked as unknown
+				if (isUnknown(value)) {
+					return false;
 				}
-
-				for (ExtraCellNumber ecn : removals) removeExtra(ecn, solution);
-
-				int prevDiff = diff;
-				diff = computeDifficulty(solution);
-				while (diff > difficulty)
-				{
-					addExtra(removals.remove(0), solution);
-					diff = computeDifficulty(solution);
-					double prct = (1 - ((toRemove.size() * 1.0 + removals.size()) / (solution.getWidth() * solution.getHeight())))*100;
-					loadPane.setTitle("Loading: " + (int)prct + "% on Attempt " + attmpt);
-					loadPane.repaint();
-				}
-
-				double prct = (1 - ((toRemove.size() * 1.0) / (solution.getWidth() * solution.getHeight())))*100;
-				loadPane.setTitle("Loading: " + (int)prct + "% on Attempt " + attmpt);
-				loadPane.repaint();
-				if (diff > difficulty) diff = prevDiff;
-			}
-		}
-
-		loadPane.dispose();
-
-		return solution;
-	}
-	private void randomSeed(BoardState state)
-	{
-		for (int x = 0; x < state.getWidth(); x++) for (int y = 0; y < state.getHeight(); y++)
-		{
-			if (Math.random() < 0.5) state.setCellContents(x, y, FILLED);
-			else state.setCellContents(x, y, EMPTY);
-		}
-	}
-	private static double probAbsorb = 0.5;
-	private BoardState clusterMechanics(BoardState state)
-	{
-		BoardState result = state.copy();
-
-		for (int x = 0; x < state.getWidth(); x++) for (int y = 0; y < state.getHeight(); y++) if (Math.random() < probAbsorb)
-		{
-			ExtraCellNumber ecn = new ExtraCellNumber();
-			ecn.setPoint(new Point(x, y));
-			int nBlack = ecn.getBlackCells(state).size(), nWhite = ecn.getWhiteCells(state).size();
-
-			boolean goBlack = (Math.random() < (nBlack * 1.0) / (nBlack + nWhite));
-			if (goBlack) result.setCellContents(x, y, FILLED); else result.setCellContents(x, y, EMPTY);
-		}
-
-		return result;
-	}
-	private void finalizeBoard(BoardState state)
-	{
-		for (int x = 0; x < state.getWidth(); x++) for (int y = 0; y < state.getHeight(); y++)
-		{
-			ExtraCellNumber ecn = new ExtraCellNumber();
-			ecn.setPoint(new Point(x, y));
-			ecn.setVal(ecn.getBlackCells(state).size());
-			addExtra(ecn, state);
-		}
-		for (int x = 0; x < state.getWidth(); x++) for (int y = 0; y < state.getHeight(); y++) state.setCellContents(x, y, UNKNOWN);
-	}
-
-	public int computeDifficulty(BoardState state)
-	{
-		BoardState copy = state.copy();
-
-		AI ai = new AI(this);
-		boolean unique = ai.completeReturnUnique(copy);
-
-		if (!unique) return PuzzleGeneration.UNSOLVEABLE;
-
-		// Difficulty is classified by move intensity:
-		// If the move is RuleFinishWithBlack and reveals at least 3 squares or 1/20 of the remaining, it is Easy
-		// If the move is RuleFinishWithBlack and reveals at least 2 squares of 1/30 of the remaining, it is Medium
-		//	It is also Medium if the RuleSharedCells rule occurs, but never twice within 5 turns, and always revealing at least 10 squares or 1/6 of the remaining
-		// If guessing is not required, it is hard
-		// If the puzzle requires guessing, it is optimal
-
-		int runningDifficulty = PuzzleGeneration.EASY;
-
-		BoardState test = copy;
-		int lastShared = 5;
-		while (test != null)
-		{
-			if (test.getChildren().size() == 0) test = null;
-			else if (test.getChildren().size() >= 2) return PuzzleGeneration.OPTIMAL;
-			else
-			{
-				BoardState prev = test;
-				test = test.getChildren().get(0);
-				if (runningDifficulty == PuzzleGeneration.EASY)
-				{
-					Object just = test.getJustification();
-					if (just instanceof RuleFinishWithBlack)
-					{
-						int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
-						if (unknown1-unknown2 < 2 && (unknown1-unknown2)*30 < unknown1)
-							runningDifficulty = PuzzleGeneration.HARD;
-						else if (unknown1-unknown2 < 3 && (unknown1-unknown2)*20 < unknown1)
-							runningDifficulty = PuzzleGeneration.NORMAL;
+				// check that the numbers are satisfied
+				// don't look at cells that don't have clues in them
+				if (value != -30 && value != -20) {
+					// count the number of black cells
+					int numBlackCells = 0;
+					for (int i = -1; i < 2; ++i) {
+						for (int j = -1; j < 2; ++j) {
+							int xpos = x + i;
+							int ypos = y + j;
+							if (inBounds(width, height, xpos, ypos)) {
+								if (isBlack(finalstate.getCellContents(x, y))) {
+									numBlackCells += 1;
+								}
+							}
+						}
 					}
-					else if (just instanceof RuleSharedCells)
-					{
-						runningDifficulty = PuzzleGeneration.NORMAL;
-						lastShared = 0;
+					if (numBlackCells != value) {
+						return false;
 					}
-				}
-				else if (runningDifficulty == PuzzleGeneration.NORMAL)
-				{
-					if (lastShared < 5) lastShared++;
-					Object just = test.getJustification();
-					if (just instanceof RuleFinishWithBlack)
-					{
-						int unknown1 = countUnknown(prev), unknown2 = countUnknown(test);
-						if (unknown1-unknown2 < 2 && (unknown1-unknown2)*40 < unknown1)
-							runningDifficulty = PuzzleGeneration.HARD;
-					}
-					else if (just instanceof RuleSharedCells)
-						if (lastShared < 5) runningDifficulty = PuzzleGeneration.HARD;
 				}
 			}
 		}
-		return runningDifficulty;
+		return true;
 	}
-	private int countUnknown(BoardState board)
-	{
-		int tot = 0;
-		for (int x = 0; x < board.getWidth(); x++) for (int y = 0; y < board.getHeight(); y++) if (board.getCellContents(x, y) == CELL_UNKNOWN) tot++;
-		return tot;
+
+	public void mousePressedEvent(BoardState state, Point where) {
+
+		int value = state.getCellContents(where.x, where.y);
+		if (isUnknown(value)) {
+			value += CELL_BLACK;
+		} else if (isBlack(value)) {
+			value += CELL_WHITE;
+		} else if (isWhite(value)) {
+			value += CELL_UNKNOWN;
+		} else {
+			String error = "The value in the cell is outside the set of possible values.";
+		}
+		state.setCellContents(where.x, where.y, value);
+	}
+
+	public void initBoard(BoardState state) {
 	}
 
 	/**
 	 * Get all the images (as strings to the image path) used by this puzzle in the center part
 	 * @return an array of strings to image paths
 	 */
-	public BoardImage[] getAllCenterImages()
-	{
-		BoardImage[] s = new BoardImage[33];
-
-		for (int i = 0; i <= 10; i++) for (int j = 0; j <= 2; j++)
-			s[11*j+i] = new BoardImage("images/fillapix/cellval["+i+"]["+j+"].GIF", 11*j+i);
-
+	public BoardImage[] getAllCenterImages() {
+		BoardImage[] s = new BoardImage[0];
 		return s;
 	}
 
 	/**
-	 * Get all the images (as strings to the image path) used by this puzzle in the border part
-	 * @return an array of strings to image paths
-	 */
-	public BoardImage[] getAllBorderImages()
-	{
+ 	* Get all the images (as strings to the image path) used by this puzzle in the border part
+ 	* @return an array of strings to image paths
+ 	*/
+	public BoardImage[] getAllBorderImages() {
 		BoardImage[] s = new BoardImage[0];
-
 		return s;
 	}
 
@@ -308,120 +218,409 @@ public class Fillapix extends PuzzleModule
 	 * @param curValue the current value of the label
 	 * @return the next value of the label
 	 */
-	public int getNextLabelValue(int curValue)
-	{
+	public int getNextLabelValue(int curValue) {
 		return 0;
 	}
 
-	public void directModify(int x, int y, BoardState state)
-	{
-		ExtraCellNumber ecn = getECNAt(new Point(x, y), state);
-
-		if (ecn != null)
-		{
-   	 	if (ecn.getVal() == 9) removeExtra(ecn, state);
-			else ecn.setVal(ecn.getVal()+1);
-		}
-                
-		else
-		{
-			ecn = new ExtraCellNumber();
-			ecn.setPoint(new Point(x, y));
-			ecn.setVal(0);
-
-			addExtra(ecn, state);
-		}
-          
-          
-	}
-	private ExtraCellNumber getECNAt(Point p, BoardState state)
-	{
-		for (ExtraCellNumber ecn : getECNs(state)) if (ecn.getPoint().equals(p)) return ecn;
-		return null;
-	}
-
-        public void mousePressedEvent(BoardState state, Point where)
-	{
-            	BoardState state2 = state.getSingleParentState();
-                int next2=state2.getCellContents(where.x, where.y);
-                //only alter the cell if it has not been altered in a previous state
-                if (next2==0)
-                {
-                    int next = getNextCellValue(where.x,where.y,state);
-                    state.setCellContents(where.x,where.y,next);
-                }
-             else
-                {}
-
-		
-	}
-        
-	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard)
-	{
+	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
 		return currentBoard.compareBoard(goalBoard);
 	}
 
-	public boolean checkBoardComplete(BoardState state)
-	{
-		if (!checkValidBoardState(state)) return false;
-		for (int x = 0; x < state.getWidth(); x++) for (int y = 0; y < state.getHeight(); y++) if (state.getCellContents(x, y) == UNKNOWN) return false;
-		return true;
+	// SHOULD FIX THIS SO THAT IT APPLIES TO FILLAPIX AND NOT LIGHTUP I'M NOT SURE WHAT VALUES GO HERE QUITE YET
+	private static final int[][] rules = { { 1, 2, 0, 3 }, // Rules to try after SurroundBulbs (White, SelfLit, Bulbs, Corners)
+		{ 2, 0, 3, 1 }, // Rules to try after SurroundWhite (SelfLit, Bulbs, Corners, White). White is actually unneeded
+		{ 1, 0, 3, 2 }, // Rules to try after OnlySelfLit (White, Bulbs, Corners, SelfLit)
+		{ 0, 2, 1, 3 }, // Rules to try after WhitCorners (Bulbs, SelfLit, White, Lit)
+		{ 1, 3, 0, 2 }, // Rules to try after Start (White, Corners, Bulbs, SelfLit)
+		{ 0, 3, 2, 1 }, // Rules to try after Contradition (Bulbs, Corners, SelfLit, White)
+		{ 1, 0, 3, 2 } }; // Rules to try after Guess (White, Bulbs, Corners, SelfLit}
+
+	public int[] obtainRuleOrder(int state, int rule) {
+		if (state == 3) // Normal
+		return rules[rule];
+		else // Default state rules
+		return rules[state+4];
 	}
 
-	public Vector<PuzzleRule> getRules()
-	{
+	public Vector <PuzzleRule> getRules() {
+		Vector <PuzzleRule>ruleList = new Vector <PuzzleRule>();
+		ruleList.add(new RuleFinishWithBlack());
+		ruleList.add(new RuleFinishWithWhite());
 		return ruleList;
 	}
 
-	public Vector<Contradiction> getContradictions()
-	{
-		return contraList;
+	/**
+	 * Gets a list of Contradictions associated with this puzzle
+	 *
+	 * @return A Vector of Contradictions
+	 */
+	public Vector <Contradiction> getContradictions() {
+		Vector <Contradiction>contradictionList = new Vector <Contradiction>();
+		contradictionList.add(new ContradictionTooFewBlackCells());
+		contradictionList.add(new ContradictionTooManyBlackCells());
+		return contradictionList;
 	}
 
-	public Vector<CaseRule> getCaseRules()
-	{
-		return caseList;
+	public Vector <CaseRule> getCaseRules() {
+		Vector <CaseRule> caseRules = new Vector <CaseRule>();
+		caseRules.add(new CaseBlackOrWhite());
+		return caseRules;
 	}
 
-	public boolean checkValidBoardState(BoardState boardState)
-	{
-		for (ExtraCellNumber ecn : getECNs(boardState)) if (!ecn.valid(boardState)) return false;
+
+	public boolean checkValidBoardState(BoardState boardState) {
+		/*
+		BoardState clone = new BoardState(boardState);
+		boardState = clone.addTransitionFrom();
+		Vector<Contradiction> contras = getContradictions();
+		for (Contradiction con : contras) if (con.checkContradiction(clone) == null) return false;
+		return true;
+		*/
 		return true;
 	}
 
-	// Static clone of local method, may need renaming
-	public static boolean s_checkValidBoardState(BoardState boardState)
-	{
-		return (new Fillapix()).checkValidBoardState(boardState);
+	public void treeSelectionChanged(ArrayList <Selection> newSelection) {
+		/*
+		if(newSelection.size() != 0) {
+			BoardState b = newSelection.get(0).getState();
+			// fillLight(b); SOMETHING ELSE SHOULD PROBABLY GO HERE
+		}
+		*/
 	}
 
-	/**
-	 * Daniel Ploch 09/30/2008
-	 * Locates squares with least # of possible solutions, and chooses one at random
-	 */
-	public BoardState guess(BoardState B)
-	{
-		Point toGuess = null;
+	public void boardDataChanged(BoardState state) {
+		// fillLight(state); HERE TOO
+	}
 
-		int w = B.getWidth(), h = B.getHeight();
+	// I DON'T THINK WE NEED THIS FUNCTION EITHER
+	public static void fillLight(BoardState state) {
+		/*
+		ArrayList<Object> extra = state.getExtraData();
+		extra.clear();
+		boolean[][] litup = new boolean[state.getHeight()][state.getWidth()];
+		// determineLight(state, litup);
+		for (int y = 0; y < state.getHeight(); ++y) {
+			for (int x = 0; x < state.getWidth(); ++x) {
+				if(litup[y][x])
+					extra.add(new Point(x,y));
+			}
+		}
+		*/
+	}
 
-		outer: for (int x = 0; x < w; x++) for (int y = 0; y < h; y++) if (B.getCellContents(x, y) == Fillapix.UNKNOWN)
+	// WE PROBABLY DON'T NEED THIS EITHER
+	protected static void determineLight(BoardState state, boolean[][] litup) {
+		/*
+		int width = state.getWidth();
+		int height = state.getHeight();
+		for (int y = 0; y < height; ++y)
 		{
-			toGuess = new Point(x, y);
-			break;
+		for (int x = 0; x < width; ++x)
+		{
+		if(state.getCellContents(x,y) == CELL_LIGHT)
+		{
+		litup[y][x] = true;
+		if(x > 0)
+		{
+		for(int tempx = x - 1; tempx >= 0; --tempx)
+		{
+		if(state.getCellContents(tempx,y) > 2 || state.getCellContents(tempx,y) == 1)
+		break;
+		else
+		litup[y][tempx] = true;
+		}
 		}
 
-		if (toGuess == null) // Board is full, gameover
-			return B;
+		if(x < width-1)
+		{
+		for(int tempx = x+1; tempx < width; ++tempx)
+		{
+		if(state.getCellContents(tempx,y) > 2 || state.getCellContents(tempx,y) == 1)
+		break;
+		else
+		litup[y][tempx] = true;
+		}
+		}
 
-		BoardState parent = B.getSingleParentState();
+		if(y > 0)
+		{
+		for(int tempy = y-1; tempy >= 0; --tempy)
+		{
+		if(state.getCellContents(x,tempy) > 2 || state.getCellContents(x,tempy) == 1)
+		break;
+		else
+		litup[tempy][x] = true;
+		}
+		}
 
-		B.setCellContents(toGuess.x, toGuess.y, FILLED);
-		BoardState white = parent.addTransitionFrom();
-		white.setCellContents(toGuess.x, toGuess.y, EMPTY);
-
-		parent.setCaseSplitJustification(getCaseRules().get(0));
-
-		return B;
+		if(y < height-1)
+		{
+		for(int tempy = y + 1; tempy < height; ++tempy)
+		{
+		if(state.getCellContents(x,tempy) > 2 || state.getCellContents(x,tempy) == 1)
+		break;
+		else
+		litup[tempy][x] = true;
+		}
+		}
+		}
+		}
+		}*/
 	}
+
+	/* AI stuff */
+	public BoardState guess(BoardState Board) {
+		/*
+		// out of forced moves, need to guess
+		Point guess = GenerateBestGuess(Board);
+		// guess, if we found one
+		if (guess.x != -1 && guess.y != -1) {
+		BoardState Parent = Board.getSingleParentState();
+		BoardState CaseLight = Board;
+		BoardState CaseBlank = Parent.addTransitionFrom();
+		CaseLight.setCellContents(guess.x, guess.y, CELL_LIGHT);
+		fillLight(CaseLight);
+		CaseBlank.setCellContents(guess.x, guess.y, CELL_EMPTY);
+		fillLight(CaseBlank);
+		Parent.setCaseSplitJustification(new CaseLightOrEmpty());
+		//System.out.println("Guessed at "+guess.x+","+guess.y);
+
+		return CaseLight;
+		}
+		*/
+		// if we didn't then the board is full, and we are finished (thus, the returned board will be the same as the one we were given
+		System.out.println("Statement: Your puzzle has been solved already. Why do you persist?"); // hahahaha
+		return Board;
+	}
+
+
+	private Point GenerateBestGuess(BoardState Board) {
+		// Lightup requires a bit more guessing, since the places we can stick lights aren't very restricted
+		// We will start with trying to find un-filled black squares, and then move on to the unfilled square
+		// that will fill the most other unfilled squares.
+		int currentX=-1;
+		int currentY=-1;
+		/*
+		//double prob = 0;
+		int information = 0;
+		int width = Board.getHeight();
+		int height = Board.getWidth();
+		// search for best square
+		for (int r = 0; r < height; r++ ) {
+			for (int c = 0; c < width; c++) {
+				// If the cell we are looking at is a black square, we want to find the number of open squares
+				// preference is given to squares with the best ratio of available to filled squares
+				if (Board.getCellContents(r,c) == CELL_UNKNOWN) {
+					int currentInfo = InfoGained(r,c,Board,5);
+					if (currentInfo > information) {
+						currentX = r;
+						currentY = c;
+						information = currentInfo;
+					}
+				}
+			}
+		}
+
+		// now we try to return again, this time with the empty square that will fill the most other squares
+		if (currentX != -1 && currentY != -1) {
+			return new Point (currentX, currentY);
+		}
+		//And if that fails, then there are no more squares to fill
+		System.out.println("No more squares!"); */
+		return new Point (currentX, currentY);
+	}
+
+	// DON'T THINK WE NEED THIS
+	// function for finding blank squares around a black square
+	/*
+	private Point FindEmpty (int r, int c, BoardState Board) {
+		int width = Board.getHeight();
+		int height = Board.getWidth();
+		//Up
+		if (r > 0) {
+		if (Board.getCellContents(r-1, c) == CELL_UNKNOWN) {
+		return new Point(r-1,c);
+		}
+		}
+		//Left
+		if (c > 0) {
+		if (Board.getCellContents(r, c-1) == CELL_UNKNOWN) {
+		return new Point(r,c-1);
+		}
+		}
+		//down
+		if (r < height-1) {
+		if (Board.getCellContents(r+1, c) == CELL_UNKNOWN) {
+		return new Point(r+1,c);
+		}
+		}
+		//Right
+		if (c < width) {
+		if (Board.getCellContents(r, c+1) == CELL_UNKNOWN) {
+		return new Point(r,c+1);
+		}
+		}
+		// If we havn't returned by now, something is seriously wrong
+		return new Point(r,c);
+	}*/
+
+
+	//finds the number of squares that will be filled by putting a light in an unfilled square
+	private int InfoGained (int r, int c, BoardState Board, int direction) {
+		int information = 0;
+		/*
+		int height = Board.getHeight();
+		int width = Board.getWidth();
+		final int squareWeight = 1; // base points for a square.
+		final int startingWeight = 10; // bonuses for the starting square being near black squares.
+		final double blackWeight = .5; // bonus for a non-starting square being adjaceted to a black square.
+		// ending conditions: running off the side of the board, running into a black square
+			if ((r < 0) || (r >= width) || (c < 0) || (c >= height)) {
+			return 0;
+			}
+			if (Board.getCellContents(r,c) > 3) {
+			return 0;
+			}
+
+			// attempts to condense everything into a single number, "Information gained by moving here"
+			// Points for filling in this square
+			if (Board.getCellContents(r,c) == CELL_UNKNOWN) {
+			information += squareWeight;
+			}
+			// Points for black squares we are adjacent to
+			if (r > 1) {
+			if ((10 < Board.getCellContents((r-1), c)) && (Board.getCellContents((r-1), c) < 15)) {
+			information += blackWeight;
+			if(direction == 5) {
+			information += startingWeight;
+			}
+			}
+			}
+			if (r < (width-1)) {
+			if ((10 < Board.getCellContents((r+1), c)) && (Board.getCellContents((r+1), c) < 15)) {
+			information += blackWeight;
+			if(direction == 5) {
+			information += startingWeight;
+			}
+			}
+			}
+			if (c > 1) {
+			if ((10 < Board.getCellContents(r, (c-1))) && (Board.getCellContents(r, (c-1)) < 15)) {
+			information += blackWeight;
+			if(direction == 5) {
+			information += startingWeight;
+			}
+			}
+			}
+			if (c < (height-1)) {
+			if ((10 < Board.getCellContents(r, (c+1))) && (Board.getCellContents(r, (c+1)) < 15)) {
+			information += blackWeight;
+			if(direction == 5) {
+			information += startingWeight;
+			}
+			}
+			}
+			// recursively find all other squares that we cast on
+			if (direction == 5) {
+			return information +InfoGained(r+1,c,Board,1) +
+			InfoGained(r,c+1,Board,2) +
+			InfoGained(r-1,c,Board,3) +
+			InfoGained(r,c-1,Board,4);
+			}
+			if (direction == 1) {
+			return information + InfoGained(r+1,c,Board,1);
+			}
+			if (direction == 2) {
+			return information + InfoGained(r,c+1,Board,2);
+			}
+			if (direction == 3) {
+			return information + InfoGained(r-1,c,Board,3);
+			}
+			if (direction == 4) {
+			return information + InfoGained(r,c-1,Board,4);
+			}
+			// If we get here, things are bad. We shouldn't guess here.
+			*/
+		return -1;
+	}
+
+	// ?? WHAT'S THIS FOR
+	/*
+	static Vector<Point> findDiagonalNumbers(BoardState state, Point at) {
+		Vector<Point> ret = new Vector<Point>();
+		int x;
+		int y;
+		if(at.x > 0) {
+			x = at.x - 1;
+			if(at.y > 0) {
+				y = at.y - 1;
+				if(cellIsNumber(state, new Point(x, y))) ret.add(new Point(x,y));
+			}
+
+			if(at.y < state.getHeight() - 1) {
+				y = at.y + 1;
+				if(cellIsNumber(state, new Point(x, y))) ret.add(new Point(x,y));
+			}
+		}
+
+		if(at.x < state.getWidth() - 1) {
+			x = at.x + 1;
+			if(at.y > 0) {
+				y = at.y - 1;
+				if(cellIsNumber(state, new Point(x, y))) ret.add(new Point(x,y));
+			}
+
+			if(at.y < state.getHeight() - 1) {
+				y = at.y + 1;
+				if(cellIsNumber(state, new Point(x, y))) ret.add(new Point(x,y));
+			}
+		}
+
+		return ret;
+	}*/
+
+	// ?? WHAT IS THIS FOR
+	/*
+	static Vector<Point> findAdjacentNumbers(BoardState state, Point at)
+	{
+		Vector<Point> ret = new Vector<Point>();
+		int x = at.x;
+		int y = at.y;
+		if(at.x > 0) {
+			x = at.x - 1;
+			if(cellIsNumber(state, new Point(x, y)))
+			ret.add(new Point(x,y));
+		}
+
+		if(at.x < state.getWidth() - 1) {
+			x = at.x + 1;
+			if(cellIsNumber(state, new Point(x, y)))
+			ret.add(new Point(x,y));
+		}
+
+		x = at.x;
+
+		if(at.y > 0) {
+			y = at.y - 1;
+			if(cellIsNumber(state, new Point(x, y)))
+			ret.add(new Point(x,y));
+		}
+
+		if(at.y < state.getHeight() - 1) {
+			y = at.y + 1;
+			if(cellIsNumber(state, new Point(x, y)))
+			ret.add(new Point(x,y));
+		}
+
+		return ret;
+	}
+
+	static boolean cellIsNumber(BoardState state, Point at) {
+		return state.getCellContents(at.x, at.y) < 0;
+		// return state.getCellContents(at.x, at.y) >= 10 || state.getCellContents(at.x, at.y) < 15;
+	}
+
+	public void updateState(BoardState state) {
+		//LightUp.fillLight(state);
+	}*/
 }

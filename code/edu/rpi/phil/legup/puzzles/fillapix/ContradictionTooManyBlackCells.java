@@ -29,9 +29,54 @@ public class ContradictionTooManyBlackCells extends Contradiction
      */
     public String checkContradictionRaw(BoardState state)
     {
-    	if (Fillapix.s_checkValidBoardState(state))
-    		return "Contradiction does not apply, Fillapix is valid";
-    	else
-    		return null;
-    }
+		String error = null;
+		int height = state.getHeight();
+		int width = state.getWidth();
+		int cellvalue = 0;
+		int blackCells = 0;
+
+		for(int x = 0; x < width; ++x)
+		{
+			for(int y = 0; y < height; ++y)
+			{
+				cellvalue = state.getCellContents(x,y);
+				if(cellvalue > 0)
+				{
+					blackCells = 0;
+					if(x > 0) // left
+						if(Fillapix.isBlack(state.getCellContents(x-1, y)))
+							++blackCells;
+					if(x < width - 1) // right
+						if(Fillapix.isBlack(state.getCellContents(x+1, y)))
+							++blackCells;
+					if(y > 0) // above
+						if(Fillapix.isBlack(state.getCellContents(x, y-1)))
+							++blackCells;
+					if(y < height - 1) // below
+						if(Fillapix.isBlack(state.getCellContents(x, y+1)))
+							++blackCells;
+					if(x > 0 && y > 0) // upper left diagonal
+						if(Fillapix.isBlack(state.getCellContents(x-1, y-1)))
+							++blackCells;
+					if(x > 0 && y < height - 1) // bottom left diagonal
+						if(Fillapix.isBlack(state.getCellContents(x-1, y+1)))
+							++blackCells;
+					if(x < width - 1 && y > 0) // upper right diagonal
+						if(Fillapix.isBlack(state.getCellContents(x+1, y-1)))
+							++blackCells;
+					if(x < width - 1 && y < height - 1) // bottom right diagonal
+						if(Fillapix.isBlack(state.getCellContents(x+1, y+1)))
+							++blackCells;
+					if(Fillapix.isBlack(state.getCellContents(x, y)))
+							++blackCells;
+
+					if(blackCells > cellvalue)
+						return null;
+				}
+			}
+		}
+
+		error = "No block with too many black cells exists.";
+		return error;
+	}
 }

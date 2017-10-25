@@ -68,7 +68,6 @@ public class RuleBulbsOutsideDiagonal extends PuzzleRule {
                         return err;
                     }
                 }
-
             }
         }
         return null;
