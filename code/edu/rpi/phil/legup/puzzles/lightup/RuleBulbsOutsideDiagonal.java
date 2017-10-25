@@ -39,20 +39,36 @@ public class RuleBulbsOutsideDiagonal extends PuzzleRule {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 // Check for changes
+                BoardState modified;
                 if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
                     //Make sure cells placed are empty cells
                     if (destBoardState.getCellContents(x, y) == LightUp.CELL_EMPTY) {
                         return "Only bulbs are allowed for this rule!";
                     }
 
-                    // Create alternative boardstate to apply other case/contradiction
-                    BoardState modified = origBoardState.copy();
+                    // Create alternative board state to apply other case/contradiction
+                    modified = origBoardState.copy();
                     modified.getBoardCells()[y][x] = LightUp.CELL_LIGHT;
                     for (Contradiction c : contras) {
-                        if (c.checkContradictionRaw(modified) != null)
-                            return "It is not required for the modified cell(s) to be lights!";
+                        if (c.checkContradictionRaw(modified) == null)
+                            return "Too many bulbs placed.";
+                    }
+                    int cellvalue = origBoardState.getCellContents(x, y);
+                    String err = "Only valid when cell requires 3 bulbs and is on outer edges of cell.";
+                    if (origBoardState.getCellContents(x-1, y) >= 10 && origBoardState.getCellContents(x-1, y) < 15 && origBoardState.getCellContents(x-1, y) != 13) {
+                        return err;
+                    }
+                    if (origBoardState.getCellContents(x+1, y) >= 10 && origBoardState.getCellContents(x+1, y) < 15 && origBoardState.getCellContents(x+1, y) != 13) {
+                        return err;
+                    }
+                    if (origBoardState.getCellContents(x, y-1) >= 10 && origBoardState.getCellContents(x, y-1) < 15 && origBoardState.getCellContents(x, y-1) != 13) {
+                        return err;
+                    }
+                    if (origBoardState.getCellContents(x, y+1) >= 10 && origBoardState.getCellContents(x, y+1) < 15 && origBoardState.getCellContents(x, y+1) != 13) {
+                        return err;
                     }
                 }
+
             }
         }
         return null;
