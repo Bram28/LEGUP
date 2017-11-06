@@ -31,7 +31,7 @@ public class RuleSurroundTentWithGrass extends PuzzleRule
 
 		protected String checkRuleRaw(BoardState destBoardState) {
 			Set<Contradiction> contras = new HashSet<Contradiction>();
-			contras.add(new ContradictionAdjacentTents());
+			contras.add(new ContradictionTouchingTents());
 
 			BoardState origBoardState = destBoardState.getSingleParentState();
 			int width = origBoardState.getWidth();

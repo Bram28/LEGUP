@@ -119,8 +119,10 @@ public class NormalBoard extends Board
 							);
 							lastRightMousePoint = p;
 						}
-						else
-							parent.showStatus("You are not allowed to change that cell.", true);
+						else {
+							System.out.println("TESTING");
+							parent.showStatus("You are not allowed to chage that cell.", true);
+						}
 					}
 				}
 			}

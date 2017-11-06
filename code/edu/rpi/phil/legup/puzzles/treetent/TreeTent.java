@@ -431,6 +431,7 @@ public class TreeTent extends PuzzleModule
 		else
 		{ // drag, create link, or remove it
 			ExtraTreeTentLink e = new ExtraTreeTentLink(from,to);
+			System.out.println("testing");
 			boolean removed = false;
 
 			if(((to.x-from.x)^2 + (to.y-from.y)^2) != 1 && ((from.x-to.x)^2 + (from.y-to.y)^2) != 1)
@@ -653,7 +654,7 @@ public class TreeTent extends PuzzleModule
 		contradictionList.add(new ContradictionNoTreeForTent());
 		contradictionList.add(new ContradictionTooFewTents());
 		contradictionList.add(new ContradictionTooManyTents());
-		contradictionList.add(new ContradictionAdjacentTents());
+		contradictionList.add(new ContradictionTouchingTents());
 
 		return contradictionList;
 	}
