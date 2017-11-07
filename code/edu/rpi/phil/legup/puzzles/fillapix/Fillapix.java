@@ -79,12 +79,12 @@ public class Fillapix extends PuzzleModule {
 		return (value == -20 || value == 100 || (value/10)==6);
 	}
 
-	protected boolean inBounds(int width, int height, int x, int y) {
+	public static boolean inBounds(int width, int height, int x, int y) {
 		return (((0 <= x) && (x < width)) && ((0 <= y) && (y < height)));
 	}
 
-	public boolean isCellWithClue(int value) {
-		return value > 0;
+	public static boolean hasClue(int value) {
+		return value!=-50 && value!=-30 && value!=-20 && value!=50 && value!=70 && value!=100;
 	}
 
 	public Fillapix() {
@@ -152,7 +152,7 @@ public class Fillapix extends PuzzleModule {
 				}
 				// check that the numbers are satisfied
 				// don't look at cells that don't have clues in them
-				if (value != -30 && value != -20) {
+				if (hasClue(value)) {
 					// count the number of black cells
 					int numBlackCells = 0;
 					for (int i = -1; i < 2; ++i) {
