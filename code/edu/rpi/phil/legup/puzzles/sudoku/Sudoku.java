@@ -507,17 +507,6 @@ public class Sudoku extends PuzzleModule
 		}
 	}
 
-	public void drawText( Graphics2D g, int x, int y, String text ){
-		g.setColor( Color.blue );
-		g.setFont( font );
-		FontMetrics fm = g.getFontMetrics();
-		int w = ( cellSize.width - fm.stringWidth(text) ) / 2;
-		int h = ( cellSize.height - fm.getAscent() ) / 2 + fm.getAscent();
-		g.drawString( text,
-				cellSize.width * (x + 1) + w,
-				cellSize.height * (y + 1) + h );
-	}
-
 	/**
 	 * Get the forced dimension for this puzzle, or null if there isn't a forced dimension
 	 * @return the size the puzzle must be, or null if the size is allowed to vary

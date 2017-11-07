@@ -110,14 +110,15 @@ public class Fillapix extends PuzzleModule {
 		state.setModifiableCell(x,y,true);
 		int val = state.getCellContents( x, y );
 		// draw the background color
-
+		Color textColor = Color.black;
 		g.setColor(Color.lightGray);
 		System.out.println("VAAAAAAAAAAAAAAAL: " + val);
 		if (isUnknown(val)) {
 			System.out.println("IS UNKNOWN");
 		} else if (isBlack(val)) {
 			System.out.println("IS BLACK");
-			g.setColor(Color.darkGray);
+			textColor = Color.white;
+			g.setColor(Color.black);
 		} else if (isWhite(val)) {
 			System.out.println("IS WHITE");
 			g.setColor(Color.white);
@@ -129,9 +130,9 @@ public class Fillapix extends PuzzleModule {
 
 		// draw the number
 		if (val!=50 && val!=70 && val!=100 && val!=0) {
-			drawText(g, x, y, String.valueOf(val%10));
+			drawText(g, x, y, String.valueOf(val%10), textColor);
 		} else {
-			drawText(g, x, y, "");
+			drawText(g, x, y, "", textColor);
 		}
 	}
 

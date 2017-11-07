@@ -593,6 +593,19 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 			cellSize.width * (x + 1) + w,
 			cellSize.height * (y + 1) + h );
 	}
+
+	protected void drawSmallText( Graphics2D g, int x, int y, String text, int numSqueezed, int numIndex, Color c )
+	{
+		Font smallFont = new Font( "Arial", Font.PLAIN, 10);
+		g.setColor( c );
+		g.setFont( smallFont );
+		FontMetrics fm = g.getFontMetrics();
+		int w = ( cellSize.width - fm.stringWidth(text) ) / (3 * numSqueezed) + (numIndex%3) * 6;
+		int h = ( cellSize.height - fm.getAscent() ) / (3 * numSqueezed) + (numIndex/3) * 9 + fm.getAscent();
+		g.drawString( text,
+				cellSize.width * (x + 1) + w,
+				cellSize.height * (y + 1) + h );
+	}
 	
 	protected void drawImage( Graphics2D g, int x, int y, Image img ){
 		g.drawImage( img,
@@ -608,6 +621,17 @@ public abstract class PuzzleModule implements TreeSelectionListener, BoardDataCh
 
 	public void drawText( Graphics2D g, int x, int y, String text ){
 		g.setColor( fontColor );
+		g.setFont( font );
+		FontMetrics fm = g.getFontMetrics();
+		int w = ( cellSize.width - fm.stringWidth(text) ) / 2;
+		int h = ( cellSize.height - fm.getAscent() ) / 2 + fm.getAscent();
+		g.drawString( text,
+				cellSize.width * (x + 1) + w,
+				cellSize.height * (y + 1) + h );
+	}
+
+	public void drawText( Graphics2D g, int x, int y, String text, Color c){
+		g.setColor( c );
 		g.setFont( font );
 		FontMetrics fm = g.getFontMetrics();
 		int w = ( cellSize.width - fm.stringWidth(text) ) / 2;
