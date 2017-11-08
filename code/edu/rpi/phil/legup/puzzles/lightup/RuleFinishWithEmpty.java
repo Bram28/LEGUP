@@ -13,14 +13,7 @@ public class RuleFinishWithEmpty extends PuzzleRule
 	static final long serialVersionUID = 2828176895339413023L;
 	public String getImageName() 
 	{
-		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
-		{
-			return "images/lightup/rules/FinishWithEmptyLegacy.png"; 
-		}
-		else
-		{
-			return "images/lightup/rules/FinishWithEmpty.png"; 
-		}
+			return "images/lightup/rules/FinishWithEmpty.png";
 	}
 	RuleFinishWithEmpty()
 	{

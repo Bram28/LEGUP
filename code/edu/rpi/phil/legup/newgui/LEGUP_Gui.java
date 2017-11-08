@@ -91,8 +91,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	public static final int IMD_FEEDBACK = 32;
 	public static final int INTERN_RO = 64;
 	public static final int AUTO_JUST = 128;
-	//Default color for light up boards will be light blue from now on.
-	public static boolean LIGHT_UP_LEGACY = false;
 	public static boolean profFlag( int flag ){
 		return !((PROF_FLAGS[CONFIG_INDEX] & flag) == 0);
 	}
@@ -210,36 +208,36 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		 		  (Add to this as you go along)
 		1) LightUpLegacy
 		 */
-		File temp = new File("Settings.txt");
-		boolean exists = temp.exists();
-		if(exists)
-		{
-			String line = null;
-			FileReader reader = null;
-			try{
-				reader = new FileReader("Settings.txt");
-				BufferedReader bufferedReader = null;
-	            bufferedReader = new BufferedReader(reader);
-				while((line = bufferedReader.readLine()) != null) {
-	            	if(line.contains("LightUpLegacy"))
-	            	{
-	            		if(line.contains("true"))
-	            		{
-	            			LIGHT_UP_LEGACY = true;
-	            		}
-	            		else
-	            		{
-	            			LIGHT_UP_LEGACY = false;
-	            		}
-	            	}
-	            }
-	            bufferedReader.close();
-			}
-	        catch(FileNotFoundException ex) {
-	            System.out.println(
-	                "Unable to open file Settings.txt");
-	        }
-		}
+//		File temp = new File("Settings.txt");
+//		boolean exists = temp.exists();
+//		if(exists)
+//		{
+//			String line = null;
+//			FileReader reader = null;
+//			try{
+//				reader = new FileReader("Settings.txt");
+//				BufferedReader bufferedReader = null;
+//	            bufferedReader = new BufferedReader(reader);
+//				while((line = bufferedReader.readLine()) != null) {
+//	            	if(line.contains("LightUpLegacy"))
+//	            	{
+//	            		if(line.contains("true"))
+//	            		{
+//	            			LIGHT_UP_LEGACY = true;
+//	            		}
+//	            		else
+//	            		{
+//	            			LIGHT_UP_LEGACY = false;
+//	            		}
+//	            	}
+//	            }
+//	            bufferedReader.close();
+//			}
+//	        catch(FileNotFoundException ex) {
+//	            System.out.println(
+//	                "Unable to open file Settings.txt");
+//	        }
+//		}
 	}
 
 	public LEGUP_Gui(Legup legupMain)
@@ -305,7 +303,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	private JMenu help = new JMenu("Help");
 	//Place all global settings onto this menu item.
 	private JMenu settings = new JMenu("Settings");
-		private JMenuItem LightUpLegacy = new JMenuItem("Light Up Legacy Mode");
+//		private JMenuItem LightUpLegacy = new JMenuItem("Light Up Legacy Mode");
 	// contains all the code to setup the menubar
 	private void setupMenu(){
 		bar.add(file);
@@ -372,8 +370,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		bar.add(help);
 		//Used for global settings.
 		bar.add(settings);
-			settings.add(LightUpLegacy);
-			LightUpLegacy.addActionListener(this);
+//			settings.add(LightUpLegacy);
+//			LightUpLegacy.addActionListener(this);
 
 
 		setJMenuBar(bar);
@@ -957,48 +955,48 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 			}
 		}
 		//Switches LightUp Board from White to Blue
-		else if (e.getSource() == LightUpLegacy)
-		{
-			//Global_Settings_Text
-			if(LIGHT_UP_LEGACY == false)
-			{
-                ImageIcon icon = new ImageIcon("images/lightup/emptyLegacy.gif");
-				JOptionPane.showMessageDialog(null,
-                        "You have changed the empty space tiles in all light up boards to be white. " +
-        				"Please restart this application or open the puzzle again for all changes to take effect.",
-						"Light Up Legacy Mode", JOptionPane.INFORMATION_MESSAGE, icon);
-				LIGHT_UP_LEGACY = true;
-				PrintWriter writer = null;
-				try {
-					writer = new PrintWriter("Settings.txt", "UTF-8");
-				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				}
-				/* Check all other settings current value and write them
-				to the file as well */
-				writer.println("LightUpLegacy: " + LIGHT_UP_LEGACY);
-				writer.close();
-			}
-			//Global_Settings_Text
-			else
-			{
-                ImageIcon icon = new ImageIcon("images/lightup/empty.gif");
-				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be light blue."
-						+ " Please restart this application or open the puzzle again for all changes to take effect."
-						,"Light Up Legacy Mode", JOptionPane.INFORMATION_MESSAGE, icon);
-				LIGHT_UP_LEGACY = false;
-				PrintWriter writer = null;
-				try {
-					writer = new PrintWriter("Settings.txt", "UTF-8");
-				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				}
-				/* Check all other settings current value and write them
-				to the file as well. */
-				writer.println("LightUpLegacy:" + LIGHT_UP_LEGACY);
-				writer.close();
-			}
-		}
+//		else if (e.getSource() == LightUpLegacy)
+//		{
+//			//Global_Settings_Text
+//			if(LIGHT_UP_LEGACY == false)
+//			{
+//                ImageIcon icon = new ImageIcon("images/lightup/emptyLegacy.gif");
+//				JOptionPane.showMessageDialog(null,
+//                        "You have changed the empty space tiles in all light up boards to be white. " +
+//        				"Please restart this application or open the puzzle again for all changes to take effect.",
+//						"Light Up Legacy Mode", JOptionPane.INFORMATION_MESSAGE, icon);
+//				LIGHT_UP_LEGACY = true;
+//				PrintWriter writer = null;
+//				try {
+//					writer = new PrintWriter("Settings.txt", "UTF-8");
+//				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+//					e1.printStackTrace();
+//				}
+//				/* Check all other settings current value and write them
+//				to the file as well */
+//				writer.println("LightUpLegacy: " + LIGHT_UP_LEGACY);
+//				writer.close();
+//			}
+//			//Global_Settings_Text
+//			else
+//			{
+//                ImageIcon icon = new ImageIcon("images/lightup/empty.gif");
+//				JOptionPane.showMessageDialog(null, "You have changed the empty space tiles in all light up boards to be light blue."
+//						+ " Please restart this application or open the puzzle again for all changes to take effect."
+//						,"Light Up Legacy Mode", JOptionPane.INFORMATION_MESSAGE, icon);
+//				LIGHT_UP_LEGACY = false;
+//				PrintWriter writer = null;
+//				try {
+//					writer = new PrintWriter("Settings.txt", "UTF-8");
+//				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+//					e1.printStackTrace();
+//				}
+//				/* Check all other settings current value and write them
+//				to the file as well. */
+//				writer.println("LightUpLegacy:" + LIGHT_UP_LEGACY);
+//				writer.close();
+//			}
+//		}
 		else
 		{
 			for (int x = 0; x < PROF_FLAGS.length; ++x)

@@ -14,14 +14,7 @@ public class ContradictionCannotLightACell extends Contradiction
 	static final long serialVersionUID = -7418828924174890795L;
 	public String getImageName() 
 	{
-		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
-		{
-			return "images/lightup/contradictions/CannotLightACellLegacy.png";
-		}
-		else
-		{
 			return "images/lightup/contradictions/CannotLightACell.png";
-		}
 	}
 	ContradictionCannotLightACell()
 	 {

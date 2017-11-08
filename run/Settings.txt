@@ -1,1 +1,1 @@
-LightUpLegacy: True
+LightUpLegacy: true

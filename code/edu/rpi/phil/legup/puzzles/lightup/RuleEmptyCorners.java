@@ -13,14 +13,7 @@ public class RuleEmptyCorners extends PuzzleRule
 	static final long serialVersionUID = 9501L;
 	public String getImageName() 
 	{ 
-		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
-		{
-			return "images/lightup/rules/EmptyCornersLegacy.png"; 
-		}
-		else
-		{
-			return "images/lightup/rules/EmptyCorners.png"; 
-		}
+			return "images/lightup/rules/EmptyCorners.png";
 	}
 	RuleEmptyCorners()
 	{

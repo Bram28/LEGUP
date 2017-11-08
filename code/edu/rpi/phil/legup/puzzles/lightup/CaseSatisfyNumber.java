@@ -26,14 +26,7 @@ public class CaseSatisfyNumber extends CaseRule
 	static final long serialVersionUID = 5238481899970588295L;
 	public String getImageName() 
 	{
-		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
-		{
-			return "images/lightup/cases/SatisfyNumberLegacy.png";
-		}
-		else
-		{
-			return "images/lightup/cases/SatisfyNumber.png";
-		}
+		return "images/lightup/cases/SatisfyNumberLegacy.png";
 	}
 
 	// CaseRuleSelectionHelper Methods to highlight cells with a number in them
