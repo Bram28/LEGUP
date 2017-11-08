@@ -248,12 +248,6 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		setTitle("LEGUP");
 		setLayout( new BorderLayout() );
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		try {
-			readSettings();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		setupMenu();
 		setupToolBar();
 		setupContent();
