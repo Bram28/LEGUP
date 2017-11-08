@@ -175,7 +175,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		new JButton(/*toolBarNames[11],*/ new ImageIcon("images/" + toolBarNames[11] + ".png")),
 		new JButton(/*toolBarNames[12],*/ new ImageIcon("images/" + toolBarNames[12] + ".png")),
 		new JButton(/*toolBarNames[13],*/ new ImageIcon("images/" + toolBarNames[13] + ".png")),
-		new JButton(toolBarNames[14], new ImageIcon("images/" + toolBarNames[14] + ".png")) //Toggle annotations
+//		new JButton(toolBarNames[14], new ImageIcon("images/" + toolBarNames[14] + ".png")) //Toggle annotations
 	};
 
 	final static int[] toolbarSeperatorBefore =
@@ -187,8 +187,8 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 	{
 		if (getBoard() != null) getBoard().boardDataChanged(null);
 	}
-	public void readSettings() throws IOException
-	{
+//	public void readSettings() throws IOException
+//	{
 		/* A global setting will be saved even after the program shuts
 		 down and is reopened through this function.
 		 You can read all other settings as well, right now it only
@@ -238,7 +238,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 //	                "Unable to open file Settings.txt");
 //	        }
 //		}
-	}
+//	}
 
 	public LEGUP_Gui(Legup legupMain)
 	{
