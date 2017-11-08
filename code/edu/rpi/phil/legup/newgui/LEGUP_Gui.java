@@ -175,7 +175,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		new JButton(/*toolBarNames[11],*/ new ImageIcon("images/" + toolBarNames[11] + ".png")),
 		new JButton(/*toolBarNames[12],*/ new ImageIcon("images/" + toolBarNames[12] + ".png")),
 		new JButton(/*toolBarNames[13],*/ new ImageIcon("images/" + toolBarNames[13] + ".png")),
-//		new JButton(toolBarNames[14], new ImageIcon("images/" + toolBarNames[14] + ".png")) //Toggle annotations
+		new JButton(toolBarNames[14], new ImageIcon("images/" + toolBarNames[14] + ".png")) //Toggle annotations
 	};
 
 	final static int[] toolbarSeperatorBefore =
@@ -248,6 +248,11 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		setTitle("LEGUP");
 		setLayout( new BorderLayout() );
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		try {
+//			readSettings();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		setupMenu();
 		setupToolBar();
 		setupContent();
@@ -296,7 +301,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 		private JMenuItem hint = new JMenuItem("Hint");
 	private JMenu help = new JMenu("Help");
 	//Place all global settings onto this menu item.
-	private JMenu settings = new JMenu("Settings");
+//	private JMenu settings = new JMenu("Settings");
 //		private JMenuItem LightUpLegacy = new JMenuItem("Light Up Legacy Mode");
 	// contains all the code to setup the menubar
 	private void setupMenu(){
@@ -363,7 +368,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 		bar.add(help);
 		//Used for global settings.
-		bar.add(settings);
+//		bar.add(settings);
 //			settings.add(LightUpLegacy);
 //			LightUpLegacy.addActionListener(this);
 
