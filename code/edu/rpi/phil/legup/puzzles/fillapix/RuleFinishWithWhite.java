@@ -36,9 +36,8 @@ public class RuleFinishWithWhite extends PuzzleRule
             return "This rule only involves having a single branch!";
         }
 
-        // Add contradictions to check to set contras
-        Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
-        contras.add(new ContradictionTooManyBlackCells());
+        // The only contradiction being used
+        ContradictionTooManyBlackCells c = new ContradictionTooManyBlackCells();
 
         // Copy the parent state to compare with current state to find changes
         BoardState origBoardState = destBoardState.getSingleParentState();
@@ -52,22 +51,27 @@ public class RuleFinishWithWhite extends PuzzleRule
             for (int x = 0; x < width; x++) {
                 // Check for changes
                 if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
-                    //Make sure cells placed are empty cells
+                    //Make sure cells placed are white cells
                     if (!Fillapix.isWhite(destBoardState.getCellContents(x, y))) {
-                        return "Only empty cells are allowed for this rule!";
+                        return "Only white cells are allowed for this rule!";
                     }
 
                     // Create alternative boardstate to apply other case/contradiction
                     BoardState modified = origBoardState.copy();
-                    modified.getBoardCells()[y][x] = Fillapix.CELL_WHITE;
-                    for (Contradiction c : contras) {
-                        if (c.checkContradictionRaw(modified) != null)
-                            return "It is not required for the modified cell(s) to be white!";
+                    if (Fillapix.isUnknown(modified.getBoardCells()[y][x])) {
+                        modified.getBoardCells()[y][x]+=Fillapix.CELL_BLACK;
+                    } else if (Fillapix.isWhite(modified.getBoardCells()[y][x])) {
+                        modified.getBoardCells()[y][x]+=(Fillapix.CELL_UNKNOWN+Fillapix.CELL_BLACK);
+                    } // else the cell is already white!
+
+                    if (c.checkContradictionRaw(modified) != null) {
+                        return "It is not required for the modified cell(s) to be White!";
                     }
                 }
             }
         }
         return null;
+
 
         /*
         String error = null;

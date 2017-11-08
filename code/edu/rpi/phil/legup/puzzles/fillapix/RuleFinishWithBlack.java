@@ -36,9 +36,8 @@ public class RuleFinishWithBlack extends PuzzleRule
 			return "This rule only involves having a single branch!";
 		}
 
-		// Add contradictions to check to set contras
-		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
-		contras.add(new ContradictionTooFewBlackCells());
+		// The only contradiction being used
+		ContradictionTooFewBlackCells c = new ContradictionTooFewBlackCells();
 
 		// Copy the parent state to compare with current state to find changes
 		BoardState origBoardState = destBoardState.getSingleParentState();
@@ -52,17 +51,21 @@ public class RuleFinishWithBlack extends PuzzleRule
 			for (int x = 0; x < width; x++) {
 				// Check for changes
 				if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
-					//Make sure cells placed are light cells
+					//Make sure cells placed are black cells
 					if (!Fillapix.isBlack(destBoardState.getCellContents(x, y))) {
 						return "Only black cells are allowed for this rule!";
 					}
 
 					// Create alternative boardstate to apply other case/contradiction
 					BoardState modified = origBoardState.copy();
-					modified.getBoardCells()[y][x] = Fillapix.CELL_WHITE; // FIGURE OUT WHAT TO DO FOR CELLS WITH CLUES
-					for (Contradiction c : contras) {
-						if (c.checkContradictionRaw(modified) != null)
-							return "It is not required for the modified cell(s) to be Black!";
+					if (Fillapix.isUnknown(modified.getBoardCells()[y][x])) {
+						modified.getBoardCells()[y][x]+=(Fillapix.CELL_BLACK+Fillapix.CELL_WHITE);
+					} else if (Fillapix.isBlack(modified.getBoardCells()[y][x])) {
+						modified.getBoardCells()[y][x]+=Fillapix.CELL_WHITE;
+					} // else the cell is already white!
+
+					if (c.checkContradictionRaw(modified) != null) {
+						return "It is not required for the modified cell(s) to be Black!";
 					}
 				}
 			}

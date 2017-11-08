@@ -10,11 +10,11 @@ public class ContradictionTooManyBlackCells extends Contradiction
     private static final long serialVersionUID = 855439484L;
 	
     ContradictionTooManyBlackCells()
-	 {
+	{
 		setName("Too Many Black Cells");
 		description = "There may not be more black cells than the number.";
 		image = new ImageIcon("images/fillapix/contradictions/TooManyBlackCells.png");
-	 }
+	}
 
 	 public String getImageName()
 	{
@@ -29,50 +29,39 @@ public class ContradictionTooManyBlackCells extends Contradiction
      */
     public String checkContradictionRaw(BoardState state)
     {
-		String error = null;
+		String error = "";
 		int height = state.getHeight();
 		int width = state.getWidth();
 		int cellvalue = 0;
 		int blackCells = 0;
 
-		for(int x = 0; x < width; ++x)
-		{
-			for(int y = 0; y < height; ++y)
-			{
+		//System.out.println("Too Many Black Cells started");
+		for(int x = 0; x < width; ++x) {
+			for(int y = 0; y < height; ++y) {
+				//System.out.println("Checking " + x + ", " +y);
 				cellvalue = state.getCellContents(x,y);
-				if(cellvalue > 0)
+				// cell with a clue
+				if(Fillapix.hasClue(cellvalue))
 				{
 					blackCells = 0;
-					if(x > 0) // left
-						if(Fillapix.isBlack(state.getCellContents(x-1, y)))
-							++blackCells;
-					if(x < width - 1) // right
-						if(Fillapix.isBlack(state.getCellContents(x+1, y)))
-							++blackCells;
-					if(y > 0) // above
-						if(Fillapix.isBlack(state.getCellContents(x, y-1)))
-							++blackCells;
-					if(y < height - 1) // below
-						if(Fillapix.isBlack(state.getCellContents(x, y+1)))
-							++blackCells;
-					if(x > 0 && y > 0) // upper left diagonal
-						if(Fillapix.isBlack(state.getCellContents(x-1, y-1)))
-							++blackCells;
-					if(x > 0 && y < height - 1) // bottom left diagonal
-						if(Fillapix.isBlack(state.getCellContents(x-1, y+1)))
-							++blackCells;
-					if(x < width - 1 && y > 0) // upper right diagonal
-						if(Fillapix.isBlack(state.getCellContents(x+1, y-1)))
-							++blackCells;
-					if(x < width - 1 && y < height - 1) // bottom right diagonal
-						if(Fillapix.isBlack(state.getCellContents(x+1, y+1)))
-							++blackCells;
-					if(Fillapix.isBlack(state.getCellContents(x, y)))
-							++blackCells;
+					for (int i = -1; i < 2; ++i) {
+						for (int j = -1; j < 2; ++j) {
+							int xpos = x + i;
+							int ypos = y + j;
+							if (Fillapix.inBounds(width, height, xpos, ypos)) {
+								if (Fillapix.isBlack(cellvalue)) {
+									blackCells += 1;
+								}
+							}
+						}
+					}
 
-					if(blackCells > cellvalue)
+					if (blackCells > (cellvalue%10)) {
+						// System.out.println("Cell " + x + ", " + y + " has too few black cells!");
 						return null;
+					}
 				}
+				//System.out.println("Cell " + x + ", " + y + " is fine");
 			}
 		}
 

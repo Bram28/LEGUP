@@ -44,44 +44,20 @@ public class CaseBlackOrWhite extends CaseRule
 				rv = "Your two-way split must change a single cell with this rule.";
 			} else {
 				Point p = dif.get(0);
-
 				if (!((Fillapix.isBlack(one.getCellContents(p.x,p.y)) &&
 						Fillapix.isWhite(two.getCellContents(p.x,p.y))) ||
 						(Fillapix.isBlack(two.getCellContents(p.x,p.y)) &&
 								Fillapix.isWhite(one.getCellContents(p.x,p.y))))) {
-					// if(LEGUP_Gui.LIGHT_UP_LEGACY == true)
-					// {rv = "In this case rule, one state's cell must be white and the other a light.";}
-					// else
-					// {rv = "In this case rule, one state's cell must be light blue and the other a light.";}
+					rv = "In this case rule, one state's cell must be white and the other black.";
 				} else if (Fillapix.isUnknown(parent.getCellContents(p.x,p.y))) {
 					rv = "The parent cell that you're applying the case rule on must be a blank cell.";
 				}
 			}
 		}
-
 		return rv;
-		/*
-		if (state.getChildren().size() < 2)
-			return "This case rule can only be applied on a split transition";
-
-		List<BoardState> states = state.getChildren();
-		if (states.size() != 2) return "This case rule can only be applied to two child states";
-		ArrayList<Point> dif = BoardState.getDifferenceLocations(states.get(0), states.get(1));
-		if (dif.size() != 1)
-			return "Case rule only applies to a split transition of one cell";
-		Point difPoint = dif.get(0);
-
-		if (state.getCellContents(difPoint.x, difPoint.y) != Fillapix.CELL_UNKNOWN)
-			return "Case rule does not apply to changing values in a split, only making new ones";
-
-		int val0 = states.get(0).getCellContents(difPoint.x, difPoint.y), val1 = states.get(1).getCellContents(difPoint.x, difPoint.y);
-
-		if ((val0 == Fillapix.FILLED && val1 == Fillapix.EMPTY) || (val0 == Fillapix.EMPTY && val1 == Fillapix.FILLED))
-			return null;
-
-		return "Case rule only applies to splitting a single unknown cell into Black and White";*/
 	}
 
+	/*
 	public boolean startDefaultApplicationRaw(BoardState state)
 	{
 		return true;
@@ -102,4 +78,6 @@ public class CaseBlackOrWhite extends CaseRule
 		}
 		return false;
 	}
+	*/
+
 }
