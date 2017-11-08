@@ -18,7 +18,7 @@ public class RuleCornerBlack extends PuzzleRule
 	RuleCornerBlack()
 	{
 		setName("Corner Black");
-		description = "If there is only one white square connected to unkowns and " +
+		description = "If there is only one white square connected to unknowns and " +
 			"one more white is needed then the angles of that white square are black";
 		image = new ImageIcon("images/nurikabe/rules/CornerBlack.png");
 	}
@@ -111,7 +111,7 @@ public class RuleCornerBlack extends PuzzleRule
 											else return "There is a MultipleNumbers Contradiction on the board!";
 										}
 									}
-									//Third check: The white region kittycorner to this currently has one less cell than required
+									// Third check: The white region kittycorner to this currently has one less cell than required
 									if (regionNum > 0 && reg.size() == regionNum-11) {
 										validPoint = true;
 										break;

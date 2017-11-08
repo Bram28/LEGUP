@@ -29,7 +29,7 @@ public class RuleBlackBetweenRegions extends PuzzleRule
 	/**
 	* Checks if the contradiction was applied correctly to this board state
 	*
-	* @param state The board state
+	* @param destBoardState The board state
 	* @return null if the contradiction was applied correctly, the error String otherwise
 	*/
 	protected String checkRuleRaw(BoardState destBoardState)
@@ -85,7 +85,7 @@ public class RuleBlackBetweenRegions extends PuzzleRule
 							contrasSatisfied++;
 					}
 					if (contrasSatisfied == 0)
-						return "The black cell does not seperate two white regions!";
+						return "The black cell does not separate two white regions!";
 				}
 			}
 		}
