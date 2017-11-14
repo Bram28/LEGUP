@@ -21,6 +21,7 @@ import edu.rpi.phil.legup.Contradiction;
 import edu.rpi.phil.legup.PuzzleModule;
 import edu.rpi.phil.legup.PuzzleRule;
 import edu.rpi.phil.legup.Selection;
+import edu.rpi.phil.legup.newgui.Board;
 import edu.rpi.phil.legup.newgui.LEGUP_Gui;
 // import edu.rpi.phil.legup.puzzles.treetent.CaseLinkTree; //avoid duplicating helper functions
 
@@ -49,7 +50,7 @@ public class Fillapix extends PuzzleModule {
 
 	public Map<String, Integer> getSelectableCells() {
 		// FIX LATER
-		Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+		Map<String, Integer> tmp = new LinkedHashMap<>();
 		String tmpname = "";
 		for (int i = -50; i < 70; i++) {
 			tmpname+="a";
@@ -62,9 +63,17 @@ public class Fillapix extends PuzzleModule {
 	}
 
 	public Map<String, Integer> getUnselectableCells() {
-		Map<String, Integer> tmp = new LinkedHashMap<String, Integer>();
+		Map<String, Integer> tmp = new LinkedHashMap<>();
 		tmp.put("hmm", -100); // BOGUS VALUE, EVERYTHING'S SELECTABLE
 		return tmp;
+	}
+
+	// position of cell can be found from line of integers
+	// x position: integer/row_size
+	// y position: integer%row_size
+	public Map<Integer, Boolean> initializedCells;
+	public void initializeCell(int key) {
+		initializedCells.put(key, true);
 	}
 
 	public static boolean isUnknown(int value) {
@@ -88,6 +97,7 @@ public class Fillapix extends PuzzleModule {
 	}
 
 	public Fillapix() {
+		initializedCells = new LinkedHashMap<>();
 	}
 
 	public void drawCell( Graphics2D g, int x, int y, int state ){
@@ -107,24 +117,22 @@ public class Fillapix extends PuzzleModule {
 
 	public void drawCell( Graphics2D g, int x, int y, BoardState state ){
 		// make sure the user can click on the cell
-		state.setModifiableCell(x,y,true);
+		int key = (x*state.getWidth())+y;
+		if (initializedCells.get(key) == null) {
+			state.setModifiableCell(x,y, true);
+			initializeCell(key);
+		}
+
 		int val = state.getCellContents( x, y );
 		// draw the background color
 		Color textColor = Color.black;
 		g.setColor(Color.lightGray);
-		System.out.println("VAAAAAAAAAAAAAAAL: " + val);
 		if (isUnknown(val)) {
-			System.out.println("IS UNKNOWN");
 		} else if (isBlack(val)) {
-			System.out.println("IS BLACK");
 			textColor = Color.white;
 			g.setColor(Color.black);
 		} else if (isWhite(val)) {
-			System.out.println("IS WHITE");
 			g.setColor(Color.white);
-		} else {
-			System.out.println("Odddd: " + val);
-			state.setModifiableCell(x,y,true);
 		}
 		g.fill(getCellBounds(x,y));
 
@@ -291,48 +299,5 @@ public class Fillapix extends PuzzleModule {
 
 	public void boardDataChanged(BoardState state) {
 		// fillLight(state); HERE TOO
-	}
-
-	// I DON'T THINK WE NEED THIS FUNCTION EITHER
-	public static void fillLight(BoardState state) {
-		/*
-		ArrayList<Object> extra = state.getExtraData();
-		extra.clear();
-		boolean[][] litup = new boolean[state.getHeight()][state.getWidth()];
-		// determineLight(state, litup);
-		for (int y = 0; y < state.getHeight(); ++y) {
-			for (int x = 0; x < state.getWidth(); ++x) {
-				if(litup[y][x])
-					extra.add(new Point(x,y));
-			}
-		}
-		*/
-	}
-
-
-
-	/* AI stuff */
-	public BoardState guess(BoardState Board) {
-		/*
-		// out of forced moves, need to guess
-		Point guess = GenerateBestGuess(Board);
-		// guess, if we found one
-		if (guess.x != -1 && guess.y != -1) {
-		BoardState Parent = Board.getSingleParentState();
-		BoardState CaseLight = Board;
-		BoardState CaseBlank = Parent.addTransitionFrom();
-		CaseLight.setCellContents(guess.x, guess.y, CELL_LIGHT);
-		fillLight(CaseLight);
-		CaseBlank.setCellContents(guess.x, guess.y, CELL_EMPTY);
-		fillLight(CaseBlank);
-		Parent.setCaseSplitJustification(new CaseLightOrEmpty());
-		//System.out.println("Guessed at "+guess.x+","+guess.y);
-
-		return CaseLight;
-		}
-		*/
-		// if we didn't then the board is full, and we are finished (thus, the returned board will be the same as the one we were given
-		System.out.println("Statement: Your puzzle has been solved already. Why do you persist?"); // hahahaha
-		return Board;
 	}
 }

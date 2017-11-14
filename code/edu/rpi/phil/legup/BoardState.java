@@ -273,7 +273,6 @@ public class BoardState implements java.io.Serializable
 	/**
 	 * Toggle whether this state and all its (single) children are collapsed
 	 * <not> called recursively to do the work
-	 * @see toggleCollapseRecursive
 	 */
 	public void toggleCollapse()
 	{
@@ -1007,7 +1006,6 @@ public class BoardState implements java.io.Serializable
 	}
 	
 	/**
-	 * @param child A possible descendant of the given ancestor
 	 * @param descendant A possible ancestor of the given descendant
 	 * @return true if the given BoardState is a descendant of the given ancestor, otherwise false
 	 */
@@ -1811,7 +1809,6 @@ public class BoardState implements java.io.Serializable
 	private boolean leadContradiction = false;
 	/**
 	 * Does this board state lead to a contradiction?
-	 * @param state the state we're checking
 	 * @return true iff this board state (always) leads to a contradiction
 	 */
 	public boolean leadsToContradiction()
@@ -1876,8 +1873,7 @@ public class BoardState implements java.io.Serializable
 	private boolean leadSolution = false;
 	/**
 	 * Does this board state lead to the solution?
-	 * @param state the state we're checking
-	 * @return true iff this board state (always) leads to a contradiction
+	  @return true iff this board state (always) leads to a contradiction
 	 */
 	public boolean leadsToSolution()
 	{
@@ -2379,7 +2375,6 @@ public class BoardState implements java.io.Serializable
 
 	/**
 	 *  Returns the array of board cells
-	 * @param none
 	 * @return array of board cells
 	 */
 	public int[][] getBoardCells() {
