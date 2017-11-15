@@ -15,14 +15,7 @@ public class RuleFinishWithBulbs extends PuzzleRule
 	static final long serialVersionUID = 5613497586353427743L;
 	public String getImageName() 
 	{
-		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
-		{
-			return "images/lightup/rules/FinishWithBulbsLegacy.png"; 
-		}
-		else
-		{
-			return "images/lightup/rules/FinishWithBulbs.png"; 
-		}
+			return "images/lightup/rules/FinishWithBulbs.png";
 	}
 	RuleFinishWithBulbs() {
 		setName("Finish with Bulbs");

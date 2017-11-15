@@ -11,7 +11,7 @@ import edu.rpi.phil.legup.Contradiction;
 public class RuleBulbsOutsideDiagonal extends PuzzleRule {
     static final long serialVersionUID = 9501L;
     public String getImageName() {
-        return "images/lightup/rules/EmptyCornersLegacy.png";
+        return "images/lightup/rules/BulbsOutsideDiagonal.png";
     }
     RuleBulbsOutsideDiagonal() {
         setName("Bulbs Outside Diagonal");
@@ -41,10 +41,6 @@ public class RuleBulbsOutsideDiagonal extends PuzzleRule {
                 // Check for changes
                 BoardState modified;
                 if (destBoardState.getCellContents(x, y) != origBoardState.getCellContents(x, y)) {
-                    //Make sure cells placed are empty cells
-                    if (destBoardState.getCellContents(x, y) == LightUp.CELL_EMPTY) {
-                        return "Only bulbs are allowed for this rule!";
-                    }
 
                     // Create alternative board state to apply other case/contradiction
                     modified = origBoardState.copy();
@@ -54,22 +50,24 @@ public class RuleBulbsOutsideDiagonal extends PuzzleRule {
                             return "Too many bulbs placed.";
                     }
                     int cellvalue = origBoardState.getCellContents(x, y);
-                    String err = "Only valid when cell requires 3 bulbs and is on outer edges of cell.";
-                    if (origBoardState.getCellContents(x-1, y) >= 10 && origBoardState.getCellContents(x-1, y) < 15 && origBoardState.getCellContents(x-1, y) != 13) {
-                        return err;
-                    }
-                    if (origBoardState.getCellContents(x+1, y) >= 10 && origBoardState.getCellContents(x+1, y) < 15 && origBoardState.getCellContents(x+1, y) != 13) {
-                        return err;
-                    }
-                    if (origBoardState.getCellContents(x, y-1) >= 10 && origBoardState.getCellContents(x, y-1) < 15 && origBoardState.getCellContents(x, y-1) != 13) {
-                        return err;
-                    }
-                    if (origBoardState.getCellContents(x, y+1) >= 10 && origBoardState.getCellContents(x, y+1) < 15 && origBoardState.getCellContents(x, y+1) != 13) {
+                    System.out.print("cellvalue is " + cellvalue);
+                    String err = "Only valid when cell requires 3 bulbs diagonal to a cell that requires 1 bulb and is on outer edges of cells.";
+                    int c=0;
+                    if (!(isStateValid(x-1,y,origBoardState,cellvalue) || isStateValid(x+1,y,origBoardState,cellvalue) ||
+                            isStateValid(x,y-1,origBoardState,cellvalue) || isStateValid(x,y+1,origBoardState,cellvalue) )) {
                         return err;
                     }
                 }
             }
         }
         return null;
+    }
+    private boolean isStateValid(int x, int y, BoardState origBoardState, int cellvalue) {
+        if (origBoardState.getCellContents(x,y) >= 10 &&
+                ((origBoardState.getCellContents(x, y) == 13 && cellvalue == LightUp.CELL_LIGHT)
+                || (origBoardState.getCellContents(x, y) == 11 && cellvalue == LightUp.CELL_EMPTY))) {
+            return true;
+        }
+        return false;
     }
 }

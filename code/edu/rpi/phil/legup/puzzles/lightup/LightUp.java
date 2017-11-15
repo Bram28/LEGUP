@@ -92,14 +92,7 @@ public class LightUp extends PuzzleModule
 		} else if (cellValue == CELL_EMPTY){
 			/*This check works, all old images will have Legacy added to 
 			their ending. */
-			if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
-			{
-				return "images/lightup/emptyLegacy.gif";
-			}
-			else			
-			{
 				return "images/lightup/empty.gif";
-			}
 		} else if (cellValue >= 10 && cellValue < 15){
 			return "images/lightup/" + (cellValue-10)+".gif";
 		} else if(cellValue == 15){
@@ -217,14 +210,7 @@ public class LightUp extends PuzzleModule
 		ruleList.add(new RuleMustLight());
 		ruleList.add(new RuleEmptyCorners());
 		ruleList.add(new RuleBulbsOutsideDiagonal());
-		if(LEGUP_Gui.LIGHT_UP_LEGACY == true)
-		{
-			ruleList.add(new RuleWhiteInLight());
-		}
-		else
-		{
 			ruleList.add(new RuleEmptyCellInLight());
-		}
 		return ruleList;
 	}
 

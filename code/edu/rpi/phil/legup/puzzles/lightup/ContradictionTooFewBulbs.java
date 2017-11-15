@@ -11,14 +11,7 @@ public class ContradictionTooFewBulbs extends Contradiction
 	static final long serialVersionUID = 9500L;
 	public String getImageName() 
 	{
-		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
-		{
-			return "images/lightup/contradictions/TooFewBulbsLegacy.png";
-		}
-		else
-		{
 			return "images/lightup/contradictions/TooFewBulbs.png";
-		}
 	}
 	 ContradictionTooFewBulbs()
 	 {

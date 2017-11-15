@@ -17,14 +17,7 @@ public class CaseLightOrEmpty extends CaseRule
 	static final long serialVersionUID = -1977535413148184084L;
 	public String getImageName() 
 	{
-		if (LEGUP_Gui.LIGHT_UP_LEGACY == true)
-		{
-			return "images/lightup/cases/LightOrEmptyLegacy.png";
-		}
-		else
-		{
 			return "images/lightup/cases/LightOrEmpty.png";
-		}
 	}
 	public CaseLightOrEmpty()
 	{
@@ -67,10 +60,7 @@ public class CaseLightOrEmpty extends CaseRule
 					(two.getCellContents(p.x,p.y) == LightUp.CELL_LIGHT &&
 						one.getCellContents(p.x,p.y) == LightUp.CELL_EMPTY)))
 				{
-					if(LEGUP_Gui.LIGHT_UP_LEGACY == true)
-					{rv = "In this case rule, one state's cell must be white and the other a light.";}
-					else
-					{rv = "In this case rule, one state's cell must be light blue and the other a light.";}
+					rv = "In this case rule, one state's cell must be white and the other a light.";
 				}
 				else if (parent.getCellContents(p.x,p.y) != LightUp.CELL_UNKNOWN)
 				{
