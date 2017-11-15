@@ -49,12 +49,10 @@ public class RuleBulbsOutsideDiagonal extends PuzzleRule {
                         if (c.checkContradictionRaw(modified) == null)
                             return "Too many bulbs placed.";
                     }
-                    int cellvalue = origBoardState.getCellContents(x, y);
-                    System.out.print("cellvalue is " + cellvalue);
+                    int cellvalue = destBoardState.getCellContents(x, y);
                     String err = "Only valid when cell requires 3 bulbs diagonal to a cell that requires 1 bulb and is on outer edges of cells.";
-                    int c=0;
-                    if (!(isStateValid(x-1,y,origBoardState,cellvalue) || isStateValid(x+1,y,origBoardState,cellvalue) ||
-                            isStateValid(x,y-1,origBoardState,cellvalue) || isStateValid(x,y+1,origBoardState,cellvalue) )) {
+                    if (!(isStateValid(x-1,y,destBoardState,cellvalue) || isStateValid(x+1,y,destBoardState,cellvalue) ||
+                            isStateValid(x,y-1,destBoardState,cellvalue) || isStateValid(x,y+1,destBoardState,cellvalue) )) {
                         return err;
                     }
                 }
@@ -63,9 +61,20 @@ public class RuleBulbsOutsideDiagonal extends PuzzleRule {
         return null;
     }
     private boolean isStateValid(int x, int y, BoardState origBoardState, int cellvalue) {
+        if (x<0 || x>=origBoardState.getWidth() || y<0 || y>=origBoardState.getHeight()) return false;
         if (origBoardState.getCellContents(x,y) >= 10 &&
                 ((origBoardState.getCellContents(x, y) == 13 && cellvalue == LightUp.CELL_LIGHT)
                 || (origBoardState.getCellContents(x, y) == 11 && cellvalue == LightUp.CELL_EMPTY))) {
+            return true && findDiagonal(x, y, origBoardState.getCellContents(x,y), origBoardState);
+        }
+        return false;
+    }
+    private boolean findDiagonal(int x, int y, int cellvalue, BoardState state) {
+        int toFind = 0;
+        if (cellvalue == 13) { toFind = 11; }
+        if (cellvalue == 11) { toFind = 13; }
+        if (state.getCellContents(x+1,y+1) == toFind || state.getCellContents(x-1,y-1) == toFind ||
+                state.getCellContents(x-1,y+1) == toFind || state.getCellContents(x+1,y-1) == toFind) {
             return true;
         }
         return false;
