@@ -11,6 +11,7 @@
 package edu.rpi.phil.legup.puzzles.treetent;
 
 import java.awt.Point;
+import java.util.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,7 +29,8 @@ public class RuleLastCampingSpot extends PuzzleRule
     {
 		setName("Last Camping Spot");
 		//description = "If there is one unknown cell next to a tentless unlinked tree, it is a tent which must be linked to the tree.";
-		description = "If an unlinked tree is adjacent to only one blank cell and not adjacent to any unlinked tents, the blank cell must be a tent linked to that tree.";
+		//description = "If an unlinked tree is adjacent to only one blank cell and not adjacent to any unlinked tents, the blank cell must be a tent linked to that tree.";
+		description = "If an unlinked tree is adjacent to only one blank cell and not adjacent to any unlinked tents, the blank cell must be a tent.";
 		//image = new ImageIcon("images/treetent/oneTentPosition.png");
     }
 
@@ -40,6 +42,8 @@ public class RuleLastCampingSpot extends PuzzleRule
 			int width = origBoardState.getWidth();
 			int height = origBoardState.getHeight();
 
+			ArrayList<Object> extra = destBoardState.getExtraDataDelta();
+			if(extra.size() > 0){  return "Links can't be verified by this rule!"; }
 			// Check for only one branch
 			if (destBoardState.getParents().size() != 1) {
 				return "This rule only involves having a single branch!";

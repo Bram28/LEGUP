@@ -418,6 +418,7 @@ public class BoardState implements java.io.Serializable
 	{
 		return extraData;
 	}
+	public ArrayList<Object> getExtraDataDelta() { return extraDataDelta; }
 
 	//Add object o to this state's extra data
 	public void addExtraData(Object o)

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.lang.Math;
 
 import javax.swing.ImageIcon;
 
@@ -377,6 +378,35 @@ public class TreeTent extends PuzzleModule
 	 */
 	public void mousePressedEvent(BoardState state, Point where)
 	{
+		//Check if the pressed grid is a Tent.
+		//If it is a Tent, check and delete any links associated with the Tent.
+		boolean r1,r2,r3,r4;
+		ExtraTreeTentLink e1 = new ExtraTreeTentLink(where,new Point(where.x+1,where.y));
+		ExtraTreeTentLink e2 = new ExtraTreeTentLink(where,new Point(where.x-1,where.y));
+		ExtraTreeTentLink e3 = new ExtraTreeTentLink(where,new Point(where.x,where.y+1));
+		ExtraTreeTentLink e4 = new ExtraTreeTentLink(where,new Point(where.x,where.y-1));
+
+		if (state.getCellContents(where.x, where.y) == CELL_TENT) {
+			ArrayList<Object> extra = state.getExtraData();
+			r1 = extra.contains(e1);
+			r2 = extra.contains(e2);
+			r3 = extra.contains(e3);
+			r4 = extra.contains(e4);
+			//Deletes the link by calling mousedraggedevent between the two points of the link.
+			if(r1){
+				mouseDraggedEvent(state,where,new Point(where.x+1,where.y));
+			}
+			else if(r2){
+				mouseDraggedEvent(state,where,new Point(where.x-1,where.y));
+			}
+			else if(r3){
+				mouseDraggedEvent(state,where,new Point(where.x,where.y+1));
+			}
+			else if(r4){
+				mouseDraggedEvent(state,where,new Point(where.x,where.y-1));
+			}
+
+		}
 		//get rid of annotation
 		disableAnnotationsForCell(where.x, where.y);
 
@@ -388,8 +418,7 @@ public class TreeTent extends PuzzleModule
 	}
 	public void labelPressedEvent(BoardState state, int index, int side)
 	{
-		//System.out.println(index);
-		//System.out.println(side);
+		BoardState curr = state;
 		BoardState next = state.conditionalAddTransition();
 		if(next != null)
 		{
@@ -401,6 +430,34 @@ public class TreeTent extends PuzzleModule
 				int y = horizontal ? index : i;
 				if(next.isModifiableCell(x,y))
 				{
+					//Check if any cells that were Tents are linked or not.
+					//If they were linked, delete the links.
+					if(next.getCellContents(x,y) == CELL_TENT){
+						boolean r1,r2,r3,r4;
+						ExtraTreeTentLink e1 = new ExtraTreeTentLink(new Point(x,y),new Point(x+1,y));
+						ExtraTreeTentLink e2 = new ExtraTreeTentLink(new Point(x,y),new Point(x-1,y));
+						ExtraTreeTentLink e3 = new ExtraTreeTentLink(new Point(x,y),new Point(x,y+1));
+						ExtraTreeTentLink e4 = new ExtraTreeTentLink(new Point(x,y),new Point(x,y-1));
+						ArrayList<Object> extra = curr.getExtraDataDelta();
+						r1 = extra.contains(e1);
+						r2 = extra.contains(e2);
+						r3 = extra.contains(e3);
+						r4 = extra.contains(e4);
+						//Deletes the link by calling mousedraggedevent between the two points of the link.
+						if(r1){
+							mouseDraggedEvent(curr,new Point(x,y),new Point(x+1,y));
+						}
+						else if(r2){
+							mouseDraggedEvent(curr,new Point(x,y),new Point(x-1,y));
+						}
+						else if(r3){
+							mouseDraggedEvent(curr,new Point(x,y),new Point(x,y+1));
+						}
+						else if(r4){
+							mouseDraggedEvent(curr,new Point(x,y),new Point(x,y-1));
+						}
+					}
+					//Set all cells to grass
 					next.setCellContents(x,y,CELL_GRASS);
 
 					//make sure to disable annotations since the cell will be filled with grass
@@ -419,33 +476,78 @@ public class TreeTent extends PuzzleModule
 	public void mouseDraggedEvent(BoardState state, Point from, Point to)
 	{
 		if (from.equals(to))
-		{ // click
-			//Warning: Legup doesn't check whether or not a cell can be modified when a dragged event occurs
-			//Already handled by PuzzleModule.mousePressedEvent()
-			/*if(state.isModifiableCell(to.x, to.y))
-			{
-				int next = getNextCellValue(from.x,from.y,state);
-				state.setCellContents(from.x,from.y,next);
-			}*/
+		{
 		}
 		else
 		{ // drag, create link, or remove it
 			ExtraTreeTentLink e = new ExtraTreeTentLink(from,to);
-			System.out.println("testing");
 			boolean removed = false;
 
-			if(((to.x-from.x)^2 + (to.y-from.y)^2) != 1 && ((from.x-to.x)^2 + (from.y-to.y)^2) != 1)
+
+
+			ArrayList<ExtraTreeTentLink> repeat = new ArrayList<ExtraTreeTentLink>();
+
+			//variables to check if there any other links associated with the two points we are attempting to link together.
+			ExtraTreeTentLink f1 = new ExtraTreeTentLink(from,new Point(from.x+1,from.y));
+			ExtraTreeTentLink f2 = new ExtraTreeTentLink(from,new Point(from.x-1,from.y));
+			ExtraTreeTentLink f3 = new ExtraTreeTentLink(from,new Point(from.x,from.y+1));
+			ExtraTreeTentLink f4 = new ExtraTreeTentLink(from,new Point(from.x,from.y-1));
+
+			ExtraTreeTentLink t1 = new ExtraTreeTentLink(to,new Point(to.x+1,to.y));
+			ExtraTreeTentLink t2 = new ExtraTreeTentLink(to,new Point(to.x-1,to.y));
+			ExtraTreeTentLink t3 = new ExtraTreeTentLink(to,new Point(to.x,to.y+1));
+			ExtraTreeTentLink t4 = new ExtraTreeTentLink(to,new Point(to.x,to.y-1));
+			//add all possible links except for the one we are attempting to create, into an arraylist
+			if(!f1.equals(e))
+				repeat.add(f1);
+			if(!f2.equals(e))
+				repeat.add(f2);
+			if(!f3.equals(e))
+				repeat.add(f3);
+			if(!f4.equals(e))
+				repeat.add(f4);
+			if(!t1.equals(e))
+				repeat.add(t1);
+			if(!t2.equals(e))
+				repeat.add(t2);
+			if(!t3.equals(e))
+				repeat.add(t3);
+			if(!t4.equals(e))
+				repeat.add(t4);
+
+			//check if link has length of one.
+			if(Math.pow(to.x-from.x,2)+Math.pow(to.y-from.y,2) != 1)
 				return;
 
-			//check if exactly one point is a tree
-			if (!((state.getCellContents(from.x, from.y) == CELL_TREE && state.getCellContents(to.x, to.y) != CELL_TREE) ||
-			(state.getCellContents(from.x, from.y) != CELL_TREE && state.getCellContents(to.x, to.y) == CELL_TREE)))
+			//check if link is connecting tent to tree
+			if (!((state.getCellContents(from.x, from.y) == CELL_TREE && state.getCellContents(to.x, to.y) == CELL_TENT) ||
+			(state.getCellContents(from.x, from.y) == CELL_TENT && state.getCellContents(to.x, to.y) == CELL_TREE)))
 				return;
 			BoardState next = ((state.isModifiable())? state : BoardState.addTransition());
-			if(next == null)return;
+			if(next == null){
+				return;
+			}
 			Legup.setCurrentState(next);
 			ArrayList<Object> extra = next.getExtraData();
+			ArrayList<Object> delta = next.getExtraDataDelta();
+//			System.out.println("extra");
+//			System.out.println(extra);
+//			System.out.println(delta);
+
+			//stop if the link we are trying to create already exists and verified by a rule
+			if(extra.contains(e) && !delta.contains(e)){
+				return;
+			}
 			removed = extra.remove(e);
+
+			//stop if one of the points already has a link associated with it.
+			for(int i = 0; i < repeat.size();i++){
+				if(extra.contains(repeat.get(i))){
+					return;
+				}
+			}
+
+			//if link did not already exist between the two dragged points, add the link.
 			if(!removed)
 			{
 				next.addExtraData(e);
@@ -457,6 +559,7 @@ public class TreeTent extends PuzzleModule
 			}
 
 			next.propagateExtraData(e,!removed);
+
 		}
 	}
 

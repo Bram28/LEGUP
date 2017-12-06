@@ -13,6 +13,7 @@
 package edu.rpi.phil.legup.puzzles.treetent;
 import javax.swing.ImageIcon;
 import java.util.Set;
+import java.util.*;
 import java.util.HashSet;
 
 import edu.rpi.phil.legup.BoardState;
@@ -42,6 +43,9 @@ public class RuleFinishWithGrass extends PuzzleRule
 			if (destBoardState.getParents().size() != 1) {
 				return "This rule only involves having a single branch!";
 			}
+
+			ArrayList<Object> extra = destBoardState.getExtraDataDelta();
+			if(extra.size() > 0){  return "Links can't be verified by this rule!"; }
 
 			for (int y = 0; y < height; ++y) {
 				for (int x = 0; x < width; ++x) {
