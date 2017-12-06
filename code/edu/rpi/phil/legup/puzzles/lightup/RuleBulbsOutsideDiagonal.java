@@ -50,7 +50,7 @@ public class RuleBulbsOutsideDiagonal extends PuzzleRule {
                             return "Too many bulbs placed.";
                     }
                     int cellvalue = destBoardState.getCellContents(x, y);
-                    String err = "Only valid when cell requires 3 bulbs diagonal to a cell that requires 1 bulb and is on outer edges of cells.";
+                    String err = "Only valid when cell is diagonal to a cell that requires 1 bulb and is on outer edges of cells.";
                     if (!(isStateValid(x-1,y,destBoardState,cellvalue) || isStateValid(x+1,y,destBoardState,cellvalue) ||
                             isStateValid(x,y-1,destBoardState,cellvalue) || isStateValid(x,y+1,destBoardState,cellvalue) )) {
                         return err;
@@ -65,18 +65,31 @@ public class RuleBulbsOutsideDiagonal extends PuzzleRule {
         if (origBoardState.getCellContents(x,y) >= 10 &&
                 ((origBoardState.getCellContents(x, y) == 13 && cellvalue == LightUp.CELL_LIGHT)
                 || (origBoardState.getCellContents(x, y) == 11 && cellvalue == LightUp.CELL_EMPTY))) {
-            return true && findDiagonal(x, y, origBoardState.getCellContents(x,y), origBoardState);
+            return true && findDiagonal(x, y, origBoardState.getCellContents(x,y), origBoardState, false);
+        }
+        // if the block is a 2 or a 1 against a border, the same idea applies for the rule.
+        if ((origBoardState.getCellContents(x, y) == 12 && cellvalue == LightUp.CELL_LIGHT) ||
+                (origBoardState.getCellContents(x, y) == 11 && cellvalue == LightUp.CELL_LIGHT)) {
+            return isBlockOnBorder(((origBoardState.getCellContents(x, y)-10) * -1) + 3, x, y, origBoardState);
         }
         return false;
     }
-    private boolean findDiagonal(int x, int y, int cellvalue, BoardState state) {
-        int toFind = 0;
-        if (cellvalue == 13) { toFind = 11; }
-        if (cellvalue == 11) { toFind = 13; }
-        if (state.getCellContents(x+1,y+1) == toFind || state.getCellContents(x-1,y-1) == toFind ||
-                state.getCellContents(x-1,y+1) == toFind || state.getCellContents(x+1,y-1) == toFind) {
-            return true;
-        }
+    // checks for if the block at (x,y) is on the edge of the puzzle
+    private boolean isBlockOnBorder(int num, int x, int y, BoardState origBoardState) {
+        System.out.println("NUM equals " + num);
+        int count = 0;
+        if (x+1<0 || x+1 >= origBoardState.getWidth())  count++;
+        if (x-1<0 || x-1 >= origBoardState.getWidth())  count++;
+        if (y+1<0 || y+1 >= origBoardState.getHeight()) count++;
+        if (y-1<0 || y-1 >= origBoardState.getHeight()) count++;
+        System.out.println("COUNT equals " + count);
+        return count == num;
+    }
+    private boolean findDiagonal(int x, int y, int cellvalue, BoardState state, boolean eleven) {
+        if ((x+1>0 && x+1 < state.getWidth()) && (y+1>0 && y+1 < state.getHeight()) && state.getCellContents(x+1,y+1) >= 11) return true;
+        if ((x-1>0 && x-1 < state.getWidth()) && (y+1>0 && y+1 < state.getHeight()) && state.getCellContents(x-1,y+1) >= 11) return true;
+        if ((x+1>0 && x+1 < state.getWidth()) && (y-1>0 && y-1 < state.getHeight()) && state.getCellContents(x+1,y-1) >= 11) return true;
+        if ((x-1>0 && x-1 < state.getWidth()) && (y-1>0 && y-1 < state.getHeight()) && state.getCellContents(x-1,y-1) >= 11) return true;
         return false;
     }
 }
