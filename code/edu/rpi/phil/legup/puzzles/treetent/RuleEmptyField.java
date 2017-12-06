@@ -10,6 +10,7 @@
 
 package edu.rpi.phil.legup.puzzles.treetent;
 
+import java.util.*;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -24,7 +25,8 @@ public class RuleEmptyField extends PuzzleRule
 	public RuleEmptyField()
     {
 		setName("Empty Field");
-		description = "Any cell not next to an unlinked tree can be marked grass.";
+		//description = "Any cell not next to an unlinked tree can be marked grass.";
+		description = "blank cells not adjacent to an unlinked tree are grass.";
 		//image = new ImageIcon("images/treetent/noTreesAround.png");
     }
 
@@ -36,6 +38,8 @@ public class RuleEmptyField extends PuzzleRule
 		int width = origBoardState.getWidth();
 		int height = origBoardState.getHeight();
 
+		ArrayList<Object> extra = destBoardState.getExtraDataDelta();
+		if(extra.size() > 0){  return "Links can't be verified by this rule!"; }
 		// Check for only one branch
 		if (destBoardState.getParents().size() != 1) {
 			return "This rule only involves having a single branch!";

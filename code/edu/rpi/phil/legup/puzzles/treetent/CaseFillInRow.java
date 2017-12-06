@@ -54,7 +54,7 @@ public class CaseFillInRow extends CaseRule
 
 		Set<Contradiction> contras = new LinkedHashSet<Contradiction>();
 		contras.add(new ContradictionNoTreeForTent());
-		contras.add(new ContradictionAdjacentTents());
+		contras.add(new ContradictionTouchingTents());
 		contras.add(new ContradictionTooManyTents());
 
 		outerloop:

@@ -13,8 +13,8 @@ public class RuleTentForTree extends RuleNewLink
     {
 			//Combine with ruleLastCampingSpot
     	setName("Tent for Tree");
-    	description = "A tree must link to a tent if there are no unknowns or unlinked tents near the tree.";
-    	//image = new ImageIcon("images/treetent/NewTreeLink.png");
+        description = "If only one unlinked tent and no blank cells are adjacent to an unlinked tree, the unlinked tree must link to the unlinked tent.";
+        //image = new ImageIcon("images/treetent/NewTreeLink.png");
     }
 
     protected String checkCellNeededLink(Point tree, Point tent, BoardState state, ArrayList<Object> validLinks)

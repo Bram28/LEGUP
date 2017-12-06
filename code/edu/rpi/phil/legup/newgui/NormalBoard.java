@@ -119,8 +119,9 @@ public class NormalBoard extends Board
 							);
 							lastRightMousePoint = p;
 						}
-						else
+						else {
 							parent.showStatus("You are not allowed to change that cell.", true);
+						}
 					}
 				}
 			}
@@ -168,7 +169,7 @@ public class NormalBoard extends Board
 							if(next != null) { pm.mousePressedEvent(next,p); }
 						}
 						else
-                        {
+						{
 							parent.showStatus("You are not allowed to change that cell.", true);
                         }
 					}

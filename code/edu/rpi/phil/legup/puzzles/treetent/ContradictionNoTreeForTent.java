@@ -24,8 +24,9 @@ public class ContradictionNoTreeForTent extends Contradiction
      */
     public String checkContradictionRaw(BoardState state)
     {
-    	String error = "No unlinked tent is not adjacent to an unlinked tree.";
-    	int height = state.getHeight();
+    	//String error = "No unlinked tent is not adjacent to an unlinked tree.";
+		String error = "All tents can still be linked to a tree.";
+		int height = state.getHeight();
     	int width = state.getWidth();
     	boolean found;
     	ArrayList<Object> validLinks = state.getExtraData();

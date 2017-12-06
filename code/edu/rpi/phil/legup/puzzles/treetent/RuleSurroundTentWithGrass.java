@@ -12,6 +12,7 @@ package edu.rpi.phil.legup.puzzles.treetent;
 
 import javax.swing.ImageIcon;
 import java.util.Set;
+import java.util.*;
 import java.util.HashSet;
 
 import edu.rpi.phil.legup.BoardState;
@@ -31,12 +32,14 @@ public class RuleSurroundTentWithGrass extends PuzzleRule
 
 		protected String checkRuleRaw(BoardState destBoardState) {
 			Set<Contradiction> contras = new HashSet<Contradiction>();
-			contras.add(new ContradictionAdjacentTents());
+			contras.add(new ContradictionTouchingTents());
 
 			BoardState origBoardState = destBoardState.getSingleParentState();
 			int width = origBoardState.getWidth();
 			int height = origBoardState.getHeight();
 
+			ArrayList<Object> extra = destBoardState.getExtraDataDelta();
+			if(extra.size() > 0){  return "Links can't be verified by this rule!"; }
 			// Check for only one branch
 			if (destBoardState.getParents().size() != 1) {
 				return "This rule only involves having a single branch!";

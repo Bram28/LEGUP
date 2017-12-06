@@ -79,6 +79,6 @@ public class ContradictionTooFewTents extends Contradiction
         return null;
     }
 
-    return "There are no rows or columns that cannot meet the required number of tents!";
+    return "All rows and columns can still have sufficient tents.";
   }
 }

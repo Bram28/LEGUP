@@ -12,7 +12,8 @@ public class RuleTreeForTent extends RuleNewLink
     public RuleTreeForTent()
     {
     	setName("Tree for Tent");
-    	description = "A tent must link to a tree if only one unlinked tree is near the tent.";
+    	//description = "A tent must link to a tree if only one unlinked tree is near the tent.";
+    	description = "If only one unlinked tree is adjacent to an unlinked tent, the unlinked tent must link to the unlinked tree.";
     	//image = new ImageIcon("images/treetent/NewTentLink.png");
     }
 
