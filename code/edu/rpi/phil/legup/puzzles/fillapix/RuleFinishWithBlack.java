@@ -22,7 +22,7 @@ public class RuleFinishWithBlack extends PuzzleRule
 	private static final long serialVersionUID = 730983709L;
     public RuleFinishWithBlack() {
 		setName("Finish with Black");
-		description = "The remaining unknowns around a block must be black to satisfy the number.";
+		description = "The remaining unknowns in a block must be black to satisfy the number.";
 		image = new ImageIcon("images/fillapix/rules/FinishWithBlack.png");
 	}
 
@@ -39,7 +39,6 @@ public class RuleFinishWithBlack extends PuzzleRule
 
 		// The only contradiction being used
 		ContradictionTooFewBlackCells c = new ContradictionTooFewBlackCells();
-
 		// Copy the parent state to compare with current state to find changes
 		BoardState origBoardState = destBoardState.getSingleParentState();
 		int width = origBoardState.getWidth();
@@ -71,6 +70,7 @@ public class RuleFinishWithBlack extends PuzzleRule
 				}
 			}
 		}
+		System.out.println("Mwahahhaaha");
 		return null;
 	}
 }

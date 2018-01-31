@@ -32,7 +32,7 @@ public class CaseBlackOrWhite extends CaseRule
 		String rv = null;
 		BoardState parent = state.getSingleParentState();
 		if (parent.getChildren().size() != 2) {
-			rv = "This case rule can only be applied on a two-way split.";
+			return "This case rule can only be applied on a two-way split.";
 		} else {
 			BoardState one = parent.getChildren().get(0);
 			BoardState two = parent.getChildren().get(1);
