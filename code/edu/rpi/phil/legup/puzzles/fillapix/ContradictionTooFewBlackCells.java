@@ -31,42 +31,23 @@ public class ContradictionTooFewBlackCells extends Contradiction {
         int height = state.getHeight();
         int width = state.getWidth();
         int cellvalue = 0;
-        int blackCells = 0;
-        boolean blockWithTooFewCellsExists = false;
-
-        //System.out.println("Too Few Black Cells started");
+        int whiteCells = 0;
+        int unknownCells = 0;
         for(int x = 0; x < width; ++x) {
             for(int y = 0; y < height; ++y) {
-                //System.out.println("Checking " + x + ", " +y);
                 cellvalue = state.getCellContents(x,y);
                 // cell with a clue
-                if(Fillapix.hasClue(cellvalue))
-                {
-                    blackCells = 0;
-                    for (int i = -1; i < 2; ++i) {
-                        for (int j = -1; j < 2; ++j) {
-                            int xpos = x + i;
-                            int ypos = y + j;
-                            if (Fillapix.inBounds(width, height, xpos, ypos)) {
-                                if (Fillapix.isBlack(cellvalue)) {
-                                    blackCells += 1;
-                                }
-                            }
-                        }
-                    }
-
-                    if (blackCells < (cellvalue%10)) {
-    					// System.out.println("Cell " + x + ", " + y + " has too few black cells!");
-                        blockWithTooFewCellsExists = true;
+                if(Fillapix.hasClue(cellvalue)) {
+                    whiteCells = Fillapix.getNumWhiteCells(x,y,state);
+                    unknownCells = Fillapix.getNumUnknownCells(x,y,state);
+                    if ((cellvalue%10) > ((9 - whiteCells))) { //- unknownCells)) {
+                        System.out.println("Too few!!");
+                        return null;
                     }
                 }
-                //System.out.println("Cell " + x + ", " + y + " is fine");
             }
-        }
-
-        if (blockWithTooFewCellsExists) {
-            return null;
-        }
+        } // 9 - white - unknown = black     ...     9 - white - unknown > black
+        // number of black cells should be equal to the clue, so 9 - white - unknown = clue
 
         error = "No block with too few black cells exists.";
         return error;

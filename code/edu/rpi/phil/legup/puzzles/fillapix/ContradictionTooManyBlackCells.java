@@ -34,34 +34,19 @@ public class ContradictionTooManyBlackCells extends Contradiction
 		int width = state.getWidth();
 		int cellvalue = 0;
 		int blackCells = 0;
-
 		//System.out.println("Too Many Black Cells started");
 		for(int x = 0; x < width; ++x) {
 			for(int y = 0; y < height; ++y) {
-				//System.out.println("Checking " + x + ", " +y);
 				cellvalue = state.getCellContents(x,y);
 				// cell with a clue
 				if(Fillapix.hasClue(cellvalue))
 				{
-					blackCells = 0;
-					for (int i = -1; i < 2; ++i) {
-						for (int j = -1; j < 2; ++j) {
-							int xpos = x + i;
-							int ypos = y + j;
-							if (Fillapix.inBounds(width, height, xpos, ypos)) {
-								if (Fillapix.isBlack(cellvalue)) {
-									blackCells += 1;
-								}
-							}
-						}
-					}
+					blackCells = Fillapix.getNumBlackCells(x, y, state);
 
 					if (blackCells > (cellvalue%10)) {
-						// System.out.println("Cell " + x + ", " + y + " has too few black cells!");
 						return null;
 					}
 				}
-				//System.out.println("Cell " + x + ", " + y + " is fine");
 			}
 		}
 
