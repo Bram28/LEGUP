@@ -83,6 +83,54 @@ public class Fillapix extends PuzzleModule {
 		return (value == -20 || value == 100 || (value/10)==6);
 	}
 
+	public static int getNumBlackCells(int x, int y, BoardState state) {
+		int numBlackCells = 0;
+		for (int i = -1; i < 2; ++i) {
+			for (int j = -1; j < 2; ++j) {
+				int xpos = x + i;
+				int ypos = y + j;
+				if (Fillapix.inBounds(state.getWidth(), state.getHeight(), xpos, ypos)) {
+					if (Fillapix.isBlack(state.getCellContents(x,y))) {
+						numBlackCells += 1;
+					}
+				}
+			}
+		}
+		return numBlackCells;
+	}
+
+	public static int getNumUnknownCells(int x, int y, BoardState state) {
+		int numUnknownCells = 0;
+		for (int i = -1; i < 2; ++i) {
+			for (int j = -1; j < 2; ++j) {
+				int xpos = x + i;
+				int ypos = y + j;
+				if (Fillapix.inBounds(state.getWidth(), state.getHeight(), xpos, ypos)) {
+					if (Fillapix.isUnknown(state.getCellContents(x,y))) {
+						numUnknownCells += 1;
+					}
+				}
+			}
+		}
+		return numUnknownCells;
+	}
+
+	public static int getNumWhiteCells(int x, int y, BoardState state) {
+		int numWhiteCells = 0;
+		for (int i = -1; i < 2; ++i) {
+			for (int j = -1; j < 2; ++j) {
+				int xpos = x + i;
+				int ypos = y + j;
+				if (Fillapix.inBounds(state.getWidth(), state.getHeight(), xpos, ypos)) {
+					if (Fillapix.isWhite(state.getCellContents(x,y))) {
+						numWhiteCells += 1;
+					}
+				}
+			}
+		}
+		return numWhiteCells;
+	}
+
 	public static boolean inBounds(int width, int height, int x, int y) {
 		return (((0 <= x) && (x < width)) && ((0 <= y) && (y < height)));
 	}

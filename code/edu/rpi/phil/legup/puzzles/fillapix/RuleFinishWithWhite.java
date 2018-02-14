@@ -21,7 +21,7 @@ public class RuleFinishWithWhite extends PuzzleRule
 
     public RuleFinishWithWhite() {
         setName("Finish with White");
-        description = "The remaining unknowns around a block must be white if the number is satisfied.";
+        description = "The remaining unknowns in a block must be white if the number is satisfied.";
         image = new ImageIcon("images/fillapix/rules/FinishWithWhite.png");
     }
 
