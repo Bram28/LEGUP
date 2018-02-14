@@ -51,14 +51,9 @@ public class Fillapix extends PuzzleModule {
 	public Map<String, Integer> getSelectableCells() {
 		// FIX LATER
 		Map<String, Integer> tmp = new LinkedHashMap<>();
-		String tmpname = "";
-		for (int i = -50; i < 70; i++) {
-			tmpname+="a";
-			tmp.put(tmpname, i);
-		}
-		// tmp.put("blank", CELL_UNKNOWN);
-		// tmp.put("black", CELL_BLACK);
-		// tmp.put("white", CELL_WHITE);
+		tmp.put("blank", 50);
+		tmp.put("black", 70);
+		tmp.put("white", 100);
 		return tmp;
 	}
 
@@ -101,17 +96,27 @@ public class Fillapix extends PuzzleModule {
 	}
 
 	public void drawCell( Graphics2D g, int x, int y, int state ){
+		Color textColor = Color.black;
 		if (isUnknown(state)) {
 			g.setColor(Color.lightGray);
 		} else if (isBlack(state)) {
-			g.setColor(Color.darkGray);
+			textColor = Color.white;
+			g.setColor(Color.black);
 		} else if (isWhite(state)) {
 			g.setColor(Color.white);
 		} else {
 			System.out.println("This state shouldn't exist. It's impossible. It's preposterous");
 		}
+		/*
 		if (state > 0) {
 			drawText( g, x, y, String.valueOf(state%10) );
+		}*/
+
+		// draw the number
+		if (state!=50 && state!=70 && state!=100 && state!=0) {
+			drawText(g, x, y, String.valueOf(state%10), textColor);
+		} else {
+			drawText(g, x, y, "", textColor);
 		}
 	}
 
@@ -229,10 +234,6 @@ public class Fillapix extends PuzzleModule {
 	 */
 	public int getNextLabelValue(int curValue) {
 		return 0;
-	}
-
-	public boolean checkGoal(BoardState currentBoard, BoardState goalBoard){
-		return currentBoard.compareBoard(goalBoard);
 	}
 
 	// SHOULD FIX THIS SO THAT IT APPLIES TO FILLAPIX AND NOT LIGHTUP I'M NOT SURE WHAT VALUES GO HERE QUITE YET
