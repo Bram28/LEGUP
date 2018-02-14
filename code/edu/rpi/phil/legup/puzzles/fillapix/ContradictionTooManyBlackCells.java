@@ -35,10 +35,8 @@ public class ContradictionTooManyBlackCells extends Contradiction
 		int cellvalue = 0;
 		int blackCells = 0;
 
-		//System.out.println("Too Many Black Cells started");
 		for(int x = 0; x < width; ++x) {
 			for(int y = 0; y < height; ++y) {
-				//System.out.println("Checking " + x + ", " +y);
 				cellvalue = state.getCellContents(x,y);
 				// cell with a clue
 				if(Fillapix.hasClue(cellvalue))
@@ -57,11 +55,9 @@ public class ContradictionTooManyBlackCells extends Contradiction
 					}
 
 					if (blackCells > (cellvalue%10)) {
-						// System.out.println("Cell " + x + ", " + y + " has too few black cells!");
 						return null;
 					}
 				}
-				//System.out.println("Cell " + x + ", " + y + " is fine");
 			}
 		}
 

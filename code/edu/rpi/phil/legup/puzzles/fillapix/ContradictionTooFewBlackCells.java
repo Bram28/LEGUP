@@ -31,23 +31,32 @@ public class ContradictionTooFewBlackCells extends Contradiction {
         int height = state.getHeight();
         int width = state.getWidth();
         int cellvalue = 0;
+        int unknownCells = 0;
         int blackCells = 0;
-        boolean blockWithTooFewCellsExists = false;
+        int whiteCells = 0;
+        int blockSize = 9;
+        boolean blockWithTooFewBlackCellsExists = false;
 
-        //System.out.println("Too Few Black Cells started");
         for(int x = 0; x < width; ++x) {
             for(int y = 0; y < height; ++y) {
-                //System.out.println("Checking " + x + ", " +y);
                 cellvalue = state.getCellContents(x,y);
                 // cell with a clue
                 if(Fillapix.hasClue(cellvalue))
                 {
+                    whiteCells = 0;
                     blackCells = 0;
+                    unknownCells = 0;
                     for (int i = -1; i < 2; ++i) {
                         for (int j = -1; j < 2; ++j) {
                             int xpos = x + i;
                             int ypos = y + j;
                             if (Fillapix.inBounds(width, height, xpos, ypos)) {
+                                if (Fillapix.isWhite(cellvalue)) {
+                                    whiteCells += 1;
+                                }
+                                if (Fillapix.isUnknown(cellvalue)) {
+                                    unknownCells += 1;
+                                }
                                 if (Fillapix.isBlack(cellvalue)) {
                                     blackCells += 1;
                                 }
@@ -55,16 +64,19 @@ public class ContradictionTooFewBlackCells extends Contradiction {
                         }
                     }
 
-                    if (blackCells < (cellvalue%10)) {
-    					// System.out.println("Cell " + x + ", " + y + " has too few black cells!");
-                        blockWithTooFewCellsExists = true;
+                    // if ((9-whiteCells) < (cellvalue%10)) { // doesn't account for the corner case of border cells!
+                    if ((blackCells+unknownCells) < (cellvalue%10)) {
+                        System.err.println("LEFT SIDE, WHITE CELLS: "+(9-whiteCells)+"   RIGHT SIDE: "+(cellvalue%10));
+                        System.err.println("LEFT SIDE, OTHER CELLS: "+(blackCells+unknownCells)+"   RIGHT SIDE: "+(cellvalue%10));
+                        blockWithTooFewBlackCellsExists = true;
+                    } else {
+                        System.err.println("It never entered...");
                     }
                 }
-                //System.out.println("Cell " + x + ", " + y + " is fine");
             }
         }
 
-        if (blockWithTooFewCellsExists) {
+        if (blockWithTooFewBlackCellsExists) {
             return null;
         }
 
