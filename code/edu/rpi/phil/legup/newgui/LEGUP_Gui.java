@@ -701,7 +701,7 @@ public class LEGUP_Gui extends JFrame implements ActionListener, TreeSelectionLi
 
 	private void directions()
 	{
-		JOptionPane.showMessageDialog(null, "For ever move you make, you must provide a justification for it (located in the Rules panel).\n"
+		JOptionPane.showMessageDialog(null, "For every move you make, you must provide a justification for it (located in the Rules panel).\n"
 				+ "While working on the puzzle, you may click on the \"Check\" button to test your proof for correctness.",
 				"Directions", JOptionPane.PLAIN_MESSAGE);
 	}

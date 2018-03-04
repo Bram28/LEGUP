@@ -10,6 +10,7 @@ import edu.rpi.phil.legup.Contradiction;
 public class ContradictionNoTentForTree extends Contradiction
 {
 	static final long serialVersionUID = 9509L;
+	private Point loneTree;
 	public String getImageName() {return "images/treetent/contra_NoTentForTree.png";}
 	public ContradictionNoTentForTree()
 	 {
@@ -81,12 +82,18 @@ public class ContradictionNoTentForTree extends Contradiction
     	    			}
     	    		}
 
-    	    		if (surrounded)
-    	    			error = null;
+    	    		if (surrounded) {
+						loneTree = tree;
+						error = null;
+					}
     	    	}
     	    }
     	}
 
 		return error;
     }
+
+	public Point getLoneTree() {
+		return loneTree;
+	}
 }
